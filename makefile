@@ -2,7 +2,7 @@
 # SETTINGS
 #--------------------------------------------
 
-PROJECT_NAME=mg
+PROJECT_NAME=.
 
 INSTALL_ROOT_PATH=$(shell pwd)/${PROJECT_NAME}
 INSTALL_LIB_ROOT_PATH := ${INSTALL_ROOT_PATH}/dependencies
@@ -49,11 +49,13 @@ DEPENDENCIES=dependencies
 
 # Find all makefiles in apps
 APPS_MODULES = \
-$(addsuffix '/make' , $(shell find ${APPS} -mindepth 1 -maxdepth 1 -type d 2>/dev/null))
+$(addsuffix '/make' , $(shell find ${APPS} -mindepth 1 -maxdepth 1 \
+! -name 'editor_qt' -type d 2>/dev/null))
 
 # Find all makefiles in libs
 LIBS_MODULES = \
-$(addsuffix '/make' , $(shell find ${LIBS} -mindepth 1 -maxdepth 1 -type d 2>/dev/null))
+$(addsuffix '/make' , $(shell find ${LIBS} -mindepth 1 -maxdepth 1 \
+! -name 'googletest' -type d 2>/dev/null))
 
 #--------------------------------------------
 # EXTERNAL RULE
@@ -103,22 +105,20 @@ $(shell find ${DEPENDENCIES}/lib/ \
 # RULES
 #--------------------------------------------
 
-${MAKE_ALL}: ${MAKE_LIBS} #${MAKE_APPS}
+${MAKE_ALL}: ${MAKE_LIBS} ${MAKE_APPS}
 
 ${MAKE_APPS}: ${APPS_MODULES}
 
 ${MAKE_LIBS}: ${LIBS_MODULES}
 
 
-${CLEAN}: ${CLEAN_LIBS} #${CLEAN_APPS}
+${CLEAN}: ${CLEAN_LIBS} ${CLEAN_APPS}
 
 ${CLEAN_APPS}: ${APPS_MODULES}
 
 ${CLEAN_LIBS}: ${LIBS_MODULES}
 
-${INSTALL}: ${INSTALL_APPS} ${INSTALL_LIBS}
-	@cp -rf resources ${INSTALL_ROOT_PATH}
-	@cp INSTALLED_README.txt ${INSTALL_ROOT_PATH}/README.txt
+${INSTALL}: ${INSTALL_LIBS} #${INSTALL_APPS}
 
 
 ${INSTALL_APPS}: ${APPS_MODULES}
@@ -131,6 +131,7 @@ ${CLEAN_DEPENDENCIES}:
 	@$(foreach var, ${DEPENDENCIES_LIBS}, echo ${var};)
 	@$(foreach var, ${DEPENDENCIES_INCLUDES}, rm -rf ${var})
 	@$(foreach var, ${DEPENDENCIES_LIBS}, rm -rf ${var})
+	@rm -rf ${INSTALL_LIB_ROOT_PATH}
 
 #--------------------------------------------
 
@@ -156,9 +157,5 @@ $(LIBS_MODULES):
 
 
 
-#--------------------------------------------
-
-JAVA_JDK=/usr/lib/jvm/java-8-oracle
-
-GUI:
-	cd gui && ant -DJAVA_HOME="${JAVA_JDK}"
+#@cp -rf resources ${INSTALL_ROOT_PATH}
+#@cp INSTALLED_README.txt ${INSTALL_ROOT_PATH}/README.txt

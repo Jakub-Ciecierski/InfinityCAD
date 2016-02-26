@@ -1,0 +1,19 @@
+######################
+# REQUIREMENTS
+######################
+
+GNU Make 3.81
+
+######################
+# INSTALLATION
+######################
+
+The following commmand installs the entire project:
+
+    make install
+
+Program will be installed in default directory: "./fapr"
+
+Optionally, You can provide path to the installation directory:
+
+    make install INSTALL_ROOT_PATH=/path/to/installation/

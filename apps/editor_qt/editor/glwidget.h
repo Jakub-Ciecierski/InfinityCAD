@@ -2,9 +2,14 @@
 #define GLWIDGET_H
 
 #include <QGLWidget>
+#include <geometry/objects/torus.h>
 
 class GLWidget : public QGLWidget
 {
+private:
+    Torus* torus;
+    int width;
+    int height;
 public:
     explicit GLWidget(QWidget* parent = 0);
 

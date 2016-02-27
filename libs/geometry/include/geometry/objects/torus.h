@@ -9,6 +9,7 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <geometry/edge.h>
 
 class Torus {
 private:
@@ -22,13 +23,17 @@ private:
     unsigned int centerPointCount;
     unsigned int insidePointCount;
 
-    std::vector<glm::fvec4> verticies;
+    std::vector<glm::fvec4> vertices;
+    std::vector<Edge> edges;
 
     //-----------------------------------------------------------//
     //  PRIVATE METHODS
     //-----------------------------------------------------------//
 
     void initVertices();
+
+    double angleToRadians(double angle);
+
 public:
     //-----------------------------------------------------------//
     //  CONSTRUCTORS
@@ -43,6 +48,8 @@ public:
     //-----------------------------------------------------------//
 
     void update();
+
+    void render(const glm::mat4& MVP);
 
     double getX(double centerCircleAngleDegree, double insideCircleAngleDegree);
     double getY(double centerCircleAngleDegree, double insideCircleAngleDegree);

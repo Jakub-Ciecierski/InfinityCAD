@@ -1,27 +1,23 @@
 //
-// Created by jakub on 2/27/16.
+// Created by jakub on 2/28/16.
 //
 
-#ifndef MG1_CAMERA_H
-#define MG1_CAMERA_H
+#ifndef MG1_PERSPECTIVE_PROJECTION_H
+#define MG1_PERSPECTIVE_PROJECTION_H
 
 #include <glm/gtc/matrix_transform.hpp>
+#include <geometry/projection.h>
 
-class Camera {
+class PerspectiveProjection : public Projection{
 private:
     //-----------------------------------------------------------//
     //  PRIVATE FIELDS
     //-----------------------------------------------------------//
 
-    unsigned int x;
-    unsigned int y;
-    unsigned int z;
+    int width;
+    int height;
 
-    float xAngle;
-    float yAngle;
-    float zAngle;
-
-    glm::mat4 MVP;
+    float FOV;
 
     //-----------------------------------------------------------//
     //  PRIVATE METHODS
@@ -32,18 +28,17 @@ public:
     //  CONSTRUCTORS
     //-----------------------------------------------------------//
 
-    Camera(unsigned int x, unsigned int y, unsigned int z);
+    PerspectiveProjection(int width, int height);
 
-    ~Camera();
+    ~PerspectiveProjection();
 
     //-----------------------------------------------------------//
     //  PUBLIC METHODS
     //-----------------------------------------------------------//
 
-    void updateMVP();
+    virtual const glm::mat4 &getProjectionMatrix() override;
 
-    const glm::mat4& getMVP();
 };
 
 
-#endif //MG1_CAMERA_H
+#endif //MG1_PERSPECTIVE_PROJECTION_H

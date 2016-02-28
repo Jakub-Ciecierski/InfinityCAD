@@ -16,10 +16,10 @@ PRE_TARGETDEPS += .buildfile
 QT       += core gui opengl
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+CONFIG += c++11
 
 TARGET = editor
 TEMPLATE = app
-
 
 SOURCES += main.cpp\
         mainwindow.cpp \

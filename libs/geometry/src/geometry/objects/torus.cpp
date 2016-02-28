@@ -6,6 +6,7 @@
 #include <cmath>
 #include <GL/gl.h>
 #include <iostream>
+#include <drawer.h>
 
 using namespace glm;
 
@@ -15,12 +16,21 @@ const double PI_OVER_180 = M_PI/180;
 //  CONSTRUCTORS
 //-----------------------------------------------------------//
 
-Torus::Torus(double R, double r) : R(R), r(r){
-    centerPointCount = 360;
-    insidePointCount = 360;
-
+Torus::Torus(float innerRadius, float outerRadiusr) :
+        innerRadius(innerRadius), outerRadiusr(outerRadiusr){
+    sidesCount = 90;
+    ringsCount = 90;
     initVertices();
+    initEdges();
+}
 
+Torus::Torus(float innerRadius, float outerRadiusr,
+             unsigned int sidesCount,
+             unsigned int ringsCount) :
+        innerRadius(innerRadius), outerRadiusr(outerRadiusr),
+        sidesCount(sidesCount), ringsCount(ringsCount){
+    initVertices();
+    initEdges();
 }
 
 Torus::~Torus() {
@@ -28,76 +38,72 @@ Torus::~Torus() {
 }
 
 //-----------------------------------------------------------//
-//  PUBLIC METHODS
+//  PRIVATE METHODS
 //-----------------------------------------------------------//
 
 
-double Torus::getX(double centerCircleAngleDegree,
-                   double insideCircleAngleDegree) {
-    double x = (R + r*cos(angleToRadians(centerCircleAngleDegree))) *
-            (cos(angleToRadians(insideCircleAngleDegree)));
+float Torus::getX(float centerCircleAngleDegree,
+                  float insideCircleAngleDegree) {
+    float x = (innerRadius + outerRadiusr * cos(angleToRadians(centerCircleAngleDegree))) *
+              (cos(angleToRadians(insideCircleAngleDegree)));
 
     return x;
 }
 
-double Torus::getY(double centerCircleAngleDegree,
-                   double insideCircleAngleDegree) {
-    double y = (R + r*cos(angleToRadians(centerCircleAngleDegree))) *
-               (sin(angleToRadians(insideCircleAngleDegree)));
+float Torus::getY(float centerCircleAngleDegree,
+                  float insideCircleAngleDegree) {
+    float y = (innerRadius + outerRadiusr * cos(angleToRadians(centerCircleAngleDegree))) *
+              (sin(angleToRadians(insideCircleAngleDegree)));
 
     return y;
 }
 
-double Torus::getZ(double centerCircleAngleDegree,
-                   double insideCircleAngleDegree) {
-    double z = r*cos(angleToRadians(centerCircleAngleDegree));
+float Torus::getZ(float centerCircleAngleDegree,
+                  float insideCircleAngleDegree) {
+    float z = outerRadiusr * cos(angleToRadians(centerCircleAngleDegree));
 
     return z;
 }
 
-void Torus::update() {
-
-}
+//-----------------------------------------------------------//
+//  PROTECTED METHODS
+//-----------------------------------------------------------//
 
 void Torus::initVertices() {
-    int vertexCount = centerPointCount * insidePointCount;
+    int vertexCount = sidesCount * ringsCount;
     vertices.clear();
     vertices.resize(vertexCount);
 
     int currentVertexIndex = 0;
     const unsigned int MAX_ANGLE = 360;
-    for(unsigned int i = 0; i < centerPointCount; i++){
-        double centerCircleAngleDegree =
-                ((double)i/centerPointCount) * MAX_ANGLE;
-        for(unsigned int j = 0; j < insidePointCount; j++){
-            double insideCircleAngleDegree =
-                    ((double)j/insidePointCount) * MAX_ANGLE;
+    for(unsigned int j = 0; j < ringsCount; j++){
+        float ringIndex = ((float)j / ringsCount) * MAX_ANGLE;
+        for(unsigned int i = 0; i < sidesCount; i++){
+            float sideIndex = ((float)i / sidesCount) * MAX_ANGLE;
 
-            double X = this->getX(centerCircleAngleDegree,
-                                  insideCircleAngleDegree);
-            double Y = this->getY(centerCircleAngleDegree,
-                                  insideCircleAngleDegree);
-            double Z = this->getZ(centerCircleAngleDegree,
-                                  insideCircleAngleDegree);
+            float x = this->getX(ringIndex,
+                                 sideIndex);
+            float y = this->getY(ringIndex,
+                                 sideIndex);
+            float z = this->getZ(ringIndex,
+                                 sideIndex);
 
-            fvec4 vertex = fvec4(X, Y, Z, 1.0f);
+            fvec4 vertex = fvec4(x, y, z, 1.0f);
             vertices[currentVertexIndex++] = vertex;
         }
     }
 }
 
-void Torus::render(const mat4& MVP) {
-    glColor3f(0.0, 1.0, 0.0);
-    glBegin(GL_LINES);
-    for(int i = 0; i < vertices.size() - 1; i++){
-        glVertex3f(vertices[i].x, vertices[i].y, vertices[i].z);
-        glVertex3f(vertices[i+1].x, vertices[i+1].y, vertices[i+1].z);
+
+void Torus::initEdges() {
+    for(unsigned int r = 0; r < ringsCount - 1; r++){
+        for(unsigned int s = 0; s < sidesCount - 1; s++){
+            Edge edge1(r * sidesCount + s, r * sidesCount + (s + 1));
+            Edge edge2((r +1) * sidesCount + (s + 1), (r +1) * sidesCount + s);
+            Edge edge3(r * sidesCount + (s + 1), (r +1) * sidesCount + (s + 1));
+            edges.push_back(edge1);
+            edges.push_back(edge2);
+            edges.push_back(edge3);
+        }
     }
-
-    glEnd();
-}
-
-double Torus::angleToRadians(double angle) {
-    double radians = angle * PI_OVER_180;
-    return radians;
 }

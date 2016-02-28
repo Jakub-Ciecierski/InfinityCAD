@@ -1,38 +1,24 @@
 //
-// Created by jakub on 2/26/16.
+// Created by jakub on 2/28/16.
 //
 
-#ifndef MG1_TORUS_H
-#define MG1_TORUS_H
+#ifndef MG1_CUBE_H
+#define MG1_CUBE_H
 
 #include <vector>
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <geometry/edge.h>
 #include <geometry/renderable.h>
 
-class Torus : public Renderable{
+class Cube : public Renderable {
 private:
     //-----------------------------------------------------------//
     //  PRIVATE FIELDS
     //-----------------------------------------------------------//
-
-    float innerRadius;
-    float outerRadiusr;
-
-    unsigned int sidesCount;
-    unsigned int ringsCount;
-
     //-----------------------------------------------------------//
     //  PRIVATE METHODS
     //-----------------------------------------------------------//
 
-    float getX(float innerRadius, float outerRadiusr);
-    float getY(float innerRadius, float outerRadiusr);
-    float getZ(float innerRadius, float outerRadiusr);
-
 protected:
+
     //-----------------------------------------------------------//
     //  PROTECTED METHODS
     //-----------------------------------------------------------//
@@ -45,14 +31,15 @@ public:
     //  CONSTRUCTORS
     //-----------------------------------------------------------//
 
-    Torus(float innerRadius, float outerRadiusr);
+    Cube();
 
-    Torus(float innerRadius, float outerRadiusr,
-          unsigned int sidesCount,
-          unsigned int ringsCount);
+    ~Cube();
 
-    ~Torus();
+    //-----------------------------------------------------------//
+    //  PUBLIC METHODS
+    //-----------------------------------------------------------//
+
 };
 
 
-#endif //MG1_TORUS_H
+#endif //MG1_CUBE_H

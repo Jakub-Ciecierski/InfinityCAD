@@ -7,6 +7,8 @@
 
 #include <geometry/objects/torus.h>
 
+float angleToRadians(float angle);
+
 void drawLine();
 
 void drawTorus(const Torus& torus);

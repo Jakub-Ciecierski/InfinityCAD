@@ -3,19 +3,18 @@
 //
 
 #include <gtest/gtest.h>
-#include <geometry/camera.h>
+#include <geometry/cameras/camera.h>
 
 TEST(Camera, UpdateMVP) {
-    Camera camera(0,0,0);
-
-    const glm::mat4& MVP = camera.getMVP();
+    Camera camera;
+    const glm::mat4& viewMatrix = camera.getViewMatrix();
 
     for(int i = 0; i < 4; i++){
         std::cout
-        << MVP[i].x << ", "
-        << MVP[i].y << ", "
-        << MVP[i].z << ", "
-        << MVP[i].w << ", "
+        << viewMatrix[i].x << ", "
+        << viewMatrix[i].y << ", "
+        << viewMatrix[i].z << ", "
+        << viewMatrix[i].w << ", "
         << std::endl;
     }
 

@@ -37,9 +37,11 @@ GLWidget::~GLWidget(){
 void GLWidget::keyPressEvent(QKeyEvent *event){
     // Move X
     if(event->key() == Qt::Key_Left){
-        camera->move(-0.1, 0, 0);
+        //camera->move(-0.1, 0, 0);
+        camera->move(0.0, 0, -0.1);
     }if(event->key() == Qt::Key_Right){
-        camera->move(0.1, 0, 0);
+        //camera->move(0.1, 0, 0);
+        camera->move(0.0, 0, 0.1);
     }
     // Move Y
     if(event->key() == Qt::Key_Up){
@@ -107,7 +109,6 @@ void GLWidget::paintGL(){
 
     for(unsigned int i = 0; i < renderableObjects.size(); i++){
         renderableObjects[i]->render(VP);
-        renderableObjects[i]->rotate(0.1, 0, 0);
     }
 }
 

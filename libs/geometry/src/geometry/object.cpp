@@ -28,9 +28,9 @@ Object::~Object() {
 mat4 Object::getTranslationMatrix() {
     mat4 translateMatrix = mat4(1.0f);
 
-    translateMatrix[0].w = position.x;
-    translateMatrix[1].w = position.y;
-    translateMatrix[2].w = position.z;
+    translateMatrix[3].x = position.x;
+    translateMatrix[3].y = position.y;
+    translateMatrix[3].z = position.z;
 
     return translateMatrix;
 }
@@ -43,44 +43,60 @@ mat4 Object::getRotationMatrix() {
 
 mat4 Object::getXRotationMatrix() {
     mat4 xRotateMatrix = mat4(1.0f);
-
+/*
     xRotateMatrix[1].y = cos(angleToRadians(rotationAngles.x));
     xRotateMatrix[1].z = -sin(angleToRadians(rotationAngles.x));
     xRotateMatrix[2].y = sin(angleToRadians(rotationAngles.x));
     xRotateMatrix[2].z = cos(angleToRadians(rotationAngles.x));
+*/
+    xRotateMatrix[1].y = cos(angleToRadians(rotationAngles.x));
+    xRotateMatrix[1].z = sin(angleToRadians(rotationAngles.x));
 
+    xRotateMatrix[2].y = -sin(angleToRadians(rotationAngles.x));
+    xRotateMatrix[2].z = cos(angleToRadians(rotationAngles.x));
     return xRotateMatrix;
 }
 
 mat4 Object::getYRotationMatrix() {
     mat4 yRotateMatrix = mat4(1.0f);
-
+/*
     yRotateMatrix[0].x = cos(angleToRadians(rotationAngles.y));
     yRotateMatrix[0].z = sin(angleToRadians(rotationAngles.y));
     yRotateMatrix[2].x = -sin(angleToRadians(rotationAngles.y));
     yRotateMatrix[2].z = cos(angleToRadians(rotationAngles.y));
-
+*/
+    yRotateMatrix[0].x = cos(angleToRadians(rotationAngles.y));
+    yRotateMatrix[0].z = -sin(angleToRadians(rotationAngles.y));
+    yRotateMatrix[2].x = sin(angleToRadians(rotationAngles.y));
+    yRotateMatrix[2].z = cos(angleToRadians(rotationAngles.y));
     return yRotateMatrix;
 }
 
 mat4 Object::getZRotationMatrix() {
     mat4 zRotateMatrix = mat4(1.0f);
-
+/*
     zRotateMatrix[0].x = cos(angleToRadians(rotationAngles.z));
     zRotateMatrix[0].y = -sin(angleToRadians(rotationAngles.z));
     zRotateMatrix[1].x = sin(angleToRadians(rotationAngles.z));
     zRotateMatrix[1].y = cos(angleToRadians(rotationAngles.z));
-
+*/
+    zRotateMatrix[0].x = cos(angleToRadians(rotationAngles.z));
+    zRotateMatrix[0].y = sin(angleToRadians(rotationAngles.z));
+    zRotateMatrix[1].x = -sin(angleToRadians(rotationAngles.z));
+    zRotateMatrix[1].y = cos(angleToRadians(rotationAngles.z));
     return zRotateMatrix;
 }
 
 mat4 Object::getScaleMatrix() {
     mat4 scaleMatrix = mat4(1.0f);
-
+/*
     scaleMatrix[0].x = scaleFactor;
     scaleMatrix[1].y = scaleFactor;
     scaleMatrix[2].z = scaleFactor;
-
+*/
+    scaleMatrix[0].x = scaleFactor;
+    scaleMatrix[1].y = scaleFactor;
+    scaleMatrix[2].z = scaleFactor;
     return scaleMatrix;
 }
 

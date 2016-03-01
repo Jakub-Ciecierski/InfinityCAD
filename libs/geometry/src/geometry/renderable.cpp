@@ -43,12 +43,10 @@ void Renderable::render(const mat4 &VP) {
 
     unsigned int verticesCount = vertices.size();
     vector<vec4> transformedVertices(verticesCount);
+
+
     for(unsigned int i = 0; i < verticesCount; i++){
         transformedVertices[i] = MVP * vertices[i];
-
-        transformedVertices[i].x /= transformedVertices[i].w;
-        transformedVertices[i].y /= transformedVertices[i].w;
-        transformedVertices[i].z /= transformedVertices[i].w;
     }
 
     const vector<Edge>& edges = getEdges();

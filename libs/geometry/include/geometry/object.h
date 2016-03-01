@@ -8,7 +8,23 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 /*
- * Object can be moved, rotated and scaled
+ * Object can be moved, rotated and scaled.
+ * GLM matrices and vertices are used for computating.
+ * It is important to note the structure of these objects:
+ * A matrix T = |1 0 0 X|
+ *              |0 1 0 Y|
+ *              |0 0 0 Z|
+ *              |0 0 0 1|
+ * Will be accessed as follows:
+ * T[0] = |1|
+ *        |0|
+ *        |0|
+ *        |0|
+ * T[3] = |X|
+ *        |Y|
+ *        |Z|
+ *        |1|
+ * In other words, the matrices store columns linearly.
  */
 class Object {
 private:

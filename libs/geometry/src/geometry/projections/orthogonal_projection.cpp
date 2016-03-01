@@ -24,7 +24,7 @@ OrthogonalProjection::~OrthogonalProjection() {
 
 const mat4 &OrthogonalProjection::getProjectionMatrix() {
     projectionMatrix = mat4(1.0f);
-    projectionMatrix[3].z = 1.0f / r;
+    projectionMatrix[3].w = 1.0f / r;
 
     return projectionMatrix;
 }

@@ -128,17 +128,7 @@ void Torus::initVertices() {
 
 
 void Torus::initEdges() {
-    /*
-    for(unsigned int r = 0; r < ringsCount - 1; r++){
-        for(unsigned int s = 0; s < sidesCount - 1; s++){
-            Edge edge1(r * sidesCount + s, r * sidesCount + (s + 1));
-            Edge edge2((r +1) * sidesCount + (s + 1), (r +1) * sidesCount + s);
-            Edge edge3(r * sidesCount + (s + 1), (r +1) * sidesCount + (s + 1));
-            edges.push_back(edge1);
-            edges.push_back(edge2);
-            edges.push_back(edge3);
-        }
-    }*/
+
 }
 
 //-----------------------------------------------------------//

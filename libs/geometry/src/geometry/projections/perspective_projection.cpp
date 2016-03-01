@@ -25,15 +25,23 @@ const glm::mat4 &PerspectiveProjection::getProjectionMatrix() {
     float cy = height / 2;
 
     projectionMatrix[0].x = d;
-    projectionMatrix[0].z = cx;
+    projectionMatrix[0].y = 0;
+    projectionMatrix[0].z = 0;
+    projectionMatrix[0].w = 0;
 
-    projectionMatrix[1].y = -d;
-    projectionMatrix[1].z = cy;
+    projectionMatrix[1].x = 0;
+    projectionMatrix[1].y = d;
+    projectionMatrix[1].z = 0;
+    projectionMatrix[1].w = 0;
 
+    projectionMatrix[2].x = cx;
+    projectionMatrix[2].y = cy;
     projectionMatrix[2].z = 0;
     projectionMatrix[2].w = 1;
 
-    projectionMatrix[3].z = 1;
+    projectionMatrix[3].x = 0;
+    projectionMatrix[3].y = 0;
+    projectionMatrix[3].z = 0;
     projectionMatrix[3].w = 0;
 
     return projectionMatrix;

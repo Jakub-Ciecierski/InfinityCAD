@@ -6,11 +6,6 @@
 
 using namespace glm;
 
-Edge::Edge(fvec4 *vertex1, fvec4 *vertex2) :
-    vertex1(vertex1), vertex2(vertex2){
-
-}
-
 Edge::Edge(unsigned int i, unsigned int j) :
     i(i), j(j){
 

@@ -12,15 +12,10 @@
  */
 class Edge {
 private:
-    glm::fvec4* vertex1;
-    glm::fvec4* vertex2;
-
     unsigned int i;
     unsigned int j;
+
 public:
-
-    Edge(glm::fvec4* vertex1, glm::fvec4* vertex2);
-
     Edge(unsigned int i, unsigned int j);
 
     unsigned int getVertex1() const;

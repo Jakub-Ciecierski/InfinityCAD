@@ -12,6 +12,7 @@ GLWidget::GLWidget(QWidget* parent) :
     height = 449;
 
     camera = new Camera();
+    camera->move(0,0,0);
     orthogonalProjection = new OrthogonalProjection(1000.0f);
     perspectiveProjection = new PerspectiveProjection(width, height);
 
@@ -37,11 +38,9 @@ GLWidget::~GLWidget(){
 void GLWidget::keyPressEvent(QKeyEvent *event){
     // Move X
     if(event->key() == Qt::Key_Left){
-        //camera->move(-0.1, 0, 0);
-        camera->move(0.0, 0, -0.1);
+        camera->move(-0.1, 0, 0);
     }if(event->key() == Qt::Key_Right){
-        //camera->move(0.1, 0, 0);
-        camera->move(0.0, 0, 0.1);
+        camera->move(0.1, 0, 0);
     }
     // Move Y
     if(event->key() == Qt::Key_Up){

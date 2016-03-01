@@ -44,7 +44,6 @@ void Renderable::render(const mat4 &VP) {
     unsigned int verticesCount = vertices.size();
     vector<vec4> transformedVertices(verticesCount);
 
-
     for(unsigned int i = 0; i < verticesCount; i++){
         transformedVertices[i] = MVP * vertices[i];
     }

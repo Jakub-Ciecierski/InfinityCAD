@@ -3,12 +3,10 @@
 //
 
 #include <geometry/objects/torus.h>
-#include <cmath>
-#include <GL/gl.h>
 #include <iostream>
-#include <drawer.h>
 
 using namespace glm;
+using namespace std;
 
 const double PI_OVER_180 = M_PI/180;
 
@@ -17,18 +15,18 @@ const double PI_OVER_180 = M_PI/180;
 //-----------------------------------------------------------//
 
 Torus::Torus(float innerRadius, float outerRadiusr) :
-        innerRadius(innerRadius), outerRadiusr(outerRadiusr){
-    sidesCount = 90;
-    ringsCount = 90;
+        innerRadius(innerRadius), outerRadius(outerRadiusr){
+    sidesCount = 30;
+    ringsCount = 30;
     initVertices();
     initEdges();
 }
 
 Torus::Torus(float innerRadius, float outerRadiusr,
-             unsigned int sidesCount,
-             unsigned int ringsCount) :
-        innerRadius(innerRadius), outerRadiusr(outerRadiusr),
-        sidesCount(sidesCount), ringsCount(ringsCount){
+             unsigned int ringsCount,
+             unsigned int sidesCount) :
+        innerRadius(innerRadius), outerRadius(outerRadiusr),
+        ringsCount(ringsCount), sidesCount(sidesCount){
     initVertices();
     initEdges();
 }
@@ -42,25 +40,29 @@ Torus::~Torus() {
 //-----------------------------------------------------------//
 
 
-float Torus::getX(float centerCircleAngleDegree,
-                  float insideCircleAngleDegree) {
-    float x = (innerRadius + outerRadiusr * cos(angleToRadians(centerCircleAngleDegree))) *
+float Torus::getX(float ringAngle,
+                  float sideAngle) {
+    /*
+    float x = (innerRadius + outerRadiusr
+                             * cos(angleToRadians(centerCircleAngleDegree))) *
               (cos(angleToRadians(insideCircleAngleDegree)));
-
+    */
+    float x = (innerRadius + outerRadius * cos(ringAngle))
+              * (cos((sideAngle)));
     return x;
 }
 
-float Torus::getY(float centerCircleAngleDegree,
-                  float insideCircleAngleDegree) {
-    float y = (innerRadius + outerRadiusr * cos(angleToRadians(centerCircleAngleDegree))) *
-              (sin(angleToRadians(insideCircleAngleDegree)));
+float Torus::getY(float ringAngle,
+                  float sideAngle) {
+    float y = (innerRadius + outerRadius * cos((ringAngle)))
+              * (sin((sideAngle)));
 
     return y;
 }
 
-float Torus::getZ(float centerCircleAngleDegree,
-                  float insideCircleAngleDegree) {
-    float z = outerRadiusr * cos(angleToRadians(centerCircleAngleDegree));
+float Torus::getZ(float ringAngle,
+                  float sideAngle) {
+    float z = outerRadius * sin(ringAngle);
 
     return z;
 }
@@ -70,32 +72,63 @@ float Torus::getZ(float centerCircleAngleDegree,
 //-----------------------------------------------------------//
 
 void Torus::initVertices() {
-    int vertexCount = sidesCount * ringsCount;
     vertices.clear();
-    vertices.resize(vertexCount);
+    edges.clear();
 
-    int currentVertexIndex = 0;
-    const unsigned int MAX_ANGLE = 360;
-    for(unsigned int j = 0; j < ringsCount; j++){
-        float ringIndex = ((float)j / ringsCount) * MAX_ANGLE;
-        for(unsigned int i = 0; i < sidesCount; i++){
-            float sideIndex = ((float)i / sidesCount) * MAX_ANGLE;
+    unsigned int currentVertexIndex = 0;
 
-            float x = this->getX(ringIndex,
-                                 sideIndex);
-            float y = this->getY(ringIndex,
-                                 sideIndex);
-            float z = this->getZ(ringIndex,
-                                 sideIndex);
+    float rd = (2 * M_PI) / ringsCount;
+    float sd = (2 * M_PI) / sidesCount;
+    float currentRAngle = 0;
+    float currentSAngle = 0;
 
-            fvec4 vertex = fvec4(x, y, z, 1.0f);
-            vertices[currentVertexIndex++] = vertex;
+    while(currentRAngle < 2*M_PI){
+        currentSAngle = 0;
+        while(currentSAngle < 2*M_PI){
+            fvec4 vertex = fvec4(this->getX(currentRAngle, currentSAngle),
+                                 this->getY(currentRAngle, currentSAngle),
+                                 this->getZ(currentRAngle, currentSAngle),
+                                 1.0f);
+            fvec4 vertex1 = fvec4(this->getX(currentRAngle + rd, currentSAngle),
+                                  this->getY(currentRAngle + rd, currentSAngle),
+                                  this->getZ(currentRAngle + rd, currentSAngle),
+                                  1.0f);
+            fvec4 vertex2 = fvec4(this->getX(currentRAngle + rd,
+                                             currentSAngle + sd),
+                                  this->getY(currentRAngle + rd,
+                                             currentSAngle + sd),
+                                  this->getZ(currentRAngle + rd,
+                                             currentSAngle + sd),
+                                  1.0f);
+            fvec4 vertex3 = fvec4(this->getX(currentRAngle,
+                                             currentSAngle + sd),
+                                  this->getY(currentRAngle,
+                                             currentSAngle + sd),
+                                  this->getZ(currentRAngle,
+                                             currentSAngle + sd),
+                                  1.0f);
+            vertices.push_back(vertex);
+            vertices.push_back(vertex1);
+            vertices.push_back(vertex2);
+            vertices.push_back(vertex3);
+
+            edges.push_back(Edge(currentVertexIndex, currentVertexIndex+1));
+            edges.push_back(Edge(currentVertexIndex + 1,
+                                 currentVertexIndex + 2));
+            edges.push_back(Edge(currentVertexIndex + 2,
+                                 currentVertexIndex + 3));
+            edges.push_back(Edge(currentVertexIndex + 3,
+                                 currentVertexIndex));
+            currentVertexIndex += 4;
+            currentSAngle += sd;
         }
+        currentRAngle += rd;
     }
 }
 
 
 void Torus::initEdges() {
+    /*
     for(unsigned int r = 0; r < ringsCount - 1; r++){
         for(unsigned int s = 0; s < sidesCount - 1; s++){
             Edge edge1(r * sidesCount + s, r * sidesCount + (s + 1));
@@ -105,5 +138,17 @@ void Torus::initEdges() {
             edges.push_back(edge2);
             edges.push_back(edge3);
         }
-    }
+    }*/
+}
+
+//-----------------------------------------------------------//
+//  PUBLIC METHODS
+//-----------------------------------------------------------//
+
+void Torus::updateNetSize(unsigned int ringsCount,
+                          unsigned int sidesCount){
+    this->ringsCount = ringsCount;
+    this->sidesCount = sidesCount;
+
+    initVertices();
 }

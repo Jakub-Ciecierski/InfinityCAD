@@ -61,6 +61,8 @@ public:
     void rotate(float dxAngle, float dyAngle, float dzAngle);
 
     void scale(float scale);
+
+    void scaleDt(float scale);
 };
 
 #endif //MG1_OBJECT_H

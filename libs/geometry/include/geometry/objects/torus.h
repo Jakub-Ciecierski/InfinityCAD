@@ -19,18 +19,18 @@ private:
     //-----------------------------------------------------------//
 
     float innerRadius;
-    float outerRadiusr;
+    float outerRadius;
 
-    unsigned int sidesCount;
     unsigned int ringsCount;
+    unsigned int sidesCount;
 
     //-----------------------------------------------------------//
     //  PRIVATE METHODS
     //-----------------------------------------------------------//
 
-    float getX(float innerRadius, float outerRadiusr);
-    float getY(float innerRadius, float outerRadiusr);
-    float getZ(float innerRadius, float outerRadiusr);
+    float getX(float ringAngle, float sideAngle);
+    float getY(float ringAngle, float sideAngle);
+    float getZ(float ringAngle, float sideAngle);
 
 protected:
     //-----------------------------------------------------------//
@@ -52,6 +52,8 @@ public:
           unsigned int ringsCount);
 
     ~Torus();
+
+    void updateNetSize(unsigned int ringsCount, unsigned int sidesCount);
 };
 
 

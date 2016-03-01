@@ -132,3 +132,9 @@ void Object::rotate(float dxAngle, float dyAngle, float dzAngle) {
 void Object::scale(float scale) {
     this->scaleFactor = scale;
 }
+
+void Object::scaleDt(float scale) {
+    this->scaleFactor += scale;
+    if(this->scaleFactor < 0.1)
+        this->scaleFactor = 0.1;
+}

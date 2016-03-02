@@ -470,8 +470,6 @@
                    </widget>
                   </item>
                  </layout>
-                 <zorder>positionFrame</zorder>
-                 <zorder>positionFrame</zorder>
                  <zorder>label_5</zorder>
                  <zorder>angleXFrame</zorder>
                  <zorder>frame_5</zorder>

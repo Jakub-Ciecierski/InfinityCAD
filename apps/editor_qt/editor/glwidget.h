@@ -19,7 +19,6 @@ class GLWidget : public QGLWidget
 {
 private:
     Camera* camera;
-    Projection* orthogonalProjection;
     Projection* perspectiveProjection;
 
     std::vector<Renderable*> renderableObjects;

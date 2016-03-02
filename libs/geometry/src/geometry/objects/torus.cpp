@@ -42,11 +42,6 @@ Torus::~Torus() {
 
 float Torus::getX(float ringAngle,
                   float sideAngle) {
-    /*
-    float x = (innerRadius + outerRadiusr
-                             * cos(angleToRadians(centerCircleAngleDegree))) *
-              (cos(angleToRadians(insideCircleAngleDegree)));
-    */
     float x = (innerRadius + outerRadius * cos(ringAngle))
               * (cos((sideAngle)));
     return x;

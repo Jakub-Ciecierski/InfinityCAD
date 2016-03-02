@@ -7,8 +7,3 @@ ObjectTreeWidget::ObjectTreeWidget(QWidget* parent) :
 {
 
 }
-
-void ObjectTreeWidget::mousePressEvent(QMouseEvent *e){
-    std::cout << "Mouse clicked" << std::endl;
-//    e->accept();
-}

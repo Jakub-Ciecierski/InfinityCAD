@@ -2,22 +2,18 @@
 // Created by jakub on 2/28/16.
 //
 
-#ifndef MG1_PERSPECTIVE_PROJECTION_H
-#define MG1_PERSPECTIVE_PROJECTION_H
+#ifndef MG1_ORTHOGONALPROJECTION_H
+#define MG1_ORTHOGONALPROJECTION_H
 
-#include <glm/gtc/matrix_transform.hpp>
 #include <geometry/projection.h>
 
-class PerspectiveProjection : public Projection{
+class PerspectiveProjection : public Projection {
 private:
     //-----------------------------------------------------------//
     //  PRIVATE FIELDS
     //-----------------------------------------------------------//
 
-    int width;
-    int height;
-
-    float FOV;
+    float r;
 
     //-----------------------------------------------------------//
     //  PRIVATE METHODS
@@ -28,7 +24,7 @@ public:
     //  CONSTRUCTORS
     //-----------------------------------------------------------//
 
-    PerspectiveProjection(int width, int height);
+    PerspectiveProjection(float r);
 
     ~PerspectiveProjection();
 
@@ -37,8 +33,7 @@ public:
     //-----------------------------------------------------------//
 
     virtual const glm::mat4 &getProjectionMatrix() override;
-
 };
 
 
-#endif //MG1_PERSPECTIVE_PROJECTION_H
+#endif //MG1_ORTHOGONALPROJECTION_H

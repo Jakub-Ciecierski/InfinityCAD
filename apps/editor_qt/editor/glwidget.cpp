@@ -3,28 +3,30 @@
 #include <drawer.h>
 #include <iostream>
 
-#include <geometry/projections/orthogonal_projection.h>
 #include <geometry/projections/perspective_projection.h>
+
+#include <QLineEdit>
 
 GLWidget::GLWidget(QWidget* parent) :
     QGLWidget(parent)
 {
-     //parent->findChild<QLineEdit*>("")
+    //QLineEdit* positionXInput = parent->findChild<QLineEdit*>("positionXInput");
+    //positionXInput->setText("2");
     /*
+    std::string str = this->objectName();
     const QObjectList& children = parent->children();
-    for(int i = 0; i < children.count; i++){
+    for(int i = 0; i < children.count(); i++){
         QObject* object = children.at(i);
-        children.
+        std::cout << object->objectName() << std::endl;
     }*/
 
     camera = new Camera();
-    camera->move(0,0,-2);
-    orthogonalProjection = new OrthogonalProjection(1.0f);
+    camera->move(0,0,0);
+    perspectiveProjection = new PerspectiveProjection(0.5f);
 
     renderableObjects.push_back(new Torus(0.5, 0.12));
     renderableObjects.push_back(new Torus(0.5, 0.12));
-    renderableObjects.push_back(new Cube());
-    renderableObjects[0]->move(0, -2, 0);
+    renderableObjects[1]->move(0, -1, -1);
 
     // Start main loop
     connect(&timer, SIGNAL(timeout()), this, SLOT(updateGL()));
@@ -35,7 +37,7 @@ GLWidget::GLWidget(QWidget* parent) :
 
 GLWidget::~GLWidget(){
     delete camera;
-    delete orthogonalProjection;
+    delete perspectiveProjection;
 
     for(unsigned int i = 0; i < renderableObjects.size(); i++){
         delete renderableObjects[i];
@@ -109,7 +111,7 @@ void GLWidget::paintGL(){
     glClear(GL_COLOR_BUFFER_BIT);
     const glm::mat4& viewMatrix = camera->getViewMatrix();
     const glm::mat4& projectionMatrix
-            = orthogonalProjection->getProjectionMatrix();
+            = perspectiveProjection->getProjectionMatrix();
     glm::mat4 VP = projectionMatrix * viewMatrix;
 
     for(unsigned int i = 0; i < renderableObjects.size(); i++){

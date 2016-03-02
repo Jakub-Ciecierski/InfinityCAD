@@ -22,7 +22,7 @@ GLWidget::GLWidget(QWidget* parent) :
 
     camera = new Camera();
     camera->move(0,0,0);
-    perspectiveProjection = new PerspectiveProjection(0.5f);
+    perspectiveProjection = new PerspectiveProjection(10.0f);
 
     renderableObjects.push_back(new Torus(0.5, 0.12));
     renderableObjects.push_back(new Torus(0.5, 0.12));

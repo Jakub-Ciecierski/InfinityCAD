@@ -5,10 +5,10 @@
 #include "drawer.h"
 #include <GL/gl.h>
 
-const double PI_OVER_180 = M_PI/180;
+const float PI_OVER_180 = M_PI/180;
 
 float angleToRadians(float angle) {
-    double radians = angle * PI_OVER_180;
+    float radians = angle * PI_OVER_180;
     return radians;
 }
 

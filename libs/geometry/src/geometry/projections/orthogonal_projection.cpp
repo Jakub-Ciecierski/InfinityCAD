@@ -12,6 +12,8 @@ using namespace glm;
 
 OrthogonalProjection::OrthogonalProjection(float r) :
     r(r){
+    projectionMatrix = mat4(1.0f);
+    projectionMatrix[3].w = 1.0f / r;
 }
 
 OrthogonalProjection::~OrthogonalProjection() {
@@ -23,8 +25,5 @@ OrthogonalProjection::~OrthogonalProjection() {
 //-----------------------------------------------------------//
 
 const mat4 &OrthogonalProjection::getProjectionMatrix() {
-    projectionMatrix = mat4(1.0f);
-    projectionMatrix[3].w = 1.0f / r;
-
     return projectionMatrix;
 }

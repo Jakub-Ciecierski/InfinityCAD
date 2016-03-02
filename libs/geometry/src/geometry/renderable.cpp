@@ -46,6 +46,10 @@ void Renderable::render(const mat4 &VP) {
 
     for(unsigned int i = 0; i < verticesCount; i++){
         transformedVertices[i] = MVP * vertices[i];
+
+        transformedVertices[i].x /= transformedVertices[i].w;
+        transformedVertices[i].y /= transformedVertices[i].w;
+        transformedVertices[i].z /= transformedVertices[i].w;
     }
 
     const vector<Edge>& edges = getEdges();
@@ -56,13 +60,11 @@ void Renderable::render(const mat4 &VP) {
         unsigned int index1 = edges[i].getVertex1();
         unsigned int index2 = edges[i].getVertex2();
 
-        glVertex3f(transformedVertices[index1].x,
-                   transformedVertices[index1].y,
-                   transformedVertices[index1].z);
+        glVertex2f(transformedVertices[index1].x,
+                   transformedVertices[index1].y);
 
-        glVertex3f(transformedVertices[index2].x,
-                   transformedVertices[index2].y,
-                   transformedVertices[index2].z);
+        glVertex2f(transformedVertices[index2].x,
+                   transformedVertices[index2].y);
     }
     glEnd();
 }

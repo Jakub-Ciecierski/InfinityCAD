@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <allobjectstreemanager.h>
 
 namespace Ui {
 class MainWindow;
@@ -17,6 +18,10 @@ public:
 
 private:
     Ui::MainWindow *ui;
+
+    AllObjectsTreeManager* allObjectsTreeManager;
+
+    void setUpAllObjectsTree();
 };
 
 #endif // MAINWINDOW_H

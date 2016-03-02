@@ -6,9 +6,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    allObjectsTreeManager = new AllObjectsTreeManager(ui->allObjectsTree);
+
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete allObjectsTreeManager;
 }

@@ -1,6 +1,8 @@
 #ifndef GLWIDGET_H
 #define GLWIDGET_H
 
+#include "mainwindow.h"
+
 #include <QGLWidget>
 #include <QTimer>
 #include <QtGui>

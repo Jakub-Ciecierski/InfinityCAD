@@ -23,10 +23,14 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    glwidget.cpp
+    glwidget.cpp \
+    allobjecttreecreator.cpp \
+    objecttreewidget.cpp
 
 HEADERS  += mainwindow.h \
-    glwidget.h
+    glwidget.h \
+    allobjectstreemanager.h \
+    objecttreewidget.h
 
 FORMS    += mainwindow.ui
 

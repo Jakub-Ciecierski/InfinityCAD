@@ -1,3 +1,4 @@
+#include "mainwindow.h"
 #include "glwidget.h"
 #include <drawer.h>
 #include <iostream>
@@ -8,17 +9,24 @@
 GLWidget::GLWidget(QWidget* parent) :
     QGLWidget(parent)
 {
-    width = 543;
-    height = 449;
+     //parent->findChild<QLineEdit*>("")
+    /*
+    const QObjectList& children = parent->children();
+    for(int i = 0; i < children.count; i++){
+        QObject* object = children.at(i);
+        children.
+    }*/
 
     camera = new Camera();
-    camera->move(0,0,0);
-    orthogonalProjection = new OrthogonalProjection(1000.0f);
-    perspectiveProjection = new PerspectiveProjection(width, height);
+    camera->move(0,0,-2);
+    orthogonalProjection = new OrthogonalProjection(1.0f);
 
     renderableObjects.push_back(new Torus(0.5, 0.12));
+    renderableObjects.push_back(new Torus(0.5, 0.12));
     renderableObjects.push_back(new Cube());
+    renderableObjects[0]->move(0, -2, 0);
 
+    // Start main loop
     connect(&timer, SIGNAL(timeout()), this, SLOT(updateGL()));
     timer.start(16);
 
@@ -28,7 +36,6 @@ GLWidget::GLWidget(QWidget* parent) :
 GLWidget::~GLWidget(){
     delete camera;
     delete orthogonalProjection;
-    delete perspectiveProjection;
 
     for(unsigned int i = 0; i < renderableObjects.size(); i++){
         delete renderableObjects[i];
@@ -67,28 +74,27 @@ void GLWidget::keyPressEvent(QKeyEvent *event){
     }else if(event->key() == Qt::Key_Minus){
         camera->scaleDt(-0.05);
     }
-    /*
-    if(event->key() == Qt::Key_1){
+
+    if(event->key() == Qt::Key_Q){
         Torus* torus = (Torus*)renderableObjects[0];
         torus->updateNetSize(30,30);
     }
-    if(event->key() == Qt::Key_2){
+    if(event->key() == Qt::Key_W){
         Torus* torus = (Torus*)renderableObjects[0];
         torus->updateNetSize(90,90);
     }
-    if(event->key() == Qt::Key_3){
+    if(event->key() == Qt::Key_E){
         Torus* torus = (Torus*)renderableObjects[0];
         torus->updateNetSize(120,120);
     }
-    if(event->key() == Qt::Key_4){
+    if(event->key() == Qt::Key_R){
         Torus* torus = (Torus*)renderableObjects[0];
         torus->updateNetSize(180,180);
     }
-    if(event->key() == Qt::Key_5){
+    if(event->key() == Qt::Key_T){
         Torus* torus = (Torus*)renderableObjects[0];
         torus->updateNetSize(360,360);
-    }*/
-
+    }
 }
 
 void GLWidget::keyReleaseEvent(QKeyEvent *event){

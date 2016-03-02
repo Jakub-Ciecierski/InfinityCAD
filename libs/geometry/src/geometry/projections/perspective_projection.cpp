@@ -11,15 +11,9 @@ PerspectiveProjection::PerspectiveProjection(int width, int height) {
     this->width = width;
     this->height = height;
 
-    FOV = 90;
+    FOV = 130;
     projectionMatrix = mat4(1.0f);
-}
 
-PerspectiveProjection::~PerspectiveProjection() {
-
-}
-
-const glm::mat4 &PerspectiveProjection::getProjectionMatrix() {
     float d = (width / 2) * (1 / tan(angleToRadians(FOV/2)));
     float cx = width / 2;
     float cy = height / 2;
@@ -30,7 +24,7 @@ const glm::mat4 &PerspectiveProjection::getProjectionMatrix() {
     projectionMatrix[0].w = 0;
 
     projectionMatrix[1].x = 0;
-    projectionMatrix[1].y = d;
+    projectionMatrix[1].y = -d;
     projectionMatrix[1].z = 0;
     projectionMatrix[1].w = 0;
 
@@ -41,8 +35,14 @@ const glm::mat4 &PerspectiveProjection::getProjectionMatrix() {
 
     projectionMatrix[3].x = 0;
     projectionMatrix[3].y = 0;
-    projectionMatrix[3].z = 0;
+    projectionMatrix[3].z = 1;
     projectionMatrix[3].w = 0;
+}
 
+PerspectiveProjection::~PerspectiveProjection() {
+
+}
+
+const glm::mat4 &PerspectiveProjection::getProjectionMatrix() {
     return projectionMatrix;
 }

@@ -28,22 +28,22 @@ void Cube::initVertices() {
     vertices.resize(8);
     vertices[0].x = -1;
     vertices[0].y = 1;
-    vertices[0].z = 0;
+    vertices[0].z = -1;
     vertices[0].w = 1;
 
     vertices[1].x = 1;
     vertices[1].y = 1;
-    vertices[1].z = 0;
+    vertices[1].z = -1;
     vertices[1].w = 1;
 
     vertices[2].x = 1;
     vertices[2].y = -1;
-    vertices[2].z = 0;
+    vertices[2].z = -1;
     vertices[2].w = 1;
 
     vertices[3].x = -1;
     vertices[3].y = -1;
-    vertices[3].z = 0;
+    vertices[3].z = -1;
     vertices[3].w = 1;
 
     vertices[4].x = -1;

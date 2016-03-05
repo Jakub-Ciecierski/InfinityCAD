@@ -5,7 +5,7 @@
 #ifndef MG1_ORTHOGONALPROJECTION_H
 #define MG1_ORTHOGONALPROJECTION_H
 
-#include <gm/projection.h>
+#include <gm/projections/projection.h>
 
 class PerspectiveProjection : public Projection {
 private:

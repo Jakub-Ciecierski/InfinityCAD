@@ -3,8 +3,10 @@
 #include <iostream>
 
 #include <gm/objects/torus.h>
+#include <gm/objects/cube.h>
 #include <gm/projections/perspective_projection.h>
-#include <gm/cameras/camera.h>
+#include <gm/cameras/camera_std.h>
+#include <gm/cameras/camera_fps.h>
 
 #include <QLineEdit>
 
@@ -24,12 +26,18 @@ GLWidget::GLWidget(QWidget* parent) :
     scene = new Scene();
 
     Projection* perspectiveProjection = new PerspectiveProjection(10.0f);
-    Camera* camera = new Camera(perspectiveProjection);
+    CameraFPS* fpsCamera = new CameraFPS(perspectiveProjection);
 
-    scene->addCamera(camera);
-    scene->setActiveCamera(camera);
+    scene->addCamera(fpsCamera);
+    scene->setActiveCamera(fpsCamera);
 
-    scene->addRenderObject(new Torus(0.2, 0.1));
+    Torus* t = new Torus(0.4, 0.3);
+    t->move(0,0,5);
+    Torus* tt = new Torus(0.2, 0.1);
+    Cube* c  = new Cube();
+    scene->addRenderObject(tt);
+    scene->addRenderObject(t);
+    scene->addRenderObject(c);
 
     // Start main loop
     connect(&timer, SIGNAL(timeout()), this, SLOT(updateGL()));
@@ -39,6 +47,8 @@ GLWidget::GLWidget(QWidget* parent) :
 
     renderer = new Renderer(scene);
 
+    isMouseDrag = false;
+
 }
 
 GLWidget::~GLWidget(){
@@ -46,30 +56,27 @@ GLWidget::~GLWidget(){
 }
 
 void GLWidget::keyPressEvent(QKeyEvent *event){
-    Camera* camera = renderer->getScene()->getActiveCamera();
-    // Move X
-    if(event->key() == Qt::Key_Left){
-        camera->move(-0.1, 0, 0);
-    }if(event->key() == Qt::Key_Right){
-        camera->move(0.1, 0, 0);
+    float speedBoost = 1.0f;
+    if(event->modifiers() & Qt::ShiftModifier){
+        speedBoost = 10.0f;
     }
-    // Move Y
-    if(event->key() == Qt::Key_Up){
-        camera->move(0.0, 0.1, 0);
-    }else if(event->key() == Qt::Key_Down){
-        camera->move(0.0,-0.1, 0);
-    }
+    CameraFPS* camera = (CameraFPS*)renderer->getScene()->getActiveCamera();
 
-    // Rotate
-    if(event->key() == Qt::Key_8){
-        camera->rotate(-10.0, 0.0, 0);
-    }else if(event->key() == Qt::Key_2){
-        camera->rotate(10.0, 0.0, 0);
+    if(event->key() == Qt::Key_W){
+        camera->moveForward(speedBoost);
+    }if(event->key() == Qt::Key_S){
+        camera->moveBackward(speedBoost);
     }
-    if(event->key() == Qt::Key_4){
-        camera->rotate(0.0, -10.0, 0);
-    }else if(event->key() == Qt::Key_6){
-        camera->rotate(0.0, 10.0, 0);
+    if(event->key() == Qt::Key_A){
+        camera->moveLeft(speedBoost);
+    }if(event->key() == Qt::Key_D){
+        camera->moveRight(speedBoost);
+    }
+    if(event->key() == Qt::Key_Q){
+        camera->moveDown(speedBoost);
+    }
+    if(event->key() == Qt::Key_E){
+        camera->moveUp(speedBoost);
     }
 
     // Scale
@@ -81,9 +88,80 @@ void GLWidget::keyPressEvent(QKeyEvent *event){
 
 }
 
-void GLWidget::keyReleaseEvent(QKeyEvent *event){
-
+void GLWidget::mousePressEvent(QMouseEvent *event){
+    if(event->buttons() & Qt::LeftButton){
+        mouseDragPosition = event->pos();
+        isMouseDrag = true;
+    }
+    else if(event->buttons() & Qt::RightButton){
+        rightMouseDragPosition = event->pos();
+        isRightMouseDrag = true;
+    }
 }
+
+void GLWidget::mouseReleaseEvent(QMouseEvent *event){
+    isMouseDrag = false;
+    isRightMouseDrag = false;
+}
+
+void GLWidget::mouseMoveEvent(QMouseEvent *event){
+    float moveDist = 0.002 * 5;
+
+    // Move in FPS style
+    if(isMouseDrag){
+        CameraFPS* camera = (CameraFPS*)renderer->getScene()->getActiveCamera();
+        int dx = event->x() - mouseDragPosition.x();
+        int dy = event->y() - mouseDragPosition.y();
+
+        if(event->modifiers() & Qt::ShiftModifier){
+            float speedBoost = 0.2;
+            if(dx < 0)
+                camera->moveLeft(speedBoost);
+            if(dx > 0)
+                camera->moveRight(speedBoost);
+            if(dy < 0)
+                camera->moveForward(speedBoost);
+            if(dy > 0)
+                camera->moveBackward(speedBoost);
+        }else{
+            camera->horizontalAngleDegree += dx * camera->mouseSpeed;
+            camera->verticalAngleDegree -= dy * camera->mouseSpeed;
+        }
+        mouseDragPosition = event->pos();
+    }
+    // Move along axis
+    if(isRightMouseDrag){
+        Camera* camera = renderer->getScene()->getActiveCamera();
+
+        int dx = event->x() - rightMouseDragPosition.x();
+        int dy = event->y() - rightMouseDragPosition.y();
+
+        // Z
+        if(event->modifiers() & Qt::ControlModifier){
+            camera->move(0, 0, (float)dy * moveDist);
+        }
+        // Y
+        if(event->modifiers() & Qt::ShiftModifier){
+            camera->move(0, (float)dy * moveDist, 0);
+        }
+        // X
+        else{
+            camera->move((float)dy * moveDist, 0, 0);
+        }
+
+        rightMouseDragPosition = event->pos();
+    }
+}
+
+void GLWidget::wheelEvent(QWheelEvent* event){
+    float speedBoost = 0.0001;
+    if(event->modifiers() & Qt::ControlModifier){
+        speedBoost = 0.001;
+    }
+    int x = event->delta();
+
+    renderer->getScene()->scaleDt(x*speedBoost);
+};
 
 void GLWidget::initializeGL() {
     renderer->initialize();

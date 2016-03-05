@@ -22,9 +22,19 @@ private:
     int height;
 
     QTimer timer;
+
+    QPoint mouseDragPosition;
+    QPoint rightMouseDragPosition;
+    bool isMouseDrag;
+    bool isRightMouseDrag;
 protected:
     void keyPressEvent(QKeyEvent *event);
-    void keyReleaseEvent(QKeyEvent *event);
+
+    void mousePressEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
+
+    void wheelEvent(QWheelEvent* event);
 public:
     explicit GLWidget(QWidget* parent = 0);
     ~GLWidget();

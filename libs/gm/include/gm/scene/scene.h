@@ -5,17 +5,16 @@
 #ifndef MG1_SCENE_H
 #define MG1_SCENE_H
 
-
-#include <gm/cameras/camera.h>
 #include <gm/color/color.h>
 #include <gm/rendering/render_object.h>
+#include <gm/cameras/camera_std.h>
 #include "gm/scene/scene_id.h"
 #include "scene_id_factory.h"
 
 /*
  * Scene is responsible for deallocating all objects in the scene
  */
-class Scene {
+class Scene : public Object{
 private:
     //-----------------------------------------------------------//
     //  PRIVATE FIELDS
@@ -69,7 +68,7 @@ public:
     void setColor(Color color);
 
     const std::vector<RenderObject*>& getRenderObjects();
-    const std::vector<Camera*>& getCameras();
+    const std::vector<Camera *>& getCameras();
 
     Camera* getActiveCamera();
 

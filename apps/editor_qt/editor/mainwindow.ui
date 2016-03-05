@@ -34,7 +34,7 @@
      <widget class="GLWidget" name="sceneRendererWidget" native="true">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-        <horstretch>5</horstretch>
+        <horstretch>6</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
@@ -44,7 +44,7 @@
      <widget class="QFrame" name="sceneOptionFrame">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-        <horstretch>3</horstretch>
+        <horstretch>2</horstretch>
         <verstretch>5</verstretch>
        </sizepolicy>
       </property>
@@ -112,7 +112,7 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>229</width>
+                <width>145</width>
                 <height>501</height>
                </rect>
               </property>

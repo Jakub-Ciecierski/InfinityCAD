@@ -64,7 +64,6 @@ void RenderObject::drawLines(const std::vector<glm::vec4>& vertices){
 
             v1 = vec4(xc,yc,0,0);
         }
-
         glVertex2f(v1.x,
                    v1.y);
         glVertex2f(v2.x,

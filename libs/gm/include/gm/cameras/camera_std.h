@@ -1,0 +1,29 @@
+//
+// Created by jakub on 2/27/16.
+//
+
+#ifndef MG1_CAMERA_STD_H
+#define MG1_CAMERA_STD_H
+
+#include <gm/object.h>
+#include <gm/projections/projection.h>
+#include "gm/cameras/camera.h"
+
+/*
+ * Camera produces View and Projection Matrix.
+ *
+ * Takes ownership over projection.
+ */
+class CameraSTD : public Camera{
+
+public:
+    CameraSTD(Projection* projection);
+
+    ~CameraSTD();
+
+    const glm::mat4& getVPMatrix();
+};
+
+
+#endif //MG1_CAMERA_STD_H
+

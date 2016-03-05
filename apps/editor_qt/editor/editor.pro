@@ -25,12 +25,14 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     glwidget.cpp \
     allobjecttreecreator.cpp \
-    objecttreewidget.cpp
+    objecttreewidget.cpp \
+    controls.cpp
 
 HEADERS  += mainwindow.h \
     glwidget.h \
     allobjectstreemanager.h \
-    objecttreewidget.h
+    objecttreewidget.h \
+    controls.h
 
 FORMS    += mainwindow.ui
 

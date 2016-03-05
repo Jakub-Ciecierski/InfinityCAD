@@ -3,7 +3,6 @@
 //
 
 #include <gtest/gtest.h>
-#include <gm/cameras/camera.h>
 
 TEST(Camera, UpdateMVP) {
 

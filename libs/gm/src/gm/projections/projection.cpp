@@ -2,7 +2,8 @@
 // Created by jakub on 2/28/16.
 //
 
-#include <gm/projection.h>
+
+#include <gm/projections/projection.h>
 
 Projection::Projection() {
 

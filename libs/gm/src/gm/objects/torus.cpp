@@ -3,7 +3,6 @@
 //
 
 #include <gm/objects/torus.h>
-#include <iostream>
 
 using namespace glm;
 using namespace std;

@@ -93,6 +93,8 @@ const mat4& Object::getModelMatrix() {
 }
 
 void Object::clampAngles() {
+    // TODO check for overflow
+    /*
     rotationAngles.x = rotationAngles.x < 0 ? 0 : rotationAngles.x;
     rotationAngles.y = rotationAngles.y < 0 ? 0 : rotationAngles.y;
     rotationAngles.z = rotationAngles.z < 0 ? 0 : rotationAngles.z;
@@ -100,6 +102,7 @@ void Object::clampAngles() {
     rotationAngles.x = rotationAngles.x > 360 ? 360 : rotationAngles.x;
     rotationAngles.y = rotationAngles.y > 360 ? 360 : rotationAngles.y;
     rotationAngles.z = rotationAngles.z > 360 ? 360 : rotationAngles.z;
+     */
 }
 
 //-----------------------------------------------------------//

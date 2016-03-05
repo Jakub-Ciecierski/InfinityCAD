@@ -74,7 +74,7 @@ const std::vector<Camera*>& Scene::getCameras() {
 }
 
 
-Camera* Scene::getActiveCamera() {
+Camera * Scene::getActiveCamera() {
     return this->activeCamera;
 }
 
@@ -89,6 +89,7 @@ void Scene::renderScene() {
     // activeCamera is not checked against null on purpose to
     // increase performance.
     glm::mat4 VP = activeCamera->getVPMatrix();
+    VP = VP * getModelMatrix();
 
     for(unsigned int i = 0; i < sceneObjects.size(); i++){
         sceneObjects[i]->render(VP);

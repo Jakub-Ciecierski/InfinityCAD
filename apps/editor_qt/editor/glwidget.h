@@ -9,19 +9,14 @@
 
 #include <vector>
 
-#include <geometry/objects/torus.h>
-#include <geometry/objects/cube.h>
-#include <geometry/cameras/camera.h>
-#include <geometry/projection.h>
-#include <geometry/renderable.h>
+#include <gm/rendering/renderer.h>
+#include <gm/scene/scene.h>
 
 class GLWidget : public QGLWidget
 {
 private:
-    Camera* camera;
-    Projection* perspectiveProjection;
-
-    std::vector<Renderable*> renderableObjects;
+    Renderer* renderer;
+    Scene* scene;
 
     int width;
     int height;

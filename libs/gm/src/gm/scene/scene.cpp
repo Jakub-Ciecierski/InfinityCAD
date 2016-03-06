@@ -89,6 +89,7 @@ void Scene::renderScene() {
     // activeCamera is not checked against null on purpose to
     // increase performance.
     glm::mat4 VP = activeCamera->getVPMatrix();
+    // We want to able to move the scene
     VP = VP * getModelMatrix();
 
     for(unsigned int i = 0; i < sceneObjects.size(); i++){

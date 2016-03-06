@@ -11,7 +11,7 @@ using namespace glm;
 CameraFPS::CameraFPS(Projection *projection) :
         Camera(projection) {
     buttonsSpeed = 0.5;
-    mouseSpeed = 0.09;
+    mouseSpeed = 0.03;
 }
 
 CameraFPS::~CameraFPS() {
@@ -28,38 +28,42 @@ const glm::mat4 &CameraFPS::getVPMatrix() {
 
     right = vec3(sin(angleToRadians(horizontalAngleDegree) - M_PI_2),
                  0,
-                 cos(angleToRadians(horizontalAngleDegree) - M_PI_2));
+                 cos(angleToRadians(horizontalAngleDegree) - M_PI_2)
+                 );
 
     direction = normalize(direction);
     right = normalize(right);
+
     up = cross(right, direction);
     up = normalize(up);
 
-    vec3 X = cross(up, direction);
+    vec3 X = right;
     up = cross(direction, X);
 
     X = normalize(X);
     up = normalize(up);
 
     mat4 viewM = mat4();
-    viewM[0][0] = X.x;
-    viewM[1][0] = X.y;
-    viewM[2][0] = X.z;
-    viewM[3][0] = (X.x * position.x + X.y * position.y + X.z * position.z);
-    viewM[0][1] = up.x;
-    viewM[1][1] = up.y;
-    viewM[2][1] = up.z;
-    viewM[3][1] = (up.x * position.x + up.y * position.y + up.z * position.z);
-    viewM[0][2] = direction.x;
-    viewM[1][2] = direction.y;
-    viewM[2][2] = direction.z;
-    viewM[3][2] = (direction.x * position.x +
-                   direction.y * position.y +
-                   direction.z * position.z);
-    viewM[0][3] = 0;
-    viewM[1][3] = 0;
-    viewM[2][3] = 0;
-    viewM[3][3] = 1.0f;
+    viewM[0].x = X.x;
+    viewM[1].x = X.y;
+    viewM[2].x = X.z;
+    viewM[3].x = (X.x * -position.x + X.y * -position.y + X.z * -position.z);
+
+    viewM[0].y = up.x;
+    viewM[1].y = up.y;
+    viewM[2].y = up.z;
+    viewM[3].y = (up.x * -position.x + up.y * -position.y + up.z * -position.z);
+
+    viewM[0].z = direction.x;
+    viewM[1].z = direction.y;
+    viewM[2].z = direction.z;
+    viewM[3].z = (direction.x * -position.x +
+                   direction.y * -position.y +
+                   direction.z * -position.z);
+    viewM[0].w = 0;
+    viewM[1].w = 0;
+    viewM[2].w = 0;
+    viewM[3].w = 1.0f;
 
     VP = projection->getProjectionMatrix() * viewM;
 
@@ -93,11 +97,11 @@ void CameraFPS::moveDown() {
 
 
 void CameraFPS::moveForward(float speedBoost) {
-    position -= direction * buttonsSpeed * speedBoost;
+    position += direction * buttonsSpeed * speedBoost;
 }
 
 void CameraFPS::moveBackward(float speedBoost) {
-    position += direction * buttonsSpeed * speedBoost;
+    position -= direction * buttonsSpeed * speedBoost;
 }
 
 void CameraFPS::moveLeft(float speedBoost) {

@@ -10,6 +10,17 @@
 
 #include <QLineEdit>
 
+bool keys[1024];
+const int KEY_W = 0;
+const int KEY_S = 1;
+const int KEY_A = 2;
+const int KEY_D = 3;
+const int KEY_Q = 4;
+const int KEY_E = 5;
+const int KEY_MINUS = 6;
+const int KEY_PLUS = 7;
+const int KEY_SHIFT = 8;
+
 GLWidget::GLWidget(QWidget* parent) :
     QGLWidget(parent)
 {
@@ -56,36 +67,58 @@ GLWidget::~GLWidget(){
 }
 
 void GLWidget::keyPressEvent(QKeyEvent *event){
-    float speedBoost = 1.0f;
-    if(event->modifiers() & Qt::ShiftModifier){
-        speedBoost = 10.0f;
-    }
     CameraFPS* camera = (CameraFPS*)renderer->getScene()->getActiveCamera();
-
     if(event->key() == Qt::Key_W){
-        camera->moveForward(speedBoost);
+        keys[KEY_W] = true;
     }if(event->key() == Qt::Key_S){
-        camera->moveBackward(speedBoost);
+        keys[KEY_S] = true;
     }
     if(event->key() == Qt::Key_A){
-        camera->moveLeft(speedBoost);
+        keys[KEY_A] = true;
     }if(event->key() == Qt::Key_D){
-        camera->moveRight(speedBoost);
+        keys[KEY_D] = true;
     }
     if(event->key() == Qt::Key_Q){
-        camera->moveDown(speedBoost);
+        keys[KEY_Q] = true;
     }
     if(event->key() == Qt::Key_E){
-        camera->moveUp(speedBoost);
+        keys[KEY_E] = true;
     }
-
-    // Scale
     if(event->key() == Qt::Key_Plus){
-        camera->scaleDt(0.05);
+        keys[KEY_PLUS] = true;
     }else if(event->key() == Qt::Key_Minus){
-        camera->scaleDt(-0.05);
+        keys[KEY_MINUS] = true;
     }
+    if(event->key() == Qt::Key_Shift){
+        keys[KEY_SHIFT] = true;
+    }
+}
 
+void GLWidget::keyReleaseEvent(QKeyEvent *event){
+    if(event->key() == Qt::Key_W){
+        keys[KEY_W] = false;
+    }if(event->key() == Qt::Key_S){
+        keys[KEY_S] = false;
+    }
+    if(event->key() == Qt::Key_A){
+        keys[KEY_A] = false;
+    }if(event->key() == Qt::Key_D){
+        keys[KEY_D] = false;
+    }
+    if(event->key() == Qt::Key_Q){
+        keys[KEY_Q] = false;
+    }
+    if(event->key() == Qt::Key_E){
+        keys[KEY_E] = false;
+    }
+    if(event->key() == Qt::Key_Plus){
+        keys[KEY_PLUS] = false;
+    }else if(event->key() == Qt::Key_Minus){
+        keys[KEY_MINUS] = false;
+    }
+    if(event->key() == Qt::Key_Shift){
+        keys[KEY_SHIFT] = false;
+    }
 }
 
 void GLWidget::mousePressEvent(QMouseEvent *event){
@@ -153,6 +186,40 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event){
     }
 }
 
+void GLWidget::do_movement(){
+    CameraFPS* camera = (CameraFPS*)renderer->getScene()->getActiveCamera();
+
+    float speedBoost = 0.6f;
+    if(keys[KEY_SHIFT]){
+        speedBoost = 3.0f;
+    }
+
+    if(keys[KEY_W]){
+        camera->moveForward(speedBoost);
+    }
+    if(keys[KEY_S]){
+        camera->moveBackward(speedBoost);
+    }
+    if(keys[KEY_A]){
+        camera->moveLeft(speedBoost);
+    }
+    if(keys[KEY_D]){
+        camera->moveRight(speedBoost);
+    }
+    if(keys[KEY_Q]){
+        camera->moveDown(speedBoost/3);
+    }
+    if(keys[KEY_E]){
+        camera->moveUp(speedBoost/3);
+    }
+    if(keys[KEY_MINUS]){
+        camera->scaleDt(0.05);
+    }
+    if(keys[KEY_PLUS]){
+        camera->scaleDt(-0.05);
+    }
+}
+
 void GLWidget::wheelEvent(QWheelEvent* event){
     float speedBoost = 0.0001;
     if(event->modifiers() & Qt::ControlModifier){
@@ -168,6 +235,7 @@ void GLWidget::initializeGL() {
 }
 
 void GLWidget::paintGL(){
+    do_movement();
     renderer->render();
 }
 

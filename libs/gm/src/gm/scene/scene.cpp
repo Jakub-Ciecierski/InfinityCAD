@@ -20,6 +20,10 @@ Scene::~Scene() {
     }
 }
 
+//--------------------//
+//  SETTERS
+//--------------------//
+
 SceneID Scene::addRenderObject(RenderObject *object) {
     this->sceneObjects.push_back(object);
 
@@ -65,6 +69,10 @@ void Scene::setColor(Color color) {
                  sceneColor.Alpha);
 }
 
+//--------------------//
+//  GETTERS
+//--------------------//
+
 const std::vector<RenderObject*>& Scene::getRenderObjects() {
     return this->sceneObjects;
 }
@@ -83,16 +91,29 @@ const Color &Scene::getColor() {
     return this->sceneColor;
 }
 
+const glm::mat4& Scene::getMVP() {
+    return this->MVP;
+}
+
+//--------------------//
+//  PUBLIC
+//--------------------//
+
 void Scene::renderScene() {
     glClearColor(sceneColor.R, sceneColor.G, sceneColor.B,
                  sceneColor.Alpha);
-    // activeCamera is not checked against null on purpose to
-    // increase performance.
-    glm::mat4 VP = activeCamera->getVPMatrix();
-    // We want to able to move the scene
-    VP = VP * getModelMatrix();
 
     for(unsigned int i = 0; i < sceneObjects.size(); i++){
-        sceneObjects[i]->render(VP);
+        sceneObjects[i]->render(MVP);
+    }
+}
+
+void Scene::update() {
+    Object::update();
+
+    MVP = activeCamera->getVPMatrix() * getModelMatrix();
+
+    for(unsigned int i = 0; i < sceneObjects.size(); i++){
+        sceneObjects[i]->update();
     }
 }

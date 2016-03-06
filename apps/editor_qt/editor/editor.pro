@@ -7,6 +7,7 @@
 PROJECT_ROOT=$$PWD/../../..
 DEPENDENCIES=${PROJECT_ROOT}/depedencies
 
+system(echo "asd")
 
 mytarget.target = .buildfile
 mytarget.commands = make -C $$PWD/../../../ install
@@ -51,6 +52,7 @@ else:unix: LIBS += -L$$PWD/../../../dependencies/lib/glm/ -lglm
 
 INCLUDEPATH += $$PWD/../../../dependencies/include/glm
 DEPENDPATH += $$PWD/../../../dependencies/include/glm
+
 
 # EXTERNALS
 

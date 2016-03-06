@@ -30,17 +30,17 @@ class Object {
 private:
     glm::mat4 modelMatrix;
 
-    glm::mat4 getTranslationMatrix();
+    glm::mat4 constructTranslationMatrix();
 
     /*
      * RotateMatrix = XRotate * YRotate * ZRotate
      */
-    glm::mat4 getRotationMatrix();
-    glm::mat4 getXRotationMatrix();
-    glm::mat4 getYRotationMatrix();
-    glm::mat4 getZRotationMatrix();
+    glm::mat4 constructRotationMatrix();
+    glm::mat4 constructXRotationMatrix();
+    glm::mat4 constructYRotationMatrix();
+    glm::mat4 constructZRotationMatrix();
 
-    glm::mat4 getScaleMatrix();
+    glm::mat4 constructScaleMatrix();
 
 protected:
     glm::vec3 position;
@@ -79,6 +79,8 @@ public:
     void scale(float scale);
 
     void scaleDt(float scale);
+
+    virtual void update();
 };
 
 #endif //MG1_OBJECT_H

@@ -25,16 +25,20 @@ const int KEY_SPACE = 9;
 GLWidget::GLWidget(QWidget* parent) :
     QGLWidget(parent)
 {
-    //QLineEdit* positionXInput = parent->findChild<QLineEdit*>("positionXInput");
-    //positionXInput->setText("2");
-    /*
-    std::string str = this->objectName();
-    const QObjectList& children = parent->children();
-    for(int i = 0; i < children.count(); i++){
-        QObject* object = children.at(i);
-        std::cout << object->objectName() << std::endl;
-    }*/
+    setupRenderer();
+    setupFocusPolicy();
+    setupRayTracing();
 
+    startMainLoop();
+
+    isMouseDrag = false;
+}
+
+GLWidget::~GLWidget(){
+    delete renderer;
+}
+
+void GLWidget::setupRenderer(){
     scene = new Scene();
 
     Projection* perspectiveProjection = new PerspectiveProjection(1.0f);
@@ -51,21 +55,28 @@ GLWidget::GLWidget(QWidget* parent) :
     scene->addRenderObject(t);
     scene->addRenderObject(c);
 
+    renderer = new Renderer(scene);
+}
+
+void GLWidget::setupFocusPolicy(){
+    this->setFocusPolicy(Qt::ClickFocus);
+}
+
+void GLWidget::setupRayTracing(){
+    ellipsoid = new Ellipsoid(0.2, 0.3, 0.1);
+    ray = new Ray();
+    ray->ellipsoid = ellipsoid;
+}
+
+void GLWidget::startMainLoop(){
     // Start main loop
     connect(&timer, SIGNAL(timeout()), this, SLOT(updateGL()));
     timer.start(16);
-
-    this->setFocusPolicy(Qt::ClickFocus);
-
-    renderer = new Renderer(scene);
-
-    isMouseDrag = false;
-
 }
 
-GLWidget::~GLWidget(){
-    delete renderer;
-}
+//-----------------------------------------------------------//
+//  KEY EVENTS
+//-----------------------------------------------------------//
 
 void GLWidget::keyPressEvent(QKeyEvent *event){
     CameraFPS* camera = (CameraFPS*)renderer->getScene()->getActiveCamera();
@@ -127,6 +138,10 @@ void GLWidget::keyReleaseEvent(QKeyEvent *event){
         keys[KEY_SPACE] = false;
     }
 }
+
+//-----------------------------------------------------------//
+//  MOUSE
+//-----------------------------------------------------------//
 
 void GLWidget::mousePressEvent(QMouseEvent *event){
     if(event->buttons() & Qt::LeftButton){
@@ -238,12 +253,19 @@ void GLWidget::wheelEvent(QWheelEvent* event){
     renderer->getScene()->scaleDt(x*speedBoost);
 };
 
+//-----------------------------------------------------------//
+//  OPENGL
+//-----------------------------------------------------------//
+
 void GLWidget::initializeGL() {
     renderer->initialize();
 }
 
 void GLWidget::paintGL(){
     do_movement();
+    renderer->update();
+
+    //ray->rayCasting(*renderer);
     renderer->render();
 }
 

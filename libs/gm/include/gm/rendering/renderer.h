@@ -20,8 +20,8 @@ private:
     Scene* scene;
 
     // Current screen dimensions
-    unsigned int width;
-    unsigned int height;
+    unsigned int widthPixels;
+    unsigned int heightPixels;
 
     //-----------------------------------------------------------//
     //  PRIVATE METHODS
@@ -42,6 +42,12 @@ public:
     //  PUBLIC METHODS
     //-----------------------------------------------------------//
 
+    float xPixelToGLCoord(int p);
+    float yPixelToGLCoord(int p);
+
+    int xGLToPixelCoord(float p);
+    int yGLToPixelCoord(float p);
+
     Scene* getScene();
 
     unsigned int getWindowWidth();
@@ -53,6 +59,8 @@ public:
     void render();
 
     void resize(unsigned int width, unsigned int height);
+
+    void update();
 };
 
 

@@ -27,7 +27,13 @@ private:
 
     Color sceneColor;
 
+public:
+    virtual void update() override;
+
     SceneIDFactory sceneIDFactory;
+
+    // Model of the scene, View and Projection from camera
+    glm::mat4 MVP;
 
     //-----------------------------------------------------------//
     //  PRIVATE METHODS
@@ -73,6 +79,8 @@ public:
     Camera* getActiveCamera();
 
     const Color& getColor();
+
+    const glm::mat4& getMVP();
 
     void renderScene();
 };

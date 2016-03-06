@@ -4,7 +4,6 @@
 
 #include <gm/object.h>
 #include <gm/angle_to_radians.h>
-#include <iostream>
 
 using namespace glm;
 
@@ -26,7 +25,7 @@ Object::~Object() {
 //  PRIVATE METHODS
 //-----------------------------------------------------------//
 
-mat4 Object::getTranslationMatrix() {
+mat4 Object::constructTranslationMatrix() {
     mat4 translateMatrix = mat4(1.0f);
 
     translateMatrix[3].x = position.x;
@@ -36,13 +35,14 @@ mat4 Object::getTranslationMatrix() {
     return translateMatrix;
 }
 
-mat4 Object::getRotationMatrix() {
+mat4 Object::constructRotationMatrix() {
     mat4 rotationMatrix
-            = getXRotationMatrix() * getYRotationMatrix() * getZRotationMatrix();
+            = constructXRotationMatrix() * constructYRotationMatrix() *
+                    constructZRotationMatrix();
     return rotationMatrix;
 }
 
-mat4 Object::getXRotationMatrix() {
+mat4 Object::constructXRotationMatrix() {
     mat4 xRotateMatrix = mat4(1.0f);
 
     xRotateMatrix[1].y = cos(angleToRadians(rotationAngles.x));
@@ -54,7 +54,7 @@ mat4 Object::getXRotationMatrix() {
     return xRotateMatrix;
 }
 
-mat4 Object::getYRotationMatrix() {
+mat4 Object::constructYRotationMatrix() {
     mat4 yRotateMatrix = mat4(1.0f);
 
     yRotateMatrix[0].x = cos(angleToRadians(rotationAngles.y));
@@ -64,7 +64,7 @@ mat4 Object::getYRotationMatrix() {
     return yRotateMatrix;
 }
 
-mat4 Object::getZRotationMatrix() {
+mat4 Object::constructZRotationMatrix() {
     mat4 zRotateMatrix = mat4(1.0f);
 
     zRotateMatrix[0].x = cos(angleToRadians(rotationAngles.z));
@@ -74,7 +74,7 @@ mat4 Object::getZRotationMatrix() {
     return zRotateMatrix;
 }
 
-mat4 Object::getScaleMatrix() {
+mat4 Object::constructScaleMatrix() {
     mat4 scaleMatrix = mat4(1.0f);
 
     scaleMatrix[0].x = scaleFactor;
@@ -88,8 +88,6 @@ mat4 Object::getScaleMatrix() {
 //-----------------------------------------------------------//
 
 const mat4& Object::getModelMatrix() {
-    this->modelMatrix
-            = getTranslationMatrix() * getRotationMatrix() * getScaleMatrix();
     return modelMatrix;
 }
 
@@ -139,4 +137,10 @@ void Object::scaleDt(float scale) {
     this->scaleFactor += scale;
     if(this->scaleFactor < 0.1)
         this->scaleFactor = 0.1;
+}
+
+void Object::update() {
+    this->modelMatrix = constructTranslationMatrix() *
+                        constructRotationMatrix() *
+                        constructScaleMatrix();
 }

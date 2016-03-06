@@ -11,15 +11,14 @@
 
 #include <gm/rendering/renderer.h>
 #include <gm/scene/scene.h>
+#include <gm/ray_casting/ray.h>
+#include <gm/ray_casting/ellipsoid.h>
 
 class GLWidget : public QGLWidget
 {
 private:
     Renderer* renderer;
     Scene* scene;
-
-    int width;
-    int height;
 
     QTimer timer;
 
@@ -28,7 +27,16 @@ private:
     bool isMouseDrag;
     bool isRightMouseDrag;
 
+    void setupRenderer();
+    void setupFocusPolicy();
+    void setupRayTracing();
+
+    void startMainLoop();
+
     void do_movement();
+
+    Ray* ray;
+    Ellipsoid* ellipsoid;
 protected:
     void keyPressEvent(QKeyEvent *event);
     void keyReleaseEvent(QKeyEvent *event);

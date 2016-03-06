@@ -113,10 +113,43 @@
                 <x>0</x>
                 <y>0</y>
                 <width>145</width>
-                <height>501</height>
+                <height>626</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_5">
+               <item>
+                <widget class="QFrame" name="ellipsoidFrame">
+                 <property name="frameShape">
+                  <enum>QFrame::StyledPanel</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Raised</enum>
+                 </property>
+                 <layout class="QVBoxLayout" name="verticalLayout_6">
+                  <item>
+                   <widget class="QSlider" name="ellipsoidARadiusSlider">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSlider" name="ellipsoidBRadiusSlider">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSlider" name="ellipsoidCRadiusSlider">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
                <item>
                 <widget class="QFrame" name="positionFrame">
                  <property name="sizePolicy">

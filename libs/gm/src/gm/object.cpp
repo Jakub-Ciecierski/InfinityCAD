@@ -4,6 +4,7 @@
 
 #include <gm/object.h>
 #include <gm/angle_to_radians.h>
+#include <iostream>
 
 using namespace glm;
 

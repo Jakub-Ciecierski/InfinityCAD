@@ -20,6 +20,7 @@ const int KEY_E = 5;
 const int KEY_MINUS = 6;
 const int KEY_PLUS = 7;
 const int KEY_SHIFT = 8;
+const int KEY_SPACE = 9;
 
 GLWidget::GLWidget(QWidget* parent) :
     QGLWidget(parent)
@@ -36,7 +37,7 @@ GLWidget::GLWidget(QWidget* parent) :
 
     scene = new Scene();
 
-    Projection* perspectiveProjection = new PerspectiveProjection(10.0f);
+    Projection* perspectiveProjection = new PerspectiveProjection(1.0f);
     CameraFPS* fpsCamera = new CameraFPS(perspectiveProjection);
 
     scene->addCamera(fpsCamera);
@@ -92,6 +93,9 @@ void GLWidget::keyPressEvent(QKeyEvent *event){
     if(event->key() == Qt::Key_Shift){
         keys[KEY_SHIFT] = true;
     }
+    if(event->key() == Qt::Key_Space){
+        keys[KEY_SPACE] = true;
+    }
 }
 
 void GLWidget::keyReleaseEvent(QKeyEvent *event){
@@ -118,6 +122,9 @@ void GLWidget::keyReleaseEvent(QKeyEvent *event){
     }
     if(event->key() == Qt::Key_Shift){
         keys[KEY_SHIFT] = false;
+    }
+    if(event->key() == Qt::Key_Space){
+        keys[KEY_SPACE] = false;
     }
 }
 
@@ -174,13 +181,14 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event){
             camera->move(0, 0, (float)dy * moveDist);
         }
         // Y
-        if(event->modifiers() & Qt::ShiftModifier){
+        else if(event->modifiers() & Qt::ShiftModifier){
             camera->move(0, (float)dy * moveDist, 0);
         }
         // X
         else{
             camera->move((float)dy * moveDist, 0, 0);
         }
+
 
         rightMouseDragPosition = event->pos();
     }
@@ -190,7 +198,7 @@ void GLWidget::do_movement(){
     CameraFPS* camera = (CameraFPS*)renderer->getScene()->getActiveCamera();
 
     float speedBoost = 0.6f;
-    if(keys[KEY_SHIFT]){
+    if(keys[KEY_SPACE]){
         speedBoost = 3.0f;
     }
 

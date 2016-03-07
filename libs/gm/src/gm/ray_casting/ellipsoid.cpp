@@ -83,3 +83,15 @@ float Ellipsoid::intersect(float x, float y,
 
     return z;
 }
+
+void Ellipsoid::setARadius(float r) {
+    a = r;
+}
+
+void Ellipsoid::setBRadius(float r) {
+    b = r;
+}
+
+void Ellipsoid::setCRadius(float r) {
+    c = r;
+}

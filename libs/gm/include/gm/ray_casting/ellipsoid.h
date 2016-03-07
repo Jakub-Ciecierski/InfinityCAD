@@ -27,6 +27,7 @@ private:
 
 
 public:
+
     //-----------------------------------------------------------//
     //  CONSTRUCTORS
     //-----------------------------------------------------------//
@@ -39,6 +40,10 @@ public:
 
     float intersect(float x, float y,
                    const glm::mat4& MVPMatrix);
+
+    void setARadius(float r);
+    void setBRadius(float r);
+    void setCRadius(float r);
 };
 
 

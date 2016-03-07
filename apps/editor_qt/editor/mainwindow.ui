@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>837</width>
-    <height>545</height>
+    <width>1133</width>
+    <height>703</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -112,8 +112,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>145</width>
-                <height>626</height>
+                <width>205</width>
+                <height>623</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -126,25 +126,185 @@
                   <enum>QFrame::Raised</enum>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_6">
+                  <property name="spacing">
+                   <number>0</number>
+                  </property>
+                  <property name="leftMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="topMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="rightMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>0</number>
+                  </property>
                   <item>
-                   <widget class="QSlider" name="ellipsoidARadiusSlider">
+                   <widget class="QLabel" name="ellipsoidPropertiesLabel">
+                    <property name="text">
+                     <string>Ellipsoid</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="Line" name="line_3">
                     <property name="orientation">
                      <enum>Qt::Horizontal</enum>
                     </property>
                    </widget>
                   </item>
                   <item>
-                   <widget class="QSlider" name="ellipsoidBRadiusSlider">
-                    <property name="orientation">
-                     <enum>Qt::Horizontal</enum>
+                   <widget class="QFrame" name="ellipsoidARadiusFrame">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                      <horstretch>5</horstretch>
+                      <verstretch>5</verstretch>
+                     </sizepolicy>
                     </property>
+                    <property name="frameShape">
+                     <enum>QFrame::StyledPanel</enum>
+                    </property>
+                    <property name="frameShadow">
+                     <enum>QFrame::Raised</enum>
+                    </property>
+                    <layout class="QHBoxLayout" name="horizontalLayout_9">
+                     <item>
+                      <widget class="QLabel" name="ellipsoidARadiusLabel">
+                       <property name="maximumSize">
+                        <size>
+                         <width>15</width>
+                         <height>15</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>a</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QSlider" name="ellipsoidARadiusSlider">
+                       <property name="maximum">
+                        <number>99</number>
+                       </property>
+                       <property name="orientation">
+                        <enum>Qt::Horizontal</enum>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
                    </widget>
                   </item>
                   <item>
-                   <widget class="QSlider" name="ellipsoidCRadiusSlider">
-                    <property name="orientation">
-                     <enum>Qt::Horizontal</enum>
+                   <widget class="QFrame" name="ellipsoidBRadiusFrame">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                      <horstretch>5</horstretch>
+                      <verstretch>5</verstretch>
+                     </sizepolicy>
                     </property>
+                    <property name="frameShape">
+                     <enum>QFrame::StyledPanel</enum>
+                    </property>
+                    <property name="frameShadow">
+                     <enum>QFrame::Raised</enum>
+                    </property>
+                    <layout class="QHBoxLayout" name="horizontalLayout_10">
+                     <item>
+                      <widget class="QLabel" name="ellipsoidBRadiusLabel">
+                       <property name="maximumSize">
+                        <size>
+                         <width>15</width>
+                         <height>15</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>b</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QSlider" name="ellipsoidBRadiusSlider">
+                       <property name="orientation">
+                        <enum>Qt::Horizontal</enum>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QFrame" name="ellipsoidCRadiusFrame">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                      <horstretch>5</horstretch>
+                      <verstretch>5</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="frameShape">
+                     <enum>QFrame::StyledPanel</enum>
+                    </property>
+                    <property name="frameShadow">
+                     <enum>QFrame::Raised</enum>
+                    </property>
+                    <layout class="QHBoxLayout" name="horizontalLayout_11">
+                     <item>
+                      <widget class="QLabel" name="ellipsoidCRadiusLabel">
+                       <property name="maximumSize">
+                        <size>
+                         <width>15</width>
+                         <height>15</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>c</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QSlider" name="ellipsoidCRadiusSlider">
+                       <property name="orientation">
+                        <enum>Qt::Horizontal</enum>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QFrame" name="rayLightIntensityFrame">
+                    <property name="frameShape">
+                     <enum>QFrame::StyledPanel</enum>
+                    </property>
+                    <property name="frameShadow">
+                     <enum>QFrame::Raised</enum>
+                    </property>
+                    <layout class="QHBoxLayout" name="horizontalLayout_12">
+                     <item>
+                      <widget class="QLabel" name="rayLightIntensityLabel">
+                       <property name="maximumSize">
+                        <size>
+                         <width>15</width>
+                         <height>15</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>L</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QSlider" name="rayLightIntensitySlider">
+                       <property name="orientation">
+                        <enum>Qt::Horizontal</enum>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
                    </widget>
                   </item>
                  </layout>
@@ -168,6 +328,21 @@
                   <number>1</number>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_3">
+                  <property name="spacing">
+                   <number>0</number>
+                  </property>
+                  <property name="leftMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="topMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="rightMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>0</number>
+                  </property>
                   <item>
                    <widget class="QLabel" name="positionLabel">
                     <property name="sizePolicy">
@@ -347,6 +522,21 @@
                   <enum>QFrame::Raised</enum>
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_4">
+                  <property name="spacing">
+                   <number>0</number>
+                  </property>
+                  <property name="leftMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="topMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="rightMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>0</number>
+                  </property>
                   <item>
                    <widget class="QLabel" name="label_5">
                     <property name="text">
@@ -519,6 +709,21 @@
                   <enum>QFrame::Raised</enum>
                  </property>
                  <layout class="QHBoxLayout" name="horizontalLayout_8">
+                  <property name="spacing">
+                   <number>0</number>
+                  </property>
+                  <property name="leftMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="topMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="rightMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>0</number>
+                  </property>
                   <item>
                    <widget class="QLabel" name="scaleLabel">
                     <property name="text">
@@ -564,7 +769,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>837</width>
+     <width>1133</width>
      <height>25</height>
     </rect>
    </property>
@@ -584,6 +789,15 @@
    <extends>QWidget</extends>
    <header>glwidget.h</header>
    <container>1</container>
+   <slots>
+    <signal>ellipsoidARadiusChanged(int)</signal>
+    <signal>ellipsoidBRadiusChanged(int)</signal>
+    <signal>ellipsoidCRadiusChanged(int)</signal>
+    <slot>setEllipsoidARadius(int)</slot>
+    <slot>setEllipsoidBRadius(int)</slot>
+    <slot>setEllipsoidCRadius(int)</slot>
+    <slot>setRayLightIntensity(int)</slot>
+   </slots>
   </customwidget>
   <customwidget>
    <class>ObjectTreeWidget</class>
@@ -592,5 +806,70 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>ellipsoidARadiusSlider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>sceneRendererWidget</receiver>
+   <slot>setEllipsoidARadius(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>738</x>
+     <y>189</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>465</x>
+     <y>192</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>ellipsoidBRadiusSlider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>sceneRendererWidget</receiver>
+   <slot>setEllipsoidBRadius(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>726</x>
+     <y>230</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>510</x>
+     <y>272</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>ellipsoidCRadiusSlider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>sceneRendererWidget</receiver>
+   <slot>setEllipsoidCRadius(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>743</x>
+     <y>284</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>363</x>
+     <y>367</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>rayLightIntensitySlider</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>sceneRendererWidget</receiver>
+   <slot>setRayLightIntensity(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>754</x>
+     <y>321</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>433</x>
+     <y>361</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

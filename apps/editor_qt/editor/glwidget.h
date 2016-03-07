@@ -2,7 +2,7 @@
 #define GLWIDGET_H
 
 #include "mainwindow.h"
-
+#include <QObject>
 #include <QGLWidget>
 #include <QTimer>
 #include <QtGui>
@@ -16,6 +16,7 @@
 
 class GLWidget : public QGLWidget
 {
+    Q_OBJECT
 private:
     Renderer* renderer;
     Scene* scene;
@@ -37,6 +38,8 @@ private:
 
     Ray* ray;
     Ellipsoid* ellipsoid;
+    float sliderValueDivider;
+
 protected:
     void keyPressEvent(QKeyEvent *event);
     void keyReleaseEvent(QKeyEvent *event);
@@ -53,6 +56,18 @@ public:
     void initializeGL();
     void paintGL();
     void resizeGL(int width, int height);
+
+public slots:
+    void setEllipsoidARadius(int value);
+    void setEllipsoidBRadius(int value);
+    void setEllipsoidCRadius(int value);
+
+    void setRayLightIntensity(int value);
+
+signals:
+    void ellipsoidARadiusChanged(int value);
+    void ellipsoidBRadiusChanged(int value);
+    void ellipsoidCRadiusChanged(int value);
 };
 
 #endif // GLWIDGET_H

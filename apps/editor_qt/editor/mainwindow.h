@@ -22,6 +22,7 @@ private:
     AllObjectsTreeManager* allObjectsTreeManager;
 
     void setUpAllObjectsTree();
+    void setupBinding();
 };
 
 #endif // MAINWINDOW_H

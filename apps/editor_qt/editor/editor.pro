@@ -7,8 +7,6 @@
 PROJECT_ROOT=$$PWD/../../..
 DEPENDENCIES=${PROJECT_ROOT}/depedencies
 
-system(echo "asd")
-
 mytarget.target = .buildfile
 mytarget.commands = make -C $$PWD/../../../ install
 QMAKE_EXTRA_TARGETS += mytarget
@@ -22,15 +20,15 @@ CONFIG += c++11
 TARGET = editor
 TEMPLATE = app
 
-SOURCES += main.cpp\
+SOURCES += glwidget.cpp \
+        main.cpp\
         mainwindow.cpp \
-    glwidget.cpp \
     allobjecttreecreator.cpp \
     objecttreewidget.cpp \
     controls.cpp
 
-HEADERS  += mainwindow.h \
-    glwidget.h \
+HEADERS  += glwidget.h \
+    mainwindow.h \
     allobjectstreemanager.h \
     objecttreewidget.h \
     controls.h

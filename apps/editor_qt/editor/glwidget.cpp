@@ -63,8 +63,22 @@ void GLWidget::setupFocusPolicy(){
 }
 
 void GLWidget::setupRayTracing(){
-    ellipsoid = new Ellipsoid(0.2, 0.3, 0.1);
-    ray = new Ray();
+    sliderValueDivider = 10.0f;
+
+    float a = 0.2;
+    float b = 0.3;
+    float c = 0.1;
+    ellipsoid = new Ellipsoid(a, b, c);
+
+    ellipsoidARadiusChanged(a * sliderValueDivider);
+    emit ellipsoidBRadiusChanged(b * sliderValueDivider);
+    emit ellipsoidCRadiusChanged(c * sliderValueDivider);
+
+    ellipsoidARadiusChanged(55);
+    emit ellipsoidBRadiusChanged(b * sliderValueDivider);
+    emit ellipsoidCRadiusChanged(c * sliderValueDivider);
+
+    ray = new Ray(renderer);
     ray->ellipsoid = ellipsoid;
 }
 
@@ -79,7 +93,7 @@ void GLWidget::startMainLoop(){
 //-----------------------------------------------------------//
 
 void GLWidget::keyPressEvent(QKeyEvent *event){
-    CameraFPS* camera = (CameraFPS*)renderer->getScene()->getActiveCamera();
+
     if(event->key() == Qt::Key_W){
         keys[KEY_W] = true;
     }if(event->key() == Qt::Key_S){
@@ -188,7 +202,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event){
     if(isRightMouseDrag){
         Camera* camera = renderer->getScene()->getActiveCamera();
 
-        int dx = event->x() - rightMouseDragPosition.x();
+        //int dx = event->x() - rightMouseDragPosition.x();
         int dy = event->y() - rightMouseDragPosition.y();
 
         // Z
@@ -266,9 +280,33 @@ void GLWidget::paintGL(){
     renderer->update();
 
     //ray->rayCasting(*renderer);
+    //ray->adaptiveRayCasting(*renderer,4);
     renderer->render();
 }
 
 void GLWidget::resizeGL(int width, int height){
     renderer->resize(width, height);
+    //renderer->resize(100, 100);
 }
+
+//-----------------------------------------------------------//
+//  SLOTS
+//-----------------------------------------------------------//
+
+void GLWidget::setEllipsoidARadius(int  value){
+    this->ellipsoid->setARadius(float(value) / sliderValueDivider);
+}
+
+void GLWidget::setEllipsoidBRadius(int  value){
+    this->ellipsoid->setBRadius(float(value) / sliderValueDivider);
+}
+
+void GLWidget::setEllipsoidCRadius(int  value){
+    this->ellipsoid->setCRadius(float(value) / sliderValueDivider);
+}
+
+void GLWidget::setRayLightIntensity(int  value){
+
+}
+
+#include "moc_glwidget.cpp"

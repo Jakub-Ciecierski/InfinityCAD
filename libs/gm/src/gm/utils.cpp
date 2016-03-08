@@ -22,3 +22,8 @@ void printMat4(const mat4& mat){
     << mat[3].x << sep << mat[3].y << sep
     << mat[3].z << sep << mat[3].w << std::endl;
 }
+
+void printvec3(const vec3& v){
+    std::string sep = ",    ";
+    std::cout << "[" << v.x << ", " << v.y << ", " << v.z << "]" << std::endl;
+}

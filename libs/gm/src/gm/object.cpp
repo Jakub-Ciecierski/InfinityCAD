@@ -139,6 +139,10 @@ void Object::scaleDt(float scale) {
         this->scaleFactor = 0.1;
 }
 
+const vec3& Object::getPosition() {
+    return this->position;
+}
+
 void Object::update() {
     this->modelMatrix = constructTranslationMatrix() *
                         constructRotationMatrix() *

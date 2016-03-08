@@ -6,18 +6,20 @@
 #include <GL/gl.h>
 #include <gm/ray_casting/ray_constants.h>
 #include <iostream>
+#include <gm/utils.h>
 
 using namespace glm;
 
 Ray::Ray(Renderer* renderer) : renderer(renderer) {
-
+    resetAdaptiveRayCasting();
 }
 
 void Ray::rayCasting(Renderer& renderer) {
-    static int lol = 1;
     Scene* scene = renderer.getScene();
     unsigned int width = renderer.getWindowWidth();
     unsigned int height = renderer.getWindowHeight();
+
+    ellipsoid->updateDMVPMatrix(scene->getMVP());
 
     glBegin(GL_POINTS);
     for(unsigned int x = 0; x < width; x++){
@@ -25,16 +27,17 @@ void Ray::rayCasting(Renderer& renderer) {
         for(unsigned int y = 0; y < height; y++){
             float yGL = renderer.yPixelToGLCoord(y);
 
+            //float z = ellipsoid->intersect(xGL, yGL);
             float z = ellipsoid->intersect(xGL, yGL,
-                                           scene->getMVP());
+                                           scene->getActiveCamera()->getPosition());
 
-            if(z != RAY_NO_SOLUTION){
-                glColor3f(1.0, 0.5, 0);
+            if(z == RAY_NO_SOLUTION){
+                const Color& c = scene->getColor();
+                glColor3f(c.R, c.G, c.B);
             }
             else {
-                Color c = scene->getColor();
-
-                glColor3f(c.R, c.G, c.B);
+                Color surfaceColor = computeLightIntensity(vec3(xGL,yGL, z));
+                glColor3f(surfaceColor.R, surfaceColor.G, surfaceColor.B);
             }
 
             glVertex2f(xGL,
@@ -44,24 +47,30 @@ void Ray::rayCasting(Renderer& renderer) {
     glEnd();
 }
 
-void Ray::adaptiveRayCasting(Renderer &renderer, int exponent) {
+bool Ray::adaptiveRayCasting(Renderer &renderer, int exponent) {
+    bool maxTileCountReached = false;
+
     Scene* scene = renderer.getScene();
+    ellipsoid->updateDMVPMatrix(scene->getMVP());
+
     unsigned int width = renderer.getWindowWidth();
     unsigned int height = renderer.getWindowHeight();
 
-    int tileWidthCount = 1;
-    int tileHeightCount = 1;
-/*
-    std::cout << "width: " << width << std::endl;
-    std::cout << "height: " << height << std::endl;
-*/
-    while(tileWidthCount <= width){
-        computeTiledWindow(width, height,
-                           tileWidthCount, tileHeightCount);
-        tileWidthCount *= exponent;
-        tileHeightCount *= exponent;
-    }
+    computeTiledWindow(width, height,
+                       tileWidthCount, tileHeightCount);
 
+    if(tileWidthCount == width && tileHeightCount == height)
+        maxTileCountReached = true;
+
+    tileWidthCount *= exponent;
+    tileHeightCount *= exponent;
+
+    if(tileWidthCount > width) {
+        tileWidthCount = width;
+    }
+    if(tileHeightCount > height) tileHeightCount = height;
+
+    return maxTileCountReached;
 }
 
 void Ray::computeTiledWindow(int width, int height,
@@ -99,23 +108,86 @@ void Ray::computeTile(int xtileID, int ytileID,
 */
     // Compute intersectiong of first pixel in tile
     float z = ellipsoid->intersect(xStartGL, yStartGL,
-                                   renderer->getScene()->getMVP());
-    Color c = computeLightIntensity(vec4(xStartGL, yStartGL, z, 1));
+                                   renderer->getScene()->
+                                           getActiveCamera()->getPosition());
     glBegin(GL_POINTS);
-    glColor3f(c.R, c.G, c.B);
+    if(z == RAY_NO_SOLUTION){
+        const Color& c = renderer->getScene()->getColor();
+        glColor3f(c.R, c.G, c.B);
+    }
+    else {
+        Color c = computeLightIntensity(vec3(xStartGL, yStartGL, z));
+        glColor3f(c.R, c.G, c.B);
+    }
     for(int x = xStart; x < xStart + tileWidth; x++){
         for(int y = yStart; y < yStart + tileHeight; y++){
             glVertex2f(xStartGL, yStartGL);
+
         }
     }
     glEnd();
 }
 
-Color Ray::computeLightIntensity(const vec4 &position) {
-    if(position.z != RAY_NO_SOLUTION){
-        return Color(1.0, 0.5, 0);
-    } else {
-        Color c = renderer->getScene()->getColor();
-        return Color(c.R, c.G, c.B);
-    }
+Color Ray::computeLightIntensity(const vec3& p) {
+    const vec3& eyePosition =
+            renderer->getScene()->getActiveCamera()->getPosition();
+    vec3 N = normalize(ellipsoid->derivative(p));
+    vec3 V = normalize(p - eyePosition);
+
+    /*
+    std::cout << "-----------" << std::endl;
+    printvec3(eyePosition);
+    printvec3(N);
+    printvec3(V);
+*/
+    float dot = (V.x * N.x) + (V.y * N.y) + (V.z * N.z);
+    float lightIntensity = pow(dot, intesityExponent);
+/*
+    std::cout << "dot: " << dot << std::endl;
+    std::cout << "intesityExponent: " << intesityExponent << std::endl;
+    std::cout << "lightIntensity: " << lightIntensity << std::endl;
+*/
+    const Color& c = ellipsoid->getColor();
+    if(lightIntensity < 0) lightIntensity = 0;
+    Color surfaceColor = Color(c.R * lightIntensity,
+                               c.G * lightIntensity,
+                               c.B * lightIntensity,
+                               c.Alpha);
+
+    return surfaceColor;
+}
+
+void Ray::resetAdaptiveRayCasting() {
+    tileWidthCount = 1;
+    tileHeightCount = 1;
+}
+
+bool Ray::adaptiveRayCasting_Parallel(Renderer &renderer, int exponent) {
+    Scene* scene = renderer.getScene();
+    // shouldn't be here
+    ellipsoid->updateDMVPMatrix(scene->getMVP());
+
+    unsigned int width = renderer.getWindowWidth();
+    unsigned int height = renderer.getWindowHeight();
+
+    std::vector<TileWindow> tileWindows;
+    int id;
+    // create Tiles
+    bool doneCreating = false;
+    do{
+        if(tileWidthCount == width && tileHeightCount == height)
+            doneCreating = true;
+
+        tileWidthCount *= exponent;
+        tileHeightCount *= exponent;
+        if(tileWidthCount > width) tileWidthCount = width;
+        if(tileHeightCount > height) tileHeightCount = height;
+
+        TileWindow tileWindow;
+        tileWindow.id = id;
+        tileWindow.widthWindow = width;
+        tileWindow.heightWindow = height;
+        tileWindow.tileWidthCount = tileWidthCount;
+        tileWindow.tileHeightCount = tileHeightCount;
+    }while(!doneCreating);
 }

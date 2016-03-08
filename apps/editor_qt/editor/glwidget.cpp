@@ -5,6 +5,7 @@
 #include <gm/objects/torus.h>
 #include <gm/objects/cube.h>
 #include <gm/projections/perspective_projection.h>
+#include <gm/projections/indentity_projection.h>
 #include <gm/cameras/camera_std.h>
 #include <gm/cameras/camera_fps.h>
 
@@ -41,8 +42,9 @@ GLWidget::~GLWidget(){
 void GLWidget::setupRenderer(){
     scene = new Scene();
 
-    Projection* perspectiveProjection = new PerspectiveProjection(1.0f);
-    CameraFPS* fpsCamera = new CameraFPS(perspectiveProjection);
+    //Projection* perspectiveProjection = new PerspectiveProjection(1.0f);
+    Projection* indentityProjection = new IndentityProjection();
+    CameraFPS* fpsCamera = new CameraFPS(indentityProjection);
 
     scene->addCamera(fpsCamera);
     scene->setActiveCamera(fpsCamera);
@@ -65,9 +67,9 @@ void GLWidget::setupFocusPolicy(){
 void GLWidget::setupRayTracing(){
     sliderValueDivider = 10.0f;
 
-    float a = 0.2;
-    float b = 0.3;
-    float c = 0.1;
+    float a = 2.0;
+    float b = 2.0;
+    float c = 2.0;
     ellipsoid = new Ellipsoid(a, b, c);
 
     ellipsoidARadiusChanged(a * sliderValueDivider);
@@ -80,6 +82,7 @@ void GLWidget::setupRayTracing(){
 
     ray = new Ray(renderer);
     ray->ellipsoid = ellipsoid;
+    ray->intesityExponent = 2;
 }
 
 void GLWidget::startMainLoop(){
@@ -279,9 +282,12 @@ void GLWidget::paintGL(){
     do_movement();
     renderer->update();
 
-    //ray->rayCasting(*renderer);
-    //ray->adaptiveRayCasting(*renderer,4);
-    renderer->render();
+    ray->rayCasting(*renderer);
+    /*
+    if(ray->adaptiveRayCasting(*renderer,3))
+        ray->resetAdaptiveRayCasting();
+        */
+    //renderer->render();
 }
 
 void GLWidget::resizeGL(int width, int height){
@@ -306,7 +312,7 @@ void GLWidget::setEllipsoidCRadius(int  value){
 }
 
 void GLWidget::setRayLightIntensity(int  value){
-
+    ray->intesityExponent = value;
 }
 
 #include "moc_glwidget.cpp"

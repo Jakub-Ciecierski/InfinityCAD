@@ -80,6 +80,8 @@ public:
 
     void scaleDt(float scale);
 
+    const glm::vec3& getPosition();
+
     virtual void update();
 };
 

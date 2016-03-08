@@ -20,8 +20,22 @@ private:
     void computeTile(int xtileID, int ytileID,
                      int tileWidth, int tileHeight);
 
-    Color computeLightIntensity(const glm::vec4 &position);
+    Color computeLightIntensity(const glm::vec3 &p);
 
+    int tileWidthCount;
+    int tileHeightCount;
+
+    struct TileWindow {
+        int id;
+
+        int widthWindow;
+        int heightWindow;
+
+        int tileWidthCount;
+        int tileHeightCount;
+
+        std::vector<std::vector<Color>> bitmap;
+    };
 public:
     int intesityExponent;
 
@@ -31,7 +45,14 @@ public:
 
     void rayCasting(Renderer& renderer);
 
-    void adaptiveRayCasting(Renderer& renderer, int exponent);
+    /*
+     * Returns true if reached tileCount = PixelCount
+     */
+    bool adaptiveRayCasting(Renderer& renderer, int exponent);
+
+    bool adaptiveRayCasting_Parallel(Renderer& renderer, int exponent);
+
+    void resetAdaptiveRayCasting();
 };
 
 

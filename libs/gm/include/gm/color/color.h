@@ -9,6 +9,8 @@
  * The intesitity of color belongs to the interval [0,1]
  */
 class Color {
+private:
+    void clamp();
 
 public:
     float R;

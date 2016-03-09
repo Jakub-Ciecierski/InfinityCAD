@@ -18,7 +18,8 @@ private:
                             int tileWidthCount, int tileHeightCount);
 
     void computeTile(int xtileID, int ytileID,
-                     int tileWidth, int tileHeight);
+                     int tileWidth, int tileHeight,
+                     int restWidth, int restHeight);
 
     Color computeLightIntensity(const glm::vec3 &p);
 

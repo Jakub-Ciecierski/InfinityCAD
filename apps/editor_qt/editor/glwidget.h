@@ -34,11 +34,15 @@ private:
 
     void startMainLoop();
 
-    void do_movement();
+    bool do_movement();
 
     Ray* ray;
     Ellipsoid* ellipsoid;
     float sliderValueDivider;
+    int sliderValueMax;
+    bool continueAdaptiveRendering;
+
+    bool doAdaptive;
 
 protected:
     void keyPressEvent(QKeyEvent *event);
@@ -63,6 +67,8 @@ public slots:
     void setEllipsoidCRadius(int value);
 
     void setRayLightIntensity(int value);
+
+    void setDoAdaptive(bool v);
 
 signals:
     void ellipsoidARadiusChanged(int value);

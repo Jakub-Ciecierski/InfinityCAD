@@ -67,9 +67,9 @@ void GLWidget::setupFocusPolicy(){
 void GLWidget::setupRayTracing(){
     sliderValueDivider = 10.0f;
 
-    float a = 2.0;
-    float b = 2.0;
-    float c = 2.0;
+    float a = 25.0;
+    float b = 25.0;
+    float c = 25.0;
     ellipsoid = new Ellipsoid(a, b, c);
 
     ellipsoidARadiusChanged(a * sliderValueDivider);
@@ -83,6 +83,9 @@ void GLWidget::setupRayTracing(){
     ray = new Ray(renderer);
     ray->ellipsoid = ellipsoid;
     ray->intesityExponent = 2;
+
+    continueAdaptiveRendering = true;
+    sliderValueMax = 100;
 }
 
 void GLWidget::startMainLoop(){
@@ -161,6 +164,8 @@ void GLWidget::keyReleaseEvent(QKeyEvent *event){
 //-----------------------------------------------------------//
 
 void GLWidget::mousePressEvent(QMouseEvent *event){
+    continueAdaptiveRendering = true;
+
     if(event->buttons() & Qt::LeftButton){
         mouseDragPosition = event->pos();
         isMouseDrag = true;
@@ -181,6 +186,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event){
 
     // Move in FPS style
     if(isMouseDrag){
+        continueAdaptiveRendering = true;
         CameraFPS* camera = (CameraFPS*)renderer->getScene()->getActiveCamera();
         int dx = event->x() - mouseDragPosition.x();
         int dy = event->y() - mouseDragPosition.y();
@@ -203,6 +209,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event){
     }
     // Move along axis
     if(isRightMouseDrag){
+        continueAdaptiveRendering = true;
         Camera* camera = renderer->getScene()->getActiveCamera();
 
         //int dx = event->x() - rightMouseDragPosition.x();
@@ -226,7 +233,8 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event){
     }
 }
 
-void GLWidget::do_movement(){
+bool GLWidget::do_movement(){
+    bool changed = false;
     CameraFPS* camera = (CameraFPS*)renderer->getScene()->getActiveCamera();
 
     float speedBoost = 0.6f;
@@ -236,31 +244,42 @@ void GLWidget::do_movement(){
 
     if(keys[KEY_W]){
         camera->moveForward(speedBoost);
+        changed = true;
     }
     if(keys[KEY_S]){
         camera->moveBackward(speedBoost);
+        changed = true;
     }
     if(keys[KEY_A]){
         camera->moveLeft(speedBoost);
+        changed = true;
     }
     if(keys[KEY_D]){
         camera->moveRight(speedBoost);
+        changed = true;
     }
     if(keys[KEY_Q]){
         camera->moveDown(speedBoost/3);
+        changed = true;
     }
     if(keys[KEY_E]){
         camera->moveUp(speedBoost/3);
+        changed = true;
     }
     if(keys[KEY_MINUS]){
         camera->scaleDt(0.05);
+        changed = true;
     }
     if(keys[KEY_PLUS]){
         camera->scaleDt(-0.05);
+        changed = true;
     }
+
+    return changed;
 }
 
 void GLWidget::wheelEvent(QWheelEvent* event){
+    continueAdaptiveRendering = true;
     float speedBoost = 0.0001;
     if(event->modifiers() & Qt::ControlModifier){
         speedBoost = 0.001;
@@ -279,14 +298,24 @@ void GLWidget::initializeGL() {
 }
 
 void GLWidget::paintGL(){
-    do_movement();
+    bool doneMovement = do_movement();
+    if(doneMovement){
+        continueAdaptiveRendering = true;
+    }
     renderer->update();
 
-    ray->rayCasting(*renderer);
-    /*
-    if(ray->adaptiveRayCasting(*renderer,3))
-        ray->resetAdaptiveRayCasting();
-        */
+    if(doAdaptive){
+        static int exponent = 2;
+        if(continueAdaptiveRendering){
+            if(ray->adaptiveRayCasting(*renderer,exponent)) {
+                ray->resetAdaptiveRayCasting();
+                continueAdaptiveRendering = false;
+            }
+        }
+    }else{
+        ray->rayCasting(*renderer);
+    }
+
     //renderer->render();
 }
 
@@ -300,19 +329,31 @@ void GLWidget::resizeGL(int width, int height){
 //-----------------------------------------------------------//
 
 void GLWidget::setEllipsoidARadius(int  value){
+    value = sliderValueMax - value;
     this->ellipsoid->setARadius(float(value) / sliderValueDivider);
+    continueAdaptiveRendering = true;
 }
 
 void GLWidget::setEllipsoidBRadius(int  value){
+    value = sliderValueMax - value;
     this->ellipsoid->setBRadius(float(value) / sliderValueDivider);
+    continueAdaptiveRendering = true;
 }
 
 void GLWidget::setEllipsoidCRadius(int  value){
+    value = sliderValueMax - value;
     this->ellipsoid->setCRadius(float(value) / sliderValueDivider);
+    continueAdaptiveRendering = true;
 }
 
 void GLWidget::setRayLightIntensity(int  value){
+    value = sliderValueMax - value;
     ray->intesityExponent = value;
+    continueAdaptiveRendering = true;
+}
+
+void GLWidget::setDoAdaptive(bool v){
+    doAdaptive = v;
 }
 
 #include "moc_glwidget.cpp"

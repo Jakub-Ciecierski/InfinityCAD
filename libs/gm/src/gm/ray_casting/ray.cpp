@@ -67,8 +67,14 @@ bool Ray::adaptiveRayCasting(Renderer &renderer, int exponent) {
 
     if(tileWidthCount > width) {
         tileWidthCount = width;
+        //int d = tileWidthCount - width;
+        //tileWidthCount -= d;
     }
-    if(tileHeightCount > height) tileHeightCount = height;
+    if(tileHeightCount > height) {
+        tileHeightCount = height;
+        //int d = tileHeightCount - height;
+        //tileHeightCount -= d;
+    }
 
     return maxTileCountReached;
 }
@@ -78,35 +84,49 @@ void Ray::computeTiledWindow(int width, int height,
     // add the rest to the last tile
     int restWidth = width % tileWidthCount;
     int restHeight = height % tileHeightCount;
+    //int restWidth = 0;
+    //int restHeight = 0;
 /*
     std::cout << "---------------------------" << std::endl;
     std::cout << "tileWidthCount: " << tileWidthCount << std::endl;
     std::cout << "tileHeightCount: " << tileHeightCount << std::endl;
 */
     for(int i = 0; i < tileWidthCount; i++){
+        int currentRestWidth = 0;
         int tileWidth = width / tileWidthCount;
-        if(i == tileWidthCount-1) tileWidth += restWidth;
+        if(i == 0) {
+            currentRestWidth = restWidth;
+            //tileWidth += restWidth;
+        }
 
         for(int j = 0; j < tileHeightCount; j++){
+            int currentRestHeight = 0;
             int tileHeight = height / tileHeightCount;
-            if(j == tileHeightCount-1) tileHeight += restHeight;
-            computeTile(i, j, tileWidth, tileHeight);
+            if(j == 0) {
+                currentRestHeight = restHeight;
+                //tileHeight += restHeight;
+            }
+            computeTile(i, j, tileWidth, tileHeight,
+                        currentRestWidth, currentRestHeight);
         }
     }
 }
 
+
 void Ray::computeTile(int xtileID, int ytileID,
-                      int tileWidth, int tileHeight) {
+                      int tileWidth, int tileHeight,
+                      int restWidth, int restHeight){
     int xStart = xtileID * tileWidth;
     int yStart = ytileID * tileHeight;
+
+    tileWidth += restWidth;
+    tileHeight += restHeight;
+
     float xStartGL = renderer->xPixelToGLCoord(xStart);
     float yStartGL = renderer->yPixelToGLCoord(yStart);
-/*
-    std::cout << "Tile (" << xtileID << ", " << ytileID << ")" << std::endl;
-    std::cout << "Dim ("
-    << tileWidth << ", " << tileHeight  << ")" << std::endl;
-*/
+
     // Compute intersectiong of first pixel in tile
+
     float z = ellipsoid->intersect(xStartGL, yStartGL,
                                    renderer->getScene()->
                                            getActiveCamera()->getPosition());
@@ -121,8 +141,8 @@ void Ray::computeTile(int xtileID, int ytileID,
     }
     for(int x = xStart; x < xStart + tileWidth; x++){
         for(int y = yStart; y < yStart + tileHeight; y++){
-            glVertex2f(xStartGL, yStartGL);
-
+            glVertex2f(renderer->xPixelToGLCoord(x),
+                       renderer->yPixelToGLCoord(y));
         }
     }
     glEnd();
@@ -131,8 +151,8 @@ void Ray::computeTile(int xtileID, int ytileID,
 Color Ray::computeLightIntensity(const vec3& p) {
     const vec3& eyePosition =
             renderer->getScene()->getActiveCamera()->getPosition();
-    vec3 N = normalize(ellipsoid->derivative(p));
-    vec3 V = normalize(p - eyePosition);
+    vec3 N = normalize(-ellipsoid->derivative(p));
+    vec3 V = normalize(eyePosition - p);
 
     /*
     std::cout << "-----------" << std::endl;
@@ -141,6 +161,7 @@ Color Ray::computeLightIntensity(const vec3& p) {
     printvec3(V);
 */
     float dot = (V.x * N.x) + (V.y * N.y) + (V.z * N.z);
+    if (dot < 0) dot = 0;
     float lightIntensity = pow(dot, intesityExponent);
 /*
     std::cout << "dot: " << dot << std::endl;
@@ -148,7 +169,6 @@ Color Ray::computeLightIntensity(const vec3& p) {
     std::cout << "lightIntensity: " << lightIntensity << std::endl;
 */
     const Color& c = ellipsoid->getColor();
-    if(lightIntensity < 0) lightIntensity = 0;
     Color surfaceColor = Color(c.R * lightIntensity,
                                c.G * lightIntensity,
                                c.B * lightIntensity,
@@ -158,8 +178,8 @@ Color Ray::computeLightIntensity(const vec3& p) {
 }
 
 void Ray::resetAdaptiveRayCasting() {
-    tileWidthCount = 1;
-    tileHeightCount = 1;
+    tileWidthCount = 16;
+    tileHeightCount = 16;
 }
 
 bool Ray::adaptiveRayCasting_Parallel(Renderer &renderer, int exponent) {

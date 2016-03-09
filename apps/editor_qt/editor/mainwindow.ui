@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1133</width>
-    <height>703</height>
+    <width>750</width>
+    <height>527</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -112,8 +112,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>205</width>
-                <height>623</height>
+                <width>122</width>
+                <height>645</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -148,6 +148,13 @@
                     </property>
                     <property name="alignment">
                      <set>Qt::AlignCenter</set>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QCheckBox" name="checkBox">
+                    <property name="text">
+                     <string>Adaptive</string>
                     </property>
                    </widget>
                   </item>
@@ -769,7 +776,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1133</width>
+     <width>750</width>
      <height>25</height>
     </rect>
    </property>
@@ -797,6 +804,7 @@
     <slot>setEllipsoidBRadius(int)</slot>
     <slot>setEllipsoidCRadius(int)</slot>
     <slot>setRayLightIntensity(int)</slot>
+    <slot>setDoAdaptive(bool)</slot>
    </slots>
   </customwidget>
   <customwidget>
@@ -814,8 +822,8 @@
    <slot>setEllipsoidARadius(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>738</x>
-     <y>189</y>
+     <x>1075</x>
+     <y>220</y>
     </hint>
     <hint type="destinationlabel">
      <x>465</x>
@@ -830,8 +838,8 @@
    <slot>setEllipsoidBRadius(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>726</x>
-     <y>230</y>
+     <x>1075</x>
+     <y>269</y>
     </hint>
     <hint type="destinationlabel">
      <x>510</x>
@@ -846,8 +854,8 @@
    <slot>setEllipsoidCRadius(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>743</x>
-     <y>284</y>
+     <x>1075</x>
+     <y>318</y>
     </hint>
     <hint type="destinationlabel">
      <x>363</x>
@@ -862,12 +870,28 @@
    <slot>setRayLightIntensity(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>754</x>
-     <y>321</y>
+     <x>1075</x>
+     <y>367</y>
     </hint>
     <hint type="destinationlabel">
      <x>433</x>
      <y>361</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>sceneRendererWidget</receiver>
+   <slot>setDoAdaptive(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>911</x>
+     <y>170</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>720</x>
+     <y>165</y>
     </hint>
    </hints>
   </connection>

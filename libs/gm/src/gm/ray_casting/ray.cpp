@@ -16,6 +16,7 @@ Ray::Ray(Renderer* renderer) : renderer(renderer) {
 
 void Ray::rayCasting(Renderer& renderer) {
     Scene* scene = renderer.getScene();
+
     unsigned int width = renderer.getWindowWidth();
     unsigned int height = renderer.getWindowHeight();
 
@@ -67,13 +68,9 @@ bool Ray::adaptiveRayCasting(Renderer &renderer, int exponent) {
 
     if(tileWidthCount > width) {
         tileWidthCount = width;
-        //int d = tileWidthCount - width;
-        //tileWidthCount -= d;
     }
     if(tileHeightCount > height) {
         tileHeightCount = height;
-        //int d = tileHeightCount - height;
-        //tileHeightCount -= d;
     }
 
     return maxTileCountReached;
@@ -84,8 +81,7 @@ void Ray::computeTiledWindow(int width, int height,
     // add the rest to the last tile
     int restWidth = width % tileWidthCount;
     int restHeight = height % tileHeightCount;
-    //int restWidth = 0;
-    //int restHeight = 0;
+
 /*
     std::cout << "---------------------------" << std::endl;
     std::cout << "tileWidthCount: " << tileWidthCount << std::endl;
@@ -151,24 +147,32 @@ void Ray::computeTile(int xtileID, int ytileID,
 Color Ray::computeLightIntensity(const vec3& p) {
     const vec3& eyePosition =
             renderer->getScene()->getActiveCamera()->getPosition();
-    vec3 N = normalize(-ellipsoid->derivative(p));
+    vec3 N = normalize(ellipsoid->derivative(p));
     vec3 V = normalize(eyePosition - p);
 
-    /*
-    std::cout << "-----------" << std::endl;
+/*
+    std::cout << std::endl << "-----------" << std::endl;
+    std::cout << "Intersection" << std::endl;
+    printvec3(p);
+    std::cout << "Eye" << std::endl;
     printvec3(eyePosition);
+    std::cout << "Normal:" << std::endl;
     printvec3(N);
+    std::cout << "Towards View" << std::endl;
     printvec3(V);
 */
+
     float dot = (V.x * N.x) + (V.y * N.y) + (V.z * N.z);
     if (dot < 0) dot = 0;
     float lightIntensity = pow(dot, intesityExponent);
+
 /*
     std::cout << "dot: " << dot << std::endl;
     std::cout << "intesityExponent: " << intesityExponent << std::endl;
     std::cout << "lightIntensity: " << lightIntensity << std::endl;
 */
     const Color& c = ellipsoid->getColor();
+
     Color surfaceColor = Color(c.R * lightIntensity,
                                c.G * lightIntensity,
                                c.B * lightIntensity,

@@ -49,7 +49,6 @@ public:
     void setCRadius(float r);
 
     glm::vec3 derivative(const glm::vec3&p);
-    float intersect(float x, float y);
     float intersect(float x, float y, const glm::vec3& eye);
 
     void updateDMVPMatrix(const glm::mat4& MVPMatrix);

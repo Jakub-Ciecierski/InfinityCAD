@@ -15,6 +15,8 @@ private:
     glm::vec3 right;
     glm::vec3 up;
 
+    glm::mat4 viewM;
+
 public:
     float horizontalAngleDegree;
     float verticalAngleDegree;
@@ -27,6 +29,8 @@ public:
     ~CameraFPS();
 
     const glm::mat4& getVPMatrix();
+
+    virtual void update() override;
 
     void moveForward();
     void moveBackward();

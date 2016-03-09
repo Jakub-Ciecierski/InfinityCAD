@@ -21,6 +21,15 @@ Scene::~Scene() {
 }
 
 //--------------------//
+//  PRIVAte
+//--------------------//
+
+void Scene::updateMVP() {
+    MVP = activeCamera->getVPMatrix() * getModelMatrix();
+}
+
+
+//--------------------//
 //  SETTERS
 //--------------------//
 
@@ -111,9 +120,11 @@ void Scene::renderScene() {
 void Scene::update() {
     Object::update();
 
-    MVP = activeCamera->getVPMatrix() * getModelMatrix();
-
+    activeCamera->update();
     for(unsigned int i = 0; i < sceneObjects.size(); i++){
         sceneObjects[i]->update();
     }
+
+    updateMVP();
 }
+

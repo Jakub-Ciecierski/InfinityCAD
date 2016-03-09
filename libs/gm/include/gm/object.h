@@ -48,11 +48,6 @@ protected:
     float scaleFactor;
 
     /*
-     * ModelMatrix = Translate * Rotate * Scale
-     */
-    const glm::mat4& getModelMatrix();
-
-    /*
      * Clamp angles within a fixed interval [0, 360]
      */
     void clampAngles();
@@ -81,6 +76,11 @@ public:
     void scaleDt(float scale);
 
     const glm::vec3& getPosition();
+
+    /*
+     * ModelMatrix = Translate * Rotate * Scale
+     */
+    const glm::mat4& getModelMatrix();
 
     virtual void update();
 };

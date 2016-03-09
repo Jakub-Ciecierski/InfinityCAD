@@ -45,7 +45,7 @@ void GLWidget::setupRenderer(){
     //Projection* perspectiveProjection = new PerspectiveProjection(1.0f);
     Projection* indentityProjection = new IndentityProjection();
     CameraFPS* fpsCamera = new CameraFPS(indentityProjection);
-
+    fpsCamera->move(0,0,-5);
     scene->addCamera(fpsCamera);
     scene->setActiveCamera(fpsCamera);
 
@@ -67,16 +67,15 @@ void GLWidget::setupFocusPolicy(){
 void GLWidget::setupRayTracing(){
     sliderValueDivider = 10.0f;
 
-    float a = 25.0;
-    float b = 25.0;
-    float c = 25.0;
+    float a = 6.6;
+    float b = 10.6;
+    float c = 4.6;
     ellipsoid = new Ellipsoid(a, b, c);
 
     ellipsoidARadiusChanged(a * sliderValueDivider);
     emit ellipsoidBRadiusChanged(b * sliderValueDivider);
     emit ellipsoidCRadiusChanged(c * sliderValueDivider);
 
-    ellipsoidARadiusChanged(55);
     emit ellipsoidBRadiusChanged(b * sliderValueDivider);
     emit ellipsoidCRadiusChanged(c * sliderValueDivider);
 
@@ -86,6 +85,8 @@ void GLWidget::setupRayTracing(){
 
     continueAdaptiveRendering = true;
     sliderValueMax = 100;
+
+    scene->scale(2.3);
 }
 
 void GLWidget::startMainLoop(){
@@ -235,6 +236,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event){
 
 bool GLWidget::do_movement(){
     bool changed = false;
+
     CameraFPS* camera = (CameraFPS*)renderer->getScene()->getActiveCamera();
 
     float speedBoost = 0.6f;
@@ -298,6 +300,7 @@ void GLWidget::initializeGL() {
 }
 
 void GLWidget::paintGL(){
+
     bool doneMovement = do_movement();
     if(doneMovement){
         continueAdaptiveRendering = true;
@@ -321,7 +324,6 @@ void GLWidget::paintGL(){
 
 void GLWidget::resizeGL(int width, int height){
     renderer->resize(width, height);
-    //renderer->resize(100, 100);
 }
 
 //-----------------------------------------------------------//
@@ -329,25 +331,21 @@ void GLWidget::resizeGL(int width, int height){
 //-----------------------------------------------------------//
 
 void GLWidget::setEllipsoidARadius(int  value){
-    value = sliderValueMax - value;
     this->ellipsoid->setARadius(float(value) / sliderValueDivider);
     continueAdaptiveRendering = true;
 }
 
 void GLWidget::setEllipsoidBRadius(int  value){
-    value = sliderValueMax - value;
     this->ellipsoid->setBRadius(float(value) / sliderValueDivider);
     continueAdaptiveRendering = true;
 }
 
 void GLWidget::setEllipsoidCRadius(int  value){
-    value = sliderValueMax - value;
     this->ellipsoid->setCRadius(float(value) / sliderValueDivider);
     continueAdaptiveRendering = true;
 }
 
 void GLWidget::setRayLightIntensity(int  value){
-    value = sliderValueMax - value;
     ray->intesityExponent = value;
     continueAdaptiveRendering = true;
 }

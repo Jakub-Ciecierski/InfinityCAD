@@ -27,6 +27,7 @@ private:
 
     Color sceneColor;
 
+    void updateMVP();
 public:
     virtual void update() override;
 

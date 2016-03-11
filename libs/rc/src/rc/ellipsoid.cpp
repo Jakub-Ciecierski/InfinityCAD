@@ -3,8 +3,8 @@
 //
 
 #include <glm/detail/type_mat.hpp>
-#include <gm/ray_casting/ellipsoid.h>
-#include <gm/ray_casting/ray_constants.h>
+#include <rc/ellipsoid.h>
+#include <rc/ray_constants.h>
 #include <iostream>
 #include <gm/utils.h>
 

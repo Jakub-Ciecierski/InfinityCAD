@@ -50,7 +50,7 @@ DEPENDENCIES=dependencies
 # Find all makefiles in apps
 APPS_MODULES = \
 $(addsuffix '/make' , $(shell find ${APPS} -mindepth 1 -maxdepth 1 \
-! -name 'editor_qt' -type d 2>/dev/null))
+! -name '*_qt' -type d 2>/dev/null))
 
 # Find all makefiles in libs
 LIBS_MODULES = \

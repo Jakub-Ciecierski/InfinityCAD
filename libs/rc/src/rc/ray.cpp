@@ -4,7 +4,7 @@
 
 #include <gm/ray_casting/ray.h>
 #include <GL/gl.h>
-#include <gm/ray_casting/ray_constants.h>
+#include <rc/ray_constants.h>
 #include <iostream>
 #include <gm/utils.h>
 
@@ -82,17 +82,11 @@ void Ray::computeTiledWindow(int width, int height,
     int restWidth = width % tileWidthCount;
     int restHeight = height % tileHeightCount;
 
-/*
-    std::cout << "---------------------------" << std::endl;
-    std::cout << "tileWidthCount: " << tileWidthCount << std::endl;
-    std::cout << "tileHeightCount: " << tileHeightCount << std::endl;
-*/
     for(int i = 0; i < tileWidthCount; i++){
         int currentRestWidth = 0;
         int tileWidth = width / tileWidthCount;
         if(i == 0) {
             currentRestWidth = restWidth;
-            //tileWidth += restWidth;
         }
 
         for(int j = 0; j < tileHeightCount; j++){
@@ -100,7 +94,6 @@ void Ray::computeTiledWindow(int width, int height,
             int tileHeight = height / tileHeightCount;
             if(j == 0) {
                 currentRestHeight = restHeight;
-                //tileHeight += restHeight;
             }
             computeTile(i, j, tileWidth, tileHeight,
                         currentRestWidth, currentRestHeight);
@@ -122,7 +115,6 @@ void Ray::computeTile(int xtileID, int ytileID,
     float yStartGL = renderer->yPixelToGLCoord(yStart);
 
     // Compute intersectiong of first pixel in tile
-
     float z = ellipsoid->intersect(xStartGL, yStartGL,
                                    renderer->getScene()->
                                            getActiveCamera()->getPosition());
@@ -150,27 +142,10 @@ Color Ray::computeLightIntensity(const vec3& p) {
     vec3 N = normalize(ellipsoid->derivative(p));
     vec3 V = normalize(eyePosition - p);
 
-/*
-    std::cout << std::endl << "-----------" << std::endl;
-    std::cout << "Intersection" << std::endl;
-    printvec3(p);
-    std::cout << "Eye" << std::endl;
-    printvec3(eyePosition);
-    std::cout << "Normal:" << std::endl;
-    printvec3(N);
-    std::cout << "Towards View" << std::endl;
-    printvec3(V);
-*/
-
     float dot = (V.x * N.x) + (V.y * N.y) + (V.z * N.z);
     if (dot < 0) dot = 0;
     float lightIntensity = pow(dot, intesityExponent);
 
-/*
-    std::cout << "dot: " << dot << std::endl;
-    std::cout << "intesityExponent: " << intesityExponent << std::endl;
-    std::cout << "lightIntensity: " << lightIntensity << std::endl;
-*/
     const Color& c = ellipsoid->getColor();
 
     Color surfaceColor = Color(c.R * lightIntensity,
@@ -184,34 +159,4 @@ Color Ray::computeLightIntensity(const vec3& p) {
 void Ray::resetAdaptiveRayCasting() {
     tileWidthCount = 16;
     tileHeightCount = 16;
-}
-
-bool Ray::adaptiveRayCasting_Parallel(Renderer &renderer, int exponent) {
-    Scene* scene = renderer.getScene();
-    // shouldn't be here
-    ellipsoid->updateDMVPMatrix(scene->getMVP());
-
-    unsigned int width = renderer.getWindowWidth();
-    unsigned int height = renderer.getWindowHeight();
-
-    std::vector<TileWindow> tileWindows;
-    int id;
-    // create Tiles
-    bool doneCreating = false;
-    do{
-        if(tileWidthCount == width && tileHeightCount == height)
-            doneCreating = true;
-
-        tileWidthCount *= exponent;
-        tileHeightCount *= exponent;
-        if(tileWidthCount > width) tileWidthCount = width;
-        if(tileHeightCount > height) tileHeightCount = height;
-
-        TileWindow tileWindow;
-        tileWindow.id = id;
-        tileWindow.widthWindow = width;
-        tileWindow.heightWindow = height;
-        tileWindow.tileWidthCount = tileWidthCount;
-        tileWindow.tileHeightCount = tileHeightCount;
-    }while(!doneCreating);
 }

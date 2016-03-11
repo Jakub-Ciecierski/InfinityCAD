@@ -1,0 +1,33 @@
+###############################################
+#                REQUIREMENTS                 #
+###############################################
+
+glm
+gm
+
+###############################################
+#                INSTALL                      #
+###############################################
+
+Run:
+    make install
+in order to install lib in default directory stored in ./make/install_config.sh,
+where you can also change the installation directory.
+Installation extracts the lib.so and include/ to provided directories.
+
+###############################################
+#                RELEASE                      #
+###############################################
+
+Run:
+    make release
+in order to release lib in default directory stored in ./make/release_config.sh
+where you can also change the release directory.
+
+###############################################
+#                  DEBUG                      #
+###############################################
+
+Run:
+    make
+To compile and run unit tests

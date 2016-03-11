@@ -7,7 +7,7 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <gm/rendering/renderer.h>
-#include <gm/ray_casting/ellipsoid.h>
+#include <rc/ellipsoid.h>
 
 class Ray {
 private:
@@ -23,20 +23,9 @@ private:
 
     Color computeLightIntensity(const glm::vec3 &p);
 
-    int tileWidthCount;
-    int tileHeightCount;
+    unsigned int tileWidthCount;
+    unsigned int tileHeightCount;
 
-    struct TileWindow {
-        int id;
-
-        int widthWindow;
-        int heightWindow;
-
-        int tileWidthCount;
-        int tileHeightCount;
-
-        std::vector<std::vector<Color>> bitmap;
-    };
 public:
     int intesityExponent;
 
@@ -51,7 +40,6 @@ public:
      */
     bool adaptiveRayCasting(Renderer& renderer, int exponent);
 
-    bool adaptiveRayCasting_Parallel(Renderer& renderer, int exponent);
 
     void resetAdaptiveRayCasting();
 };

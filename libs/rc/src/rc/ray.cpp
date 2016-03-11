@@ -2,7 +2,7 @@
 // Created by jakub on 3/6/16.
 //
 
-#include <gm/ray_casting/ray.h>
+#include <rc/ray.h>
 #include <GL/gl.h>
 #include <rc/ray_constants.h>
 #include <iostream>

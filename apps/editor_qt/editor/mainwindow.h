@@ -23,6 +23,7 @@ private:
 
     void setUpAllObjectsTree();
     void setupBinding();
+    void setupSplitters();
 };
 
 #endif // MAINWINDOW_H

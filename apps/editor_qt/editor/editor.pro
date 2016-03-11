@@ -53,6 +53,3 @@ DEPENDPATH += $$PWD/../../../dependencies/include/glm
 
 
 # EXTERNALS
-
-
-

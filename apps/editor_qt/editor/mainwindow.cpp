@@ -19,10 +19,7 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::setupBinding(){
-    connect(ui->sceneRendererWidget, SIGNAL(ellipsoidARadiusChanged(int)),
-            ui->ellipsoidARadiusSlider, SLOT(setValue(int)));
-    connect(ui->sceneRendererWidget, SIGNAL(ellipsoidBRadiusChanged(int)),
-            ui->ellipsoidBRadiusSlider, SLOT(setValue(int)));
-    connect(ui->sceneRendererWidget, SIGNAL(ellipsoidCRadiusChanged(int)),
-            ui->ellipsoidCRadiusSlider, SLOT(setValue(int)));
+
+    ui->splitter->setStretchFactor(0, 20);
+    ui->splitter->setStretchFactor(1, 0);
 }

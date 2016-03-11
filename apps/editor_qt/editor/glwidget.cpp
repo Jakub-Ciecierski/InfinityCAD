@@ -28,7 +28,6 @@ GLWidget::GLWidget(QWidget* parent) :
 {
     setupRenderer();
     setupFocusPolicy();
-    setupRayTracing();
 
     startMainLoop();
 
@@ -42,10 +41,9 @@ GLWidget::~GLWidget(){
 void GLWidget::setupRenderer(){
     scene = new Scene();
 
-    //Projection* perspectiveProjection = new PerspectiveProjection(1.0f);
-    Projection* indentityProjection = new IndentityProjection();
-    CameraFPS* fpsCamera = new CameraFPS(indentityProjection);
-    fpsCamera->move(0,0,-5);
+    Projection* perspectiveProjection = new PerspectiveProjection(1.0f);
+    CameraFPS* fpsCamera = new CameraFPS(perspectiveProjection);
+    fpsCamera->move(0,0,0);
     scene->addCamera(fpsCamera);
     scene->setActiveCamera(fpsCamera);
 
@@ -62,31 +60,6 @@ void GLWidget::setupRenderer(){
 
 void GLWidget::setupFocusPolicy(){
     this->setFocusPolicy(Qt::ClickFocus);
-}
-
-void GLWidget::setupRayTracing(){
-    sliderValueDivider = 10.0f;
-
-    float a = 6.6;
-    float b = 10.6;
-    float c = 4.6;
-    ellipsoid = new Ellipsoid(a, b, c);
-
-    ellipsoidARadiusChanged(a * sliderValueDivider);
-    emit ellipsoidBRadiusChanged(b * sliderValueDivider);
-    emit ellipsoidCRadiusChanged(c * sliderValueDivider);
-
-    emit ellipsoidBRadiusChanged(b * sliderValueDivider);
-    emit ellipsoidCRadiusChanged(c * sliderValueDivider);
-
-    ray = new Ray(renderer);
-    ray->ellipsoid = ellipsoid;
-    ray->intesityExponent = 2;
-
-    continueAdaptiveRendering = true;
-    sliderValueMax = 100;
-
-    scene->scale(2.3);
 }
 
 void GLWidget::startMainLoop(){
@@ -165,7 +138,6 @@ void GLWidget::keyReleaseEvent(QKeyEvent *event){
 //-----------------------------------------------------------//
 
 void GLWidget::mousePressEvent(QMouseEvent *event){
-    continueAdaptiveRendering = true;
 
     if(event->buttons() & Qt::LeftButton){
         mouseDragPosition = event->pos();
@@ -187,7 +159,6 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event){
 
     // Move in FPS style
     if(isMouseDrag){
-        continueAdaptiveRendering = true;
         CameraFPS* camera = (CameraFPS*)renderer->getScene()->getActiveCamera();
         int dx = event->x() - mouseDragPosition.x();
         int dy = event->y() - mouseDragPosition.y();
@@ -210,7 +181,6 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event){
     }
     // Move along axis
     if(isRightMouseDrag){
-        continueAdaptiveRendering = true;
         Camera* camera = renderer->getScene()->getActiveCamera();
 
         //int dx = event->x() - rightMouseDragPosition.x();
@@ -281,7 +251,6 @@ bool GLWidget::do_movement(){
 }
 
 void GLWidget::wheelEvent(QWheelEvent* event){
-    continueAdaptiveRendering = true;
     float speedBoost = 0.0001;
     if(event->modifiers() & Qt::ControlModifier){
         speedBoost = 0.001;
@@ -300,26 +269,9 @@ void GLWidget::initializeGL() {
 }
 
 void GLWidget::paintGL(){
-
-    bool doneMovement = do_movement();
-    if(doneMovement){
-        continueAdaptiveRendering = true;
-    }
+    do_movement();
     renderer->update();
-
-    if(doAdaptive){
-        static int exponent = 2;
-        if(continueAdaptiveRendering){
-            if(ray->adaptiveRayCasting(*renderer,exponent)) {
-                ray->resetAdaptiveRayCasting();
-                continueAdaptiveRendering = false;
-            }
-        }
-    }else{
-        ray->rayCasting(*renderer);
-    }
-
-    //renderer->render();
+    renderer->render();
 }
 
 void GLWidget::resizeGL(int width, int height){
@@ -330,28 +282,5 @@ void GLWidget::resizeGL(int width, int height){
 //  SLOTS
 //-----------------------------------------------------------//
 
-void GLWidget::setEllipsoidARadius(int  value){
-    this->ellipsoid->setARadius(float(value) / sliderValueDivider);
-    continueAdaptiveRendering = true;
-}
-
-void GLWidget::setEllipsoidBRadius(int  value){
-    this->ellipsoid->setBRadius(float(value) / sliderValueDivider);
-    continueAdaptiveRendering = true;
-}
-
-void GLWidget::setEllipsoidCRadius(int  value){
-    this->ellipsoid->setCRadius(float(value) / sliderValueDivider);
-    continueAdaptiveRendering = true;
-}
-
-void GLWidget::setRayLightIntensity(int  value){
-    ray->intesityExponent = value;
-    continueAdaptiveRendering = true;
-}
-
-void GLWidget::setDoAdaptive(bool v){
-    doAdaptive = v;
-}
 
 #include "moc_glwidget.cpp"

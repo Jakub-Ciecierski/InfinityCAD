@@ -20,6 +20,4 @@ MainWindow::~MainWindow()
 
 void MainWindow::setupBinding(){
 
-    ui->splitter->setStretchFactor(0, 20);
-    ui->splitter->setStretchFactor(1, 0);
 }

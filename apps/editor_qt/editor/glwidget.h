@@ -32,6 +32,9 @@ private:
     void startMainLoop();
 
     bool do_movement();
+
+    Color QColorToGMColor(const QColor& qc);
+    QColor GMColorToQColor(const Color& c);
 protected:
     void keyPressEvent(QKeyEvent *event);
     void keyReleaseEvent(QKeyEvent *event);
@@ -50,7 +53,14 @@ public:
     void resizeGL(int width, int height);
 
 public slots:
+    /*
+     * Slot connected with check box to enable 3d rendering
+     * */
+    void set3DRendering(bool value);
+    void set3DDistance(QString distance);
 
+    void leftEyeColorPicker();
+    void rightEyeColorPicker();
 signals:
 };
 

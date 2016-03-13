@@ -25,6 +25,10 @@ RenderObject::~RenderObject() {
 //  PRIVATE METHODS
 //-----------------------------------------------------------//
 
+void RenderObject::setSurfaceColor(const Color &color) {
+    glColor3f(color.R, color.G, color.B);
+}
+
 const vector<vec4>& RenderObject::getVertices() {
     return this->vertices;
 }
@@ -36,7 +40,6 @@ const vector<Edge>& RenderObject::getEdges() {
 void RenderObject::drawLines(const std::vector<glm::vec4>& vertices){
     const vector<Edge>& edges = getEdges();
 
-    glColor3f(color.R, color.G, color.B);
     glBegin(GL_LINES);
     for(unsigned int i = 0; i < edges.size(); i++){
         unsigned int index1 = edges[i].getVertex1();
@@ -72,6 +75,11 @@ void RenderObject::drawLines(const std::vector<glm::vec4>& vertices){
     glEnd();
 }
 
+void RenderObject::drawLines(const std::vector<glm::vec4> &vertices,
+                             const Color &color) {
+
+}
+
 //-----------------------------------------------------------//
 //  PUBLIC METHODS
 //-----------------------------------------------------------//
@@ -96,6 +104,25 @@ void RenderObject::render(const mat4 &VP) {
         transformedVertices[i].z /= transformedVertices[i].w;
 
     }
+    setSurfaceColor(this->color);
+    drawLines(transformedVertices);
+}
 
+void RenderObject::render(const glm::mat4 &VP, const Color &color) {
+    mat4 MVP = VP * getModelMatrix();
+    const vector<vec4>& vertices = getVertices();
+
+    unsigned int verticesCount = vertices.size();
+    vector<vec4> transformedVertices(verticesCount);
+
+    for(unsigned int i = 0; i < verticesCount; i++){
+        transformedVertices[i] = MVP * vertices[i];
+
+        transformedVertices[i].x /= transformedVertices[i].w;
+        transformedVertices[i].y /= transformedVertices[i].w;
+        transformedVertices[i].z /= transformedVertices[i].w;
+
+    }
+    setSurfaceColor(color);
     drawLines(transformedVertices);
 }

@@ -15,7 +15,7 @@ private:
     glm::vec3 right;
     glm::vec3 up;
 
-    glm::mat4 viewM;
+    glm::mat4 viewMatrix;
 
 public:
     float horizontalAngleDegree;
@@ -24,13 +24,11 @@ public:
     float buttonsSpeed;
     float mouseSpeed;
 
+    CameraFPS();
+
     CameraFPS(Projection* projection);
 
     ~CameraFPS();
-
-    const glm::mat4& getVPMatrix();
-
-    virtual void update() override;
 
     void moveForward();
     void moveBackward();
@@ -45,6 +43,10 @@ public:
     void moveRight(float speedBoost);
     void moveUp(float speedBoost);
     void moveDown(float speedBoost );
+
+    const glm::mat4& getVPMatrix();
+    virtual const glm::mat4 &getViewMatrix();
+    virtual void update() override;
 };
 
 

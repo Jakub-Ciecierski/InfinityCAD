@@ -17,9 +17,13 @@
  */
 class RenderObject : public Object {
 private:
+    Color color;
+
     //-----------------------------------------------------------//
     //  PRIVATE METHODS
     //-----------------------------------------------------------//
+
+    void setSurfaceColor(const Color& color);
 
     const std::vector<glm::vec4>& getVertices();
     const std::vector<Edge>& getEdges();
@@ -29,8 +33,8 @@ private:
      * Drawing is based on the Edges created in the initialization process
      */
     void drawLines(const std::vector<glm::vec4>& vertices);
-
-    Color color;
+    void drawLines(const std::vector<glm::vec4>& vertices,
+                   const Color& color);
 
 protected:
 
@@ -60,6 +64,7 @@ public:
     void setColor(Color color);
 
     void render(const glm::mat4& VP);
+    void render(const glm::mat4& VP, const Color& color);
 };
 
 

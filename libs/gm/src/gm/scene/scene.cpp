@@ -6,9 +6,11 @@
 #include <gm/color/color_settings.h>
 #include <GL/gl.h>
 
+using namespace glm;
+
 Scene::Scene() :
         sceneColor(COLOR_SCENE_DEFAULT), sceneIDFactory(){
-
+    set3DRendering(false);
 }
 
 Scene::~Scene() {
@@ -21,11 +23,48 @@ Scene::~Scene() {
 }
 
 //--------------------//
-//  PRIVAte
+//  PRIVATE
 //--------------------//
 
 void Scene::updateMVP() {
     MVP = activeCamera->getVPMatrix() * getModelMatrix();
+}
+
+
+void Scene::renderAllObjects() {
+    for(unsigned int i = 0; i < sceneObjects.size(); i++){
+        sceneObjects[i]->render(MVP);
+    }
+}
+
+void Scene::renderAllObjects3D() {
+    const StereoscopicProjection* projection
+            = (const StereoscopicProjection*)activeCamera->getProjection();
+    mat4 MV = activeCamera->getViewMatrix() * getModelMatrix();
+
+    //mat4 leftMVP = projection->getLeftProjectionMatrix() * MV;
+    //mat4 rightMVP = projection->getRightProjectionMatrix() * MV;
+
+    mat4 leftMVP = projection->getLeftProjectionMatrix() *
+            activeCamera->getViewMatrix() * getModelMatrix();
+    mat4 rightMVP = projection->getRightProjectionMatrix() *
+            activeCamera->getViewMatrix() * getModelMatrix();
+
+    Color leftColor = projection->getLeftColor();
+    Color rightColor = projection->getRightColor();
+
+    for(unsigned int i = 0; i < sceneObjects.size(); i++){
+        glDisable(GL_BLEND);
+
+        sceneObjects[i]->render(leftMVP, leftColor);
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_COLOR, GL_ONE);
+
+        sceneObjects[i]->render(rightMVP, rightColor);
+
+        glDisable(GL_BLEND);
+    }
 }
 
 
@@ -78,6 +117,12 @@ void Scene::setColor(Color color) {
                  sceneColor.Alpha);
 }
 
+
+void Scene::set3DRendering(bool v) {
+    rendering3DEnabled = v;
+}
+
+
 //--------------------//
 //  GETTERS
 //--------------------//
@@ -112,8 +157,10 @@ void Scene::renderScene() {
     glClearColor(sceneColor.R, sceneColor.G, sceneColor.B,
                  sceneColor.Alpha);
 
-    for(unsigned int i = 0; i < sceneObjects.size(); i++){
-        sceneObjects[i]->render(MVP);
+    if(rendering3DEnabled){
+        renderAllObjects3D();
+    }else{
+        renderAllObjects();
     }
 }
 
@@ -125,6 +172,6 @@ void Scene::update() {
         sceneObjects[i]->update();
     }
 
-    updateMVP();
+    if(!rendering3DEnabled)
+        updateMVP();
 }
-

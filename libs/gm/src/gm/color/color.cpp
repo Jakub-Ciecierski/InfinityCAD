@@ -4,6 +4,7 @@
 
 
 #include <gm/color/color.h>
+#include <gm/color/color_convertor.h>
 
 Color::Color(float R, float G, float B) :
     R(R), G(G), B(B){

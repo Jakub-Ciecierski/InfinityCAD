@@ -14,6 +14,6 @@ IndentityProjection::~IndentityProjection() {
 
 }
 
-const mat4& IndentityProjection::getProjectionMatrix() {
-    return projectionMatrix;
+void IndentityProjection::update() {
+
 }

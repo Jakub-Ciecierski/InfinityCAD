@@ -9,6 +9,12 @@
 
 using namespace glm;
 
+CameraFPS::CameraFPS() :
+        Camera(){
+
+}
+
+
 CameraFPS::CameraFPS(Projection *projection) :
         Camera(projection) {
     buttonsSpeed = 0.15;
@@ -19,11 +25,6 @@ CameraFPS::CameraFPS(Projection *projection) :
 }
 
 CameraFPS::~CameraFPS() {
-
-}
-
-const glm::mat4 &CameraFPS::getVPMatrix() {
-    return VP;
 
 }
 
@@ -76,6 +77,15 @@ void CameraFPS::moveDown(float speedBoost) {
     position -= up * (buttonsSpeed * speedBoost);
 }
 
+const glm::mat4 &CameraFPS::getViewMatrix() {
+    return viewMatrix;
+}
+
+const glm::mat4 &CameraFPS::getVPMatrix() {
+    return VP;
+
+}
+
 void CameraFPS::update() {
     direction = vec3(
             cos(angleToRadians(verticalAngleDegree)) *
@@ -101,26 +111,26 @@ void CameraFPS::update() {
     X = normalize(X);
     up = normalize(up);
 
-    viewM[0].x = X.x;
-    viewM[1].x = X.y;
-    viewM[2].x = X.z;
-    viewM[3].x = (X.x * -position.x + X.y * -position.y + X.z * -position.z);
+    viewMatrix[0].x = X.x;
+    viewMatrix[1].x = X.y;
+    viewMatrix[2].x = X.z;
+    viewMatrix[3].x = (X.x * -position.x + X.y * -position.y + X.z * -position.z);
 
-    viewM[0].y = up.x;
-    viewM[1].y = up.y;
-    viewM[2].y = up.z;
-    viewM[3].y = (up.x * -position.x + up.y * -position.y + up.z * -position.z);
+    viewMatrix[0].y = up.x;
+    viewMatrix[1].y = up.y;
+    viewMatrix[2].y = up.z;
+    viewMatrix[3].y = (up.x * -position.x + up.y * -position.y + up.z * -position.z);
 
-    viewM[0].z = direction.x;
-    viewM[1].z = direction.y;
-    viewM[2].z = direction.z;
-    viewM[3].z = (direction.x * -position.x +
+    viewMatrix[0].z = direction.x;
+    viewMatrix[1].z = direction.y;
+    viewMatrix[2].z = direction.z;
+    viewMatrix[3].z = (direction.x * -position.x +
                   direction.y * -position.y +
                   direction.z * -position.z);
-    viewM[0].w = 0;
-    viewM[1].w = 0;
-    viewM[2].w = 0;
-    viewM[3].w = 1.0f;
+    viewMatrix[0].w = 0;
+    viewMatrix[1].w = 0;
+    viewMatrix[2].w = 0;
+    viewMatrix[3].w = 1.0f;
 
-    VP = projection->getProjectionMatrix() * viewM;
+    VP = projection->getProjectionMatrix() * viewMatrix;
 }

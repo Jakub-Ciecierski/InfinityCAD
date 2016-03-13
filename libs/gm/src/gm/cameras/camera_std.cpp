@@ -18,7 +18,11 @@ CameraSTD::~CameraSTD() {
 //  PUBLIC METHODS
 //-----------------------------------------------------------//
 
-const glm::mat4&CameraSTD::getVPMatrix() {
+const mat4 &CameraSTD::getViewMatrix() {
+    return getModelMatrix();
+}
+
+const mat4& CameraSTD::getVPMatrix() {
     VP = projection->getProjectionMatrix() * getModelMatrix();
     return VP;
 }

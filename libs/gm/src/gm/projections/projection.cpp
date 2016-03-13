@@ -12,3 +12,7 @@ Projection::Projection() {
 Projection::~Projection() {
 
 }
+
+const glm::mat4 &Projection::getProjectionMatrix() {
+    return this->projectionMatrix;
+}

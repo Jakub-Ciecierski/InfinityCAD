@@ -5,13 +5,11 @@
 #include <glm/detail/type_mat.hpp>
 #include <rc/ellipsoid.h>
 #include <rc/ray_constants.h>
-#include <iostream>
-#include <gm/utils.h>
 
 using namespace glm;
 
 Ellipsoid::Ellipsoid(float a, float b, float c) :
-        a(a), b(b), c(c), color(1.0, 0.5, 0){
+        a(a), b(b), c(c), color(1.0f, 0.5f, 0.0f){
 
 }
 

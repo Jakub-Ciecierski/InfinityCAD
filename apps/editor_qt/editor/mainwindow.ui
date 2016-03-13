@@ -531,8 +531,8 @@ QMenu::separator {
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>465</width>
-                    <height>461</height>
+                    <width>468</width>
+                    <height>465</height>
                    </rect>
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -1191,8 +1191,32 @@ QMenu::separator {
      <string>File</string>
     </property>
    </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>Edit</string>
+    </property>
+    <widget class="QMenu" name="menuSettings">
+     <property name="title">
+      <string>3D</string>
+     </property>
+     <addaction name="actionLeft_Eye_Color"/>
+     <addaction name="actionRight_Eye_Color"/>
+    </widget>
+    <addaction name="menuSettings"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuEdit"/>
   </widget>
+  <action name="actionLeft_Eye_Color">
+   <property name="text">
+    <string>Left Eye Color</string>
+   </property>
+  </action>
+  <action name="actionRight_Eye_Color">
+   <property name="text">
+    <string>Right Eye Color</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -1205,11 +1229,10 @@ QMenu::separator {
     <signal>ellipsoidARadiusChanged(int)</signal>
     <signal>ellipsoidBRadiusChanged(int)</signal>
     <signal>ellipsoidCRadiusChanged(int)</signal>
-    <slot>setEllipsoidARadius(int)</slot>
-    <slot>setEllipsoidBRadius(int)</slot>
-    <slot>setEllipsoidCRadius(int)</slot>
-    <slot>setRayLightIntensity(int)</slot>
-    <slot>setDoAdaptive(bool)</slot>
+    <slot>set3DRendering(bool)</slot>
+    <slot>set3DDistance(QString)</slot>
+    <slot>leftEyeColorPicker()</slot>
+    <slot>rightEyeColorPicker()</slot>
    </slots>
   </customwidget>
   <customwidget>
@@ -1219,5 +1242,70 @@ QMenu::separator {
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>threeDCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>sceneRendererWidget</receiver>
+   <slot>set3DRendering(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>22</x>
+     <y>48</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>230</x>
+     <y>177</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>lineEdit</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>sceneRendererWidget</receiver>
+   <slot>set3DDistance(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>96</x>
+     <y>50</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>200</x>
+     <y>152</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionLeft_Eye_Color</sender>
+   <signal>triggered()</signal>
+   <receiver>sceneRendererWidget</receiver>
+   <slot>leftEyeColorPicker()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>308</x>
+     <y>359</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionRight_Eye_Color</sender>
+   <signal>triggered()</signal>
+   <receiver>sceneRendererWidget</receiver>
+   <slot>rightEyeColorPicker()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>308</x>
+     <y>359</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

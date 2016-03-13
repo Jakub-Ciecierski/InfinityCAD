@@ -8,31 +8,19 @@
 #include <gm/projections/projection.h>
 
 class PerspectiveProjection : public Projection {
-private:
-    //-----------------------------------------------------------//
-    //  PRIVATE FIELDS
-    //-----------------------------------------------------------//
+protected:
 
-    float r;
-
-    //-----------------------------------------------------------//
-    //  PRIVATE METHODS
-    //-----------------------------------------------------------//
+    float projectionDistance;
 
 public:
-    //-----------------------------------------------------------//
-    //  CONSTRUCTORS
-    //-----------------------------------------------------------//
 
     PerspectiveProjection(float r);
 
     ~PerspectiveProjection();
 
-    //-----------------------------------------------------------//
-    //  PUBLIC METHODS
-    //-----------------------------------------------------------//
+    void setProjectionDistance(float r);
 
-    virtual const glm::mat4 &getProjectionMatrix() override;
+    virtual void update() override;
 };
 
 

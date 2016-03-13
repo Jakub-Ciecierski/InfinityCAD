@@ -22,6 +22,8 @@ public:
     ~CameraSTD();
 
     const glm::mat4& getVPMatrix();
+
+    virtual const glm::mat4 &getViewMatrix();
 };
 
 

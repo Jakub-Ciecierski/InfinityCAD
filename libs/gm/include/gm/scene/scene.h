@@ -8,8 +8,9 @@
 #include <gm/color/color.h>
 #include <gm/rendering/render_object.h>
 #include <gm/cameras/camera_std.h>
+#include <gm/projections/stereoscopic_projection.h>
 #include "gm/scene/scene_id.h"
-#include "scene_id_factory.h"
+#include "gm/scene/scene_id_factory.h"
 
 /*
  * Scene is responsible for deallocating all objects in the scene
@@ -27,19 +28,18 @@ private:
 
     Color sceneColor;
 
-    void updateMVP();
-public:
-    virtual void update() override;
+    bool rendering3DEnabled;
 
     SceneIDFactory sceneIDFactory;
 
     // Model of the scene, View and Projection from camera
     glm::mat4 MVP;
 
-    //-----------------------------------------------------------//
-    //  PRIVATE METHODS
-    //-----------------------------------------------------------//
+    void updateMVP();
 
+    void renderAllObjects();
+
+    void renderAllObjects3D();
 public:
     //-----------------------------------------------------------//
     //  CONSTRUCTORS
@@ -74,6 +74,8 @@ public:
 
     void setColor(Color color);
 
+    void set3DRendering(bool v);
+
     const std::vector<RenderObject*>& getRenderObjects();
     const std::vector<Camera *>& getCameras();
 
@@ -84,6 +86,8 @@ public:
     const glm::mat4& getMVP();
 
     void renderScene();
+
+    virtual void update() override;
 };
 
 

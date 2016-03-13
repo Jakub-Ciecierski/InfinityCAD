@@ -21,4 +21,5 @@ unsigned int colorGLToSTD(float x);
 
 float colorSTDToGL(unsigned int x);
 
+
 #endif //MG1_COLOR_CONVERTOR_H

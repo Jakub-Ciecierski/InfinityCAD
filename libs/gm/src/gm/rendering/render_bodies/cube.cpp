@@ -2,7 +2,7 @@
 // Created by jakub on 2/28/16.
 //
 
-#include <gm/objects/cube.h>
+#include "gm/rendering/render_bodies/cube.h"
 
 using namespace glm;
 using namespace std;

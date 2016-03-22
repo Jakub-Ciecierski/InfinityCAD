@@ -2,7 +2,7 @@
 // Created by jakub on 3/6/16.
 //
 
-#include <gm/utils.h>
+#include <gm/util/utils.h>
 #include <iostream>
 
 using namespace glm;

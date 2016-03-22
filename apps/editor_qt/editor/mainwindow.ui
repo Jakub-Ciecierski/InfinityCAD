@@ -423,7 +423,7 @@ QMenu::separator {
           <property name="handleWidth">
            <number>5</number>
           </property>
-          <widget class="ObjectTreeWidget" name="allObjectsTree">
+          <widget class="ObjectsTree" name="objectsListTree">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
              <horstretch>1</horstretch>
@@ -448,7 +448,7 @@ QMenu::separator {
             </property>
            </column>
           </widget>
-          <widget class="GLWidget" name="sceneRendererWidget" native="true">
+          <widget class="GLWidget" name="glRendererWidget" native="true">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
              <horstretch>6</horstretch>
@@ -479,7 +479,7 @@ QMenu::separator {
              <property name="handleWidth">
               <number>5</number>
              </property>
-             <widget class="QTreeWidget" name="sceneTree">
+             <widget class="SceneTree" name="sceneTree">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                 <horstretch>7</horstretch>
@@ -532,7 +532,7 @@ QMenu::separator {
                     <x>0</x>
                     <y>0</y>
                     <width>468</width>
-                    <height>465</height>
+                    <height>468</height>
                    </rect>
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -1183,7 +1183,7 @@ QMenu::separator {
      <x>0</x>
      <y>0</y>
      <width>974</width>
-     <height>27</height>
+     <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -1236,9 +1236,14 @@ QMenu::separator {
    </slots>
   </customwidget>
   <customwidget>
-   <class>ObjectTreeWidget</class>
+   <class>ObjectsTree</class>
    <extends>QTreeWidget</extends>
-   <header>objecttreewidget.h</header>
+   <header>widgets/objects_list/objects_tree.h</header>
+  </customwidget>
+  <customwidget>
+   <class>SceneTree</class>
+   <extends>QTreeWidget</extends>
+   <header>widgets/scene_list/scene_tree.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
@@ -1246,7 +1251,7 @@ QMenu::separator {
   <connection>
    <sender>threeDCheckBox</sender>
    <signal>toggled(bool)</signal>
-   <receiver>sceneRendererWidget</receiver>
+   <receiver>glRendererWidget</receiver>
    <slot>set3DRendering(bool)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -1262,7 +1267,7 @@ QMenu::separator {
   <connection>
    <sender>lineEdit</sender>
    <signal>textChanged(QString)</signal>
-   <receiver>sceneRendererWidget</receiver>
+   <receiver>glRendererWidget</receiver>
    <slot>set3DDistance(QString)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -1278,7 +1283,7 @@ QMenu::separator {
   <connection>
    <sender>actionLeft_Eye_Color</sender>
    <signal>triggered()</signal>
-   <receiver>sceneRendererWidget</receiver>
+   <receiver>glRendererWidget</receiver>
    <slot>leftEyeColorPicker()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -1294,7 +1299,7 @@ QMenu::separator {
   <connection>
    <sender>actionRight_Eye_Color</sender>
    <signal>triggered()</signal>
-   <receiver>sceneRendererWidget</receiver>
+   <receiver>glRendererWidget</receiver>
    <slot>rightEyeColorPicker()</slot>
    <hints>
     <hint type="sourcelabel">

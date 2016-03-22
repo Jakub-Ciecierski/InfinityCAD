@@ -5,7 +5,6 @@
 #ifndef MG1_CAMERA_FPS_H
 #define MG1_CAMERA_FPS_H
 
-#include <gm/object.h>
 #include <gm/projections/projection.h>
 #include <gm/cameras/camera.h>
 

@@ -26,7 +26,7 @@
  *        |1|
  * In other words, the matrices store columns linearly.
  */
-class Object {
+class RigidBody {
 private:
     glm::mat4 modelMatrix;
 
@@ -57,9 +57,9 @@ public:
     //  CONSTRUCTORS
     //-----------------------------------------------------------//
 
-    Object();
+    RigidBody();
 
-    virtual ~Object();
+    virtual ~RigidBody();
 
     //-----------------------------------------------------------//
     //  PUBLIC METHODS
@@ -68,6 +68,7 @@ public:
     void move(float dx, float dy, float dz);
 
     void moveTo(float x, float y, float z);
+    void moveTo(const glm::vec3& pos);
 
     void rotate(float dxAngle, float dyAngle, float dzAngle);
 

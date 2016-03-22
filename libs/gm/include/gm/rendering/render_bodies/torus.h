@@ -10,9 +10,9 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <gm/edge.h>
-#include <gm/rendering/render_object.h>
+#include <gm/rendering/render_body.h>
 
-class Torus : public RenderObject{
+class Torus : public RenderBody{
 private:
     //-----------------------------------------------------------//
     //  PRIVATE FIELDS
@@ -44,6 +44,8 @@ public:
     //-----------------------------------------------------------//
     //  CONSTRUCTORS
     //-----------------------------------------------------------//
+
+    Torus();
 
     Torus(float innerRadius, float outerRadiusr);
 

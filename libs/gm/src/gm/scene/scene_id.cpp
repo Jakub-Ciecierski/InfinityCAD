@@ -4,10 +4,14 @@
 
 #include <gm/scene/scene_id.h>
 
-SceneID::SceneID(unsigned int key) : key(key){
+SceneID::SceneID(){
+    key = -1;
+}
+
+SceneID::SceneID(int key) : key(key){
 
 }
 
-unsigned int SceneID::getKey() {
+int SceneID::getKey() const{
     return this->key;
 }

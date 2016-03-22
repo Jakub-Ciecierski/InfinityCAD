@@ -5,11 +5,10 @@
 #ifndef MG1_CAMERA_H
 #define MG1_CAMERA_H
 
-
-#include <gm/object.h>
 #include <gm/projections/projection.h>
+#include <gm/rigid_body.h>
 
-class Camera : public Object{
+class Camera : public RigidBody{
 protected:
     Projection* projection;
     glm::mat4 VP;

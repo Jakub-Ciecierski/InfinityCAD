@@ -2,8 +2,8 @@
 // Created by jakub on 2/28/16.
 //
 
-#include <gm/object.h>
-#include <gm/angle_to_radians.h>
+#include <gm/util/angle_to_radians.h>
+#include <gm/rigid_body.h>
 
 using namespace glm;
 
@@ -11,13 +11,13 @@ using namespace glm;
 //  CONSTRUCTORS
 //-----------------------------------------------------------//
 
-Object::Object() {
+RigidBody::RigidBody() {
     position = vec3(0.0f);
     rotationAngles = vec3(0.0f);
     scaleFactor = 1.0f;
 }
 
-Object::~Object() {
+RigidBody::~RigidBody() {
 
 }
 
@@ -25,7 +25,7 @@ Object::~Object() {
 //  PRIVATE METHODS
 //-----------------------------------------------------------//
 
-mat4 Object::constructTranslationMatrix() {
+mat4 RigidBody::constructTranslationMatrix() {
     mat4 translateMatrix = mat4(1.0f);
 
     translateMatrix[3].x = position.x;
@@ -35,14 +35,14 @@ mat4 Object::constructTranslationMatrix() {
     return translateMatrix;
 }
 
-mat4 Object::constructRotationMatrix() {
+mat4 RigidBody::constructRotationMatrix() {
     mat4 rotationMatrix
             = constructXRotationMatrix() * constructYRotationMatrix() *
                     constructZRotationMatrix();
     return rotationMatrix;
 }
 
-mat4 Object::constructXRotationMatrix() {
+mat4 RigidBody::constructXRotationMatrix() {
     mat4 xRotateMatrix = mat4(1.0f);
 
     xRotateMatrix[1].y = cos(angleToRadians(rotationAngles.x));
@@ -54,7 +54,7 @@ mat4 Object::constructXRotationMatrix() {
     return xRotateMatrix;
 }
 
-mat4 Object::constructYRotationMatrix() {
+mat4 RigidBody::constructYRotationMatrix() {
     mat4 yRotateMatrix = mat4(1.0f);
 
     yRotateMatrix[0].x = cos(angleToRadians(rotationAngles.y));
@@ -64,7 +64,7 @@ mat4 Object::constructYRotationMatrix() {
     return yRotateMatrix;
 }
 
-mat4 Object::constructZRotationMatrix() {
+mat4 RigidBody::constructZRotationMatrix() {
     mat4 zRotateMatrix = mat4(1.0f);
 
     zRotateMatrix[0].x = cos(angleToRadians(rotationAngles.z));
@@ -74,7 +74,7 @@ mat4 Object::constructZRotationMatrix() {
     return zRotateMatrix;
 }
 
-mat4 Object::constructScaleMatrix() {
+mat4 RigidBody::constructScaleMatrix() {
     mat4 scaleMatrix = mat4(1.0f);
 
     scaleMatrix[0].x = scaleFactor;
@@ -87,11 +87,11 @@ mat4 Object::constructScaleMatrix() {
 //  PROTECTED METHODS
 //-----------------------------------------------------------//
 
-const mat4& Object::getModelMatrix() {
+const mat4& RigidBody::getModelMatrix() {
     return modelMatrix;
 }
 
-void Object::clampAngles() {
+void RigidBody::clampAngles() {
     // TODO check for overflow
     /*
     rotationAngles.x = rotationAngles.x < 0 ? 0 : rotationAngles.x;
@@ -108,20 +108,25 @@ void Object::clampAngles() {
 //  PUBLIC METHODS
 //-----------------------------------------------------------//
 
-void Object::move(float dx, float dy, float dz) {
+void RigidBody::move(float dx, float dy, float dz) {
     position.x += dx;
     position.y += dy;
     position.z += dz;
 }
 
-void Object::moveTo(float x, float y, float z) {
+void RigidBody::moveTo(float x, float y, float z) {
     position.x = x;
     position.y = y;
     position.z = z;
 }
 
+void RigidBody::moveTo(const vec3& pos) {
+    position.x = pos.x;
+    position.y = pos.y;
+    position.z = pos.z;
+}
 
-void Object::rotate(float dxAngle, float dyAngle, float dzAngle) {
+void RigidBody::rotate(float dxAngle, float dyAngle, float dzAngle) {
     rotationAngles.x += dxAngle;
     rotationAngles.y += dyAngle;
     rotationAngles.z += dzAngle;
@@ -129,21 +134,21 @@ void Object::rotate(float dxAngle, float dyAngle, float dzAngle) {
     clampAngles();
 }
 
-void Object::scale(float scale) {
+void RigidBody::scale(float scale) {
     this->scaleFactor = scale;
 }
 
-void Object::scaleDt(float scale) {
+void RigidBody::scaleDt(float scale) {
     this->scaleFactor += scale;
     if(this->scaleFactor < 0.1)
         this->scaleFactor = 0.1;
 }
 
-const vec3& Object::getPosition() {
+const vec3& RigidBody::getPosition() {
     return this->position;
 }
 
-void Object::update() {
+void RigidBody::update() {
     this->modelMatrix = constructTranslationMatrix() *
                         constructRotationMatrix() *
                         constructScaleMatrix();

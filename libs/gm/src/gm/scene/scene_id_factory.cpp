@@ -11,3 +11,7 @@ SceneIDFactory::SceneIDFactory() {
 SceneID SceneIDFactory::createNextAvailableID() {
     return SceneID(nextAvailableIDKeyValue++);
 }
+
+SceneID SceneIDFactory::getNextAvailableID() {
+    return SceneID(nextAvailableIDKeyValue);
+}

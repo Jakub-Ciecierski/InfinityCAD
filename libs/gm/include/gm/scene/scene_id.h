@@ -8,12 +8,13 @@
 
 class SceneID {
 private:
-    unsigned int key;
+     int key;
 
 public:
-    SceneID(unsigned int key);
+    SceneID();
+    SceneID(int key);
 
-    unsigned int getKey();
+    int getKey() const;
 };
 
 

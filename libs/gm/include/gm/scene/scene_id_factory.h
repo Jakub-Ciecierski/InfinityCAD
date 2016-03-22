@@ -18,6 +18,8 @@ public:
     SceneIDFactory();
 
     SceneID createNextAvailableID();
+
+    SceneID getNextAvailableID();
 };
 
 

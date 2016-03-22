@@ -2,7 +2,7 @@
 // Created by jakub on 2/26/16.
 //
 
-#include <gm/objects/torus.h>
+#include "gm/rendering/render_bodies/torus.h"
 
 using namespace glm;
 using namespace std;
@@ -12,6 +12,17 @@ const double PI_OVER_180 = M_PI/180;
 //-----------------------------------------------------------//
 //  CONSTRUCTORS
 //-----------------------------------------------------------//
+
+Torus::Torus() {
+    outerRadius = 0.2f;
+    innerRadius = 0.5f;
+
+    sidesCount = 30;
+    ringsCount = 30;
+    initVertices();
+    initEdges();
+}
+
 
 Torus::Torus(float innerRadius, float outerRadiusr) :
         innerRadius(innerRadius), outerRadius(outerRadiusr){

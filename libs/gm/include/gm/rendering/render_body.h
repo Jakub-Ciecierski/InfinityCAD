@@ -7,15 +7,14 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <vector>
-
-#include <gm/object.h>
 #include <gm/edge.h>
 #include <gm/color/color.h>
+#include <gm/rigid_body.h>
 
 /*
  * Renderable Interface.
  */
-class RenderObject : public Object {
+class RenderBody : public RigidBody {
 private:
     Color color;
 
@@ -53,9 +52,9 @@ public:
     //  CONSTRUCTORS
     //-----------------------------------------------------------//
 
-    RenderObject();
+    RenderBody();
 
-    virtual ~RenderObject();
+    virtual ~RenderBody();
 
     //-----------------------------------------------------------//
     //  PUBLIC METHODS

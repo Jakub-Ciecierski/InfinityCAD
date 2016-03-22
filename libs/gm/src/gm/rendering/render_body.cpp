@@ -4,8 +4,8 @@
 
 
 #include <GL/gl.h>
-#include <gm/rendering/render_object.h>
 #include <gm/color/color_settings.h>
+#include <gm/rendering/render_body.h>
 
 using namespace glm;
 using namespace std;
@@ -14,10 +14,10 @@ using namespace std;
 //  CONSTRUCTORS
 //-----------------------------------------------------------//
 
-RenderObject::RenderObject() : color(COLOR_OBJECT_DEFAULT){
+RenderBody::RenderBody() : color(COLOR_OBJECT_DEFAULT){
 }
 
-RenderObject::~RenderObject() {
+RenderBody::~RenderBody() {
 
 }
 
@@ -25,19 +25,19 @@ RenderObject::~RenderObject() {
 //  PRIVATE METHODS
 //-----------------------------------------------------------//
 
-void RenderObject::setSurfaceColor(const Color &color) {
+void RenderBody::setSurfaceColor(const Color &color) {
     glColor3f(color.R, color.G, color.B);
 }
 
-const vector<vec4>& RenderObject::getVertices() {
+const vector<vec4>& RenderBody::getVertices() {
     return this->vertices;
 }
 
-const vector<Edge>& RenderObject::getEdges() {
+const vector<Edge>& RenderBody::getEdges() {
     return this->edges;
 }
 
-void RenderObject::drawLines(const std::vector<glm::vec4>& vertices){
+void RenderBody::drawLines(const std::vector<glm::vec4>& vertices){
     const vector<Edge>& edges = getEdges();
 
     glBegin(GL_LINES);
@@ -75,7 +75,7 @@ void RenderObject::drawLines(const std::vector<glm::vec4>& vertices){
     glEnd();
 }
 
-void RenderObject::drawLines(const std::vector<glm::vec4> &vertices,
+void RenderBody::drawLines(const std::vector<glm::vec4> &vertices,
                              const Color &color) {
 
 }
@@ -84,12 +84,12 @@ void RenderObject::drawLines(const std::vector<glm::vec4> &vertices,
 //  PUBLIC METHODS
 //-----------------------------------------------------------//
 
-void RenderObject::setColor(Color color) {
+void RenderBody::setColor(Color color) {
     this->color = color;
 }
 
 
-void RenderObject::render(const mat4 &VP) {
+void RenderBody::render(const mat4 &VP) {
     mat4 MVP = VP * getModelMatrix();
     const vector<vec4>& vertices = getVertices();
 
@@ -108,7 +108,7 @@ void RenderObject::render(const mat4 &VP) {
     drawLines(transformedVertices);
 }
 
-void RenderObject::render(const glm::mat4 &VP, const Color &color) {
+void RenderBody::render(const glm::mat4 &VP, const Color &color) {
     mat4 MVP = VP * getModelMatrix();
     const vector<vec4>& vertices = getVertices();
 

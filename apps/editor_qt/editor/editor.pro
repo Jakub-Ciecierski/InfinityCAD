@@ -22,16 +22,33 @@ TEMPLATE = app
 
 SOURCES += glwidget.cpp \
         main.cpp\
-        mainwindow.cpp \
-    allobjecttreecreator.cpp \
-    objecttreewidget.cpp \
-    controls.cpp
+    controls.cpp \
+    context_menus/context_menu_settings.cpp \
+    context_menus/context_menu.cpp \
+    context_menus/handler.cpp \
+    widgets/objects_list/objects_settings.cpp \
+    widgets/objects_list/objects_tree_factory.cpp \
+    editor_window.cpp \
+    system/object_manager.cpp \
+    context_menus/factories/objects_cmenu_factory.cpp \
+    context_menus/factories/scene_cmenu_factory.cpp \
+    widgets/scene_list/scene_tree.cpp \
+    widgets/objects_list/objects_tree.cpp
 
 HEADERS  += glwidget.h \
-    mainwindow.h \
-    allobjectstreemanager.h \
-    objecttreewidget.h \
-    controls.h
+    controls.h \
+    context_menus/context_menu_settings.h \
+    context_menus/context_menu.h \
+    context_menus/handler.h \
+    widgets/objects_list/objects_settings.h \
+    widgets/objects_list/objects_tree_factory.h \
+    editor_window.h \
+    system/object_manager.h \
+    context_menus/factories/objects _cmenu_factory.h \
+    context_menus/factories/scene_cmenu_factory.h \
+    context_menus/factories/objects_cmenu_factory.h \
+    widgets/scene_list/scene_tree.h \
+    widgets/objects_list/objects_tree.h
 
 FORMS    += mainwindow.ui
 

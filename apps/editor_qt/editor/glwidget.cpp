@@ -1,11 +1,13 @@
-#include "mainwindow.h"
+#include "editor_window.h"
 #include "glwidget.h"
 #include <iostream>
 
 #include <gm/color/color.h>
 #include <gm/color/color_convertor.h>
-#include <gm/objects/torus.h>
-#include <gm/objects/cube.h>
+#include "gm/rendering/render_body.h"
+
+#include <gm/rendering/render_bodies/torus.h>
+#include <gm/rendering/render_bodies/cube.h>
 #include <gm/projections/perspective_projection.h>
 #include <gm/projections/stereoscopic_projection.h>
 #include <gm/projections/indentity_projection.h>
@@ -53,7 +55,7 @@ void GLWidget::setupRenderer(){
     fpsCamera->move(0,0,0);
     scene->addCamera(fpsCamera);
     scene->setActiveCamera(fpsCamera);
-
+/*
     Torus* t = new Torus(0.4, 0.3, 100, 100);
     Torus* tt = new Torus(0.2, 0.1);
     Torus* tt1 = new Torus(0.2, 0.1);
@@ -69,7 +71,7 @@ void GLWidget::setupRenderer(){
     scene->addRenderObject(tt1);
     scene->addRenderObject(tt2);
     scene->addRenderObject(tt3);
-
+*/
 
     renderer = new Renderer(scene);
 }
@@ -303,6 +305,10 @@ void GLWidget::wheelEvent(QWheelEvent* event){
     renderer->getScene()->scaleDt(x*speedBoost);
 };
 
+Renderer* GLWidget::getRenderer(){
+    return this->renderer;
+}
+
 //-----------------------------------------------------------//
 //  OPENGL
 //-----------------------------------------------------------//
@@ -372,6 +378,12 @@ void GLWidget::rightEyeColorPicker(){
     Color gmColor = QColorToGMColor(qcolor);
 
     projection->setRightColor(gmColor);
+}
+
+void GLWidget::moveObject(const SceneID& id, glm::vec3& pos){
+    RenderBody* body = scene->getRenderBody(id);
+
+    body->moveTo(pos);
 }
 
 #include "moc_glwidget.cpp"

@@ -6,9 +6,9 @@
 #define MG1_CUBE_H
 
 #include <vector>
-#include <gm/rendering/render_object.h>
+#include <gm/rendering/render_body.h>
 
-class Cube : public RenderObject {
+class Cube : public RenderBody {
 private:
     //-----------------------------------------------------------//
     //  PRIVATE FIELDS

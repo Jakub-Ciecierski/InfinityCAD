@@ -1,11 +1,11 @@
-#ifndef ALLOBJECTTREECREATOR_H
-#define ALLOBJECTTREECREATOR_H
+#ifndef OBJECTSTREEFACTORY_H
+#define OBJECTSTREEFACTORY_H
 
 #include <QtCore>
 #include <QtGui>
 #include <QTreeWidget>
 
-class AllObjectsTreeManager
+class ObjectsTreeFactory
 {
 private:
     QTreeWidget* treeWidget;
@@ -16,9 +16,11 @@ private:
     void setUp();
     void setUpObjectsRoot();
     void setUpRenderableObjectsRoot();
+
 public:
-    AllObjectsTreeManager(QTreeWidget* treeWidget);
+    ObjectsTreeFactory(QTreeWidget* treeWidget);
+
+    void create();
 };
 
-#endif // ALLOBJECTTREECREATOR_H
-
+#endif // OBJECTSTREEFACTORY_H

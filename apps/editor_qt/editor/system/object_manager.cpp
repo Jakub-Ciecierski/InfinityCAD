@@ -1,0 +1,108 @@
+#include "object_manager.h"
+#include "editor_window.h"
+#include "ui_mainwindow.h"
+#include "widgets/objects_list/objects_settings.h"
+
+#include <gm/scene/scene_id_factory.h>
+#include <gm/scene/scene_id.h>
+#include <gm/rendering/render_bodies/torus.h>
+
+using namespace std;
+using namespace Ui;
+
+//--------------------------//
+//  PRIVATE
+//--------------------------//
+
+ObjectManager::ObjectManager(){
+    EditorWindow& m = EditorWindow::getInstance();
+    MainWindow* ui = m.getUI();
+
+    this->glWidget = ui->glRendererWidget;
+    this->scene = ui->glRendererWidget->getRenderer()->getScene();
+    this->sceneTree = ui->sceneTree;
+}
+
+void ObjectManager::addTorus(string name){
+    Torus* t = new Torus();
+
+    SceneID id = this->scene->addRenderObject(t);
+    sceneTree->addObject(name, id);
+}
+
+void ObjectManager::addPoint(string name){
+
+}
+
+string ObjectManager::getDefaultName(string type, SceneID id){
+    string defaultName = type + "_" + to_string(id.getKey());
+
+    return defaultName;
+}
+
+//--------------------------//
+//  PUBLIC
+//--------------------------//
+
+ObjectManager& ObjectManager::getInstance(){
+    static ObjectManager objectManager;
+
+    return objectManager;
+}
+
+void ObjectManager::addObject(string type){
+    SceneID nextID = this->scene->getNextAvailableID();
+    string defaultName = getDefaultName(type, nextID);
+
+    addObject(type, defaultName);
+}
+
+void ObjectManager::addObject(string type, string name){
+    if(sceneTree->getItemIndex(name) >= 0) {
+        string title = "Name";
+        string text = "Name: " + name + " already exists. Try other name";
+        EditorWindow::getInstance().showInfoBox(title, text);
+        return;
+    }
+
+    if(type == RB_TORUS_NAME){
+        addTorus(name);
+    }
+}
+
+void ObjectManager::deleteObject(string name){
+    string text = "Delete " + name + " ?";
+    string title = "Delete";
+    if(!EditorWindow::getInstance().showQuestionBox(title, text)) return;
+
+    SceneID id = this->sceneTree->deleteObject(name);
+    this->scene->removeObject(id);
+}
+
+void ObjectManager::changeName(string srcName){
+    string text = "Input new name";
+    string title = "Change Name";
+    string dstName = EditorWindow::getInstance().showInputBox(title, text);
+
+    sceneTree->changeName(srcName, dstName);
+}
+
+void ObjectManager::setActive(SceneID id){
+
+    EditorWindow& m = EditorWindow::getInstance();
+    Ui::MainWindow* ui = m.getUI();
+
+    QLineEdit* xEdit = ui->positionXInput;
+    QLineEdit* yEdit = ui->positionYInput;
+    QLineEdit* zEdit = ui->positionZInput;
+
+    float x = xEdit->text().toFloat();
+    float y = yEdit->text().toFloat();
+    float z = zEdit->text().toFloat();
+
+    glm::vec3 pos(x,y,z);
+    glWidget->moveObject(id, pos);
+
+    m.connect(xEdit, SIGNAL(textEdited(QString)),
+            glWidget, SLOT(moveObject(SceneID,glm::vec3&)));
+}

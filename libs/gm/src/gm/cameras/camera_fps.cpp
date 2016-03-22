@@ -4,7 +4,7 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <gm/cameras/camera_fps.h>
-#include <gm/angle_to_radians.h>
+#include <gm/util/angle_to_radians.h>
 #include <iostream>
 
 using namespace glm;

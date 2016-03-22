@@ -2,8 +2,8 @@
 #include "glwidget.h"
 #include <iostream>
 
-#include <gm/objects/torus.h>
-#include <gm/objects/cube.h>
+#include "render_bodies"
+#include "render_bodies"
 #include <gm/projections/perspective_projection.h>
 #include <gm/projections/indentity_projection.h>
 #include <gm/cameras/camera_std.h>

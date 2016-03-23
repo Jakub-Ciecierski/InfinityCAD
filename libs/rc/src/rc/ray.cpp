@@ -6,12 +6,37 @@
 #include <GL/gl.h>
 #include <rc/ray_constants.h>
 #include <iostream>
-#include <gm/utils.h>
+#include <gm/util/utils.h>
 
 using namespace glm;
 
 Ray::Ray(Renderer* renderer) : renderer(renderer) {
     resetAdaptiveRayCasting();
+}
+
+vec3 Ray::createRay(float x, float y){
+    Camera* camera = renderer->getScene()->getActiveCamera();
+    mat4 projMatrix = camera->getProjection()->getProjectionMatrix();
+    mat4 invProjMatrix = inverse(projMatrix);
+    mat4 invViewMatrix = inverse(camera->getViewMatrix());
+
+    vec4 clipCoords(x,y, -1, 1);
+    vec4 eyeCoords = invProjMatrix * clipCoords;
+    eyeCoords.z = -1;
+    eyeCoords.w = 0;
+
+    vec4 worldCoords = invViewMatrix * eyeCoords;
+
+    vec3 ray(worldCoords.x, worldCoords.y, worldCoords.z);
+    ray = normalize(ray);
+
+    printMat4(projMatrix);
+    printMat4(invProjMatrix);
+    printMat4(invViewMatrix);
+    printvec4(eyeCoords);
+    printvec4(worldCoords);
+
+    return ray;
 }
 
 void Ray::rayCasting(Renderer& renderer) {

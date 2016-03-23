@@ -3,9 +3,13 @@
 #include "ui_mainwindow.h"
 #include "widgets/objects_list/objects_settings.h"
 
+#include <gm/cameras/camera.h>
 #include <gm/scene/scene_id_factory.h>
 #include <gm/scene/scene_id.h>
 #include <gm/rendering/render_bodies/torus.h>
+#include <gm/rendering/render_bodies/point.h>
+#include <gm/color/color_settings.h>
+
 
 using namespace std;
 using namespace Ui;
@@ -31,7 +35,10 @@ void ObjectManager::addTorus(string name){
 }
 
 void ObjectManager::addPoint(string name){
+    Point* p = new Point();
 
+    SceneID id = this->scene->addRenderObject(p);
+    sceneTree->addObject(name, id);
 }
 
 string ObjectManager::getDefaultName(string type, SceneID id){
@@ -67,6 +74,8 @@ void ObjectManager::addObject(string type, string name){
 
     if(type == RB_TORUS_NAME){
         addTorus(name);
+    }else if(type == RB_POINT_NAME){
+        addPoint(name);
     }
 }
 
@@ -87,8 +96,48 @@ void ObjectManager::changeName(string srcName){
     sceneTree->changeName(srcName, dstName);
 }
 
+void ObjectManager::moveCross(string srcName){
+    SceneID id = sceneTree->getID(srcName);
+
+    RenderBody* body = scene->getRenderBody(id);
+    Cross* cross = scene->getCross();
+    cross->moveTo(body);
+
+    EditorWindow& m = EditorWindow::getInstance();
+    MainWindow* ui = m.getUI();
+    ui->glRendererWidget->updateCrossView();
+    /*
+    const glm::vec3& pos = cross->getPosition();
+
+
+    ui->positionXInput->setText(QString::number(pos.x, 'f', 2));
+    ui->positionYInput->setText(QString::number(pos.y, 'f', 2));
+    ui->positionZInput->setText(QString::number(pos.z, 'f', 2));
+
+    int pX = ui->glRendererWidget->getRenderer()->
+            xGLToPixelCoord(cross->transformed.x);
+    int pY = ui->glRendererWidget->getRenderer()->
+            yGLToPixelCoord(cross->transformed.y);
+
+
+    ui->angleXInput->setText(QString::number(pX));
+    ui->angleYInput->setText(QString::number(pY));*/
+}
+
+void ObjectManager::moveCamera(string objectName){
+    SceneID id = sceneTree->getID(objectName);
+
+    RenderBody* body = scene->getRenderBody(id);
+    Camera* camera = scene->getActiveCamera();
+    camera->moveTo(body);
+}
+
 void ObjectManager::setActive(SceneID id){
 
+    RenderBody* body = scene->getRenderBody(id);
+    body->setColor(COLOR_OBJECT_ACTIVE);
+
+    /*
     EditorWindow& m = EditorWindow::getInstance();
     Ui::MainWindow* ui = m.getUI();
 
@@ -105,4 +154,10 @@ void ObjectManager::setActive(SceneID id){
 
     m.connect(xEdit, SIGNAL(textEdited(QString)),
             glWidget, SLOT(moveObject(SceneID,glm::vec3&)));
+            */
+}
+
+void ObjectManager::setDeactive(SceneID id){
+    RenderBody* body = scene->getRenderBody(id);
+    body->setColor(COLOR_OBJECT_DEFAULT);
 }

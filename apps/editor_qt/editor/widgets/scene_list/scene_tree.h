@@ -33,6 +33,7 @@ private:
 public:
     SceneTree(QWidget* parent);
 
+    SceneID getID(std::string name);
     int getItemIndex(std::string name);
     int getItemIndex(QTreeWidgetItem* treeItem);
 
@@ -44,6 +45,8 @@ public slots:
     void ShowContextMenu(const QPoint& pos);
 
     void myitemActivated(QTreeWidgetItem* item, int column);
+
+    void myitemSelectionChanged();
 };
 
 #endif // SCENETREE_H

@@ -104,26 +104,31 @@ void RigidBody::clampAngles() {
      */
 }
 
+void RigidBody::translate(float x, float y, float z) {
+    position.x += x;
+    position.y += y;
+    position.z += z;
+}
+
 //-----------------------------------------------------------//
 //  PUBLIC METHODS
 //-----------------------------------------------------------//
 
 void RigidBody::move(float dx, float dy, float dz) {
-    position.x += dx;
-    position.y += dy;
-    position.z += dz;
+    translate( dx, dy, dz);
 }
 
 void RigidBody::moveTo(float x, float y, float z) {
-    position.x = x;
-    position.y = y;
-    position.z = z;
+    translate(-position.x + x, -position.y + y, -position.z + z);
 }
 
 void RigidBody::moveTo(const vec3& pos) {
-    position.x = pos.x;
-    position.y = pos.y;
-    position.z = pos.z;
+    translate(-position.x + pos.x, -position.y + pos.y, -position.z + pos.z);
+}
+
+void RigidBody::moveTo(const RigidBody* toBody) {
+    vec3 pos = toBody->getPosition();
+    translate(-position.x + pos.x, -position.y + pos.y, -position.z + pos.z);
 }
 
 void RigidBody::rotate(float dxAngle, float dyAngle, float dzAngle) {
@@ -144,7 +149,7 @@ void RigidBody::scaleDt(float scale) {
         this->scaleFactor = 0.1;
 }
 
-const vec3& RigidBody::getPosition() {
+const vec3& RigidBody::getPosition() const {
     return this->position;
 }
 

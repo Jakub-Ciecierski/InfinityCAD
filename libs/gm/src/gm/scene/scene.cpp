@@ -11,6 +11,9 @@ using namespace glm;
 Scene::Scene() :
         sceneColor(COLOR_SCENE_DEFAULT), sceneIDFactory(){
     set3DRendering(false);
+
+    cross = new Cross(&this->sceneObjects);
+    this->addRenderObject(cross);
 }
 
 Scene::~Scene() {
@@ -41,9 +44,6 @@ void Scene::renderAllObjects3D() {
     const StereoscopicProjection* projection
             = (const StereoscopicProjection*)activeCamera->getProjection();
     mat4 MV = activeCamera->getViewMatrix() * getModelMatrix();
-
-    //mat4 leftMVP = projection->getLeftProjectionMatrix() * MV;
-    //mat4 rightMVP = projection->getRightProjectionMatrix() * MV;
 
     mat4 leftMVP = projection->getLeftProjectionMatrix() *
             activeCamera->getViewMatrix() * getModelMatrix();
@@ -113,7 +113,7 @@ bool Scene::removeObject(RigidBody *object) {
 }
 
 bool Scene::removeObject(const SceneID &sceneID) {
-    for(int i = 0; i < sceneObjects.size(); i++){
+    for(unsigned int i = 0; i < sceneObjects.size(); i++){
         if(ids[i].getKey() == sceneID.getKey()){
             ids.erase(ids.begin() + i);
             sceneObjects.erase(sceneObjects.begin() + i);
@@ -173,6 +173,10 @@ RenderBody* Scene::getRenderBody(const SceneID& id){
 
 SceneID Scene::getNextAvailableID(){
     return this->sceneIDFactory.getNextAvailableID();
+}
+
+Cross* Scene::getCross(){
+    return this->cross;
 }
 
 //--------------------//

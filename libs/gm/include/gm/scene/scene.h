@@ -10,6 +10,7 @@
 #include <gm/cameras/camera_std.h>
 #include <gm/projections/stereoscopic_projection.h>
 #include <gm/rendering/render_body.h>
+#include <gm/rendering/render_bodies/cross.h>
 #include "gm/scene/scene_id.h"
 #include "gm/scene/scene_id_factory.h"
 
@@ -21,6 +22,8 @@ private:
     //-----------------------------------------------------------//
     //  PRIVATE FIELDS
     //-----------------------------------------------------------//
+
+    Cross* cross;
 
     std::vector<RenderBody*> sceneObjects;
     std::vector<SceneID> ids;
@@ -56,6 +59,10 @@ public:
     //  PUBLIC METHODS
     //-----------------------------------------------------------//
 
+    //--------------------//
+    //  SETTERS
+    //--------------------//
+
     /*
      * After the object is added to the scene, the Scene takes ownership
      * and deallocates its memory when needed.
@@ -65,7 +72,6 @@ public:
     SceneID addRenderObject(RenderBody* object);
 
     void setActiveRenderBody(const SceneID& id);
-    RenderBody* getActiveRenderBody();
 
     /*
      * The camera is taken to the ownership of the scene
@@ -82,6 +88,10 @@ public:
 
     void set3DRendering(bool v);
 
+    //--------------------//
+    //  GETTERS
+    //--------------------//
+
     const std::vector<RenderBody*>& getRenderObjects();
     const std::vector<Camera *>& getCameras();
 
@@ -94,6 +104,10 @@ public:
     RenderBody* getRenderBody(const SceneID& id);
 
     SceneID getNextAvailableID();
+
+    RenderBody* getActiveRenderBody();
+
+    Cross* getCross();
 
     void renderScene();
 

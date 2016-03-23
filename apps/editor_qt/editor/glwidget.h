@@ -9,6 +9,7 @@
 
 #include <vector>
 
+#include <gm/rendering/ray_cast.h>
 #include <gm/rendering/renderer.h>
 #include <gm/scene/scene.h>
 
@@ -16,6 +17,7 @@ class GLWidget : public QGLWidget
 {
     Q_OBJECT
 private:
+    RayCast* ray;
     Renderer* renderer;
     Scene* scene;
 
@@ -54,6 +56,7 @@ public:
     void paintGL();
     void resizeGL(int width, int height);
 
+    void updateCrossView();
 public slots:
     /*
      * Slot connected with check box to enable 3d rendering

@@ -14,6 +14,8 @@ const string OBJECTS_MENU_ADD_NAME = "Add";
 const string OBJECTS_MENU_ADD_NAMED_NAME = "Add Named";
 const string OBJECTS_MENU_PROPERTIES_NAME = "Properties";
 
+const string SCENE_MENU_MOVE_CROSS_NAME = "Move Cross";
+const string SCENE_MENU_MOVE_CAMERA_NAME = "Move Camera";
 const string SCENE_MENU_DELETE_NAME = "Delete";
 const string SCENE_MENU_CHANGE_NAME_NAME = "Change Name";
 
@@ -34,6 +36,20 @@ Handler OBJECTS_MENU_ADD_NAMED_HANDLER([](string objectType){
 });
 
 Handler OBJECTS_MENU_PROPERTIES_HANDLER;
+
+// ---------------------------------------------------------
+
+Handler SCENE_MENU_MOVE_CROSS_HANDLER([](string objectName){
+    ObjectManager objManager = ObjectManager::getInstance();
+
+    objManager.moveCross(objectName);
+});
+
+Handler SCENE_MENU_MOVE_CAMERA_HANDLER([](string objectName){
+    ObjectManager objManager = ObjectManager::getInstance();
+
+    objManager.moveCamera(objectName);
+});
 
 Handler SCENE_MENU_DELETE_HANDLER([](string objectName){
     ObjectManager objManager = ObjectManager::getInstance();

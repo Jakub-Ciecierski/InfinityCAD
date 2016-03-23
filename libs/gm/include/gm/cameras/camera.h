@@ -23,6 +23,8 @@ public:
     Projection* getProjection();
     virtual const glm::mat4& getVPMatrix() = 0;
     virtual const glm::mat4& getViewMatrix() = 0;
+
+    virtual const glm::vec3& getDirection() = 0;
 };
 
 

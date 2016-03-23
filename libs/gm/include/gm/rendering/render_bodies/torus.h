@@ -56,6 +56,8 @@ public:
     ~Torus();
 
     void updateNetSize(unsigned int ringsCount, unsigned int sidesCount);
+
+    virtual float intersect(const RayCast &ray) override;
 };
 
 

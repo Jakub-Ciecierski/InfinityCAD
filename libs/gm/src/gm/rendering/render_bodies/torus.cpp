@@ -2,6 +2,7 @@
 // Created by jakub on 2/26/16.
 //
 
+#include <rc/ray_constants.h>
 #include "gm/rendering/render_bodies/torus.h"
 
 using namespace glm;
@@ -146,4 +147,8 @@ void Torus::updateNetSize(unsigned int ringsCount,
     this->sidesCount = sidesCount;
 
     initVertices();
+}
+
+float Torus::intersect(const RayCast &ray) {
+    return RAY_NO_SOLUTION;
 }

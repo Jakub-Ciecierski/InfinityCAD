@@ -33,6 +33,8 @@ public:
 
     Ray(Renderer* renderer);
 
+    glm::vec3 createRay(float x, float y);
+
     void rayCasting(Renderer& renderer);
 
     /*

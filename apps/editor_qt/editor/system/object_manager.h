@@ -31,10 +31,12 @@ public:
     void addObject(std::string type, std::string name);
 
     void deleteObject(std::string name);
-
     void changeName(std::string srcName);
+    void moveCross(std::string srcName);
+    void moveCamera(std::string objectName);
 
     void setActive(SceneID id);
+    void setDeactive(SceneID id);
 };
 
 #endif // OBJECTMANAGER_H

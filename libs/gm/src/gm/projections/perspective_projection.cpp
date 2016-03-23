@@ -29,6 +29,6 @@ void PerspectiveProjection::setProjectionDistance(float r) {
 
 void PerspectiveProjection::update() {
     projectionMatrix = mat4(1.0f);
-    projectionMatrix[2].z = 0;
+    projectionMatrix[2].z = 0.001;
     projectionMatrix[2].w = 1.0f / projectionDistance;
 }

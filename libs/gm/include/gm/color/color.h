@@ -19,6 +19,7 @@ public:
 
     float Alpha;
 
+    Color();
     Color(float R, float G, float B);
     Color(float R, float G, float B, float Alpha);
 };

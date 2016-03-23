@@ -52,6 +52,8 @@ protected:
      */
     void clampAngles();
 
+    virtual void translate(float x, float y, float z);
+
 public:
     //-----------------------------------------------------------//
     //  CONSTRUCTORS
@@ -66,9 +68,9 @@ public:
     //-----------------------------------------------------------//
 
     void move(float dx, float dy, float dz);
-
     void moveTo(float x, float y, float z);
     void moveTo(const glm::vec3& pos);
+    void moveTo(const RigidBody* toBody);
 
     void rotate(float dxAngle, float dyAngle, float dzAngle);
 
@@ -76,7 +78,7 @@ public:
 
     void scaleDt(float scale);
 
-    const glm::vec3& getPosition();
+    const glm::vec3& getPosition() const;
 
     /*
      * ModelMatrix = Translate * Rotate * Scale

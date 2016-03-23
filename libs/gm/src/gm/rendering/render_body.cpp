@@ -2,7 +2,6 @@
 // Created by jakub on 2/28/16.
 //
 
-
 #include <GL/gl.h>
 #include <gm/color/color_settings.h>
 #include <gm/rendering/render_body.h>
@@ -15,6 +14,7 @@ using namespace std;
 //-----------------------------------------------------------//
 
 RenderBody::RenderBody() : color(COLOR_OBJECT_DEFAULT){
+    lineWidth = 1.0f;
 }
 
 RenderBody::~RenderBody() {
@@ -37,11 +37,16 @@ const vector<Edge>& RenderBody::getEdges() {
     return this->edges;
 }
 
-void RenderBody::drawLines(const std::vector<glm::vec4>& vertices){
+void RenderBody::drawLines(const std::vector<glm::vec4>& vertices,
+                           bool costumColor){
     const vector<Edge>& edges = getEdges();
 
+    glLineWidth((GLfloat)lineWidth);
     glBegin(GL_LINES);
     for(unsigned int i = 0; i < edges.size(); i++){
+        if(costumColor && edges[i].color != NULL)
+            setSurfaceColor(*(edges[i].color));
+
         unsigned int index1 = edges[i].getVertex1();
         unsigned int index2 = edges[i].getVertex2();
         vec4 v1 = vertices[index1];
@@ -75,17 +80,16 @@ void RenderBody::drawLines(const std::vector<glm::vec4>& vertices){
     glEnd();
 }
 
-void RenderBody::drawLines(const std::vector<glm::vec4> &vertices,
-                             const Color &color) {
-
-}
-
 //-----------------------------------------------------------//
 //  PUBLIC METHODS
 //-----------------------------------------------------------//
 
 void RenderBody::setColor(Color color) {
     this->color = color;
+}
+
+const Color* RenderBody::getColor() {
+    return &color;
 }
 
 
@@ -103,9 +107,12 @@ void RenderBody::render(const mat4 &VP) {
         transformedVertices[i].y /= transformedVertices[i].w;
         transformedVertices[i].z /= transformedVertices[i].w;
 
+        // TODO
+        transformed.x = transformedVertices[i].x;
+        transformed.y = transformedVertices[i].y;
     }
     setSurfaceColor(this->color);
-    drawLines(transformedVertices);
+    drawLines(transformedVertices, true);
 }
 
 void RenderBody::render(const glm::mat4 &VP, const Color &color) {
@@ -122,7 +129,11 @@ void RenderBody::render(const glm::mat4 &VP, const Color &color) {
         transformedVertices[i].y /= transformedVertices[i].w;
         transformedVertices[i].z /= transformedVertices[i].w;
 
+        // TODO
+        transformed.x = transformedVertices[i].x;
+        transformed.y = transformedVertices[i].y;
+
     }
     setSurfaceColor(color);
-    drawLines(transformedVertices);
+    drawLines(transformedVertices, false);
 }

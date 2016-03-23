@@ -8,7 +8,7 @@ using namespace glm;
 
 Edge::Edge(unsigned int i, unsigned int j) :
     i(i), j(j){
-
+    color = NULL;
 }
 
 unsigned int Edge::getVertex1() const{

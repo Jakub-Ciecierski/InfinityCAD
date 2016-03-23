@@ -2,6 +2,7 @@
 // Created by jakub on 2/28/16.
 //
 
+#include <rc/ray_constants.h>
 #include "gm/rendering/render_bodies/cube.h"
 
 using namespace glm;
@@ -87,3 +88,7 @@ void Cube::initEdges() {
 //-----------------------------------------------------------//
 //  PUBLIC METHODS
 //-----------------------------------------------------------//
+
+float Cube::intersect(const RayCast& ray){
+    return RAY_NO_SOLUTION;
+}

@@ -34,12 +34,18 @@ float Renderer::yPixelToGLCoord(int p) {
     return glY;
 }
 
-int Renderer::xGLToPixelCoord(float p) {
-    return 0;
+int Renderer::xGLToPixelCoord(float x) {
+    float vX = 2.0 / (float) this->getWindowWidth();
+    int pX = (x + 1.0f) / vX;
+
+    return pX;
 }
 
-int Renderer::yGLToPixelCoord(float p) {
-    return 0;
+int Renderer::yGLToPixelCoord(float y) {
+    float vY = 2.0 / (float) this->getWindowHeight();
+    int pY = (y + 1.0f) / vY;
+
+    return pY;
 }
 
 

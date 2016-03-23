@@ -11,7 +11,7 @@ using namespace glm;
 
 CameraFPS::CameraFPS() :
         Camera(){
-
+    update();
 }
 
 
@@ -77,11 +77,15 @@ void CameraFPS::moveDown(float speedBoost) {
     position -= up * (buttonsSpeed * speedBoost);
 }
 
-const glm::mat4 &CameraFPS::getViewMatrix() {
+const vec3& CameraFPS::getDirection(){
+    return this->direction;
+}
+
+const mat4 &CameraFPS::getViewMatrix() {
     return viewMatrix;
 }
 
-const glm::mat4 &CameraFPS::getVPMatrix() {
+const mat4 &CameraFPS::getVPMatrix() {
     return VP;
 
 }

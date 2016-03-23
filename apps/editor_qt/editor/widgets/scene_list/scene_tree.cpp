@@ -13,9 +13,22 @@ SceneTree::SceneTree(QWidget* parent) :
     setupContextMenu();
 
     this->connect(this,
-                 SIGNAL(itemActivated(QTreeWidgetItem*,int)),
+                 SIGNAL(itemPressed(QTreeWidgetItem*,int)),
                  this,
                  SLOT(myitemActivated(QTreeWidgetItem*,int)));
+    this->connect(this,
+                 SIGNAL(itemSelectionChanged()),
+                 this,
+                 SLOT(myitemSelectionChanged()));
+
+}
+
+SceneID SceneTree::getID(std::string name){
+    int i = getItemIndex(name);
+    if(i < 0) throw std::invalid_argument(name + " - No such Object");
+
+    Item item = items[i];
+    return item.id;
 }
 
 int SceneTree::getItemIndex(std::string name){
@@ -97,6 +110,13 @@ void SceneTree::myitemActivated(QTreeWidgetItem* treeItem, int column){
 
     Item item = items[i];
     ObjectManager::getInstance().setActive(item.id);
+}
+
+void SceneTree::myitemSelectionChanged(){
+    for(int i = 0;i < items.size(); i++){
+        Item item = items[i];
+        ObjectManager::getInstance().setDeactive(item.id);
+    }
 }
 
 #include "moc_scene_tree.cpp"

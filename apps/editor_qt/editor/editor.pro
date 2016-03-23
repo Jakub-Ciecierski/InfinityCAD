@@ -56,7 +56,6 @@ FORMS    += mainwindow.ui
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../dependencies/lib/gm/release/ -lgm
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../dependencies/lib/gm/debug/ -lgm
 else:unix: LIBS += -L$$PWD/../../../dependencies/lib/gm/ -lgm
-
 INCLUDEPATH += $$PWD/../../../dependencies/include/gm
 DEPENDPATH += $$PWD/../../../dependencies/include/gm
 
@@ -64,9 +63,14 @@ DEPENDPATH += $$PWD/../../../dependencies/include/gm
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../dependencies/lib/glm/release/ -lglm
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../dependencies/lib/glm/debug/ -lglm
 else:unix: LIBS += -L$$PWD/../../../dependencies/lib/glm/ -lglm
-
 INCLUDEPATH += $$PWD/../../../dependencies/include/glm
 DEPENDPATH += $$PWD/../../../dependencies/include/glm
 
+# Ray
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../dependencies/lib/rc/release/ -lrc
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../dependencies/lib/rc/debug/ -lrc
+else:unix: LIBS += -L$$PWD/../../../dependencies/lib/rc/ -lrc
+INCLUDEPATH += $$PWD/../../../dependencies/include/rc
+DEPENDPATH += $$PWD/../../../dependencies/include/rc
 
 # EXTERNALS

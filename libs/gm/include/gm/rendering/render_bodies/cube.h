@@ -39,6 +39,7 @@ public:
     //  PUBLIC METHODS
     //-----------------------------------------------------------//
 
+    virtual float intersect(const RayCast &ray) override;
 };
 
 

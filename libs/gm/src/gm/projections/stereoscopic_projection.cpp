@@ -75,11 +75,11 @@ void StereoscopicProjection::update() {
 
     leftProjectionMatrix = mat4(1.0f);
     leftProjectionMatrix[2].x = -distance3D / 2 * projectionDistance;
-    leftProjectionMatrix[2].z = 0;
+    leftProjectionMatrix[2].z = 0.001;
     leftProjectionMatrix[2].w = 1.0f / projectionDistance;
 
     rightProjectionMatrix = mat4(1.0f);
     rightProjectionMatrix[2].x = distance3D / 2 * projectionDistance;
-    rightProjectionMatrix[2].z = 0;
+    rightProjectionMatrix[2].z = 0.001;
     rightProjectionMatrix[2].w = 1.0f / projectionDistance;
 }

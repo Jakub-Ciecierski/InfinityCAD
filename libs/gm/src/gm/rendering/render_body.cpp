@@ -113,6 +113,8 @@ void RenderBody::render(const mat4 &VP) {
     }
     setSurfaceColor(this->color);
     drawLines(transformedVertices, true);
+
+
 }
 
 void RenderBody::render(const glm::mat4 &VP, const Color &color) {

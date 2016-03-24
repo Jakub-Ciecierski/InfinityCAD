@@ -6,7 +6,6 @@
 #include <GL/gl.h>
 #include <rc/ray_constants.h>
 #include <iostream>
-#include <gm/util/utils.h>
 
 using namespace glm;
 
@@ -29,12 +28,6 @@ vec3 Ray::createRay(float x, float y){
 
     vec3 ray(worldCoords.x, worldCoords.y, worldCoords.z);
     ray = normalize(ray);
-
-    printMat4(projMatrix);
-    printMat4(invProjMatrix);
-    printMat4(invViewMatrix);
-    printvec4(eyeCoords);
-    printvec4(worldCoords);
 
     return ray;
 }

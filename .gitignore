@@ -49,3 +49,6 @@ bundles
 out
 
 core
+
+apps/editor_qt/editor/editor.pro.user
+

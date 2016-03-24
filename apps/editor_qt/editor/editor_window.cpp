@@ -92,6 +92,7 @@ string EditorWindow::showInputBox(string title, string text){
     {
         return reply.toStdString();
     }
+    return "";
 }
 
 //-------------------------//

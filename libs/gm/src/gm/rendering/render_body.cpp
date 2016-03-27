@@ -15,6 +15,7 @@ using namespace std;
 
 RenderBody::RenderBody() : color(COLOR_OBJECT_DEFAULT){
     lineWidth = 1.0f;
+    grabable = true;
 }
 
 RenderBody::~RenderBody() {
@@ -35,6 +36,32 @@ const vector<vec4>& RenderBody::getVertices() {
 
 const vector<Edge>& RenderBody::getEdges() {
     return this->edges;
+}
+
+void RenderBody::transformPosition(const glm::mat4 &VP){
+    vec4 transformedOrigins(getPosition(), 1);
+
+    transformedOrigins = VP * transformedOrigins;
+    transformedOrigins.x /= transformedOrigins.w;
+    transformedOrigins.y /= transformedOrigins.w;
+    transformedOrigins.z /= transformedOrigins.w;
+
+    projectedPosition.x = transformedOrigins.x;
+    projectedPosition.y = transformedOrigins.y;
+    projectedPosition.z = transformedOrigins.z;
+}
+
+void RenderBody::transform(const mat4 &VP){
+    mat4 MVP = VP * getModelMatrix();
+    transformPosition(VP);
+
+    for(unsigned int i = 0; i < transformedVertices.size(); i++){
+        transformedVertices[i] = MVP * vertices[i];
+
+        transformedVertices[i].x /= transformedVertices[i].w;
+        transformedVertices[i].y /= transformedVertices[i].w;
+        transformedVertices[i].z /= transformedVertices[i].w;
+    }
 }
 
 void RenderBody::drawLines(const std::vector<glm::vec4>& vertices,
@@ -58,7 +85,7 @@ void RenderBody::drawLines(const std::vector<glm::vec4>& vertices,
 
         // v2 is behind
         if(v2.w < 0){
-            float n = v1.w / (v1.w - v2.w);
+            float n = (v1.w - 1.0) / (v1.w - v2.w);
             float xc = (n * v1.x) + ((1-n) * v2.x);
             float yc = (n * v1.y) + ((1-n) * v2.y);
 
@@ -66,7 +93,7 @@ void RenderBody::drawLines(const std::vector<glm::vec4>& vertices,
         }
         // v1 is behind
         if(v1.w < 0){
-            float n = v2.w / (v2.w - v1.w);
+            float n = (v2.w - 1.0f) / (v2.w - v1.w);
             float xc = (n * v2.x) + ((1-n) * v1.x);
             float yc = (n * v2.y) + ((1-n) * v1.y);
 
@@ -84,8 +111,16 @@ void RenderBody::drawLines(const std::vector<glm::vec4>& vertices,
 //  PUBLIC METHODS
 //-----------------------------------------------------------//
 
+bool RenderBody::isGrabable() {
+    return grabable;
+}
+
 void RenderBody::setColor(Color color) {
     this->color = color;
+}
+
+const vec3& RenderBody::getProjectedPosition(){
+    return this->projectedPosition;
 }
 
 const Color* RenderBody::getColor() {
@@ -94,48 +129,16 @@ const Color* RenderBody::getColor() {
 
 
 void RenderBody::render(const mat4 &VP) {
-    mat4 MVP = VP * getModelMatrix();
-    const vector<vec4>& vertices = getVertices();
+    transform(VP);
 
-    unsigned int verticesCount = vertices.size();
-    vector<vec4> transformedVertices(verticesCount);
-
-    for(unsigned int i = 0; i < verticesCount; i++){
-        transformedVertices[i] = MVP * vertices[i];
-
-        transformedVertices[i].x /= transformedVertices[i].w;
-        transformedVertices[i].y /= transformedVertices[i].w;
-        transformedVertices[i].z /= transformedVertices[i].w;
-
-        // TODO
-        transformed.x = transformedVertices[i].x;
-        transformed.y = transformedVertices[i].y;
-    }
     setSurfaceColor(this->color);
     drawLines(transformedVertices, true);
-
-
 }
 
 void RenderBody::render(const glm::mat4 &VP, const Color &color) {
-    mat4 MVP = VP * getModelMatrix();
-    const vector<vec4>& vertices = getVertices();
+    transform(VP);
 
-    unsigned int verticesCount = vertices.size();
-    vector<vec4> transformedVertices(verticesCount);
-
-    for(unsigned int i = 0; i < verticesCount; i++){
-        transformedVertices[i] = MVP * vertices[i];
-
-        transformedVertices[i].x /= transformedVertices[i].w;
-        transformedVertices[i].y /= transformedVertices[i].w;
-        transformedVertices[i].z /= transformedVertices[i].w;
-
-        // TODO
-        transformed.x = transformedVertices[i].x;
-        transformed.y = transformedVertices[i].y;
-
-    }
     setSurfaceColor(color);
     drawLines(transformedVertices, false);
 }
+

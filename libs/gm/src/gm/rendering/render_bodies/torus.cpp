@@ -20,8 +20,10 @@ Torus::Torus() {
 
     sidesCount = 30;
     ringsCount = 30;
+
     initVertices();
     initEdges();
+    transformedVertices.resize(vertices.size());
 }
 
 

@@ -20,6 +20,7 @@ Point::Point() : RenderBody(){
 
     initVertices();
     initEdges();
+    transformedVertices.resize(vertices.size());
 }
 
 Point::~Point() {

@@ -5,6 +5,8 @@
 #include <gm/scene/scene.h>
 #include <gm/color/color_settings.h>
 #include <GL/gl.h>
+#include <gm/rendering/render_bodies/axis_net.h>
+#include <gm/rendering/render_bodies/primitivies/cone.h>
 
 using namespace glm;
 
@@ -14,6 +16,9 @@ Scene::Scene() :
 
     cross = new Cross(&this->sceneObjects);
     this->addRenderObject(cross);
+
+    AxisNet* axisNet = new AxisNet(50);
+    this->addRenderObject(axisNet);
 }
 
 Scene::~Scene() {

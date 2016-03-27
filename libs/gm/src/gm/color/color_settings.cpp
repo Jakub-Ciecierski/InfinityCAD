@@ -19,4 +19,6 @@ Color COLOR_X_AXIS(1.0, 0.0, 0.0, 1.0);
 Color COLOR_Y_AXIS(0.0, 1.0, 0.0, 1.0);
 Color COLOR_Z_AXIS(0.0, 0.0, 1.0, 1.0);
 
+Color COLOR_PLANE(0.8, 0.8, 0.8, 1.0);
+
 Color COLOR_GRABED(1.0, 0.0, 0.0, 1.0);

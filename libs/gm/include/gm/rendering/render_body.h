@@ -25,19 +25,28 @@ private:
     //  PRIVATE METHODS
     //-----------------------------------------------------------//
 
-    void setSurfaceColor(const Color& color);
+    void transformPosition(const glm::mat4 &VP);
+    void transform(const glm::mat4 &VP);
 
 protected:
+    bool grabable;
     float lineWidth;
 
     std::vector<glm::vec4> vertices;
     std::vector<Edge> edges;
 
+    std::vector<glm::vec4> transformedVertices;
+    glm::vec3 projectedPosition;
+
     //-----------------------------------------------------------//
     //  PROTECTED METHODS
     //-----------------------------------------------------------//
+
+    void setSurfaceColor(const Color& color);
+
     const std::vector<glm::vec4>& getVertices();
     const std::vector<Edge>& getEdges();
+
 
     virtual void initVertices() = 0;
     virtual void initEdges() = 0;
@@ -61,15 +70,18 @@ public:
     //-----------------------------------------------------------//
     //  PUBLIC METHODS
     //-----------------------------------------------------------//
-    glm::vec2 transformed;
+
+    bool isGrabable();
 
     void setColor(Color color);
     const Color* getColor();
 
+    const glm::vec3& getProjectedPosition();
+
     virtual float intersect(const RayCast& ray) = 0;
 
-    void render(const glm::mat4& VP);
-    void render(const glm::mat4& VP, const Color& color);
+    virtual void render(const glm::mat4& VP);
+    virtual void render(const glm::mat4& VP, const Color& color);
 };
 
 

@@ -23,6 +23,8 @@ extern Color COLOR_X_AXIS;
 extern Color COLOR_Y_AXIS;
 extern Color COLOR_Z_AXIS;
 
+extern Color COLOR_PLANE;
+
 extern Color COLOR_GRABED;
 
 #endif //MG1_COLOR_SETTINGS_H

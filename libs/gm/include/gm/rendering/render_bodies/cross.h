@@ -7,9 +7,14 @@
 
 #include <gm/rendering/render_body.h>
 #include <map>
+#include <gm/rendering/render_bodies/primitivies/cone.h>
 
 class Cross : public RenderBody{
 private:
+    Cone* xCone;
+    Cone* yCone;
+    Cone* zCone;
+
     Color xAxisColor;
     Color yAxisColor;
     Color zAxisColor;
@@ -26,6 +31,8 @@ private:
     };
     const std::vector<RenderBody*>* sceneObjects;
     std::map<RenderBody*, BodyInfo> grabedMap;
+
+    void initCones();
 
 protected:
     virtual void translate(float x, float y, float z) override;
@@ -49,10 +56,14 @@ public:
     void activateGrab();
     void deactivateGrab();
 
-    void scanAndMoveToClosestObject(const RayCast& ray);
     void scanAndMoveToClosestObject(const RayCast& ray, int width, int height);
 
     virtual float intersect(const RayCast &ray) override;
+
+    virtual void render(const glm::mat4& VP) override;
+    virtual void render(const glm::mat4& VP, const Color& color) override;
+
+    virtual void update() override;
 };
 
 

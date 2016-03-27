@@ -11,25 +11,70 @@
 
 using namespace glm;
 
+//-----------------------//
+//  CONSTRUCTORS
+//-----------------------//
+
 Cross::Cross(const std::vector<RenderBody*>* sceneObjects) :
         xAxisColor(COLOR_X_AXIS),
         yAxisColor(COLOR_Y_AXIS),
         zAxisColor(COLOR_Z_AXIS),
         grabedColor(COLOR_GRABED){
-    lineWidth = 6.0f;
-
+    lineWidth = 3.0f;
     grabRadius = 0.1;
 
     initVertices();
     initEdges();
+    transformedVertices.resize(vertices.size());
 
     this->sceneObjects = sceneObjects;
     isGrabActive = false;
+
+    initCones();
 }
 
 Cross::~Cross() {
+    delete xCone;
+    delete yCone;
+    delete zCone;
+}
+
+//-----------------------//
+//  PRIVATE
+//-----------------------//
+
+
+void Cross::initCones(){
+    float r = 0.2;
+    float h = 0.6;
+    int baseCount = 30;
+
+    float scaleFactor = 0.1;
+
+    xCone = new Cone(r, h, baseCount);
+    yCone = new Cone(r, h, baseCount);
+    zCone = new Cone(r, h, baseCount);
+
+    xCone->setColor(xAxisColor);
+    xCone->scale(scaleFactor );
+    xCone->rotate(0, 0, 180 + 90);
+    xCone->move(grabRadius - ((h-0.1)*scaleFactor), 0, 0);
+
+    yCone->setColor(yAxisColor);
+    yCone->scale(scaleFactor );
+    yCone->rotate(0, 180, 0);
+    yCone->move(0, grabRadius - ((h-0.1)*scaleFactor), 0);
+
+    zCone->setColor(zAxisColor);
+    zCone->scale(scaleFactor );
+    zCone->rotate(90, 0, 0);
+    zCone->move(0, 0, grabRadius - ((h-0.1)*scaleFactor));
 
 }
+
+//-----------------------//
+//  PROTECTED
+//-----------------------//
 
 void Cross::translate(float x, float y, float z) {
     RigidBody::translate(x, y, z);
@@ -39,6 +84,10 @@ void Cross::translate(float x, float y, float z) {
 
         body->move(x, y, z);
     }
+
+    xCone->move(x, y, z);
+    yCone->move(x, y, z);
+    zCone->move(x, y, z);
 }
 
 void Cross::initVertices() {
@@ -101,6 +150,12 @@ void Cross::initEdges() {
     edges.push_back(e3);
 }
 
+
+//-----------------------//
+//  PUBLIC
+//-----------------------//
+
+
 void Cross::activateGrab() {
     if(isGrabActive) return;
     isGrabActive = true;
@@ -108,6 +163,8 @@ void Cross::activateGrab() {
     const vec3 crossPos = this->getPosition();
     for(unsigned int i = 1; i < sceneObjects->size(); i++){
         RenderBody* body = (*sceneObjects)[i];
+        if(!body->isGrabable()) continue;
+
         const vec3& bodyPos = body->getPosition();
 
         float dx = crossPos.x - bodyPos.x;
@@ -142,27 +199,6 @@ float Cross::intersect(const RayCast &ray) {
     return RAYCAST_NO_SOLUTION;
 }
 
-void Cross::scanAndMoveToClosestObject(const RayCast& ray){
-    float tol = 0.1;
-
-    RenderBody* closestBody = NULL;
-    for(unsigned int i = 1; i < sceneObjects->size(); i++){
-        float x = ray.currentX;
-        float y = ray.currentY;
-        RenderBody* body = (*sceneObjects)[i];
-
-
-        /*
-        float z = body->intersect(ray);
-        if(z != RAYCAST_NO_SOLUTION){
-            std::cout << "Found object: " << i << std::endl << std::endl;
-            this->moveTo(body);
-        }else{
-            ;//std::cout << "Found nothing" << std::endl;
-        }*/
-    }
-}
-
 void Cross::scanAndMoveToClosestObject(const RayCast& ray, int width, int height){
     int distTol = 20;
 
@@ -179,9 +215,10 @@ void Cross::scanAndMoveToClosestObject(const RayCast& ray, int width, int height
     for(unsigned int i = 1; i < sceneObjects->size(); i++){
 
         RenderBody* body = (*sceneObjects)[i];
+        const vec3& bodyProjectedPosition = body->getProjectedPosition();
 
-        float bodyX = body->transformed.x;
-        float bodyY = body->transformed.y;
+        float bodyX = bodyProjectedPosition.x;
+        float bodyY = bodyProjectedPosition.y;
 
         int bodypX = (bodyX + 1.0f) / vX;
         int bodypY  = (bodyY + 1.0f) / vY;
@@ -190,21 +227,35 @@ void Cross::scanAndMoveToClosestObject(const RayCast& ray, int width, int height
         int dy = rayY - bodypY;
         int dist = sqrt(dx*dx + dy*dy);
 
-        std::cout << "Ray: " << "x:" << rayX << ", y" << rayY << std::endl;
-        std::cout << "Body: " << "x:" << bodypX << ", y" << bodypY << std::endl;
-        std::cout << "Dist: " << dist << std::endl << std::endl;
 
         if(dist < distTol){
             this->moveTo(body);
         }
 
-        /*
-        float z = body->intersect(ray);
-        if(z != RAYCAST_NO_SOLUTION){
-            std::cout << "Found object: " << i << std::endl << std::endl;
-            this->moveTo(body);
-        }else{
-            ;//std::cout << "Found nothing" << std::endl;
-        }*/
     }
+}
+
+void Cross::render(const glm::mat4 &VP) {
+    RenderBody::render(VP);
+
+    xCone->render(VP);
+    yCone->render(VP);
+    zCone->render(VP);
+
+}
+
+void Cross::render(const glm::mat4 &VP, const Color &color) {
+    RenderBody::render(VP, color);
+
+    xCone->render(VP, color);
+    yCone->render(VP, color);
+    zCone->render(VP, color);
+}
+
+void Cross::update() {
+    RigidBody::update();
+
+    xCone->update();
+    yCone->update();
+    zCone->update();
 }

@@ -42,6 +42,7 @@ GLWidget::GLWidget(QWidget* parent) :
     startMainLoop();
 
     isMouseDrag = false;
+    isRightMouseDrag = false;
 }
 
 GLWidget::~GLWidget(){
@@ -274,8 +275,10 @@ void GLWidget::updateCrossView(){
     ui->positionYInput->setText(QString::number(pos.y, 'f', 2));
     ui->positionZInput->setText(QString::number(pos.z, 'f', 2));
 
-    int pX = renderer->xGLToPixelCoord(cross->transformed.x);
-    int pY = renderer->yGLToPixelCoord(cross->transformed.y);
+    const glm::vec3& bodyProjectedPosition = cross->getProjectedPosition();
+
+    int pX = renderer->xGLToPixelCoord(bodyProjectedPosition.x);
+    int pY = renderer->yGLToPixelCoord(bodyProjectedPosition.y);
     ui->angleXInput->setText(QString::number(pX));
     ui->angleYInput->setText(QString::number(pY));
 
@@ -313,11 +316,11 @@ bool GLWidget::do_movement(){
         changed = true;
     }
     if(keys[KEY_Q]){
-        camera->moveDown(speedBoost/3);
+        camera->moveDown(speedBoost);
         changed = true;
     }
     if(keys[KEY_E]){
-        camera->moveUp(speedBoost/3);
+        camera->moveUp(speedBoost);
         changed = true;
     }
     if(keys[KEY_MINUS]){

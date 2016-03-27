@@ -62,11 +62,11 @@ void CameraFPS::moveBackward(float speedBoost) {
 }
 
 void CameraFPS::moveLeft(float speedBoost) {
-    position -= right * (buttonsSpeed / 2) * speedBoost;
+    position -= right * (buttonsSpeed ) * speedBoost;
 }
 
 void CameraFPS::moveRight(float speedBoost) {
-    position += right * (buttonsSpeed / 2) * speedBoost;
+    position += right * (buttonsSpeed / 1) * speedBoost;
 }
 
 void CameraFPS::moveUp(float speedBoost) {

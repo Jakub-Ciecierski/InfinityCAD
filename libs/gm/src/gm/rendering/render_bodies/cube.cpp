@@ -12,9 +12,10 @@ using namespace std;
 //  CONSTRUCTORS
 //-----------------------------------------------------------//
 
-Cube::Cube() {
+Cube::Cube() : RenderBody(){
     initVertices();
     initEdges();
+    transformedVertices.resize(vertices.size());
 }
 
 Cube::~Cube() {

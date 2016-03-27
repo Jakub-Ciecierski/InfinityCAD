@@ -5,7 +5,9 @@
 #include <gm/rendering/render_bodies/cross.h>
 #include <gm/color/color_settings.h>
 #include <iostream>
-#include <rc/ray_constants.h>
+#include "gm/rendering/ray_cast.h"
+#include "../../../../include/gm/rendering/ray_cast.h"
+#include "../../../../include/gm/rendering/render_body.h"
 
 using namespace glm;
 
@@ -137,7 +139,7 @@ void Cross::deactivateGrab() {
 }
 
 float Cross::intersect(const RayCast &ray) {
-    return RAY_NO_SOLUTION;
+    return RAYCAST_NO_SOLUTION;
 }
 
 void Cross::scanAndMoveToClosestObject(const RayCast& ray){
@@ -145,14 +147,64 @@ void Cross::scanAndMoveToClosestObject(const RayCast& ray){
 
     RenderBody* closestBody = NULL;
     for(unsigned int i = 1; i < sceneObjects->size(); i++){
+        float x = ray.currentX;
+        float y = ray.currentY;
         RenderBody* body = (*sceneObjects)[i];
 
+
+        /*
         float z = body->intersect(ray);
-        if(z != RAY_NO_SOLUTION){
+        if(z != RAYCAST_NO_SOLUTION){
             std::cout << "Found object: " << i << std::endl << std::endl;
             this->moveTo(body);
         }else{
             ;//std::cout << "Found nothing" << std::endl;
+        }*/
+    }
+}
+
+void Cross::scanAndMoveToClosestObject(const RayCast& ray, int width, int height){
+    int distTol = 20;
+
+    float x = ray.currentX;
+    float y = ray.currentY;
+
+    float vX = 2.0 / (float) width;
+    int rayX = (x + 1.0f) / vX;
+
+    float vY = 2.0 / (float) height;
+    int rayY = (y + 1.0f) / vY;
+
+    RenderBody* closestBody = NULL;
+    for(unsigned int i = 1; i < sceneObjects->size(); i++){
+
+        RenderBody* body = (*sceneObjects)[i];
+
+        float bodyX = body->transformed.x;
+        float bodyY = body->transformed.y;
+
+        int bodypX = (bodyX + 1.0f) / vX;
+        int bodypY  = (bodyY + 1.0f) / vY;
+
+        int dx = rayX - bodypX;
+        int dy = rayY - bodypY;
+        int dist = sqrt(dx*dx + dy*dy);
+
+        std::cout << "Ray: " << "x:" << rayX << ", y" << rayY << std::endl;
+        std::cout << "Body: " << "x:" << bodypX << ", y" << bodypY << std::endl;
+        std::cout << "Dist: " << dist << std::endl << std::endl;
+
+        if(dist < distTol){
+            this->moveTo(body);
         }
+
+        /*
+        float z = body->intersect(ray);
+        if(z != RAYCAST_NO_SOLUTION){
+            std::cout << "Found object: " << i << std::endl << std::endl;
+            this->moveTo(body);
+        }else{
+            ;//std::cout << "Found nothing" << std::endl;
+        }*/
     }
 }

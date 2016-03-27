@@ -20,6 +20,8 @@ RayCast::~RayCast() {
 }
 
 void RayCast::update(float x, float y) {
+    currentX = x;
+    currentY = y;
     mat4 projMatrix = camera->getProjection()->getProjectionMatrix();
     mat4 invProjMatrix = inverse(projMatrix);
     mat4 invViewMatrix = inverse(camera->getViewMatrix());

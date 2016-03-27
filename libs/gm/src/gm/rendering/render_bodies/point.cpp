@@ -6,7 +6,7 @@
 #include <iostream>
 #include <GL/gl.h>
 #include <gm/util/utils.h>
-#include <rc/ray_constants.h>
+#include "gm/rendering/ray_cast.h"
 
 using namespace glm;
 
@@ -143,7 +143,7 @@ float Point::intersect(const RayCast& ray){
     float c = gm::dot(tmp, tmp) - (toleratedRadius * toleratedRadius);
 
     float delta = (b*b - c);
-    if(isnan(delta) == 1 || delta < 0) return RAY_NO_SOLUTION;
+    if(isnan(delta) == 1 || delta < 0) return RAYCAST_NO_SOLUTION;
     else if(delta > 0) solutions = 2;
     else solutions = 1;
 

@@ -93,6 +93,13 @@ void ObjectManager::changeName(string srcName){
     string title = "Change Name";
     string dstName = EditorWindow::getInstance().showInputBox(title, text);
 
+    if(sceneTree->getItemIndex(dstName) >= 0) {
+        string title = "Name";
+        string text = "Name: " + dstName + " already exists. Try other name";
+        EditorWindow::getInstance().showInfoBox(title, text);
+        return;
+    }
+    if(dstName.empty()) return;
     sceneTree->changeName(srcName, dstName);
 }
 

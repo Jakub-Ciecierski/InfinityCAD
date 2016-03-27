@@ -9,6 +9,8 @@
 
 class Camera;
 
+const float RAYCAST_NO_SOLUTION = 99999.9f;
+
 class RayCast {
 private:
     Camera* camera;
@@ -16,6 +18,8 @@ private:
     glm::vec3 origin;
     glm::vec3 direction;
 public:
+    float currentX;
+    float currentY;
 
     RayCast(Camera* camera);
     ~RayCast();

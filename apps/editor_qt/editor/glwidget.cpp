@@ -61,6 +61,7 @@ void GLWidget::setupRenderer(){
 
     ray = new RayCast(fpsCamera);
 
+
 /*
     Torus* t = new Torus(0.4, 0.3, 100, 100);
     Torus* tt = new Torus(0.2, 0.1);
@@ -196,7 +197,7 @@ void GLWidget::mousePressEvent(QMouseEvent *event){
         ray->update(xGL, yGL);
 
         Cross* cross = renderer->getScene()->getCross();
-        cross->scanAndMoveToClosestObject(*ray);
+        cross->scanAndMoveToClosestObject(*ray, renderer->getWindowWidth(), renderer->getWindowHeight());
 
         mouseDragPosition = event->pos();
         isMouseDrag = true;

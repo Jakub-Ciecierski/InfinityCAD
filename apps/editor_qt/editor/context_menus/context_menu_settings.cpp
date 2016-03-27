@@ -31,6 +31,7 @@ Handler OBJECTS_MENU_ADD_NAMED_HANDLER([](string objectType){
     string title = "New Object";
     string text = "Input name";
     string name = EditorWindow::getInstance().showInputBox(title, text);
+    if(name.empty()) return;
 
     objManager.addObject(objectType, name);
 });

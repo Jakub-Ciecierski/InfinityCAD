@@ -131,6 +131,14 @@ void RigidBody::moveTo(const RigidBody* toBody) {
     translate(-position.x + pos.x, -position.y + pos.y, -position.z + pos.z);
 }
 
+void RigidBody::rotateTo(float xAngle, float yAngle, float zAngle){
+    rotationAngles.x = xAngle;
+    rotationAngles.y = yAngle;
+    rotationAngles.z = zAngle;
+
+    clampAngles();
+}
+
 void RigidBody::rotate(float dxAngle, float dyAngle, float dzAngle) {
     rotationAngles.x += dxAngle;
     rotationAngles.y += dyAngle;

@@ -6,8 +6,8 @@
 #include <gm/cameras/camera.h>
 #include <gm/scene/scene_id_factory.h>
 #include <gm/scene/scene_id.h>
-#include <gm/rendering/render_bodies/torus.h>
-#include <gm/rendering/render_bodies/point.h>
+#include <gm/rendering/render_bodies/primitivies/torus.h>
+#include <gm/rendering/render_bodies/primitivies/point.h>
 #include <gm/color/color_settings.h>
 
 

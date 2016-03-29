@@ -25,11 +25,12 @@ Cross::Cross(const std::vector<RenderBody*>* sceneObjects) :
 
     initVertices();
     initEdges();
-    transformedVertices.resize(vertices.size());
+    NDCVertices.resize(vertices.size());
 
     this->sceneObjects = sceneObjects;
     isGrabActive = false;
 
+    grabable = false;
     initCones();
 }
 
@@ -161,7 +162,7 @@ void Cross::activateGrab() {
     isGrabActive = true;
 
     const vec3 crossPos = this->getPosition();
-    for(unsigned int i = 1; i < sceneObjects->size(); i++){
+    for(unsigned int i = 0; i < sceneObjects->size(); i++){
         RenderBody* body = (*sceneObjects)[i];
         if(!body->isGrabable()) continue;
 
@@ -199,6 +200,11 @@ float Cross::intersect(const RayCast &ray) {
     return RAYCAST_NO_SOLUTION;
 }
 
+vec3 Cross::getClosestPoint(const vec3 point){
+    return vec3(0,0,0);
+}
+
+
 void Cross::scanAndMoveToClosestObject(const RayCast& ray, int width, int height){
     int distTol = 20;
 
@@ -211,7 +217,6 @@ void Cross::scanAndMoveToClosestObject(const RayCast& ray, int width, int height
     float vY = 2.0 / (float) height;
     int rayY = (y + 1.0f) / vY;
 
-    RenderBody* closestBody = NULL;
     for(unsigned int i = 1; i < sceneObjects->size(); i++){
 
         RenderBody* body = (*sceneObjects)[i];
@@ -259,3 +264,4 @@ void Cross::update() {
     yCone->update();
     zCone->update();
 }
+

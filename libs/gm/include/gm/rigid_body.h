@@ -73,12 +73,14 @@ public:
     void moveTo(const RigidBody* toBody);
 
     void rotate(float dxAngle, float dyAngle, float dzAngle);
+    void rotateTo(float xAngle, float yAngle, float zAngle);
 
     void scale(float scale);
-
     void scaleDt(float scale);
 
     const glm::vec3& getPosition() const;
+
+    virtual glm::vec3 getClosestPoint(const glm::vec3 point) = 0;
 
     /*
      * ModelMatrix = Translate * Rotate * Scale

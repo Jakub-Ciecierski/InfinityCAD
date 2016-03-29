@@ -41,3 +41,16 @@ float gm::dot(const vec3& v1, const vec3& v2){
 
     return dotValue;
 }
+
+float gm::euclideanDistance(const vec3& v1, const vec3& v2){
+    float distance = 0;
+
+    float dx = v1.x - v2.x;
+    float dy = v1.y - v2.y;
+    float dz = v1.z - v2.z;
+    distance = dx*dx + dy*dy + dz*dz;
+
+    distance = sqrt(distance);
+
+    return distance;
+}

@@ -21,3 +21,7 @@ Camera::~Camera() {
 Projection *Camera::getProjection() {
     return this->projection;
 }
+
+glm::vec3 Camera::getClosestPoint(const glm::vec3 point) {
+    return glm::vec3(0,0,0);
+}

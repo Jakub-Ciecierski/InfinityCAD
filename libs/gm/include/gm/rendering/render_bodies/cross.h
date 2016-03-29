@@ -59,6 +59,7 @@ public:
     void scanAndMoveToClosestObject(const RayCast& ray, int width, int height);
 
     virtual float intersect(const RayCast &ray) override;
+    virtual glm::vec3 getClosestPoint(const glm::vec3 point) override;
 
     virtual void render(const glm::mat4& VP) override;
     virtual void render(const glm::mat4& VP, const Color& color) override;

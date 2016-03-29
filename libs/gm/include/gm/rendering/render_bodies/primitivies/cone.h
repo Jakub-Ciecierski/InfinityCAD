@@ -5,7 +5,6 @@
 #ifndef MG1_CONE_H
 #define MG1_CONE_H
 
-
 #include <gm/rendering/render_body.h>
 
 class Cone : public RenderBody{
@@ -19,9 +18,6 @@ protected:
     virtual void initVertices() override;
     virtual void initEdges() override;
 
-    virtual void drawLines(const std::vector<glm::vec4>& vertices,
-                           bool costumColor) override;
-
 public:
 
     Cone(float radius, float height, int baseVerticesCount);
@@ -29,6 +25,7 @@ public:
 
     virtual float intersect(const RayCast &ray) override;
 
+    virtual glm::vec3 getClosestPoint(const glm::vec3 point) override;
 };
 
 

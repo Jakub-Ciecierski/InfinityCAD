@@ -18,6 +18,8 @@ public:
     Camera();
     Camera(Projection* projection);
 
+    virtual glm::vec3 getClosestPoint(const glm::vec3 point) override;
+
     virtual ~Camera();
 
     Projection* getProjection();

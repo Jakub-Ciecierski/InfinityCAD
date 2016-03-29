@@ -9,3 +9,6 @@
 # E.g. MAKE_EXTERNAL = /path/to/make/ install
 MAKE_EXTERNAL[0]=../../glm/make/
 MAKE_EXTERNAL_RULE[0]=install
+
+MAKE_EXTERNAL[1]=../../math/make/
+MAKE_EXTERNAL_RULE[1]=install

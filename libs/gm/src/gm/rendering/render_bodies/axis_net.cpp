@@ -15,7 +15,7 @@ using namespace glm;
 AxisNet::AxisNet(int netSize) : netSize(netSize) {
     initVertices();
     initEdges();
-    transformedVertices.resize(vertices.size());
+    NDCVertices.resize(vertices.size());
 
     setColor(COLOR_PLANE);
 
@@ -89,4 +89,8 @@ void AxisNet::drawLines(const std::vector<glm::vec4> &vertices,
 
 float AxisNet::intersect(const RayCast &ray) {
     return RAYCAST_NO_SOLUTION;
+}
+
+vec3 AxisNet::getClosestPoint(const vec3 point){
+    return vec3(0,0,0);
 }

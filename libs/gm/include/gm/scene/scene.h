@@ -59,6 +59,8 @@ public:
     //  PUBLIC METHODS
     //-----------------------------------------------------------//
 
+    virtual glm::vec3 getClosestPoint(const glm::vec3 point) override;
+
     //--------------------//
     //  SETTERS
     //--------------------//

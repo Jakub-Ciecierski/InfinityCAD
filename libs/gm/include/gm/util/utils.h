@@ -15,6 +15,8 @@ void printvec4(const glm::vec4& v);
 
 namespace gm {
     float dot(const glm::vec3 &v1, const glm::vec3 &v2);
+
+    float euclideanDistance(const glm::vec3& v1, const glm::vec3& v2);
 }
 
 #endif //MG1_UTILS_H

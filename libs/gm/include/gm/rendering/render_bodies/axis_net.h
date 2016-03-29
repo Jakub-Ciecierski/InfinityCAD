@@ -21,10 +21,11 @@ protected:
 public:
 
     AxisNet(int netSize);
-
     ~AxisNet();
 
     virtual float intersect(const RayCast &ray) override;
+
+    virtual glm::vec3 getClosestPoint(const glm::vec3 point) override;
 };
 
 

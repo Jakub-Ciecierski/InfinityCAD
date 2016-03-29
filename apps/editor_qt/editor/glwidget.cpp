@@ -6,9 +6,9 @@
 #include <gm/color/color_convertor.h>
 #include "gm/rendering/render_body.h"
 
-#include <gm/rendering/render_bodies/torus.h>
+#include <gm/rendering/render_bodies/primitivies/torus.h>
 #include <gm/rendering/render_bodies/cross.h>
-#include <gm/rendering/render_bodies/cube.h>
+#include <gm/rendering/render_bodies/primitivies/cube.h>
 #include <gm/projections/perspective_projection.h>
 #include <gm/projections/stereoscopic_projection.h>
 #include <gm/projections/indentity_projection.h>

@@ -25,14 +25,17 @@ void ContextMenu::handle(const QAction* a,
                          const QList<QTreeWidgetItem *>& selected){
     if(a == NULL) return;
     if(selected.empty()) return;
+    std::string actionString = a->text().toStdString();
 
-    QTreeWidgetItem* item = selected.at(0);
+    for(unsigned int i = 0; i < selected.size(); i++){
+        QTreeWidgetItem* item = selected.at(i);
 
-    std::string str = a->text().toStdString();
-    std::string selectedObject = item->text(0).toStdString();
+        std::string selectedObject = item->text(0).toStdString();
 
-    // TODO handle proper non existing str
-    Handler handler = handlerMap[str];
+        // TODO handle proper non existing str
+        Handler handler = handlerMap[actionString];
 
-    handler.execute(selectedObject);
+        handler.execute(selectedObject);
+    }
+
 }

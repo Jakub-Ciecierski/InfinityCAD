@@ -13,6 +13,7 @@
 struct ItemTMP{
     RenderBody* object;
     QTreeWidgetItem* treeItem;
+    std::string type;
 
     ItemTMP(){}
     ItemTMP(RenderBody* obj,
@@ -83,14 +84,18 @@ private:
     QTreeWidgetItem* torusTreeRoot;
     QTreeWidgetItem* pointTreeRoot;
 
-    void initRootItems();
+    void setupContextMenu();
+    void setupRootItems();
+    void setupBinding();
 
     ContextMenu* getMenuBasedOnItems(QList<QTreeWidgetItem *>& selectedItems);
 
-    void setupContextMenu();
     QList<QTreeWidgetItem *> filterSelectedItems();
+    QList<QTreeWidgetItem *> filterSelectedItems(std::string type);
 
     void deleteItem(ItemTMP* item);
+
+    virtual void dropEvent(QDropEvent * event);
 
 public:
     SceneTree(QWidget* parent);
@@ -100,11 +105,8 @@ public:
     ItemTMP* getItemByName(std::string name);
     ItemTMP* getItemByTree(QTreeWidgetItem* treeItem);
 
-    void addObject(RenderBody* obj);
     void addObject(RenderBody* object, std::string type);
-
     SceneID deleteObject(std::string name);
-
     void changeName(std::string srcName, std::string dstName);
 
 public slots:

@@ -17,14 +17,11 @@ private:
     Scene* scene;
     SceneTree* sceneTree;
 
-    void addTorus();
     void addTorus(std::string name);
-    void addPoint();
     void addPoint(std::string name);
-
     void addBezierCurve(std::string name);
 
-    std::string getDefaultName(std::string type, SceneID id);
+    std::string getDefaultName(std::string type);
 
 public:
     static ObjectManager& getInstance();

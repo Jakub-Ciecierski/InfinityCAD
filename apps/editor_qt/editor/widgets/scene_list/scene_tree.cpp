@@ -14,30 +14,64 @@ SceneTree::SceneTree(QWidget* parent) :
     QTreeWidget(parent)
 {
     setupContextMenu();
-
-    this->connect(this,
-                 SIGNAL(itemPressed(QTreeWidgetItem*,int)),
-                 this,
-                 SLOT(myitemActivated(QTreeWidgetItem*,int)));
-    this->connect(this,
-                 SIGNAL(itemSelectionChanged()),
-                 this,
-                 SLOT(myitemSelectionChanged()));
-
-    initRootItems();
+    setupBinding();
+    setupRootItems();
 }
 
 //-----------------------------//
 //  PRIVATE
 //-----------------------------//
 
-void SceneTree::initRootItems(){
+void SceneTree::dropEvent(QDropEvent * event){
+    QModelIndex index = indexAt(event->pos());
+    if (!index.isValid()) {
+        event->setDropAction(Qt::IgnoreAction);
+        return;
+    }
+    QTreeWidgetItem* destinationTreeItem = itemFromIndex(index);
+    ItemTMP* destItem = getItemByTree(destinationTreeItem);
+
+    // Points to Bezier
+    if(destItem != NULL && destItem->type == RB_BEZIER_NAME) {
+        QList<QTreeWidgetItem *> selectedPoints =
+                filterSelectedItems(RB_POINT_NAME);
+        for(auto* selectedPoint : selectedPoints){
+
+            destItem->treeItem->addChild(selectedPoint);
+
+        }
+    }
+
+    //std::cout << "droped" << std::endl;
+}
+
+void SceneTree::setupBinding(){
+    this->connect(this, SIGNAL(itemPressed(QTreeWidgetItem*,int)),
+                 this, SLOT(myitemActivated(QTreeWidgetItem*,int)));
+    this->connect(this, SIGNAL(itemSelectionChanged()),
+                 this, SLOT(myitemSelectionChanged()));
+}
+
+void SceneTree::setupRootItems(){
     rootItems.resize(3);
 
     rootItems[TORUS_ROOT_INDEX] = RootTreeItem(RB_TORUS_NAME, "Toruses");
     rootItems[POINT_ROOT_INDEX] = RootTreeItem(RB_POINT_NAME, "Points");
     rootItems[BEZIER_ROOT_INDEX] = RootTreeItem(RB_BEZIER_NAME, "Bezier Curves");
 }
+
+void SceneTree::setupContextMenu(){
+    setSelectionMode(QAbstractItemView::ExtendedSelection);
+    setContextMenuPolicy(Qt::CustomContextMenu);
+
+    connect(this, SIGNAL(customContextMenuRequested(const QPoint&)),
+        this, SLOT(ShowContextMenu(const QPoint&)));
+
+    this->setAcceptDrops(true);
+    this->setDragEnabled(true);
+    this->setDragDropMode(QAbstractItemView::InternalMove);
+}
+
 
 ContextMenu* SceneTree::getMenuBasedOnItems(
         QList<QTreeWidgetItem *>& selectedItems){
@@ -58,12 +92,19 @@ ContextMenu* SceneTree::getMenuBasedOnItems(
     }
 }
 
-void SceneTree::setupContextMenu(){
-    setContextMenuPolicy(Qt::CustomContextMenu);
+QList<QTreeWidgetItem *> SceneTree::filterSelectedItems(string type){
+    QList<QTreeWidgetItem *> filteredItems;
 
-    connect(this, SIGNAL(customContextMenuRequested(const QPoint&)),
-        this, SLOT(ShowContextMenu(const QPoint&)));
+    QList<QTreeWidgetItem *> selectedItems = this->selectedItems();
+    for(unsigned int i = 0; i < selectedItems.size(); i++){
+        ItemTMP* item  = getItemByTree(selectedItems[i]);
+        if(item != NULL && item->type == type)
+            filteredItems.push_back(selectedItems[i]);
+    }
+
+    return filteredItems;
 }
+
 
 QList<QTreeWidgetItem *> SceneTree::filterSelectedItems(){
     QList<QTreeWidgetItem *> filteredItems;
@@ -114,8 +155,9 @@ bool SceneTree::objectExists(std::string name){
 ItemTMP* SceneTree::getItemByName(std::string name){
     for(unsigned int i = 0; i < itemsTMP.size(); i++){
         ItemTMP* item = &(itemsTMP[i]);
-        if (name == item->object->getName())
+        if (name == item->object->getName()){
             return item;
+        }
     }
     return NULL;
 }
@@ -129,22 +171,12 @@ ItemTMP* SceneTree::getItemByTree(QTreeWidgetItem* treeItem){
     return NULL;
 }
 
-
-void SceneTree::addObject(RenderBody* object){
-    QTreeWidgetItem* treeItem = new QTreeWidgetItem(this);
-    treeItem->setText(0, QString::fromStdString(object->getName()));
-
-    this->addTopLevelItem(treeItem);
-
-    ItemTMP item(object, treeItem);
-    this->itemsTMP.push_back(item);
-}
-
 void SceneTree::addObject(RenderBody* object, std::string type){
     QTreeWidgetItem* treeItem = new QTreeWidgetItem();
     treeItem->setText(0, QString::fromStdString(object->getName()));
 
     ItemTMP item(object, treeItem);
+    item.type = type;
     this->itemsTMP.push_back(item);
 
     for(unsigned int i = 0;i < rootItems.size();i++){
@@ -158,10 +190,12 @@ void SceneTree::addObject(RenderBody* object, std::string type){
 
 SceneID SceneTree::deleteObject(string name){
     ItemTMP* item = getItemByName(name);
-    if(item == NULL) throw std::invalid_argument(name + " - No such Object");
+    if(item == NULL) {throw std::invalid_argument(name + " - No such Object");}
+    SceneID id = item->object->getID();
+
     deleteItem(item);
 
-    return item->object->getID();
+    return id;
 }
 
 void SceneTree::changeName(string srcName, string dstName){
@@ -192,13 +226,21 @@ void SceneTree::myitemActivated(QTreeWidgetItem* treeItem, int column){
     ItemTMP* item = getItemByTree(treeItem);
     if(item == NULL) return;
 
-    ObjectManager::getInstance().setActive(item->object->getID());
+    //ObjectManager::getInstance().setActive(item->object->getID());
 }
 
 void SceneTree::myitemSelectionChanged(){
-    for(int i = 0;i < itemsTMP.size(); i++){
+    QList<QTreeWidgetItem *> selectedItems = this->selectedItems();
+
+    for(unsigned int i = 0;i < itemsTMP.size(); i++){
         ItemTMP item = itemsTMP[i];
         ObjectManager::getInstance().setDeactive(item.object->getID());
+    }
+
+    for(unsigned int i = 0; i < selectedItems.size();i++){
+        ItemTMP* item = getItemByTree(selectedItems[i]);
+        if(item == NULL) continue;
+        ObjectManager::getInstance().setActive(item->object->getID());
     }
 }
 

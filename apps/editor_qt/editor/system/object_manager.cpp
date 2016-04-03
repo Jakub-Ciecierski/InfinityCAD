@@ -11,6 +11,8 @@
 #include <gm/color/color_settings.h>
 #include <gm/scene/object_factory.h>
 
+#include <iostream>
+
 using namespace std;
 using namespace Ui;
 using namespace ic;
@@ -52,8 +54,9 @@ void ObjectManager::addBezierCurve(string name){
     sceneTree->addObject(p, RB_BEZIER_NAME);
 }
 
-string ObjectManager::getDefaultName(string type, SceneID id){
-    string defaultName = type + "_" + to_string(id.getKey());
+string ObjectManager::getDefaultName(string type){
+    static int id_count = 0;
+    string defaultName = type + "_" + to_string(id_count++);
 
     return defaultName;
 }
@@ -69,8 +72,7 @@ ObjectManager& ObjectManager::getInstance(){
 }
 
 void ObjectManager::addObject(string type){
-    SceneID nextID = this->scene->getNextAvailableID();
-    string defaultName = getDefaultName(type, nextID);
+    string defaultName = getDefaultName(type);
 
     addObject(type, defaultName);
 }
@@ -98,6 +100,7 @@ void ObjectManager::deleteObject(string name){
     if(!EditorWindow::getInstance().showQuestionBox(title, text)) return;
 
     SceneID id = this->sceneTree->deleteObject(name);
+
     this->scene->removeObject(id);
 }
 
@@ -140,10 +143,12 @@ void ObjectManager::moveCamera(string objectName){
 void ObjectManager::setActive(SceneID id){
 
     RenderBody* body = scene->getRenderBody(id);
-    body->setColor(COLOR_OBJECT_ACTIVE);
+    if(body != NULL)
+        body->setColor(COLOR_OBJECT_ACTIVE);
 }
 
 void ObjectManager::setDeactive(SceneID id){
     RenderBody* body = scene->getRenderBody(id);
-    body->setColor(COLOR_OBJECT_DEFAULT);
+    if(body != NULL)
+        body->setColor(COLOR_OBJECT_DEFAULT);
 }

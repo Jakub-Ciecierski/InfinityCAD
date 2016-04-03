@@ -44,6 +44,14 @@ void ObjectManager::addPoint(string name){
     sceneTree->addObject(p, RB_POINT_NAME);
 }
 
+void ObjectManager::addBezierCurve(string name){
+    ObjectFactory& objectFactory = ObjectFactory::getInstance();
+    RenderBody* p = objectFactory.createPoint(name);
+
+    this->scene->addRenderObject(p);
+    sceneTree->addObject(p, RB_BEZIER_NAME);
+}
+
 string ObjectManager::getDefaultName(string type, SceneID id){
     string defaultName = type + "_" + to_string(id.getKey());
 
@@ -79,6 +87,8 @@ void ObjectManager::addObject(string type, string name){
         addTorus(name);
     }else if(type == RB_POINT_NAME){
         addPoint(name);
+    }else if(type == RB_BEZIER_NAME){
+        addBezierCurve(name);
     }
 }
 

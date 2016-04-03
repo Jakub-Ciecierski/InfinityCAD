@@ -33,7 +33,6 @@ EditorWindow::~EditorWindow()
     delete ui;
 
     delete objectListContextMenu;
-    delete sceneListContextMenu;
 }
 
 //-------------------------//
@@ -52,10 +51,6 @@ Ui::MainWindow* EditorWindow::getUI(){
 
 ContextMenu& EditorWindow::getObjectsListContextMenu(){
     return *objectListContextMenu;
-}
-
-ContextMenu& EditorWindow::getSceneListContextMenu(){
-    return *sceneListContextMenu;
 }
 
 bool EditorWindow::showQuestionBox(string title, string text){
@@ -116,10 +111,8 @@ void EditorWindow::setupProperties(){
 
 void EditorWindow::setupContextMenus(){
     ObjectsCMenuFactory objCMFactory;
-    SceneCMenuFactory sceneCMFactory;
 
     objectListContextMenu = objCMFactory.create();
-    sceneListContextMenu = sceneCMFactory.create();
 }
 
 void EditorWindow::setupBinding(){

@@ -20,7 +20,6 @@ public:
     static EditorWindow& getInstance();
 
     ContextMenu& getObjectsListContextMenu();
-    ContextMenu& getSceneListContextMenu();
 
     Ui::MainWindow* getUI();
 
@@ -34,7 +33,6 @@ private:
     Ui::MainWindow *ui;
 
     ContextMenu* objectListContextMenu;
-    ContextMenu* sceneListContextMenu;
 
     void setupProperties();
 

@@ -5,6 +5,8 @@
 #include <iostream>
 #include "system/object_manager.h"
 #include "system/ic_names.h"
+#include <widgets/scene_list/context_menus/scene_cmenu_factory.h>
+
 
 using namespace std;
 
@@ -22,29 +24,38 @@ SceneTree::SceneTree(QWidget* parent) :
                  this,
                  SLOT(myitemSelectionChanged()));
 
-    rootItems.push_back(RootTreeItem(RB_TORUS_NAME, "Toruses"));
-    rootItems.push_back(RootTreeItem(RB_POINT_NAME, "Points"));
-    rootItems.push_back(RootTreeItem(RB_BEZIER_NAME, "Bezier Curves"));
+    initRootItems();
 }
 
 //-----------------------------//
 //  PRIVATE
 //-----------------------------//
 
-void SceneTree::initTorusRoot(){
-    if(torusTreeRoot != NULL) return;
+void SceneTree::initRootItems(){
+    rootItems.resize(3);
 
-    torusTreeRoot = new QTreeWidgetItem(this);
-    torusTreeRoot->setText(0, "Toruses");
-    this->addTopLevelItem(torusTreeRoot);
+    rootItems[TORUS_ROOT_INDEX] = RootTreeItem(RB_TORUS_NAME, "Toruses");
+    rootItems[POINT_ROOT_INDEX] = RootTreeItem(RB_POINT_NAME, "Points");
+    rootItems[BEZIER_ROOT_INDEX] = RootTreeItem(RB_BEZIER_NAME, "Bezier Curves");
 }
 
-void SceneTree::initPointRoot(){
-    if(pointTreeRoot != NULL) return;
+ContextMenu* SceneTree::getMenuBasedOnItems(
+        QList<QTreeWidgetItem *>& selectedItems){
+    SceneCMenuFactory& factory = SceneCMenuFactory::getInstance();
 
-    pointTreeRoot = new QTreeWidgetItem(this);
-    pointTreeRoot->setText(0, "Points");
-    this->addTopLevelItem(pointTreeRoot);
+    int pointCount = 0;
+    RootTreeItem& rootItem = rootItems[POINT_ROOT_INDEX];
+
+    for(auto* item : selectedItems){
+        int index = rootItem.item->indexOfChild(item);
+        if(index >= 0) pointCount++;
+    }
+    // All selected are points
+    if(pointCount == selectedItems.size()){
+        return factory.getPointMenu(&rootItems[BEZIER_ROOT_INDEX]);
+    }else{
+        return factory.getDefaultMenu();
+    }
 }
 
 void SceneTree::setupContextMenu(){
@@ -143,17 +154,6 @@ void SceneTree::addObject(RenderBody* object, std::string type){
             item.item->addChild(treeItem);
         }
     }
-   /*
-
-    if(type == RB_TORUS_NAME){
-        initTorusRoot();
-        torusTreeRoot->addChild(treeItem);
-
-    }else if(type == RB_POINT_NAME){
-        initPointRoot();
-        pointTreeRoot->addChild(treeItem);
-    }*/
-
 }
 
 SceneID SceneTree::deleteObject(string name){
@@ -176,11 +176,11 @@ void SceneTree::ShowContextMenu(const QPoint& pos){
     QList<QTreeWidgetItem *> selectedItems = filterSelectedItems();
 
     QPoint globalPos = this->mapToGlobal(pos);
-    ContextMenu& menu = EditorWindow::getInstance().
-            getSceneListContextMenu();
-    QAction* action = menu.show(globalPos);
 
-    menu.handle(action, selectedItems);
+    ContextMenu* menu = getMenuBasedOnItems(selectedItems);
+
+    QAction* action = menu->show(globalPos);
+    menu->handle(action, selectedItems);
 }
 
 //-----------------------------------------------------------//

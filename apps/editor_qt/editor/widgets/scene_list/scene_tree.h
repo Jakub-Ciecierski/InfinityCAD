@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QTreeWidget>
 
+#include <context_menus/context_menu.h>
+
 #include <string>
 #include <gm/scene/scene_id.h>
 #include <gm/rendering/render_body.h>
@@ -72,13 +74,18 @@ class SceneTree : public QTreeWidget
     Q_OBJECT
 private:
     std::vector<ItemTMP> itemsTMP;
+
+    const int TORUS_ROOT_INDEX = 0;
+    const int POINT_ROOT_INDEX = 1;
+    const int BEZIER_ROOT_INDEX = 2;
     std::vector<RootTreeItem> rootItems;
 
     QTreeWidgetItem* torusTreeRoot;
     QTreeWidgetItem* pointTreeRoot;
 
-    void initTorusRoot();
-    void initPointRoot();
+    void initRootItems();
+
+    ContextMenu* getMenuBasedOnItems(QList<QTreeWidgetItem *>& selectedItems);
 
     void setupContextMenu();
     QList<QTreeWidgetItem *> filterSelectedItems();

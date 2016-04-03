@@ -22,6 +22,8 @@ private:
     void addPoint();
     void addPoint(std::string name);
 
+    void addBezierCurve(std::string name);
+
     std::string getDefaultName(std::string type, SceneID id);
 
 public:

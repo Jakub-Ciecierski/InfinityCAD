@@ -41,6 +41,9 @@ void ObjectsTreeFactory::setUpRenderableObjectsRoot(){
     itm->setText(0, QString::fromStdString(RB_POINT_NAME));
     renderableObjectsRoot->addChild(itm);
 
+    itm = new QTreeWidgetItem();
+    itm->setText(0, QString::fromStdString(RB_BEZIER_NAME));
+    renderableObjectsRoot->addChild(itm);
 }
 
 void ObjectsTreeFactory::create(){

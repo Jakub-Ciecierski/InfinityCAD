@@ -33,8 +33,9 @@ SOURCES += glwidget.cpp \
     widgets/objects_list/context_menus/objects_cmenu_factory.cpp \
     widgets/objects_list/context_menus/objects_cmenu_settings.cpp \
     widgets/scene_list/context_menus/scene_cmenu_factory.cpp \
-    widgets/scene_list/context_menus/scene_cmenu_settings.cpp \
-    system/ic_names.cpp
+    system/ic_names.cpp \
+    widgets/scene_list/context_menus/scene_cmenu_default.cpp \
+    widgets/scene_list/context_menus/scene_cmenu_point.cpp
 
 HEADERS  += glwidget.h \
     controls.h \
@@ -48,8 +49,9 @@ HEADERS  += glwidget.h \
     widgets/objects_list/context_menus/objects_cmenu_factory.h \
     widgets/objects_list/context_menus/objects_cmenu_settings.h \
     widgets/scene_list/context_menus/scene_cmenu_factory.h \
-    widgets/scene_list/context_menus/scene_cmenu_settings.h \
-    system/ic_names.h
+    system/ic_names.h \
+    widgets/scene_list/context_menus/scene_cmenu_default.h \
+    widgets/scene_list/context_menus/scene_cmenu_point.h
 
 FORMS    += mainwindow.ui
 

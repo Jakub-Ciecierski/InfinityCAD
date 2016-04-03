@@ -15,7 +15,7 @@ public:
     void addAction(std::string name, Handler handler);
     void addAction(std::string name);
 
-    QAction* show(const QPoint& pos);
+    virtual QAction* show(const QPoint& pos);
 
     void handle(const QAction* a, const QList<QTreeWidgetItem *>& selected);
 

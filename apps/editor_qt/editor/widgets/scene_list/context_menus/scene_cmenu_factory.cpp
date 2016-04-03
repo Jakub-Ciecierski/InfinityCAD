@@ -1,34 +1,29 @@
 #include "widgets/scene_list/context_menus/scene_cmenu_factory.h"
 #include "widgets/scene_list/context_menus/scene_cmenu_settings.h"
 
-SceneCMenuFactory::SceneCMenuFactory()
-{
 
+SceneCMenuFactory::SceneCMenuFactory() {
+    defaultMenu = new SceneCMenuDefault();
+    pointMenu = new SceneCMenuPoint();
 }
 
-ContextMenu* SceneCMenuFactory::create(){
-    ContextMenu* sceneListContextMenu = new ContextMenu();
-
-    sceneListContextMenu->addAction((SCENE_MENU_MOVE_CROSS_NAME),
-                                   SCENE_MENU_MOVE_CROSS_HANDLER);
-
-    sceneListContextMenu->addAction((SCENE_MENU_MOVE_CAMERA_NAME),
-                                   SCENE_MENU_MOVE_CAMERA_HANDLER);
-
-    sceneListContextMenu->addSeparator();
-
-    sceneListContextMenu->addAction((SCENE_MENU_CHANGE_NAME_NAME),
-                                   SCENE_MENU_CHANGE_NAME_HANDLER);
-
-    sceneListContextMenu->addSeparator();
-    sceneListContextMenu->addAction((SCENE_MENU_DELETE_NAME),
-                                   SCENE_MENU_DELETE_HANDLER);
-
-
-
-    return sceneListContextMenu;
+SceneCMenuFactory::~SceneCMenuFactory() {
+    delete defaultMenu;
+    delete pointMenu;
 }
 
-ContextMenu* SceneCMenuFactory::showPointMenu(){
-    return NULL;
+SceneCMenuFactory& SceneCMenuFactory::getInstance(){
+    static SceneCMenuFactory fac;
+
+    return fac;
+}
+
+ContextMenu* SceneCMenuFactory::getDefaultMenu(){
+    return this->defaultMenu;
+}
+
+ContextMenu* SceneCMenuFactory::getPointMenu(RootTreeItem* bezierRoot){
+    this->pointMenu->setBezierRoot(bezierRoot);
+
+    return this->pointMenu;
 }

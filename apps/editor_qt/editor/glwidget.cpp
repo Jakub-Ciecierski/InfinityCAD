@@ -12,8 +12,8 @@
 #include <gm/projections/perspective_projection.h>
 #include <gm/projections/stereoscopic_projection.h>
 #include <gm/projections/indentity_projection.h>
-#include <gm/cameras/camera_std.h>
 #include <gm/cameras/camera_fps.h>
+#include <gm/scene/object_factory.h>
 
 #include <QColorDialog>
 #include <QMessageBox>
@@ -61,13 +61,14 @@ void GLWidget::setupRenderer(){
                 renderer->getWindowWidthPointer(),
                 renderer->getWindowHeightPointer(),
                 1.0f, 0.06);
-    CameraFPS* fpsCamera = new CameraFPS(stereoscopicProjection);
+    ObjectFactory& objectFactory = ObjectFactory::getInstance();
+    CameraFPS* fpsCamera = (CameraFPS*)
+            objectFactory.createCameraFPS("FPS Camera", stereoscopicProjection);
 
     scene->addCamera(fpsCamera);
     scene->setActiveCamera(fpsCamera);
 
     ray = new RayCast(fpsCamera);
-
     mouseTracker = new MouseTracker(ray, renderer);
 }
 
@@ -327,7 +328,6 @@ void GLWidget::wheelEvent(QWheelEvent* event){
     }
     int x = event->delta();
 
-    renderer->getScene()->scaleDt(x*speedBoost);
 };
 
 Renderer* GLWidget::getRenderer(){

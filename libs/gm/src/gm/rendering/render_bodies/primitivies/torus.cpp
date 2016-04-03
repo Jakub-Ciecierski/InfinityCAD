@@ -13,7 +13,8 @@ const double PI_OVER_180 = M_PI/180;
 //  CONSTRUCTORS
 //-----------------------------------------------------------//
 
-Torus::Torus() {
+Torus::Torus(SceneID id) :
+        RenderBody(id){
     outerRadius = 0.2f;
     innerRadius = 0.5f;
 
@@ -25,22 +26,17 @@ Torus::Torus() {
     NDCVertices.resize(vertices.size());
 }
 
+Torus::Torus(SceneID id, std::string name) :
+        RenderBody(id, name){
+    outerRadius = 0.2f;
+    innerRadius = 0.5f;
 
-Torus::Torus(float innerRadius, float outerRadiusr) :
-        innerRadius(innerRadius), outerRadius(outerRadiusr){
     sidesCount = 30;
     ringsCount = 30;
-    initVertices();
-    initEdges();
-}
 
-Torus::Torus(float innerRadius, float outerRadiusr,
-             unsigned int ringsCount,
-             unsigned int sidesCount) :
-        innerRadius(innerRadius), outerRadius(outerRadiusr),
-        ringsCount(ringsCount), sidesCount(sidesCount){
     initVertices();
     initEdges();
+    NDCVertices.resize(vertices.size());
 }
 
 Torus::~Torus() {

@@ -5,6 +5,7 @@
 #include <gm/rendering/render_bodies/cross.h>
 #include <gm/color/color_settings.h>
 #include <iostream>
+#include <gm/scene/object_factory.h>
 #include "gm/rendering/ray_cast.h"
 #include "../../../../include/gm/rendering/ray_cast.h"
 #include "../../../../include/gm/rendering/render_body.h"
@@ -15,12 +16,34 @@ using namespace glm;
 //  CONSTRUCTORS
 //-----------------------//
 
-Cross::Cross(const std::vector<RenderBody*>* sceneObjects) :
+Cross::Cross(SceneID id, const std::vector<RenderBody*>* sceneObjects) :
+        RenderBody(id),
         xAxisColor(COLOR_X_AXIS),
         yAxisColor(COLOR_Y_AXIS),
         zAxisColor(COLOR_Z_AXIS),
         grabedColor(COLOR_GRABED){
-    lineWidth = 3.0f;
+    lineWidth = 1.5f;
+    grabRadius = 0.1;
+
+    initVertices();
+    initEdges();
+    NDCVertices.resize(vertices.size());
+
+    this->sceneObjects = sceneObjects;
+    isGrabActive = false;
+
+    grabable = false;
+    initCones();
+}
+
+Cross::Cross(SceneID id, std::string name,
+             const std::vector<RenderBody*>* sceneObjects) :
+        RenderBody(id, name),
+        xAxisColor(COLOR_X_AXIS),
+        yAxisColor(COLOR_Y_AXIS),
+        zAxisColor(COLOR_Z_AXIS),
+        grabedColor(COLOR_GRABED){
+    lineWidth = 1.5f;
     grabRadius = 0.1;
 
     initVertices();
@@ -52,9 +75,12 @@ void Cross::initCones(){
 
     float scaleFactor = 0.1;
 
-    xCone = new Cone(r, h, baseCount);
-    yCone = new Cone(r, h, baseCount);
-    zCone = new Cone(r, h, baseCount);
+    ObjectFactory& objectFactory = ObjectFactory::getInstance();
+
+
+    xCone = objectFactory.createCone("X Cone", r, h, baseCount);
+    yCone = objectFactory.createCone("Y Cone", r, h, baseCount);
+    zCone = objectFactory.createCone("Z Cone", r, h, baseCount);
 
     xCone->setColor(xAxisColor);
     xCone->scale(scaleFactor );

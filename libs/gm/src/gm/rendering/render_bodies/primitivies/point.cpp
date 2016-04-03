@@ -5,14 +5,15 @@
 #include <gm/rendering/render_bodies/primitivies/point.h>
 #include <gm/util/utils.h>
 
-
+using namespace ic;
 using namespace glm;
 
 //-----------------------//
 //  CONSTRUCTORS
 //-----------------------//
 
-Point::Point() : RenderBody(){
+Point::Point(SceneID id) :
+        RenderBody(id){
     radius = 0.01;
     toleratedRadius = 0.1;
 
@@ -22,6 +23,18 @@ Point::Point() : RenderBody(){
 
     drawingMode = GL_TRIANGLE_FAN;
 }
+Point::Point(SceneID id, std::string name) :
+        RenderBody(id, name){
+    radius = 0.01;
+    toleratedRadius = 0.1;
+
+    initVertices();
+    initEdges();
+    NDCVertices.resize(vertices.size());
+
+    drawingMode = GL_TRIANGLE_FAN;
+}
+
 
 Point::~Point() {
 

@@ -49,7 +49,12 @@ protected:
     virtual void initEdges() override;
 
 public:
-    Cross(const std::vector<RenderBody*>* sceneObjects);
+    Cross(SceneID id,
+          const std::vector<RenderBody*>* sceneObjects);
+
+    Cross(SceneID id, std::string name,
+          const std::vector<RenderBody*>* sceneObjects);
+
 
     ~Cross();
 

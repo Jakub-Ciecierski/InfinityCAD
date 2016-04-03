@@ -8,24 +8,30 @@
 
 #include <gm/rendering/render_body.h>
 
-class Point : public RenderBody {
-private:
-    float radius;
-    float toleratedRadius;
+namespace ic {
 
-protected:
-    virtual void initVertices() override;
-    virtual void initEdges() override;
+    class Point : public RenderBody {
+    private:
+        float radius;
+        float toleratedRadius;
 
-public:
+    protected:
+        virtual void initVertices() override;
 
-    Point();
-    ~Point();
+        virtual void initEdges() override;
 
-    float intersect(const RayCast& ray) override;
+    public:
 
-    virtual glm::vec3 getClosestPoint(const glm::vec3 point) override;
-};
+        Point(SceneID id);
 
+        Point(SceneID id, std::string name);
+
+        ~Point();
+
+        float intersect(const RayCast &ray) override;
+
+        virtual glm::vec3 getClosestPoint(const glm::vec3 point) override;
+    };
+}
 
 #endif //MG1_POINT_H

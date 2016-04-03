@@ -16,7 +16,17 @@ using namespace std;
 //  CONSTRUCTORS
 //-----------------------------------------------------------//
 
-RenderBody::RenderBody() : color(COLOR_OBJECT_DEFAULT){
+RenderBody::RenderBody(SceneID id) :
+    RigidBody(id),
+    color(COLOR_OBJECT_DEFAULT){
+    lineWidth = 1.0f;
+    grabable = true;
+
+    drawingMode = GL_LINES;
+}
+RenderBody::RenderBody(SceneID id, std::string name) :
+        RigidBody(id, name),
+        color(COLOR_OBJECT_DEFAULT){
     lineWidth = 1.0f;
     grabable = true;
 

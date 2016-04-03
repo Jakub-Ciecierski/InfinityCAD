@@ -23,9 +23,10 @@ public:
     float buttonsSpeed;
     float mouseSpeed;
 
-    CameraFPS();
-
-    CameraFPS(Projection* projection);
+    CameraFPS(SceneID id,
+              Projection* projection);
+    CameraFPS(SceneID id, std::string name,
+              Projection* projection);
 
     ~CameraFPS();
 

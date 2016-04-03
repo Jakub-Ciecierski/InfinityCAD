@@ -2,16 +2,41 @@
 // Created by jakub on 4/3/16.
 //
 
+#include <gm/object.h>
+
+using namespace ic;
+using namespace std;
 
 //-----------------------//
 //  CONSTRUCTORS
 //-----------------------//
 
+Object::Object(SceneID id){
+    this->id = id;
+    this->name = "Object";
+}
+
+Object::Object(SceneID id, std::string name){
+    this->id = id;
+    this->name = name;
+}
+
+Object::~Object(){
+
+}
 
 //-----------------------//
 //  PUBLIC 
 //-----------------------//
 
-//-----------------------//
-//  PRIVATE 
-//-----------------------//
+void Object::setName(std::string name){
+    this->name = name;
+}
+
+std::string Object::getName(){
+    return this->name;
+}
+
+const SceneID& Object::getID(){
+    return this->id;
+}

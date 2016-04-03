@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.3)
 
-set(PROJECT_NAME "mg1")
+set(PROJECT_NAME "ic")
 
 set(APPS_PATH "apps")
 set(LIBS_PATH "libs")
@@ -83,7 +83,7 @@ file(GLOB_RECURSE FILES
         ${LIBS_PATH}/googletest/include/*.h
 )
 
-set(SPAM libs/gm/src/gm/rendering/render_bodies/primitivies/line.cpp libs/gm/include/gm/rendering/render_bodies/primitivies/line.h libs/gm/src/gm/rendering/mouse_tracker.cpp libs/gm/include/gm/rendering/mouse_tracker.h libs/gm/src/gm/object.cpp libs/gm/include/gm/object.h libs/gm/src/gm/scene/object_factory.cpp libs/gm/include/gm/scene/object_factory.h)
+set(SPAM)
 
 add_executable(${PROJECT_NAME} ${SPAM} ${FILES})
 

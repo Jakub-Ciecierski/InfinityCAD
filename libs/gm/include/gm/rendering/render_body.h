@@ -60,19 +60,13 @@ protected:
     virtual void drawLines(const std::vector<glm::vec4>& vertices,
                            bool costumColor);
 
-    char ComputeOutcode(glm::vec4 p,
-                        float left, float right,
-                        float top, float bottom);
-
-    bool CohenSutherland(glm::vec4& p1, glm::vec4& p2,
-                         float left, float right,
-                         float top, float bottom);
 public:
     //-----------------------------------------------------------//
     //  CONSTRUCTORS
     //-----------------------------------------------------------//
 
-    RenderBody();
+    RenderBody(SceneID id);
+    RenderBody(SceneID id, std::string name);
 
     virtual ~RenderBody();
 

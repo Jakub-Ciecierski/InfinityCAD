@@ -8,6 +8,7 @@
 #include <gm/rendering/render_bodies/axis_net.h>
 #include <gm/rendering/render_bodies/primitivies/sphere.h>
 #include <gm/rendering/render_bodies/primitivies/cube.h>
+#include <gm/scene/object_factory.h>
 
 using namespace glm;
 
@@ -15,11 +16,9 @@ Scene::Scene() :
         sceneColor(COLOR_SCENE_DEFAULT), sceneIDFactory(){
     set3DRendering(false);
 
-    AxisNet* axisNet = new AxisNet(50);
-    this->addRenderObject(axisNet);
 
-    cross = new Cross(&this->sceneObjects);
-    this->addRenderObject(cross);
+    initSceneElements();
+
 }
 
 Scene::~Scene() {
@@ -35,8 +34,19 @@ Scene::~Scene() {
 //  PRIVATE
 //--------------------//
 
+void Scene::initSceneElements(){
+    ObjectFactory objectFactory = ObjectFactory::getInstance();
+
+
+    AxisNet* axisNet = objectFactory.createAxisNet("Axis Net", 50);
+    this->addRenderObject(axisNet);
+
+    cross = objectFactory.createCross("Cross Grabber",&this->sceneObjects);
+    this->addRenderObject(cross);
+}
+
 void Scene::updateMVP() {
-    MVP = activeCamera->getVPMatrix() * getModelMatrix();
+    MVP = activeCamera->getVPMatrix();
 }
 
 
@@ -49,12 +59,12 @@ void Scene::renderAllObjects() {
 void Scene::renderAllObjects3D() {
     const StereoscopicProjection* projection
             = (const StereoscopicProjection*)activeCamera->getProjection();
-    mat4 MV = activeCamera->getViewMatrix() * getModelMatrix();
+    mat4 MV = activeCamera->getViewMatrix();
 
     mat4 leftMVP = projection->getLeftProjectionMatrix() *
-            activeCamera->getViewMatrix() * getModelMatrix();
+            activeCamera->getViewMatrix();
     mat4 rightMVP = projection->getRightProjectionMatrix() *
-            activeCamera->getViewMatrix() * getModelMatrix();
+            activeCamera->getViewMatrix();
 
     Color leftColor = projection->getLeftColor();
     Color rightColor = projection->getRightColor();
@@ -78,20 +88,8 @@ void Scene::renderAllObjects3D() {
 //  SETTERS
 //--------------------//
 
-SceneID Scene::addRenderObject(RenderBody *object) {
-    SceneID id = sceneIDFactory.createNextAvailableID();
-
+void Scene::addRenderObject(RenderBody *object) {
     this->sceneObjects.push_back(object);
-    ids.push_back(id);
-
-    return id;
-}
-
-void Scene::setActiveRenderBody(const SceneID& id){
-    activeRenderBody = getRenderBody(id);
-}
-RenderBody* Scene::getActiveRenderBody(){
-    return activeRenderBody;
 }
 
 void Scene::addCamera(Camera *camera) {
@@ -120,9 +118,8 @@ bool Scene::removeObject(RigidBody *object) {
 
 bool Scene::removeObject(const SceneID &sceneID) {
     for(unsigned int i = 0; i < sceneObjects.size(); i++){
-        if(ids[i].getKey() == sceneID.getKey()){
-            ids.erase(ids.begin() + i);
-            sceneObjects.erase(sceneObjects.begin() + i);
+        if (sceneID == sceneObjects[i]->getID()){
+            sceneObjects.erase(sceneObjects.begin()+i);
             return true;
         }
     }
@@ -132,6 +129,7 @@ bool Scene::removeObject(const SceneID &sceneID) {
 void Scene::setColor(Color color) {
     sceneColor = color;
 
+    // TODO out of place code
     glClearColor(sceneColor.R, sceneColor.G, sceneColor.B,
                  sceneColor.Alpha);
 }
@@ -170,10 +168,11 @@ const glm::mat4& Scene::getMVP() {
 
 RenderBody* Scene::getRenderBody(const SceneID& id){
     for(unsigned int i = 0; i < sceneObjects.size(); i++){
-        if (id.getKey() == ids[i].getKey()){
+        if (id == sceneObjects[i]->getID()){
             return sceneObjects[i];
         }
     }
+
     return NULL;
 }
 
@@ -189,10 +188,6 @@ Cross* Scene::getCross(){
 //  PUBLIC
 //--------------------//
 
-glm::vec3 Scene::getClosestPoint(const glm::vec3 point){
-    return vec3(0,0,0);
-}
-
 void Scene::renderScene() {
     glClearColor(sceneColor.R, sceneColor.G, sceneColor.B,
                  sceneColor.Alpha);
@@ -205,8 +200,6 @@ void Scene::renderScene() {
 }
 
 void Scene::update() {
-    RigidBody::update();
-
     activeCamera->update();
 
     for(unsigned int i = 0; i < sceneObjects.size(); i++){

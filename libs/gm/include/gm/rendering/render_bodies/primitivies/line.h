@@ -17,7 +17,10 @@ protected:
     virtual void initEdges() override;
 
 public:
-    Line(glm::vec4 v1, glm::vec4 v2);
+    Line(SceneID id ,
+         glm::vec4 v1, glm::vec4 v2);
+    Line(SceneID id , std::string name,
+         glm::vec4 v1, glm::vec4 v2);
 
     ~Line();
 

@@ -4,6 +4,7 @@
 #include <editor_window.h>
 #include <iostream>
 #include "system/object_manager.h"
+#include "widgets/objects_list/objects_settings.h"
 
 using namespace std;
 
@@ -21,64 +22,28 @@ SceneTree::SceneTree(QWidget* parent) :
                  this,
                  SLOT(myitemSelectionChanged()));
 
+    torusTreeRoot = NULL;
+    pointTreeRoot = NULL;
 }
 
-SceneID SceneTree::getID(std::string name){
-    int i = getItemIndex(name);
-    if(i < 0) throw std::invalid_argument(name + " - No such Object");
+//-----------------------------//
+//  PRIVATE
+//-----------------------------//
 
-    Item item = items[i];
-    return item.id;
+void SceneTree::initTorusRoot(){
+    if(torusTreeRoot != NULL) return;
+
+    torusTreeRoot = new QTreeWidgetItem(this);
+    torusTreeRoot->setText(0, "Toruses");
+    this->addTopLevelItem(torusTreeRoot);
 }
 
-int SceneTree::getItemIndex(std::string name){
-    for(unsigned int i = 0; i < items.size(); i++){
-        Item item = items[i];
-        if (name == item.name)
-            return i;
-    }
-    return -1;
-}
+void SceneTree::initPointRoot(){
+    if(pointTreeRoot != NULL) return;
 
-int SceneTree::getItemIndex(QTreeWidgetItem* treeItem){
-    for(unsigned int i = 0; i < items.size(); i++){
-        Item item = items[i];
-        if (treeItem == item.treeItem)
-            return i;
-    }
-    return -1;
-}
-
-void SceneTree::addObject(string name, SceneID id){
-    QTreeWidgetItem* treeItem = new QTreeWidgetItem(this);
-    treeItem->setText(0, QString::fromStdString(name));
-
-    this->addTopLevelItem(treeItem);
-
-    Item item(id, treeItem, name);
-
-    this->items.push_back(item);
-}
-
-SceneID SceneTree::deleteObject(string name){
-    int i = getItemIndex(name);
-    if(i < 0) throw std::invalid_argument(name + " - No such Object");
-
-    Item item = this->items[i];
-
-    delete item.treeItem;
-    items.erase(items.begin() + i);
-
-    return item.id;
-}
-
-void SceneTree::changeName(string srcName, string dstName){
-    int i = getItemIndex(srcName);
-    if(i < 0) throw std::invalid_argument(srcName + " - No such Object");
-
-    Item& item = this->items[i];
-    item.name = dstName;
-    item.treeItem->setText(0, QString::fromStdString(dstName));
+    pointTreeRoot = new QTreeWidgetItem(this);
+    pointTreeRoot->setText(0, "Points");
+    this->addTopLevelItem(pointTreeRoot);
 }
 
 void SceneTree::setupContextMenu(){
@@ -88,15 +53,121 @@ void SceneTree::setupContextMenu(){
         this, SLOT(ShowContextMenu(const QPoint&)));
 }
 
-void SceneTree::ShowContextMenu(const QPoint& pos){
-    QPoint globalPos = this->mapToGlobal(pos);
+QList<QTreeWidgetItem *> SceneTree::filterSelectedItems(){
+    QList<QTreeWidgetItem *> filteredItems;
 
+    QList<QTreeWidgetItem *> selectedItems = this->selectedItems();
+    for(unsigned int i = 0; i < selectedItems.size(); i++){
+        if(selectedItems[i] == torusTreeRoot ||
+                selectedItems[i] == pointTreeRoot) continue;
+
+        filteredItems.push_back(selectedItems[i]);
+    }
+    return filteredItems;
+}
+
+void SceneTree::deleteItem(ItemTMP* item){
+    delete item->treeItem;
+
+    itemsTMP.erase(remove(itemsTMP.begin(), itemsTMP.end(), *item),
+                   itemsTMP.end());
+
+    if(torusTreeRoot != NULL && torusTreeRoot->childCount() == 0){
+        delete torusTreeRoot;
+        torusTreeRoot = NULL;
+    }
+    if(pointTreeRoot != NULL && pointTreeRoot->childCount() == 0){
+        delete pointTreeRoot;
+        pointTreeRoot = NULL;
+    }
+
+}
+
+//-----------------------------//
+//  PUBLIC
+//-----------------------------//
+
+bool SceneTree::objectExists(std::string name){
+    for(unsigned int i = 0; i < itemsTMP.size(); i++){
+        ItemTMP* item = &(itemsTMP[i]);
+        if (name == item->object->getName())
+            return true;
+    }
+    return false;
+}
+
+ItemTMP* SceneTree::getItemByName(std::string name){
+    for(unsigned int i = 0; i < itemsTMP.size(); i++){
+        ItemTMP* item = &(itemsTMP[i]);
+        if (name == item->object->getName())
+            return item;
+    }
+    return NULL;
+}
+
+ItemTMP* SceneTree::getItemByTree(QTreeWidgetItem* treeItem){
+    for(unsigned int i = 0; i < itemsTMP.size(); i++){
+        ItemTMP* item = &(itemsTMP[i]);
+        if (treeItem == item->treeItem)
+            return item;
+    }
+    return NULL;
+}
+
+
+void SceneTree::addObject(RenderBody* object){
+    QTreeWidgetItem* treeItem = new QTreeWidgetItem(this);
+    treeItem->setText(0, QString::fromStdString(object->getName()));
+
+    this->addTopLevelItem(treeItem);
+
+    ItemTMP item(object, treeItem);
+    this->itemsTMP.push_back(item);
+}
+
+void SceneTree::addObject(RenderBody* object, std::string type){
+    QTreeWidgetItem* treeItem = new QTreeWidgetItem();
+    treeItem->setText(0, QString::fromStdString(object->getName()));
+
+    ItemTMP item(object, treeItem);
+    this->itemsTMP.push_back(item);
+
+    if(type == RB_TORUS_NAME){
+        initTorusRoot();
+        torusTreeRoot->addChild(treeItem);
+
+    }else if(type == RB_POINT_NAME){
+        initPointRoot();
+        pointTreeRoot->addChild(treeItem);
+    }
+
+}
+
+SceneID SceneTree::deleteObject(string name){
+    ItemTMP* item = getItemByName(name);
+    if(item == NULL) throw std::invalid_argument(name + " - No such Object");
+    deleteItem(item);
+
+    return item->object->getID();
+}
+
+void SceneTree::changeName(string srcName, string dstName){
+    ItemTMP* item = getItemByName(srcName);
+    if(item == NULL) throw std::invalid_argument(srcName + " - No such Object");
+
+    item->object->setName(dstName);
+    item->treeItem->setText(0, QString::fromStdString(dstName));
+}
+
+void SceneTree::ShowContextMenu(const QPoint& pos){
+    QList<QTreeWidgetItem *> selectedItems = filterSelectedItems();
+
+    QPoint globalPos = this->mapToGlobal(pos);
     ContextMenu& menu = EditorWindow::getInstance().
             getSceneListContextMenu();
+    QAction* action = menu.show(globalPos);
 
-    QAction* selectedItem = menu.show(globalPos);
-
-    menu.handle(selectedItem, this->selectedItems());
+    menu.handle(action, selectedItems);
 }
 
 //-----------------------------------------------------------//
@@ -105,17 +176,16 @@ void SceneTree::ShowContextMenu(const QPoint& pos){
 
 
 void SceneTree::myitemActivated(QTreeWidgetItem* treeItem, int column){
-    int i = getItemIndex(treeItem);
-    if(i < 0) return;
+    ItemTMP* item = getItemByTree(treeItem);
+    if(item == NULL) return;
 
-    Item item = items[i];
-    ObjectManager::getInstance().setActive(item.id);
+    ObjectManager::getInstance().setActive(item->object->getID());
 }
 
 void SceneTree::myitemSelectionChanged(){
-    for(int i = 0;i < items.size(); i++){
-        Item item = items[i];
-        ObjectManager::getInstance().setDeactive(item.id);
+    for(int i = 0;i < itemsTMP.size(); i++){
+        ItemTMP item = itemsTMP[i];
+        ObjectManager::getInstance().setDeactive(item.object->getID());
     }
 }
 

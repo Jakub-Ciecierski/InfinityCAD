@@ -12,13 +12,24 @@ using namespace std;
 //  CONSTRUCTORS
 //-----------------------//
 
-Cone::Cone(float radius,
-           float height,
-           int baseVerticesCount) :
+Cone::Cone(SceneID id,
+           float radius, float height, int baseVerticesCount) :
+        RenderBody(id),
         radius(radius),
         height(height),
         baseVerticesCount(baseVerticesCount) {
+    initVertices();
+    initEdges();
+    NDCVertices.resize(vertices.size());
 
+    drawingMode = GL_TRIANGLE_FAN;
+}
+Cone::Cone(SceneID id, std::string name,
+           float radius, float height, int baseVerticesCount) :
+        RenderBody(id, name),
+        radius(radius),
+        height(height),
+        baseVerticesCount(baseVerticesCount) {
     initVertices();
     initEdges();
     NDCVertices.resize(vertices.size());

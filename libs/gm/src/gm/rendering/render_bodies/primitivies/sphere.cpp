@@ -4,6 +4,7 @@
 
 #include <gm/rendering/render_bodies/primitivies/sphere.h>
 #include <math/random.h>
+#include <gm/scene/object_factory.h>
 
 
 using namespace glm;
@@ -13,8 +14,20 @@ using namespace std;
 //  CONSTRUCTORS
 //-----------------------//
 
-Sphere::Sphere(float radius,
-               int ringsCount, int sectionCount) :
+Sphere::Sphere(SceneID id, std::string name,
+               float radius, int ringsCount, int sectionCount) :
+        RenderBody(id, name),
+        radius(radius), ringsCount(ringsCount), sectionCount(sectionCount) {
+    initVertices();
+    initEdges();
+    NDCVertices.resize(vertices.size());
+
+    //drawingMode = GL_TRIANGLE_FAN;
+}
+
+Sphere::Sphere(SceneID id,
+               float radius, int ringsCount, int sectionCount) :
+        RenderBody(id),
         radius(radius), ringsCount(ringsCount), sectionCount(sectionCount) {
     initVertices();
     initEdges();
@@ -110,7 +123,8 @@ Cloud* Sphere::extractRandomCloud(int verticesCount,
 
         points[i] = vec4(x,y,z,1);
     }
-    Cloud* cloud = new Cloud(points);
+    ObjectFactory& objectFactory = ObjectFactory::getInstance();
+    Cloud* cloud = objectFactory.createCloud("Cloud", points);
 
     return cloud;
 }

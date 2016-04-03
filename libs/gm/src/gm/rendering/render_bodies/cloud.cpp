@@ -13,7 +13,18 @@ using namespace glm;
 //  CONSTRUCTORS
 //-----------------------//
 
-Cloud::Cloud(std::vector<glm::vec4>& points) {
+Cloud::Cloud(SceneID id, std::vector<glm::vec4>& points) :
+        RenderBody(id){
+    vertices = points;
+    initVertices();
+    initEdges();
+
+    worldVertices.resize(vertices.size());
+    NDCVertices.resize(vertices.size());
+}
+Cloud::Cloud(SceneID id, std::string name,
+             std::vector<glm::vec4>& points) :
+        RenderBody(id, name){
     vertices = points;
     initVertices();
     initEdges();

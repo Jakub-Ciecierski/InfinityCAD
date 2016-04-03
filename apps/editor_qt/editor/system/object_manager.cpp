@@ -9,10 +9,11 @@
 #include <gm/rendering/render_bodies/primitivies/torus.h>
 #include <gm/rendering/render_bodies/primitivies/point.h>
 #include <gm/color/color_settings.h>
-
+#include <gm/scene/object_factory.h>
 
 using namespace std;
 using namespace Ui;
+using namespace ic;
 
 //--------------------------//
 //  PRIVATE
@@ -28,17 +29,19 @@ ObjectManager::ObjectManager(){
 }
 
 void ObjectManager::addTorus(string name){
-    Torus* t = new Torus();
+    ObjectFactory& objectFactory = ObjectFactory::getInstance();
+    RenderBody* t = objectFactory.createTorus(name);
 
-    SceneID id = this->scene->addRenderObject(t);
-    sceneTree->addObject(name, id);
+    this->scene->addRenderObject(t);
+    sceneTree->addObject(t, RB_TORUS_NAME);
 }
 
 void ObjectManager::addPoint(string name){
-    Point* p = new Point();
+    ObjectFactory& objectFactory = ObjectFactory::getInstance();
+    RenderBody* p = objectFactory.createPoint(name);
 
-    SceneID id = this->scene->addRenderObject(p);
-    sceneTree->addObject(name, id);
+    this->scene->addRenderObject(p);
+    sceneTree->addObject(p, RB_POINT_NAME);
 }
 
 string ObjectManager::getDefaultName(string type, SceneID id){
@@ -65,7 +68,7 @@ void ObjectManager::addObject(string type){
 }
 
 void ObjectManager::addObject(string type, string name){
-    if(sceneTree->getItemIndex(name) >= 0) {
+    if(sceneTree->objectExists(name)) {
         string title = "Name";
         string text = "Name: " + name + " already exists. Try other name";
         EditorWindow::getInstance().showInfoBox(title, text);
@@ -93,75 +96,41 @@ void ObjectManager::changeName(string srcName){
     string title = "Change Name";
     string dstName = EditorWindow::getInstance().showInputBox(title, text);
 
-    if(sceneTree->getItemIndex(dstName) >= 0) {
+    if(sceneTree->objectExists(dstName)) {
         string title = "Name";
         string text = "Name: " + dstName + " already exists. Try other name";
         EditorWindow::getInstance().showInfoBox(title, text);
         return;
     }
     if(dstName.empty()) return;
+
     sceneTree->changeName(srcName, dstName);
 }
 
 void ObjectManager::moveCross(string srcName){
-    SceneID id = sceneTree->getID(srcName);
-
-    RenderBody* body = scene->getRenderBody(id);
+    ItemTMP* item = sceneTree->getItemByName(srcName);
+    if(item == NULL) return;
     Cross* cross = scene->getCross();
-    cross->moveTo(body);
+    cross->moveTo(item->object);
 
     EditorWindow& m = EditorWindow::getInstance();
     MainWindow* ui = m.getUI();
     ui->glRendererWidget->updateCrossView();
-    /*
-    const glm::vec3& pos = cross->getPosition();
 
-
-    ui->positionXInput->setText(QString::number(pos.x, 'f', 2));
-    ui->positionYInput->setText(QString::number(pos.y, 'f', 2));
-    ui->positionZInput->setText(QString::number(pos.z, 'f', 2));
-
-    int pX = ui->glRendererWidget->getRenderer()->
-            xGLToPixelCoord(cross->transformed.x);
-    int pY = ui->glRendererWidget->getRenderer()->
-            yGLToPixelCoord(cross->transformed.y);
-
-
-    ui->angleXInput->setText(QString::number(pX));
-    ui->angleYInput->setText(QString::number(pY));*/
 }
 
 void ObjectManager::moveCamera(string objectName){
-    SceneID id = sceneTree->getID(objectName);
+    ItemTMP* item = sceneTree->getItemByName(objectName);
+    if(item == NULL) return;
 
-    RenderBody* body = scene->getRenderBody(id);
     Camera* camera = scene->getActiveCamera();
-    camera->moveTo(body);
+    camera->moveTo(item->object);
 }
 
 void ObjectManager::setActive(SceneID id){
 
     RenderBody* body = scene->getRenderBody(id);
     body->setColor(COLOR_OBJECT_ACTIVE);
-
-    /*
-    EditorWindow& m = EditorWindow::getInstance();
-    Ui::MainWindow* ui = m.getUI();
-
-    QLineEdit* xEdit = ui->positionXInput;
-    QLineEdit* yEdit = ui->positionYInput;
-    QLineEdit* zEdit = ui->positionZInput;
-
-    float x = xEdit->text().toFloat();
-    float y = yEdit->text().toFloat();
-    float z = zEdit->text().toFloat();
-
-    glm::vec3 pos(x,y,z);
-    glWidget->moveObject(id, pos);
-
-    m.connect(xEdit, SIGNAL(textEdited(QString)),
-            glWidget, SLOT(moveObject(SceneID,glm::vec3&)));
-            */
 }
 
 void ObjectManager::setDeactive(SceneID id){

@@ -12,7 +12,14 @@ using namespace std;
 //  CONSTRUCTORS
 //-----------------------------------------------------------//
 
-Cube::Cube() : RenderBody(){
+Cube::Cube(SceneID id) :
+        RenderBody(id){
+    initVertices();
+    initEdges();
+    NDCVertices.resize(vertices.size());
+}
+Cube::Cube(SceneID id, std::string name) :
+        RenderBody(id, name){
     initVertices();
     initEdges();
     NDCVertices.resize(vertices.size());

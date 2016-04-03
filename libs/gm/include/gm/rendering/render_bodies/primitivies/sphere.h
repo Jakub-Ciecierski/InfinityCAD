@@ -25,8 +25,10 @@ protected:
     virtual void initEdges() override;
 
 public:
-    Sphere(float radius,
-           int ringsCount, int sectionCount);
+    Sphere(SceneID,
+           float radius, int ringsCount, int sectionCount);
+    Sphere(SceneID, std::string name,
+           float radius, int ringsCount, int sectionCount);
     ~Sphere();
 
     Cloud* extractRandomCloud(int verticesCount,

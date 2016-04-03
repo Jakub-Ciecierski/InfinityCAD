@@ -4,6 +4,7 @@
 
 #include <gm/rendering/render_bodies/axis_net.h>
 #include <gm/color/color_settings.h>
+#include <gm/scene/object_factory.h>
 
 using namespace glm;
 
@@ -11,7 +12,22 @@ using namespace glm;
 //  CONSTRUCTORS
 //-----------------------//
 
-AxisNet::AxisNet(int netSize) : netSize(netSize), middleLineColor(0,0,0,1) {
+AxisNet::AxisNet(SceneID id, int netSize) :
+        RenderBody(id),
+        netSize(netSize), middleLineColor(0,0,0,1){
+    middleLineWidth = 6.0f;
+    setColor(COLOR_PLANE);
+
+    initVertices();
+    initEdges();
+    NDCVertices.resize(vertices.size());
+
+    grabable = false;
+}
+
+AxisNet::AxisNet(SceneID id, std::string name, int netSize) :
+        RenderBody(id, name),
+    netSize(netSize), middleLineColor(0,0,0,1){
     middleLineWidth = 6.0f;
     setColor(COLOR_PLANE);
 
@@ -23,7 +39,9 @@ AxisNet::AxisNet(int netSize) : netSize(netSize), middleLineColor(0,0,0,1) {
 }
 
 AxisNet::~AxisNet() {
-
+    for(unsigned int i = 0; i < lines.size(); i++){
+        delete lines[i];
+    }
 }
 
 //-----------------------//
@@ -33,9 +51,12 @@ AxisNet::~AxisNet() {
 void AxisNet::initLine(glm::vec4 v1, glm::vec4 v2,
                        int& currentVertex,
                        const Color* color, float width){
-    Line line(v1,v2);
-    line.setColor(*color);
-    line.setLineWidth(width);
+    ObjectFactory& objectFactory = ObjectFactory::getInstance();
+
+    Line* line = objectFactory.createLine("line", v1, v2);
+
+    line->setColor(*color);
+    line->setLineWidth(width);
     lines.push_back(line);
 }
 
@@ -148,7 +169,7 @@ void AxisNet::render(const glm::mat4 &VP) {
     glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_ALPHA);
 
     for(auto& line : lines){
-        line.render(VP);
+        line->render(VP);
     }
 
     glDisable(GL_BLEND);
@@ -159,7 +180,7 @@ void AxisNet::render(const glm::mat4 &VP, const Color &color) {
     glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_ALPHA);
 
     for(auto& line : lines){
-        line.render(VP, color);
+        line->render(VP, color);
     }
 
     glDisable(GL_BLEND);
@@ -167,7 +188,7 @@ void AxisNet::render(const glm::mat4 &VP, const Color &color) {
 
 void AxisNet::update() {
     for(auto& line : lines){
-        line.update();
+        line->update();
     }
 }
 

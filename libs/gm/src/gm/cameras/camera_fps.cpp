@@ -10,14 +10,19 @@
 
 using namespace glm;
 
-CameraFPS::CameraFPS() :
-        Camera(){
-    update();
+CameraFPS::CameraFPS(SceneID id,
+                     Projection *projection) :
+        Camera(id, projection) {
+    buttonsSpeed = 0.15;
+    mouseSpeed = 0.06;
+
+    verticalAngleDegree = 0;
+    horizontalAngleDegree = 0;
 }
 
-
-CameraFPS::CameraFPS(Projection *projection) :
-        Camera(projection) {
+CameraFPS::CameraFPS(SceneID id, std::string name,
+                     Projection *projection) :
+        Camera(id, name, projection) {
     buttonsSpeed = 0.15;
     mouseSpeed = 0.06;
 

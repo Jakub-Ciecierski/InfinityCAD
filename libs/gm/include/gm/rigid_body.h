@@ -2,10 +2,11 @@
 // Created by jakub on 2/28/16.
 //
 
-#ifndef MG1_OBJECT_H
-#define MG1_OBJECT_H
+#ifndef MG1_RIGID_BODY_H
+#define MG1_RIGID_BODY_H
 
 #include <glm/gtc/matrix_transform.hpp>
+#include "gm/object.h"
 
 /*
  * Object can be moved, rotated and scaled.
@@ -26,7 +27,7 @@
  *        |1|
  * In other words, the matrices store columns linearly.
  */
-class RigidBody {
+class RigidBody : public ic::Object{
 private:
     glm::mat4 modelMatrix;
 
@@ -59,7 +60,8 @@ public:
     //  CONSTRUCTORS
     //-----------------------------------------------------------//
 
-    RigidBody();
+    RigidBody(SceneID id);
+    RigidBody(SceneID id, std::string name);
 
     virtual ~RigidBody();
 
@@ -90,4 +92,4 @@ public:
     virtual void update();
 };
 
-#endif //MG1_OBJECT_H
+#endif //MG1_RIGID_BODY_H

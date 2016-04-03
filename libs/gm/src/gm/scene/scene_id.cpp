@@ -15,3 +15,7 @@ SceneID::SceneID(int key) : key(key){
 int SceneID::getKey() const{
     return this->key;
 }
+
+bool SceneID::operator==(const SceneID& id) const{
+    return (id.key == this->key);
+}

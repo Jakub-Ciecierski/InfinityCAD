@@ -5,13 +5,21 @@
 #include <gm/util/angle_to_radians.h>
 #include <gm/rigid_body.h>
 
+using namespace std;
 using namespace glm;
 
 //-----------------------------------------------------------//
 //  CONSTRUCTORS
 //-----------------------------------------------------------//
 
-RigidBody::RigidBody() {
+RigidBody::RigidBody(SceneID id) :
+    Object(id){
+    position = vec3(0.0f);
+    rotationAngles = vec3(0.0f);
+    scaleFactor = 1.0f;
+}
+RigidBody::RigidBody(SceneID id, std::string name) :
+    Object(id, name){
     position = vec3(0.0f);
     rotationAngles = vec3(0.0f);
     scaleFactor = 1.0f;

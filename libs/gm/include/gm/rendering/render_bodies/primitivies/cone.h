@@ -20,7 +20,11 @@ protected:
 
 public:
 
-    Cone(float radius, float height, int baseVerticesCount);
+    Cone(SceneID id,
+         float radius, float height, int baseVerticesCount);
+    Cone(SceneID id, std::string name,
+         float radius, float height, int baseVerticesCount);
+
     ~Cone();
 
     virtual float intersect(const RayCast &ray) override;

@@ -6,46 +6,59 @@
 
 #include <string>
 #include <gm/scene/scene_id.h>
+#include <gm/rendering/render_body.h>
 
-struct Item{
-    Item(){};
-    Item(SceneID id,
-         QTreeWidgetItem* treeItem,
-         std::string name){
-        this->id = id;
-        this->treeItem = treeItem;
-        this->name = name;
-    };
-
-    SceneID id;
+struct ItemTMP{
+    RenderBody* object;
     QTreeWidgetItem* treeItem;
-    std::string name;
+
+    ItemTMP(){}
+    ItemTMP(RenderBody* obj,
+            QTreeWidgetItem* treeItem){
+        this->object = obj;
+        this->treeItem = treeItem;
+    }
+    bool operator==(const ItemTMP& item) {
+        return (item.object == this->object &&
+                item.treeItem == this->treeItem);
+    }
 };
 
 class SceneTree : public QTreeWidget
 {
     Q_OBJECT
 private:
-    std::vector<Item> items;
+    std::vector<ItemTMP> itemsTMP;
+
+    QTreeWidgetItem* torusTreeRoot;
+    QTreeWidgetItem* pointTreeRoot;
+
+    void initTorusRoot();
+    void initPointRoot();
 
     void setupContextMenu();
+    QList<QTreeWidgetItem *> filterSelectedItems();
+
+    void deleteItem(ItemTMP* item);
 
 public:
     SceneTree(QWidget* parent);
 
-    SceneID getID(std::string name);
-    int getItemIndex(std::string name);
-    int getItemIndex(QTreeWidgetItem* treeItem);
+    bool objectExists(std::string name);
 
-    void addObject(std::string name, SceneID id);
+    ItemTMP* getItemByName(std::string name);
+    ItemTMP* getItemByTree(QTreeWidgetItem* treeItem);
+
+    void addObject(RenderBody* obj);
+    void addObject(RenderBody* object, std::string type);
+
     SceneID deleteObject(std::string name);
+
     void changeName(std::string srcName, std::string dstName);
 
 public slots:
     void ShowContextMenu(const QPoint& pos);
-
     void myitemActivated(QTreeWidgetItem* item, int column);
-
     void myitemSelectionChanged();
 };
 

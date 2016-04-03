@@ -7,7 +7,6 @@
 
 #include <gm/color/color.h>
 
-#include <gm/cameras/camera_std.h>
 #include <gm/projections/stereoscopic_projection.h>
 #include <gm/rendering/render_body.h>
 #include <gm/rendering/render_bodies/cross.h>
@@ -17,7 +16,7 @@
 /*
  * Scene is responsible for deallocating all objects in the scene
  */
-class Scene : public RigidBody{
+class Scene{
 private:
     //-----------------------------------------------------------//
     //  PRIVATE FIELDS
@@ -26,9 +25,7 @@ private:
     Cross* cross;
 
     std::vector<RenderBody*> sceneObjects;
-    std::vector<SceneID> ids;
 
-    RenderBody* activeRenderBody;
     std::vector<Camera*> cameras;
     Camera* activeCamera;
 
@@ -40,6 +37,8 @@ private:
 
     // Model of the scene, View and Projection from camera
     glm::mat4 MVP;
+
+    void initSceneElements();
 
     void updateMVP();
 
@@ -59,8 +58,6 @@ public:
     //  PUBLIC METHODS
     //-----------------------------------------------------------//
 
-    virtual glm::vec3 getClosestPoint(const glm::vec3 point) override;
-
     //--------------------//
     //  SETTERS
     //--------------------//
@@ -71,9 +68,7 @@ public:
      *
      * Returns an unique ID of the object in the scene.
      */
-    SceneID addRenderObject(RenderBody* object);
-
-    void setActiveRenderBody(const SceneID& id);
+    void addRenderObject(RenderBody* object);
 
     /*
      * The camera is taken to the ownership of the scene
@@ -113,7 +108,7 @@ public:
 
     void renderScene();
 
-    virtual void update() override;
+    void update();
 };
 
 

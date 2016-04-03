@@ -15,8 +15,10 @@ protected:
 
 public:
 
-    Camera();
-    Camera(Projection* projection);
+    Camera(SceneID id,
+           Projection* projection);
+    Camera(SceneID id, std::string name,
+           Projection* projection);
 
     virtual glm::vec3 getClosestPoint(const glm::vec3 point) override;
 

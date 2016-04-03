@@ -45,13 +45,8 @@ public:
     //  CONSTRUCTORS
     //-----------------------------------------------------------//
 
-    Torus();
-
-    Torus(float innerRadius, float outerRadiusr);
-
-    Torus(float innerRadius, float outerRadiusr,
-          unsigned int sidesCount,
-          unsigned int ringsCount);
+    Torus(SceneID id);
+    Torus(SceneID id, std::string name);
 
     ~Torus();
 

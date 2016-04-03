@@ -31,7 +31,8 @@ public:
     //  CONSTRUCTORS
     //-----------------------------------------------------------//
 
-    Cube();
+    Cube(SceneID id);
+    Cube(SceneID id, std::string name);
 
     ~Cube();
 

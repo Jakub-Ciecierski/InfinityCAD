@@ -15,6 +15,8 @@ public:
     SceneID(int key);
 
     int getKey() const;
+
+    bool operator==(const SceneID& id) const;
 };
 
 

@@ -9,20 +9,50 @@
 #include <gm/rendering/render_bodies/primitivies/torus.h>
 
 #include <string>
-#include "scene_id_factory.h"
+#include <gm/rendering/render_bodies/axis_net.h>
+#include <gm/rendering/render_bodies/cross.h>
+#include <gm/rendering/render_bodies/cloud.h>
+#include "gm/scene/scene_id_factory.h"
 
+/*
+ * Singleton class
+ * ObjectFactory is responsible for all object creation.
+ * It allocates memory and assings ID for each created object.
+ *
+ * The memory is NOT deallocated.
+ */
 class ObjectFactory {
 private:
     SceneIDFactory sceneIDFactory;
 
-public:
-
     ObjectFactory();
+public:
 
     ~ObjectFactory();
 
-    Point* createPoint(std::string name);
+    static ObjectFactory& getInstance();
+
+    ic::Point* createPoint(std::string name);
+
     Torus* createTorus(std::string name);
+
+    Cross* createCross(std::string name,
+                       const std::vector<RenderBody*>* sceneObjects);
+
+    AxisNet* createAxisNet(std::string name,
+                           int netSize);
+
+    Cone* createCone(std::string name,
+                     float radius, float height, int baseVerticesCount);
+
+    Line* createLine(std::string name,
+                     glm::vec4 v1, glm::vec4 v2);
+
+    Cloud* createCloud(std::string name,
+                       std::vector<glm::vec4>& points);
+
+    Camera* createCameraFPS(std::string name,
+                            Projection* projection);
 
 };
 

@@ -22,7 +22,11 @@ protected:
     virtual void transform(const glm::mat4 &VP) override;
 public:
 
-    Cloud(std::vector<glm::vec4>& points);
+    Cloud(SceneID id,
+          std::vector<glm::vec4>& points);
+    Cloud(SceneID id, std::string name,
+          std::vector<glm::vec4>& points);
+
     ~Cloud();
     const std::vector<glm::vec4>& getWorldVertices();
 

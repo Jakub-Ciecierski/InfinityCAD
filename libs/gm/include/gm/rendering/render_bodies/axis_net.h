@@ -10,7 +10,7 @@
 
 class AxisNet : public RenderBody{
 private:
-    std::vector<Line> lines;
+    std::vector<Line*> lines;
 
     float middleLineWidth;
     int netSize;
@@ -36,7 +36,12 @@ protected:
 
 public:
 
-    AxisNet(int netSize);
+    AxisNet(SceneID id,
+            int netSize);
+
+    AxisNet(SceneID id, std::string name,
+            int netSize);
+
     ~AxisNet();
 
     virtual float intersect(const RayCast &ray) override;

@@ -5,11 +5,16 @@
 
 #include <gm/cameras/camera.h>
 
-Camera::Camera(){
+Camera::Camera(SceneID id,
+               Projection *projection) :
+        RigidBody(id),
+        projection(projection){
 
 }
 
-Camera::Camera(Projection *projection) :
+Camera::Camera(SceneID id, std::string name,
+               Projection *projection) :
+        RigidBody(id, name),
         projection(projection){
 
 }

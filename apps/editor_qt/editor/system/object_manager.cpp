@@ -1,7 +1,7 @@
 #include "object_manager.h"
 #include "editor_window.h"
 #include "ui_mainwindow.h"
-#include "widgets/objects_list/objects_settings.h"
+#include "system/ic_names.h"
 
 #include <gm/cameras/camera.h>
 #include <gm/scene/scene_id_factory.h>

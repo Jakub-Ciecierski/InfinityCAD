@@ -1,6 +1,6 @@
 #include "objects_tree_factory.h"
 
-#include "widgets/objects_list/objects_settings.h"
+#include "system/ic_names.h"
 
 ObjectsTreeFactory::ObjectsTreeFactory(QTreeWidget* treeWidget)
 {

@@ -26,6 +26,7 @@ private:
 
     QTimer timer;
 
+    QPoint globalMouseDragPosition;
     QPoint mouseDragPosition;
     QPoint rightMouseDragPosition;
     bool isMouseDrag;

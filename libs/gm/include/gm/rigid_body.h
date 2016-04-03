@@ -80,6 +80,7 @@ public:
     void scale(float scale);
     void scaleDt(float scale);
 
+    const glm::vec3& getRotations() const;
     const glm::vec3& getPosition() const;
 
     virtual glm::vec3 getClosestPoint(const glm::vec3 point) = 0;

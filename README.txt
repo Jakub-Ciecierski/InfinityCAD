@@ -1,4 +1,4 @@
-Geometrical Modeling 1
+InfinityCAD
 
 Warsaw University of Technology
 Factulty of Mathematics and Information Science.

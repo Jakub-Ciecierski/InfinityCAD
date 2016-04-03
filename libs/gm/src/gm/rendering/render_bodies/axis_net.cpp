@@ -81,12 +81,7 @@ void AxisNet::initLineSegment(glm::vec4 v1, glm::vec4 v2,
 
 void AxisNet::initXLines(float start, float finish,
                          float deltaDist, int& currentVertex){
-    float xStart = 0;
-
-    initLineSegment(vec4(xStart, 0, start, 1),
-                    vec4(xStart, 0, finish, 1),
-                    currentVertex, &middleLineColor, middleLineWidth);
-    xStart += deltaDist;
+    float xStart = deltaDist;
 
     while(xStart <= finish){
         initLineSegment(vec4(xStart, 0, start, 1),
@@ -109,14 +104,9 @@ void AxisNet::initXLines(float start, float finish,
 
 void AxisNet::initZLines(float start, float finish,
                          float deltaDist, int& currentVertex){
-    float zStart = 0;
+    float zStart = deltaDist;
 
-    initLineSegment(vec4(start, 0, zStart, 1),
-             vec4(finish, 0, zStart, 1),
-             currentVertex, &middleLineColor, middleLineWidth);
-    zStart += deltaDist;
-
-    while(zStart < finish){
+    while(zStart <= finish){
         initLineSegment(vec4(start, 0, zStart, 1),
                  vec4(finish, 0, zStart, 1),
                  currentVertex, getColor());
@@ -127,7 +117,7 @@ void AxisNet::initZLines(float start, float finish,
                     currentVertex, getColor());
 
     zStart = -1;
-    while(zStart < 0){
+    while(zStart <= 0){
         initLineSegment(vec4(start, 0, zStart, 1),
                  vec4(finish, 0, zStart, 1),
                  currentVertex, getColor());
@@ -153,6 +143,13 @@ void AxisNet::initVertices(){
     initXLines(start, finish, deltaDist, currentVertex);
     initZLines(start, finish, deltaDist, currentVertex);
 
+
+    initLineSegment(vec4(0, 0, start, 1),
+                    vec4(0, 0, finish, 1),
+                    currentVertex, &middleLineColor, middleLineWidth);
+    initLineSegment(vec4(start, 0, 0, 1),
+                    vec4(finish, 0, 0, 1),
+                    currentVertex, &middleLineColor, middleLineWidth);
 }
 
 void AxisNet::initEdges() {

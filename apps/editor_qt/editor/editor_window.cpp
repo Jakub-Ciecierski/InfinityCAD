@@ -1,11 +1,9 @@
 #include "editor_window.h"
 #include "ui_mainwindow.h"
-
-#include "context_menus/context_menu_settings.h"
 #include "widgets/objects_list/objects_tree_factory.h"
 
-#include "context_menus/factories/scene_cmenu_factory.h"
-#include "context_menus/factories/objects_cmenu_factory.h"
+#include <widgets/objects_list/context_menus/objects_cmenu_factory.h>
+#include <widgets/scene_list/context_menus/scene_cmenu_factory.h>
 #include <iostream>
 
 #include <QApplication>
@@ -129,11 +127,14 @@ void EditorWindow::setupBinding(){
 }
 
 void EditorWindow::setupSplitters(){
-    ui->objectsTreeToRenderSplitter->setStretchFactor(0,1);
+    ui->objectsTreeToRenderSplitter->setStretchFactor(0,2);
     ui->objectsTreeToRenderSplitter->setStretchFactor(1,20);
 
     ui->renderToPropertiesSplitter->setStretchFactor(0,10);
     ui->renderToPropertiesSplitter->setStretchFactor(1,2);
+
+    ui->sceneProperitesSplitter->setStretchFactor(0,2);
+    ui->sceneProperitesSplitter->setStretchFactor(1,1);
 
     ui->renderToPropertiesSplitter->
             setStyleSheet("QSplitter::handle{background: orange;}");

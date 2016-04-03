@@ -15,9 +15,6 @@ CameraFPS::CameraFPS(SceneID id,
         Camera(id, projection) {
     buttonsSpeed = 0.15;
     mouseSpeed = 0.06;
-
-    verticalAngleDegree = 0;
-    horizontalAngleDegree = 0;
 }
 
 CameraFPS::CameraFPS(SceneID id, std::string name,
@@ -25,9 +22,6 @@ CameraFPS::CameraFPS(SceneID id, std::string name,
         Camera(id, name, projection) {
     buttonsSpeed = 0.15;
     mouseSpeed = 0.06;
-
-    verticalAngleDegree = 0;
-    horizontalAngleDegree = 0;
 }
 
 CameraFPS::~CameraFPS() {
@@ -100,17 +94,17 @@ void CameraFPS::update() {
     projection->update();
 
     direction = vec3(
-            (cos(angleToRadians(verticalAngleDegree)) *
-            sin(angleToRadians(horizontalAngleDegree))),
+            (cos(angleToRadians(rotationAngles.y)) *
+             sin(angleToRadians(rotationAngles.x))),
 
-            sin(angleToRadians(verticalAngleDegree)),
+            sin(angleToRadians(rotationAngles.y)),
 
-            cos(angleToRadians(verticalAngleDegree)) *
-            cos(angleToRadians(horizontalAngleDegree)));
+            cos(angleToRadians(rotationAngles.y)) *
+            cos(angleToRadians(rotationAngles.x)));
 
-    right = vec3(sin(angleToRadians(horizontalAngleDegree) - M_PI_2),
+    right = vec3(sin(angleToRadians(rotationAngles.x) - M_PI_2),
                  0,
-                 cos(angleToRadians(horizontalAngleDegree) - M_PI_2)
+                 cos(angleToRadians(rotationAngles.x) - M_PI_2)
     );
 
     direction = normalize(direction);

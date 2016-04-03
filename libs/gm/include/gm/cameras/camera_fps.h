@@ -17,9 +17,6 @@ private:
     glm::mat4 viewMatrix;
 
 public:
-    float horizontalAngleDegree;
-    float verticalAngleDegree;
-
     float buttonsSpeed;
     float mouseSpeed;
 

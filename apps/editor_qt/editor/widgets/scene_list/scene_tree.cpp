@@ -4,7 +4,7 @@
 #include <editor_window.h>
 #include <iostream>
 #include "system/object_manager.h"
-#include "widgets/objects_list/objects_settings.h"
+#include "system/ic_names.h"
 
 using namespace std;
 
@@ -22,8 +22,9 @@ SceneTree::SceneTree(QWidget* parent) :
                  this,
                  SLOT(myitemSelectionChanged()));
 
-    torusTreeRoot = NULL;
-    pointTreeRoot = NULL;
+    rootItems.push_back(RootTreeItem(RB_TORUS_NAME, "Toruses"));
+    rootItems.push_back(RootTreeItem(RB_POINT_NAME, "Points"));
+    rootItems.push_back(RootTreeItem(RB_BEZIER_NAME, "Bezier Curves"));
 }
 
 //-----------------------------//
@@ -58,11 +59,17 @@ QList<QTreeWidgetItem *> SceneTree::filterSelectedItems(){
 
     QList<QTreeWidgetItem *> selectedItems = this->selectedItems();
     for(unsigned int i = 0; i < selectedItems.size(); i++){
-        if(selectedItems[i] == torusTreeRoot ||
-                selectedItems[i] == pointTreeRoot) continue;
-
-        filteredItems.push_back(selectedItems[i]);
+        bool add = true;
+        for(unsigned int j = 0; j <  rootItems.size(); j++){
+            RootTreeItem& rootItem = rootItems[j];
+            if(selectedItems[i] == rootItem.item) {
+                add = false;
+            }
+        }
+        if(add)
+            filteredItems.push_back(selectedItems[i]);
     }
+
     return filteredItems;
 }
 
@@ -72,15 +79,12 @@ void SceneTree::deleteItem(ItemTMP* item){
     itemsTMP.erase(remove(itemsTMP.begin(), itemsTMP.end(), *item),
                    itemsTMP.end());
 
-    if(torusTreeRoot != NULL && torusTreeRoot->childCount() == 0){
-        delete torusTreeRoot;
-        torusTreeRoot = NULL;
+    for(unsigned int i = 0;i < rootItems.size();i++){
+        RootTreeItem& rootItem = rootItems[i];
+        if(rootItem.isEmpty()){
+            rootItem.destroy();
+        }
     }
-    if(pointTreeRoot != NULL && pointTreeRoot->childCount() == 0){
-        delete pointTreeRoot;
-        pointTreeRoot = NULL;
-    }
-
 }
 
 //-----------------------------//
@@ -132,6 +136,15 @@ void SceneTree::addObject(RenderBody* object, std::string type){
     ItemTMP item(object, treeItem);
     this->itemsTMP.push_back(item);
 
+    for(unsigned int i = 0;i < rootItems.size();i++){
+        RootTreeItem& item = rootItems[i];
+        if(type == item.type){
+            item.init(this);
+            item.item->addChild(treeItem);
+        }
+    }
+   /*
+
     if(type == RB_TORUS_NAME){
         initTorusRoot();
         torusTreeRoot->addChild(treeItem);
@@ -139,7 +152,7 @@ void SceneTree::addObject(RenderBody* object, std::string type){
     }else if(type == RB_POINT_NAME){
         initPointRoot();
         pointTreeRoot->addChild(treeItem);
-    }
+    }*/
 
 }
 

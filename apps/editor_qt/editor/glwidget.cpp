@@ -18,6 +18,7 @@
 #include <QColorDialog>
 #include <QMessageBox>
 #include <QLineEdit>
+#include <QDesktopWidget>
 
 #include "ui_mainwindow.h"
 
@@ -64,6 +65,8 @@ void GLWidget::setupRenderer(){
     ObjectFactory& objectFactory = ObjectFactory::getInstance();
     CameraFPS* fpsCamera = (CameraFPS*)
             objectFactory.createCameraFPS("FPS Camera", stereoscopicProjection);
+    fpsCamera->moveTo(1.85, 1.5, -1.93);
+    fpsCamera->rotateTo(-225, -151, 0);
 
     scene->addCamera(fpsCamera);
     scene->setActiveCamera(fpsCamera);
@@ -184,8 +187,12 @@ void GLWidget::mousePressEvent(QMouseEvent *event){
         Cross* cross = renderer->getScene()->getCross();
         cross->scanAndMoveToClosestObject(*ray, renderer->getWindowWidth(), renderer->getWindowHeight());
 
-        mouseDragPosition = event->pos();
-        isMouseDrag = true;
+        if(!isMouseDrag){
+            globalMouseDragPosition = QCursor::pos();
+            mouseDragPosition = event->pos();
+            isMouseDrag = true;
+        }
+
     }
     else if(event->buttons() & Qt::RightButton){
         rightMouseDragPosition = event->pos();
@@ -220,8 +227,11 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event){
             if(dy > 0)
                 camera->moveBackward(speedBoost);
         }else{
-            camera->horizontalAngleDegree += dx * camera->mouseSpeed;
-            camera->verticalAngleDegree -= dy * camera->mouseSpeed;
+
+            camera->rotate(dx * camera->mouseSpeed,
+                           dy * camera->mouseSpeed,
+                           0);
+
         }
         mouseDragPosition = event->pos();
     }
@@ -322,12 +332,13 @@ bool GLWidget::do_movement(){
 }
 
 void GLWidget::wheelEvent(QWheelEvent* event){
+    /*
     float speedBoost = 0.0001;
     if(event->modifiers() & Qt::ControlModifier){
         speedBoost = 0.001;
     }
     int x = event->delta();
-
+    */
 };
 
 Renderer* GLWidget::getRenderer(){
@@ -347,7 +358,7 @@ void GLWidget::paintGL(){
     renderer->update();
     renderer->render();
 
-    ray->render(renderer->getScene()->getMVP());
+    //ray->render(renderer->getScene()->getMVP());
 }
 
 void GLWidget::resizeGL(int width, int height){

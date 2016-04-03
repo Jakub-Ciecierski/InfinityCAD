@@ -165,6 +165,10 @@ void RigidBody::scaleDt(float scale) {
         this->scaleFactor = 0.1;
 }
 
+const vec3& RigidBody::getRotations() const {
+    return this->rotationAngles;
+}
+
 const vec3& RigidBody::getPosition() const {
     return this->position;
 }

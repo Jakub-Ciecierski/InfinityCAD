@@ -9,6 +9,8 @@ public:
     SceneCMenuFactory();
 
     ContextMenu* create();
+
+    ContextMenu* showPointMenu();
 };
 
 #endif // SCENECMENUFACTORY_H

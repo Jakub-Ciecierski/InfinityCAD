@@ -24,11 +24,55 @@ struct ItemTMP{
     }
 };
 
+// ----------------------------------------------------------------
+
+struct RootTreeItem{
+    QTreeWidgetItem* item;
+    std::string type;
+    std::string displayName;
+
+    RootTreeItem(){}
+
+    RootTreeItem(const std::string type,
+                 std::string displayName){
+        this->item = NULL;
+        this->type = type;
+        this->displayName = displayName;
+    }
+    ~RootTreeItem(){
+        if (item != NULL) delete item;
+    }
+
+    void init(QTreeWidget* treeWidget){
+        if(item != NULL) return;
+
+        item = new QTreeWidgetItem(treeWidget);
+        item->setText(0, QString::fromStdString(displayName));
+        treeWidget->addTopLevelItem(item);
+
+        item->setExpanded(true);
+    }
+
+    bool isEmpty(){
+        if(item == NULL || item->childCount() == 0)
+            return true;
+        return false;
+    }
+
+    void destroy(){
+        delete item;
+        item = NULL;
+    }
+};
+
+// ----------------------------------------------------------------
+
 class SceneTree : public QTreeWidget
 {
     Q_OBJECT
 private:
     std::vector<ItemTMP> itemsTMP;
+    std::vector<RootTreeItem> rootItems;
 
     QTreeWidgetItem* torusTreeRoot;
     QTreeWidgetItem* pointTreeRoot;

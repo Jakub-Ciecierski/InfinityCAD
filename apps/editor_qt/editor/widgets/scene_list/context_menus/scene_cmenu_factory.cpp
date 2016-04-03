@@ -1,6 +1,5 @@
-#include "scene_cmenu_factory.h"
-
-#include "context_menus/context_menu_settings.h"
+#include "widgets/scene_list/context_menus/scene_cmenu_factory.h"
+#include "widgets/scene_list/context_menus/scene_cmenu_settings.h"
 
 SceneCMenuFactory::SceneCMenuFactory()
 {
@@ -28,4 +27,8 @@ ContextMenu* SceneCMenuFactory::create(){
 
 
     return sceneListContextMenu;
+}
+
+ContextMenu* SceneCMenuFactory::showPointMenu(){
+    return NULL;
 }

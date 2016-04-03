@@ -1,6 +1,5 @@
-#include "objects_cmenu_factory.h"
-
-#include "context_menus/context_menu_settings.h"
+#include "widgets/objects_list/context_menus/objects_cmenu_factory.h"
+#include "widgets/objects_list/context_menus/objects_cmenu_settings.h"
 
 ObjectsCMenuFactory::ObjectsCMenuFactory()
 {

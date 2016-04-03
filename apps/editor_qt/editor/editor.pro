@@ -23,32 +23,33 @@ TEMPLATE = app
 SOURCES += glwidget.cpp \
         main.cpp\
     controls.cpp \
-    context_menus/context_menu_settings.cpp \
     context_menus/context_menu.cpp \
     context_menus/handler.cpp \
-    widgets/objects_list/objects_settings.cpp \
     widgets/objects_list/objects_tree_factory.cpp \
     editor_window.cpp \
     system/object_manager.cpp \
-    context_menus/factories/objects_cmenu_factory.cpp \
-    context_menus/factories/scene_cmenu_factory.cpp \
     widgets/scene_list/scene_tree.cpp \
-    widgets/objects_list/objects_tree.cpp
+    widgets/objects_list/objects_tree.cpp \
+    widgets/objects_list/context_menus/objects_cmenu_factory.cpp \
+    widgets/objects_list/context_menus/objects_cmenu_settings.cpp \
+    widgets/scene_list/context_menus/scene_cmenu_factory.cpp \
+    widgets/scene_list/context_menus/scene_cmenu_settings.cpp \
+    system/ic_names.cpp
 
 HEADERS  += glwidget.h \
     controls.h \
-    context_menus/context_menu_settings.h \
     context_menus/context_menu.h \
     context_menus/handler.h \
-    widgets/objects_list/objects_settings.h \
     widgets/objects_list/objects_tree_factory.h \
     editor_window.h \
     system/object_manager.h \
-    context_menus/factories/objects _cmenu_factory.h \
-    context_menus/factories/scene_cmenu_factory.h \
-    context_menus/factories/objects_cmenu_factory.h \
     widgets/scene_list/scene_tree.h \
-    widgets/objects_list/objects_tree.h
+    widgets/objects_list/objects_tree.h \
+    widgets/objects_list/context_menus/objects_cmenu_factory.h \
+    widgets/objects_list/context_menus/objects_cmenu_settings.h \
+    widgets/scene_list/context_menus/scene_cmenu_factory.h \
+    widgets/scene_list/context_menus/scene_cmenu_settings.h \
+    system/ic_names.h
 
 FORMS    += mainwindow.ui
 

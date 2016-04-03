@@ -472,7 +472,7 @@ QMenu::separator {
           </property>
           <layout class="QVBoxLayout" name="verticalLayout">
            <item>
-            <widget class="QSplitter" name="properitesSplitter">
+            <widget class="QSplitter" name="sceneProperitesSplitter">
              <property name="orientation">
               <enum>Qt::Vertical</enum>
              </property>
@@ -531,8 +531,8 @@ QMenu::separator {
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>566</width>
-                    <height>583</height>
+                    <width>564</width>
+                    <height>581</height>
                    </rect>
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_5">

@@ -6,6 +6,8 @@
 #include <gm/color/color_settings.h>
 #include <gm/rendering/render_body.h>
 #include <iostream>
+#include <gm/rendering/clipping/sutherland.h>
+#include <gm/util/utils.h>
 
 using namespace glm;
 using namespace std;
@@ -73,7 +75,6 @@ void RenderBody::drawLines(const std::vector<glm::vec4>& vertices,
     const vector<Edge>& edges = getEdges();
 
     glLineWidth((GLfloat)lineWidth);
-
     glBegin(drawingMode);
     for(unsigned int i = 0; i < edges.size(); i++){
         if(costumColor && edges[i].color != NULL)
@@ -84,11 +85,69 @@ void RenderBody::drawLines(const std::vector<glm::vec4>& vertices,
         vec4 v1 = vertices[index1];
         vec4 v2 = vertices[index2];
 
-        float near = 0.0f;
+        float near = 0.1f;
+
+        bool clipped = false;
+
+
+        /*
+        if(-v1.w > v1.x > v1.w ||
+                -v1.w > v1.y > v1.w ||
+                -v1.w > v1.z > v1.w ) {
+            std::cout << "V1 Clipped" << std::endl;
+
+            //float x_c = (v1.x - v1.w) / ((v));
+            clipped = true;
+            continue;
+        }
+
+        if(-v2.w > v2.x > v2.w ||
+           -v2.w > v2.y > v2.w ||
+           -v2.w > v2.z > v2.w ) {
+            std::cout << "V2 Clipped" << std::endl;
+            clipped = true;
+            continue;
+        }
+        if(!clipped){
+            std::cout << "Nothing Clipped" << std::endl;
+        }
+*/
 
         // CLIPPING
         // Don't draw if either is not visiable
-        if(v1.w < near || v2.w < near ) continue;
+/*
+        if(v1.w < 0 || v2.w < 0 ){
+
+            continue;
+        }*/
+
+        /*
+        if(v1.w < 0 && v2.w < 0 ) {
+            //float t = (v1.x - v1.w) / ((v2.w - v1.w) - (v2.x - v1.x));
+
+            std::cout << v1.x << ", " << v1.y
+            << ", " << v1.z  << ", " << v1.w << std::endl;
+            continue;
+        }
+
+        if(v1.w < 0) {
+            //float t = (v1.x - v1.w) / ((v2.w - v1.w) - (v2.x - v1.x));
+            float t = - (v1.w / (v2.w - v1.w));
+
+            v1 = v1 + t*(v2-v1);
+        }
+        if(v2.w < 0) {
+            float t = - (v1.w / (v2.w - v1.w));
+            continue;
+            v2 = v1 + t*(v2-v1);
+        }*/
+
+        //std::cout << "..." << std::endl;
+        /*
+        if(v1.z < 0 || v2.z < 0) {
+            //std::cout << v1.w << "," << v2.w << std::endl;
+            continue;
+        }
 
         // v2 is behind
         if(v2.w < near){
@@ -106,73 +165,30 @@ void RenderBody::drawLines(const std::vector<glm::vec4>& vertices,
 
             v1 = vec4(xc,yc,0,v1.w);
         }
+*/
+        /*
+        bool doDraw = clip(v1, v2,
+                           -1, 1,
+                           -1, 1);
+*/
+        bool doDraw = clip(v1, v2,
+                           -1, 1,
+                           -1, 1);
+        if(doDraw) {
+            /*
+            if(((v1.x < -1.0 || v1.x > 1.0) || (v2.x < -1.0 || v2.x > 1.0)) ||
+            ((v1.y < -1.0 || v1.y > 1.0) || (v2.y < -1.0 || v2.y > 1.0)))
+                continue;*/
+            glVertex2f(v1.x,
+                       v1.y);
 
+            glVertex2f(v2.x,
+                       v2.y);
+            //std::cout << "DRAWING" << std::endl;
+        }
 
-        glVertex2f(v1.x,
-                   v1.y);
-        glVertex2f(v2.x,
-                   v2.y);
     }
     glEnd();
-}
-
-char RenderBody::ComputeOutcode(vec4 p, int left, int right, int top, int bottom)
-{
-    char outcode = 0;
-    if (p.x > right) outcode |= 2;
-    else if (p.x < left) outcode |= 1;
-    if (p.y < top) outcode |= 8;
-    else if (p.y > bottom) outcode |= 4;
-    return outcode;
-}
-
-bool RenderBody::CohenSutherland(vec4& p1, vec4& p2,
-                     int left, int right,
-                     int top, int bottom) {
-    bool accept = false, done = false;
-    char outcode1 = ComputeOutcode(p1, left,right,top,bottom);
-    char outcode2 = ComputeOutcode(p2, left,right,top,bottom);
-    do {
-        if ( ( outcode1 | outcode2 ) == 0 ) { //trivially accepted
-            accept = true;
-            done = true;
-        }
-        else if ( ( outcode1 & outcode2 ) != 0 ) { //trivially rejected
-            accept = false;
-            done = true;
-        }
-        else { //subdivide
-            char outcodeOut = (outcode1 != 0) ? outcode1 : outcode2;
-            vec4 p;
-            if ( ( outcodeOut & 8 ) != 0 ) {
-                p.x = p1.x + (p2.x - p1.x)*(top - p1.y)/(p2.y - p1.y);
-                p.y = top;
-            }
-            else if ( ( outcodeOut & 4 ) != 0 ) {
-                p.x = p1.x + (p2.x - p1.x)*(bottom - p1.y)/(p2.y - p1.y);
-                p.y = bottom;
-            }
-            else if ((outcodeOut & 2) != 0)
-            {
-                p.x = right;
-                p.y = ((p2.y-p1.y)/(p2.x-p1.x))*(right-p1.x)+p1.y;
-            }
-            else if ((outcodeOut & 1) != 0)
-            {
-                p.x = left;
-                p.y = ((p2.y - p1.y) / (p2.x - p1.x)) * (left - p1.x) + p1.y;
-            }
-            if (outcodeOut == outcode1){
-                p1 = p;
-                outcode1 = ComputeOutcode(p1, left,right,top,bottom);
-            }
-            else {
-                p2 = p;
-                outcode2 = ComputeOutcode(p2, left,right,top,bottom);
-            }
-        }
-    } while (!done);
-    return accept;
 }
 
 //-----------------------------------------------------------//
@@ -181,6 +197,10 @@ bool RenderBody::CohenSutherland(vec4& p1, vec4& p2,
 
 void RenderBody::setDrawingMode(GLenum mode){
     this->drawingMode = mode;
+}
+
+void RenderBody::setLineWidth(float width){
+    this->lineWidth = width;
 }
 
 bool RenderBody::isGrabable() {

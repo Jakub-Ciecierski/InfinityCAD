@@ -161,6 +161,9 @@ void Cross::activateGrab() {
     if(isGrabActive) return;
     isGrabActive = true;
 
+    float minDistance = 1000;
+    RenderBody* minBody = NULL;
+
     const vec3 crossPos = this->getPosition();
     for(unsigned int i = 0; i < sceneObjects->size(); i++){
         RenderBody* body = (*sceneObjects)[i];
@@ -176,12 +179,19 @@ void Cross::activateGrab() {
         dz *= dz;
         float distance = sqrt(dx + dy + dz);
         if(distance < grabRadius){
-            BodyInfo info(distance, *body->getColor());
-            grabedMap[body] = info;
-
-            body->setColor(grabedColor);
+            if(distance < minDistance){
+                minDistance = distance;
+                minBody = body;
+            }
         }
     }
+    if(minBody != NULL){
+        grabedMap.clear();
+        grabedMap[minBody] = BodyInfo(minDistance, *minBody->getColor());
+        minBody->setColor(grabedColor);
+    }
+
+
 }
 
 void Cross::deactivateGrab() {
@@ -231,7 +241,6 @@ void Cross::scanAndMoveToClosestObject(const RayCast& ray, int width, int height
         int dx = rayX - bodypX;
         int dy = rayY - bodypY;
         int dist = sqrt(dx*dx + dy*dy);
-
 
         if(dist < distTol){
             this->moveTo(body);

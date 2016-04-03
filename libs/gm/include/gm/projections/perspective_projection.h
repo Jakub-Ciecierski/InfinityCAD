@@ -8,13 +8,18 @@
 #include <gm/projections/projection.h>
 
 class PerspectiveProjection : public Projection {
+private:
+    unsigned int* widthWindow;
+    unsigned int* heightWindow;
+
 protected:
 
     float projectionDistance;
 
 public:
 
-    PerspectiveProjection(float r);
+    PerspectiveProjection(unsigned int* widthWindow, unsigned int* heightWindow,
+                          float r);
 
     ~PerspectiveProjection();
 

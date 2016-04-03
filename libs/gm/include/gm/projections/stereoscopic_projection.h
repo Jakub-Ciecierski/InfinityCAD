@@ -12,10 +12,14 @@
 class StereoscopicProjection : public PerspectiveProjection{
 public:
 
-    StereoscopicProjection(float projectionDistance, float distance3D);
-    StereoscopicProjection(float projectionDistance, float distance3D,
-                           Color leftColor, Color rightColor);
+    StereoscopicProjection(unsigned int* widthWindow,
+                           unsigned int* heightWindow,
+                           float projectionDistance, float distance3D);
 
+    StereoscopicProjection(unsigned int* widthWindow,
+                           unsigned int* heightWindow,
+                           float projectionDistance, float distance3D,
+                           Color leftColor, Color rightColor);
     ~StereoscopicProjection();
 
     void setDistance3D(float distance3D);

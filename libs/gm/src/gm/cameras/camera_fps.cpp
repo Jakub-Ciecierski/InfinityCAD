@@ -6,6 +6,7 @@
 #include <gm/cameras/camera_fps.h>
 #include <gm/util/angle_to_radians.h>
 #include <iostream>
+#include <gm/util/utils.h>
 
 using namespace glm;
 
@@ -91,10 +92,14 @@ const mat4 &CameraFPS::getVPMatrix() {
 }
 
 void CameraFPS::update() {
+    projection->update();
+
     direction = vec3(
-            cos(angleToRadians(verticalAngleDegree)) *
-            sin(angleToRadians(horizontalAngleDegree)),
+            (cos(angleToRadians(verticalAngleDegree)) *
+            sin(angleToRadians(horizontalAngleDegree))),
+
             sin(angleToRadians(verticalAngleDegree)),
+
             cos(angleToRadians(verticalAngleDegree)) *
             cos(angleToRadians(horizontalAngleDegree)));
 
@@ -129,12 +134,14 @@ void CameraFPS::update() {
     viewMatrix[1].z = direction.y;
     viewMatrix[2].z = direction.z;
     viewMatrix[3].z = (direction.x * -position.x +
-                  direction.y * -position.y +
-                  direction.z * -position.z);
+            direction.y * -position.y +
+            direction.z * -position.z);
+
     viewMatrix[0].w = 0;
     viewMatrix[1].w = 0;
     viewMatrix[2].w = 0;
     viewMatrix[3].w = 1.0f;
+
 
     VP = projection->getProjectionMatrix() * viewMatrix;
 }

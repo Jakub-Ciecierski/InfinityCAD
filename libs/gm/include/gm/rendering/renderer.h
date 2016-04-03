@@ -51,8 +51,10 @@ public:
     Scene* getScene();
 
     unsigned int getWindowWidth();
-
     unsigned int getWindowHeight();
+
+    unsigned int* getWindowWidthPointer();
+    unsigned int* getWindowHeightPointer();
 
     void initialize();
 

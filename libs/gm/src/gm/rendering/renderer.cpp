@@ -62,6 +62,14 @@ unsigned int Renderer::getWindowHeight() {
     return heightPixels;
 }
 
+unsigned int* Renderer::getWindowWidthPointer() {
+    return &widthPixels;
+}
+
+unsigned int* Renderer::getWindowHeightPointer() {
+    return &heightPixels;
+}
+
 void Renderer::initialize() {
 
 }

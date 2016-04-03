@@ -60,11 +60,13 @@ protected:
     virtual void drawLines(const std::vector<glm::vec4>& vertices,
                            bool costumColor);
 
-    char ComputeOutcode(glm::vec4 p, int left, int right, int top, int bottom);
+    char ComputeOutcode(glm::vec4 p,
+                        float left, float right,
+                        float top, float bottom);
 
     bool CohenSutherland(glm::vec4& p1, glm::vec4& p2,
-                         int left, int right,
-                         int top, int bottom);
+                         float left, float right,
+                         float top, float bottom);
 public:
     //-----------------------------------------------------------//
     //  CONSTRUCTORS
@@ -79,6 +81,7 @@ public:
     //-----------------------------------------------------------//
 
     void setDrawingMode(GLenum mode);
+    void setLineWidth(float width);
 
     bool isGrabable();
 

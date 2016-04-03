@@ -7,6 +7,7 @@
 
 #include <gm/rendering/render_bodies/axis_net.h>
 #include <gm/rendering/render_bodies/primitivies/sphere.h>
+#include <gm/rendering/render_bodies/primitivies/cube.h>
 
 using namespace glm;
 
@@ -19,22 +20,6 @@ Scene::Scene() :
 
     cross = new Cross(&this->sceneObjects);
     this->addRenderObject(cross);
-
-    Sphere* sphere = new Sphere(0.5, 50, 50);
-    this->addRenderObject(sphere);
-
-    Cloud* cloud1 = sphere->extractRandomCloud(100, 1, 1);
-    Cloud* cloud2 = sphere->extractRandomCloud(100, 2, 1);
-    Cloud* cloud3 = sphere->extractRandomCloud(100, 1, 2);
-    Cloud* cloud4 = sphere->extractRandomCloud(100, 2, 2);
-    cloud1->move(1.5, 0.0, 1.5);
-    cloud2->move(1.5, 0.0, -1.5);
-    cloud3->move(-1.5, 0.0, -1.5);
-    cloud4->move(-1.5, 0.0, 1.5);
-    this->addRenderObject(cloud1);
-    this->addRenderObject(cloud2);
-    this->addRenderObject(cloud3);
-    this->addRenderObject(cloud4);
 }
 
 Scene::~Scene() {
@@ -223,6 +208,7 @@ void Scene::update() {
     RigidBody::update();
 
     activeCamera->update();
+
     for(unsigned int i = 0; i < sceneObjects.size(); i++){
         sceneObjects[i]->update();
     }

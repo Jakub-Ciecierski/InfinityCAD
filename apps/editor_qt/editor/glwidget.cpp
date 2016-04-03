@@ -43,45 +43,32 @@ GLWidget::GLWidget(QWidget* parent) :
 
     isMouseDrag = false;
     isRightMouseDrag = false;
+    setMouseTracking(true);
 }
 
 GLWidget::~GLWidget(){
     delete renderer;
     delete ray;
+    delete mouseTracker;
 }
 
 void GLWidget::setupRenderer(){
     scene = new Scene();
+    renderer = new Renderer(scene);
+    renderer->resize(500,500);
 
-    Projection* stereoscopicProjection = new StereoscopicProjection(1.0f, 0.06);
+    Projection* stereoscopicProjection = new StereoscopicProjection(
+                renderer->getWindowWidthPointer(),
+                renderer->getWindowHeightPointer(),
+                1.0f, 0.06);
     CameraFPS* fpsCamera = new CameraFPS(stereoscopicProjection);
-    fpsCamera->move(0,0,0);
 
     scene->addCamera(fpsCamera);
     scene->setActiveCamera(fpsCamera);
 
     ray = new RayCast(fpsCamera);
 
-
-/*
-    Torus* t = new Torus(0.4, 0.3, 100, 100);
-    Torus* tt = new Torus(0.2, 0.1);
-    Torus* tt1 = new Torus(0.2, 0.1);
-    Torus* tt2 = new Torus(0.2, 0.1);
-    Torus* tt3 = new Torus(0.2, 0.1);
-    t->move(0,0,5);
-    tt->move(5,0,5);
-    tt1->move(4,5,5);
-    tt2->move(0,5,0);
-    tt3->move(5,0,0);
-    scene->addRenderObject(t);
-    scene->addRenderObject(tt);
-    scene->addRenderObject(tt1);
-    scene->addRenderObject(tt2);
-    scene->addRenderObject(tt3);
-*/
-
-    renderer = new Renderer(scene);
+    mouseTracker = new MouseTracker(ray, renderer);
 }
 
 void GLWidget::setupFocusPolicy(){
@@ -193,10 +180,6 @@ void GLWidget::keyReleaseEvent(QKeyEvent *event){
 void GLWidget::mousePressEvent(QMouseEvent *event){
 
     if(event->buttons() & Qt::LeftButton){
-        float xGL = renderer->xPixelToGLCoord(event->pos().x());
-        float yGL = renderer->yPixelToGLCoord(event->pos().y());
-        ray->update(xGL, yGL);
-
         Cross* cross = renderer->getScene()->getCross();
         cross->scanAndMoveToClosestObject(*ray, renderer->getWindowWidth(), renderer->getWindowHeight());
 
@@ -215,6 +198,8 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *event){
 }
 
 void GLWidget::mouseMoveEvent(QMouseEvent *event){
+    mouseTracker->update(event->x(), event->y());
+
     float moveDist = 0.002 * 5;
 
     // Move in FPS style
@@ -362,7 +347,7 @@ void GLWidget::paintGL(){
     renderer->update();
     renderer->render();
 
-    //ray->render(renderer->getScene()->getMVP());
+    ray->render(renderer->getScene()->getMVP());
 }
 
 void GLWidget::resizeGL(int width, int height){

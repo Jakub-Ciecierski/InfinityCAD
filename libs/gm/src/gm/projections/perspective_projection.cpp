@@ -10,8 +10,11 @@ using namespace glm;
 //  CONSTRUCTORS
 //-----------------------------------------------------------//
 
-PerspectiveProjection::PerspectiveProjection(float r) :
-    projectionDistance(r){
+PerspectiveProjection::PerspectiveProjection(unsigned int* widthWindow,
+                                             unsigned int* heightWindow,
+                                             float r) :
+        widthWindow(widthWindow), heightWindow(heightWindow),
+        projectionDistance(r){
     update();
 }
 
@@ -28,32 +31,21 @@ void PerspectiveProjection::setProjectionDistance(float r) {
 }
 
 void PerspectiveProjection::update() {
+/*
     projectionMatrix = mat4(1.0f);
 
     projectionMatrix[2].z = 0.001;
     projectionMatrix[2].w = 1.0f / projectionDistance;
 
-
-    float near = 1.0;
-    float far = 2.0;
-
-    float top = 1.0f;
-    float bottom = -1.0f;
-
-    float left = -1.0f;
-    float right = 1.0f;
-
-    float width = right - left;
-    float height = top - bottom;
-/*
-    projectionMatrix[0].x = near / width;
-    projectionMatrix[1].y = near / height;
-
-    projectionMatrix[2].z = -(far + near) / (far - near);
-    projectionMatrix[2].w = -1;
-
-    projectionMatrix[3].z = -(2*far*near) / (far - near);
-    projectionMatrix[3].w = 0;
 */
+    float FoV = 45;
+    float aspectRatio = (float) (*widthWindow) / (float) (*heightWindow);
+
+    projectionMatrix = glm::perspective(
+            FoV, aspectRatio , 0.1f, 100.0f
+    );
+    projectionMatrix[2].w = -projectionMatrix[2].w;
+
 
 }
+

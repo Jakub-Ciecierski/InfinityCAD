@@ -73,13 +73,6 @@ else:unix: LIBS += -L$$PWD/../../../dependencies/lib/rc/ -lrc
 INCLUDEPATH += $$PWD/../../../dependencies/include/rc
 DEPENDPATH += $$PWD/../../../dependencies/include/rc
 
-# PSO
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../dependencies/lib/pso/release/ -lpso
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../dependencies/lib/pso/debug/ -lpso
-else:unix: LIBS += -L$$PWD/../../../dependencies/lib/pso/ -lpso
-INCLUDEPATH += $$PWD/../../../dependencies/include/pso
-DEPENDPATH += $$PWD/../../../dependencies/include/pso
-
 # Math
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../dependencies/lib/math/release/ -lmath
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../dependencies/lib/math/debug/ -lmath
@@ -87,32 +80,5 @@ else:unix: LIBS += -L$$PWD/../../../dependencies/lib/math/ -lmath
 INCLUDEPATH += $$PWD/../../../dependencies/include/math
 DEPENDPATH += $$PWD/../../../dependencies/include/math
 
-# Error
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../dependencies/lib/error/release/ -lerror
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../dependencies/lib/error/debug/ -lerror
-else:unix: LIBS += -L$$PWD/../../../dependencies/lib/error/ -lerror
-INCLUDEPATH += $$PWD/../../../dependencies/include/error
-DEPENDPATH += $$PWD/../../../dependencies/include/error
-
-# Fitting
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../dependencies/lib/fitting/release/ -lfitting
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../dependencies/lib/fitting/debug/ -lfitting
-else:unix: LIBS += -L$$PWD/../../../dependencies/lib/fitting/ -lfitting
-INCLUDEPATH += $$PWD/../../../dependencies/include/fitting
-DEPENDPATH += $$PWD/../../../dependencies/include/fitting
-
-# Parallel
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../dependencies/lib/parallel/release/ -lparallel
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../dependencies/lib/parallel/debug/ -lparallel
-else:unix: LIBS += -L$$PWD/../../../dependencies/lib/parallel/ -lparallel
-INCLUDEPATH += $$PWD/../../../dependencies/include/parallel
-DEPENDPATH += $$PWD/../../../dependencies/include/parallel
-
-# Parallel
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../dependencies/lib/time/release/ -ltime
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../dependencies/lib/time/debug/ -ltime
-else:unix: LIBS += -L$$PWD/../../../dependencies/lib/time/ -ltime
-INCLUDEPATH += $$PWD/../../../dependencies/include/time
-DEPENDPATH += $$PWD/../../../dependencies/include/time
 
 # EXTERNALS

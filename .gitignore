@@ -27,8 +27,6 @@ doc/uml_diagrams/
 *.pdf
 *.out
 
-CMakeLists.txt
-
 # QT
 build-editor-Desktop_Qt_5_5_1_GCC_64bit-Debug
 

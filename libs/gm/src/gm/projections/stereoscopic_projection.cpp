@@ -12,20 +12,25 @@ using namespace glm;
 //  CONSTRUCTORS
 //-----------------------//
 
-StereoscopicProjection::StereoscopicProjection(float projectionDistance,
+StereoscopicProjection::StereoscopicProjection(unsigned int* widthWindow,
+                                               unsigned int* heightWindow,
+                                               float projectionDistance,
                                                float distance3D) :
-        PerspectiveProjection(projectionDistance),
+        PerspectiveProjection(widthWindow, heightWindow,
+                              projectionDistance),
         distance3D(distance3D),
         leftColor(COLOR_STEREOSCOPIC_LEFT_PROJ_DEFAULT),
         rightColor(COLOR_STEREOSCOPIC_RIGHT_PROJ_DEFAULT){
     update();
 }
 
-StereoscopicProjection::StereoscopicProjection(float projectionDistance,
+StereoscopicProjection::StereoscopicProjection(unsigned int* widthWindow,
+                                               unsigned int* heightWindow,
+                                               float projectionDistance,
                                                float distance3D,
                                                Color leftColor,
                                                Color rightColor) :
-        PerspectiveProjection(projectionDistance),
+        PerspectiveProjection(widthWindow, heightWindow, projectionDistance),
         distance3D(distance3D),
         leftColor(leftColor), rightColor(rightColor){
     update();
@@ -73,6 +78,13 @@ const Color& StereoscopicProjection::getRightColor() const {
 void StereoscopicProjection::update() {
     PerspectiveProjection::update();
 
+    leftProjectionMatrix = projectionMatrix;
+    rightProjectionMatrix = projectionMatrix;
+
+    leftProjectionMatrix[2].x = -distance3D / 2 * projectionDistance;
+    rightProjectionMatrix[2].x = distance3D / 2 * projectionDistance;
+
+/*
     leftProjectionMatrix = mat4(1.0f);
     leftProjectionMatrix[2].x = -distance3D / 2 * projectionDistance;
     leftProjectionMatrix[2].z = 0.001;
@@ -82,4 +94,5 @@ void StereoscopicProjection::update() {
     rightProjectionMatrix[2].x = distance3D / 2 * projectionDistance;
     rightProjectionMatrix[2].z = 0.001;
     rightProjectionMatrix[2].w = 1.0f / projectionDistance;
+*/
 }

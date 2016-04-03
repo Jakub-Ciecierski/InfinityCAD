@@ -1,0 +1,90 @@
+cmake_minimum_required(VERSION 3.3)
+
+set(PROJECT_NAME "mg1")
+
+set(APPS_PATH "apps")
+set(LIBS_PATH "libs")
+
+project(${PROJECT_NAME})
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -g -Wall -MMD")
+
+#############################################################################
+
+MACRO(FIND_INCLUDE_DIR return_list regex)
+    FILE(GLOB_RECURSE new_list ${regex})
+    message("${new_list}")
+    SET(dir_list "")
+    FOREACH(file_path ${new_list})
+        message("")
+        message("---------------------------------------------------")
+        message("${file_path}")
+        string(REGEX MATCH ^.*/include/ dir ${file_path})
+        message("${dir}")
+        GET_FILENAME_COMPONENT(dir_path ${file_path} PATH)
+        SET(dir_list ${dir_list} ${dir})
+    ENDFOREACH()
+    LIST(REMOVE_DUPLICATES dir_list)
+    SET(${return_list} ${dir_list})
+ENDMACRO()
+
+MACRO(FIND_SRC_DIR return_list regex)
+    FILE(GLOB_RECURSE new_list ${regex})
+    message("${new_list}")
+    SET(dir_list "")
+    FOREACH(file_path ${new_list})
+        message("")
+        message("---------------------------------------------------")
+        message("${file_path}")
+        string(REGEX MATCH ^.*/src/ dir ${file_path})
+        message("${dir}")
+        GET_FILENAME_COMPONENT(dir_path ${file_path} PATH)
+        SET(dir_list ${dir_list} ${dir})
+    ENDFOREACH()
+    LIST(REMOVE_DUPLICATES dir_list)
+    SET(${return_list} ${dir_list})
+ENDMACRO()
+
+#############################################################################
+
+FIND_INCLUDE_DIR(APPS_INC_DIRS ${APPS_PATH}/*/include/*.h)
+FIND_SRC_DIR(APPS_SRC_DIRS ${APPS_PATH}/*/src/*.cpp)
+
+FIND_INCLUDE_DIR(APPS_TEST_INC_DIRS ${APPS_PATH}/*/test/include/*.h)
+FIND_SRC_DIR(APPS_TEST_SRC_DIRS ${APPS_PATH}/*/src/test/*.cpp)
+
+FIND_INCLUDE_DIR(LIBS_INC_DIRS ${LIBS_PATH}/*/include/*.h)
+FIND_INCLUDE_DIR(LIBS_INC_DIRS_HPP ${LIBS_PATH}/*/include/*.hpp)
+FIND_SRC_DIR(LIBS_SRC_DIRS ${LIBS_PATH}/*/src/*.cpp)
+
+FIND_INCLUDE_DIR(LIBS_TEST_INC_DIRS ${LIBS_PATH}/*/test/include/*.h)
+FIND_SRC_DIR(LIBS_TEST_SRC_DIRS ${LIBS_PATH}/*/test/src/*.cpp)
+
+include_directories(${APPS_INC_DIRS})
+include_directories(${APPS_SRC_DIRS})
+include_directories(${APPS_TEST_INC_DIRS})
+include_directories(${APPS_TEST_SRC_DIRS})
+
+include_directories(${LIBS_INC_DIRS})
+include_directories(${LIBS_INC_DIRS_HPP})
+include_directories(${LIBS_SRC_DIRS})
+include_directories(${LIBS_TEST_INC_DIRS})
+include_directories(${LIBS_TEST_SRC_DIRS})
+
+include_directories(libs/googletest)
+include_directories(libs/googletest/include)
+
+file(GLOB_RECURSE FILES
+        ${APPS_PATH}/*.cpp
+        ${APPS_PATH}/*.h
+        ${LIBS_PATH}/*.cpp
+        ${LIBS_PATH}/*.h
+        ${LIBS_PATH}/*.hpp
+        ${LIBS_PATH}/googletest/include/*.h
+)
+
+set(SPAM libs/gm/src/gm/rendering/render_bodies/primitivies/line.cpp libs/gm/include/gm/rendering/render_bodies/primitivies/line.h libs/gm/src/gm/rendering/mouse_tracker.cpp libs/gm/include/gm/rendering/mouse_tracker.h libs/gm/src/gm/object.cpp libs/gm/include/gm/object.h libs/gm/src/gm/scene/object_factory.cpp libs/gm/include/gm/scene/object_factory.h)
+
+add_executable(${PROJECT_NAME} ${SPAM} ${FILES})
+
+target_link_libraries(${PROJECT_NAME} gtest gtest_main)

@@ -1,1 +1,0 @@
-Cross Platfrom time measuring library.

@@ -21,7 +21,7 @@ public:
     ContextMenu* create();
 
     ContextMenu* getDefaultMenu();
-    ContextMenu* getPointMenu(RootTreeItem* bezierRoot);
+    ContextMenu* getPointMenu(RootItem* bezierRoot);
 };
 
 #endif // SCENECMENUFACTORY_H

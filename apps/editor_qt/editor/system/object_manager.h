@@ -21,13 +21,13 @@ private:
     void addPoint(std::string name);
     void addBezierCurve(std::string name);
 
-    std::string getDefaultName(std::string type);
+    std::string getDefaultName(const Type& type);
 
 public:
     static ObjectManager& getInstance();
 
-    void addObject(std::string type);
-    void addObject(std::string type, std::string name);
+    void addObject(const Type& type);
+    void addObject(const Type& type, std::string name);
 
     void deleteObject(std::string name);
     void changeName(std::string srcName);

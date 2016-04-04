@@ -57,16 +57,16 @@ void SceneCMenuPoint::initHandlers(){
     SCENE_MENU_BEZIER_NAME = "Add to Bezier";
 }
 
-void SceneCMenuPoint::setBezierRoot(RootTreeItem* bezierRoot){
+void SceneCMenuPoint::setBezierRoot(RootItem* bezierRoot){
     this->bezierRoot = bezierRoot;
 }
 
 QAction* SceneCMenuPoint::show(const QPoint& pos) {
-    QTreeWidgetItem* item = bezierRoot->item;
+    QTreeWidgetItem* item = bezierRoot->treeItem;
 
     addToBezierSubMenu->clear();
 
-    if(bezierRoot->item != NULL)
+    if(bezierRoot->treeItem != NULL)
     for(unsigned int i = 0;i < item->childCount();i++){
         auto* childItem = item->child(i);
         std::string text = childItem->text(0).toStdString();

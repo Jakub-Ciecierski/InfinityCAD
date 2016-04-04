@@ -35,7 +35,7 @@ void ObjectManager::addTorus(string name){
     RenderBody* t = objectFactory.createTorus(name);
 
     this->scene->addRenderObject(t);
-    sceneTree->addObject(t, RB_TORUS_NAME);
+    sceneTree->addObject(t, RB_TORUS_TYPE);
 }
 
 void ObjectManager::addPoint(string name){
@@ -43,7 +43,7 @@ void ObjectManager::addPoint(string name){
     RenderBody* p = objectFactory.createPoint(name);
 
     this->scene->addRenderObject(p);
-    sceneTree->addObject(p, RB_POINT_NAME);
+    sceneTree->addObject(p, RB_POINT_TYPE);
 }
 
 void ObjectManager::addBezierCurve(string name){
@@ -51,12 +51,12 @@ void ObjectManager::addBezierCurve(string name){
     RenderBody* p = objectFactory.createPoint(name);
 
     this->scene->addRenderObject(p);
-    sceneTree->addObject(p, RB_BEZIER_NAME);
+    sceneTree->addObject(p, RB_BEZIER_TYPE);
 }
 
-string ObjectManager::getDefaultName(string type){
+string ObjectManager::getDefaultName(const Type& type){
     static int id_count = 0;
-    string defaultName = type + "_" + to_string(id_count++);
+    string defaultName = type.type + "_" + to_string(id_count++);
 
     return defaultName;
 }
@@ -71,13 +71,13 @@ ObjectManager& ObjectManager::getInstance(){
     return objectManager;
 }
 
-void ObjectManager::addObject(string type){
+void ObjectManager::addObject(const Type& type){
     string defaultName = getDefaultName(type);
 
     addObject(type, defaultName);
 }
 
-void ObjectManager::addObject(string type, string name){
+void ObjectManager::addObject(const Type& type, string name){
     if(sceneTree->objectExists(name)) {
         string title = "Name";
         string text = "Name: " + name + " already exists. Try other name";
@@ -85,11 +85,11 @@ void ObjectManager::addObject(string type, string name){
         return;
     }
 
-    if(type == RB_TORUS_NAME){
+    if(type == RB_TORUS_TYPE){
         addTorus(name);
-    }else if(type == RB_POINT_NAME){
+    }else if(type == RB_POINT_TYPE){
         addPoint(name);
-    }else if(type == RB_BEZIER_NAME){
+    }else if(type == RB_BEZIER_TYPE){
         addBezierCurve(name);
     }
 }
@@ -121,7 +121,7 @@ void ObjectManager::changeName(string srcName){
 }
 
 void ObjectManager::moveCross(string srcName){
-    ItemTMP* item = sceneTree->getItemByName(srcName);
+    Item* item = sceneTree->getItemByName(srcName);
     if(item == NULL) return;
     Cross* cross = scene->getCross();
     cross->moveTo(item->object);
@@ -133,7 +133,7 @@ void ObjectManager::moveCross(string srcName){
 }
 
 void ObjectManager::moveCamera(string objectName){
-    ItemTMP* item = sceneTree->getItemByName(objectName);
+    Item* item = sceneTree->getItemByName(objectName);
     if(item == NULL) return;
 
     Camera* camera = scene->getActiveCamera();

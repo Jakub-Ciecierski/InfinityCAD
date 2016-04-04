@@ -10,7 +10,7 @@ private:
     void init();
     void initHandlers();
 
-    RootTreeItem* bezierRoot;
+    RootItem* bezierRoot;
     ContextMenu* addToBezierSubMenu;
 
     std::string SCENE_MENU_MOVE_CROSS_NAME;
@@ -27,7 +27,7 @@ private:
 public:
     SceneCMenuPoint();
 
-    void setBezierRoot(RootTreeItem* bezierRoot);
+    void setBezierRoot(RootItem* bezierRoot);
 
     virtual QAction* show(const QPoint& pos) override;
 };

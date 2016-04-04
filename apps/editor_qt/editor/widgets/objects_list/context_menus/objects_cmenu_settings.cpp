@@ -28,7 +28,8 @@ Handler OBJECTS_MENU_ADD_NAMED_HANDLER([](string objectType){
     string name = EditorWindow::getInstance().showInputBox(title, text);
     if(name.empty()) return;
 
-    objManager.addObject(objectType, name);
+    Type type = typeFromString(objectType);
+    objManager.addObject(type, name);
 });
 
 Handler OBJECTS_MENU_PROPERTIES_HANDLER;

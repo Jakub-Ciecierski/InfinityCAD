@@ -22,7 +22,7 @@ ContextMenu* SceneCMenuFactory::getDefaultMenu(){
     return this->defaultMenu;
 }
 
-ContextMenu* SceneCMenuFactory::getPointMenu(RootTreeItem* bezierRoot){
+ContextMenu* SceneCMenuFactory::getPointMenu(RootItem* bezierRoot){
     this->pointMenu->setBezierRoot(bezierRoot);
 
     return this->pointMenu;

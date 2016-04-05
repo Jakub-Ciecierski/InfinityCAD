@@ -113,6 +113,10 @@ void EditorWindow::setupContextMenus(){
     ObjectsCMenuFactory objCMFactory;
 
     objectListContextMenu = objCMFactory.create();
+/*
+    connect(ui->glRendererWidget, SIGNAL(customContextMenuRequested(const QPoint&)),
+        ui->sceneTree, SLOT(ShowContextMenu(const QPoint&)));
+        */
 }
 
 void EditorWindow::setupBinding(){

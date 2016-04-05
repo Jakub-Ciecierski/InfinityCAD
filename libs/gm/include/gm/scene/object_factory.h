@@ -12,6 +12,7 @@
 #include <gm/rendering/render_bodies/axis_net.h>
 #include <gm/rendering/render_bodies/cross.h>
 #include <gm/rendering/render_bodies/cloud.h>
+#include <gm/rendering/render_bodies/curves/bezier_curve.h>
 #include "gm/scene/scene_id_factory.h"
 
 /*
@@ -50,6 +51,10 @@ public:
 
     Cloud* createCloud(std::string name,
                        std::vector<glm::vec4>& points);
+
+    BezierCurve* createBezier(std::string name);
+    BezierCurve* createBezier(std::string name,
+                             std::vector<ic::Point*>& points);
 
     Camera* createCameraFPS(std::string name,
                             Projection* projection);

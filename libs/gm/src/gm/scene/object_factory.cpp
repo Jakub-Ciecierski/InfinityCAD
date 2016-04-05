@@ -97,6 +97,22 @@ Cloud* ObjectFactory::createCloud(std::string name,
     return cloud;
 }
 
+BezierCurve* ObjectFactory::createBezier(std::string name){
+    SceneID id = sceneIDFactory.createNextAvailableID();
+
+    BezierCurve* bezierCurve = new BezierCurve(id, name);
+
+    return bezierCurve;
+}
+BezierCurve* ObjectFactory::createBezier(std::string name,
+                         std::vector<ic::Point*>& points){
+    SceneID id = sceneIDFactory.createNextAvailableID();
+
+    BezierCurve* bezierCurve = new BezierCurve(id, name,
+                                               points);
+    return bezierCurve;
+}
+
 Camera* ObjectFactory::createCameraFPS(std::string name,
                                        Projection* projection){
     SceneID id = sceneIDFactory.createNextAvailableID();

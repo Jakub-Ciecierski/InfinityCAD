@@ -30,8 +30,13 @@ Item::~Item(){
         Item* currClone = clones[i];
         delete currClone;
     }
-    if(treeItem != NULL)
+    if(isClone()){
+        clonedFrom->removeClone(this);
+    }
+    if(treeItem != NULL){
         delete treeItem;
+        treeItem = NULL;
+    }
 }
 
 void Item::setName(std::string name){
@@ -54,11 +59,7 @@ void Item::addChild(Item* child){
 
 bool Item::removeChild(Item* child){
     bool ret = false;
-    // delete mem
     for(unsigned int i = 0;i < children.size(); i++){
-        std::cout << "This: " << this->displayName << std::endl;
-        std::cout << "Child: " << child->displayName << std::endl << std::endl;
-
         Item* currChild = children[i];
         if(currChild == child){
             children.erase(children.begin() + i);
@@ -84,6 +85,11 @@ Item* Item::makeClone(){
     clones.push_back(item);
 
     return item;
+}
+
+void Item::removeClone(Item* clone){
+    clones.erase(remove(clones.begin(), clones.end(), clone),
+                   clones.end());
 }
 
 void Item::erase(std::vector<Item*>& allItems){
@@ -138,6 +144,5 @@ bool Item::isClone(){
 }
 
 bool Item::operator==(Item& item) const{
-    return (item.object == this->object &&
-            item.type == this->type);
+    return (item.object == this->object);
 }

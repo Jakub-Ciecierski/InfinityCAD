@@ -8,6 +8,8 @@
 #include <gm/scene/scene_id.h>
 #include <gm/rendering/render_bodies/primitivies/torus.h>
 #include <gm/rendering/render_bodies/primitivies/point.h>
+#include <gm/rendering/render_bodies/curves/bezier_curve.h>
+
 #include <gm/color/color_settings.h>
 #include <gm/scene/object_factory.h>
 
@@ -30,28 +32,34 @@ ObjectManager::ObjectManager(){
     this->sceneTree = ui->sceneTree;
 }
 
-void ObjectManager::addTorus(string name){
+RenderBody* ObjectManager::addTorus(string name){
     ObjectFactory& objectFactory = ObjectFactory::getInstance();
     RenderBody* t = objectFactory.createTorus(name);
 
     this->scene->addRenderObject(t);
     sceneTree->addObject(t, RB_TORUS_TYPE);
+
+    return t;
 }
 
-void ObjectManager::addPoint(string name){
+RenderBody* ObjectManager::addPoint(string name){
     ObjectFactory& objectFactory = ObjectFactory::getInstance();
     RenderBody* p = objectFactory.createPoint(name);
 
     this->scene->addRenderObject(p);
     sceneTree->addObject(p, RB_POINT_TYPE);
+
+    return p;
 }
 
-void ObjectManager::addBezierCurve(string name){
+RenderBody* ObjectManager::addBezierCurve(string name){
     ObjectFactory& objectFactory = ObjectFactory::getInstance();
-    RenderBody* p = objectFactory.createPoint(name);
+    RenderBody* p = objectFactory.createBezier(name);
 
     this->scene->addRenderObject(p);
     sceneTree->addObject(p, RB_BEZIER_TYPE);
+
+    return p;
 }
 
 string ObjectManager::getDefaultName(const Type& type){
@@ -85,22 +93,89 @@ void ObjectManager::addObject(const Type& type, string name){
         return;
     }
 
+    RenderBody* body = NULL;
     if(type == RB_TORUS_TYPE){
-        addTorus(name);
+        body = addTorus(name);
     }else if(type == RB_POINT_TYPE){
-        addPoint(name);
+        body = addPoint(name);
     }else if(type == RB_BEZIER_TYPE){
         addBezierCurve(name);
     }
+
+    if(body != NULL){
+        body->moveTo(scene->getCross());
+    }
 }
 
-void ObjectManager::addPointToBezier(Item* bezierName,
+void ObjectManager::addPointToBezier(Item* bezierItem,
                                      Item* objectItem){
-    sceneTree->addPointToBezier(bezierName, objectItem);
-    // TODO Add Point to Bezier in Scene;
+    if(bezierItem == NULL || objectItem == NULL ||
+            bezierItem->type != RB_BEZIER_TYPE ||
+            objectItem->type != RB_POINT_TYPE)
+        throw new std::invalid_argument("Invalid Item types");
+
+    // Check if point is already added
+    for(int i = 0; i < bezierItem->children.size();i++){
+        Item* childItem = bezierItem->children[i];
+        if(childItem != NULL && *childItem == *objectItem)
+            return;
+    }
+
+    sceneTree->addPointToBezier(bezierItem, objectItem);
+
+    BezierCurve* bezierCurve = static_cast<BezierCurve*>(bezierItem->object);
+    Point* point = static_cast<Point*>(objectItem->object);
+    bezierCurve->addPoint(point);
+}
+
+void ObjectManager::removePointFromBezier(Item* pointItem){
+    Item* bezierItem = pointItem->parent;
+    if(bezierItem == NULL || pointItem == NULL ||
+            bezierItem->type != RB_BEZIER_TYPE ||
+            pointItem->type != RB_POINT_BEZIER_TYPE)
+        throw new std::invalid_argument("Invalid Item types");
+
+    sceneTree->deleteObject(pointItem);
+
+    BezierCurve* bezierCurve = static_cast<BezierCurve*>(bezierItem->object);
+    Point* point = static_cast<Point*>(pointItem->object);
+
+    bezierCurve->removePoint(point);
+}
+
+void ObjectManager::movePointUpBezier(Item* pointItem){
+    Item* bezierItem = pointItem->parent;
+    if(bezierItem == NULL || pointItem == NULL ||
+            bezierItem->type != RB_BEZIER_TYPE ||
+            pointItem->type != RB_POINT_BEZIER_TYPE)
+        throw new std::invalid_argument("Invalid Item types");
+
+    sceneTree->moveItemWithinParent(pointItem);
+
+    BezierCurve* bezierCurve = static_cast<BezierCurve*>(bezierItem->object);
+    Point* point = static_cast<Point*>(pointItem->object);
+
+    bezierCurve->moveUp(point);
+}
+
+void ObjectManager::movePointDownBezier(Item* pointItem){
+    Item* bezierItem = pointItem->parent;
+    if(bezierItem == NULL || pointItem == NULL ||
+            bezierItem->type != RB_BEZIER_TYPE ||
+            pointItem->type != RB_POINT_BEZIER_TYPE)
+        throw new std::invalid_argument("Invalid Item types");
+
+    sceneTree->moveItemWithinParent(pointItem);
+
+    BezierCurve* bezierCurve = static_cast<BezierCurve*>(bezierItem->object);
+    Point* point = static_cast<Point*>(pointItem->object);
+
+    bezierCurve->moveDown(point);
 }
 
 void ObjectManager::deleteObject(Item* item){
+    if(item->treeItem == NULL) return;
+
     string text = "Delete " + item->displayName + " ?";
     string title = "Delete";
     if(!EditorWindow::getInstance().showQuestionBox(title, text)) return;

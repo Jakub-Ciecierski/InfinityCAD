@@ -47,12 +47,12 @@ void SceneTree::setupRootItems(){
 }
 
 void SceneTree::setupContextMenu(){
-    setSelectionMode(QAbstractItemView::ExtendedSelection);
     setContextMenuPolicy(Qt::CustomContextMenu);
 
     connect(this, SIGNAL(customContextMenuRequested(const QPoint&)),
         this, SLOT(ShowContextMenu(const QPoint&)));
 
+    setSelectionMode(QAbstractItemView::ExtendedSelection);
     this->setAcceptDrops(true);
     this->setDragEnabled(true);
     this->setDragDropMode(QAbstractItemView::InternalMove);
@@ -80,29 +80,6 @@ std::vector<Item*> SceneTree::treeItemsToItems(QList<QTreeWidgetItem *>& treeIte
             items.push_back(item);
     }
     return items;
-}
-
-ContextMenu* SceneTree::getMenuBasedOnItems(
-        QList<QTreeWidgetItem *>& selectedItems){
-    SceneCMenuFactory& factory = SceneCMenuFactory::getInstance();
-
-    int pointCount = 0;
-
-    for(auto* treeItem : selectedItems){
-        Item* item = getItemByTree(treeItem);
-        if(item != NULL && item->type == RB_POINT_TYPE){
-            pointCount++;
-        }
-    }
-    // All selected are points
-    if(pointCount == selectedItems.size()){
-        Item* bezierRoot = getRootItem(RB_BEZIER_TYPE);
-        if(bezierRoot == NULL)
-            throw new std::invalid_argument("Bezier not implemented");
-        return factory.getPointMenu(bezierRoot);
-    }else{
-        return factory.getDefaultMenu();
-    }
 }
 
 QList<QTreeWidgetItem *> SceneTree::filterOutTopRootSelectedItems(){
@@ -167,10 +144,12 @@ void SceneTree::dropEvent(QDropEvent * event){
 
     // Points to Bezier
     if(destItem != NULL && destItem->type == RB_BEZIER_TYPE) {
-        QList<QTreeWidgetItem *> selectedPoints =
-                filterSelectedItems(RB_POINT_TYPE);
-        for(auto* selectedPoint : selectedPoints){
-            addPointToBezier(destinationTreeItem, selectedPoint);
+        ObjectManager& objManager = ObjectManager::getInstance();
+        QList<QTreeWidgetItem *> selectedPoints = filterSelectedItems(RB_POINT_TYPE);
+
+        for(auto* selectedTreeItem : selectedPoints){
+            Item* selectedItem = getItemByTree(selectedTreeItem);
+            objManager.addPointToBezier(destItem, selectedItem);
         }
     }
 }
@@ -249,23 +228,26 @@ void SceneTree::addPointToBezier(QTreeWidgetItem* bezierTreeItem,
 }
 
 void SceneTree::addPointToBezier(Item* bezierItem, Item* pointItem){
-    if(bezierItem == NULL || pointItem == NULL ||
-            bezierItem->type != RB_BEZIER_TYPE ||
-            pointItem->type != RB_POINT_TYPE)
-        throw new std::invalid_argument("Invalid Item types");
-
-    // Check if point is already added
-    for(int i = 0; i < bezierItem->treeItem->childCount();i++){
-        QTreeWidgetItem* childTreeItem = bezierItem->treeItem->child(i);
-        Item* childItem = getItemByTree(childTreeItem);
-        if(childItem != NULL && *childItem == *pointItem)
-            return;
-    }
     Item* cloneItem = pointItem->makeClone();
     cloneItem->type = RB_POINT_BEZIER_TYPE;
 
     bezierItem->addChild(cloneItem);
     allItems.push_back(cloneItem);
+}
+
+void SceneTree::moveItemWithinParent(Item* item){
+    Item* parent = item->parent;
+    if(parent == NULL)
+        throw new std::invalid_argument("Swapping top level not implemented");
+    /*
+    int i = parent->treeItem->indexOfChild(item->treeItem);
+    if (i <= 0) return;
+    parent->treeItem->removeChild(item->treeItem);
+    QString text = item->treeItem->text(0);
+    std::cout<< text.toStdString() << std::endl;
+    parent->treeItem->insertChild(i-1, item->treeItem);
+    std::cout<< text.toStdString() << std::endl;
+    */
 }
 
 void SceneTree::activateObject(RenderBody* renderBody){
@@ -304,7 +286,6 @@ void SceneTree::ShowContextMenu(const QPoint& pos){
     };
 
     SceneCMenuFactory& factory = SceneCMenuFactory::getInstance();
-    //ContextMenu* menu = getMenuBasedOnItems(selectedItems);
 
     SceneContextMenu* menu = factory.getProperMenu(selectedItems,
                                               getItemByTreePointer,

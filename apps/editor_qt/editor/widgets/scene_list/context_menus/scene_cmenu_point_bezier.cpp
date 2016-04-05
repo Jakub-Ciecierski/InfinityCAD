@@ -1,4 +1,5 @@
 #include "scene_cmenu_point_bezier.h"
+#include <system/object_manager.h>
 
 using namespace std;
 
@@ -21,9 +22,9 @@ void SceneCMenuPointBezier::init(){
 
 void SceneCMenuPointBezier::initHandlers(){
     SCENE_MENU_MOVEUP_NAME = "Move up";
-    SCENE_MENU_MOVEUP_HANDLER = SceneCMHandler([](Item* objectName){
-        //ObjectManager objManager = ObjectManager::getInstance();
-        //objManager.deleteObject(objectName);
+    SCENE_MENU_MOVEUP_HANDLER = SceneCMHandler([](Item* objectItem){
+        ObjectManager objManager = ObjectManager::getInstance();
+        objManager.movePointUpBezier(objectItem);
     });
 
     SCENE_MENU_MOVEDOWN_NAME = "Move down";
@@ -33,9 +34,9 @@ void SceneCMenuPointBezier::initHandlers(){
     });
 
     SCENE_MENU_REMOVE_NAME = "Disconnect";
-    SCENE_MENU_REMOVE_HANDLER = SceneCMHandler([](Item* objectName){
-        //ObjectManager objManager = ObjectManager::getInstance();
-        //objManager.deleteObject(objectName);
+    SCENE_MENU_REMOVE_HANDLER = SceneCMHandler([](Item* objectItem){
+            ObjectManager& objManager = ObjectManager::getInstance();
+            objManager.removePointFromBezier(objectItem);
     });
 
 }

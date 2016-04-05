@@ -17,9 +17,9 @@ private:
     Scene* scene;
     SceneTree* sceneTree;
 
-    void addTorus(std::string name);
-    void addPoint(std::string name);
-    void addBezierCurve(std::string name);
+    RenderBody* addTorus(std::string name);
+    RenderBody* addPoint(std::string name);
+    RenderBody* addBezierCurve(std::string name);
 
     std::string getDefaultName(const Type& type);
 
@@ -29,7 +29,12 @@ public:
     void addObject(const Type& type);
     void addObject(const Type& type, std::string name);
 
+    // TODO split
     void addPointToBezier(Item* bezier, Item* objectName);
+    void removePointFromBezier(Item* pointItem);
+    void movePointUpBezier(Item* pointItem);
+    void movePointDownBezier(Item* pointItem);
+
     void deleteObject(Item* name);
     void changeName(Item* srcName);
     void moveCross(Item* srcName);

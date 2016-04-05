@@ -47,6 +47,8 @@ GLWidget::GLWidget(QWidget* parent) :
     isRightMouseDrag = false;
 
     setMouseTracking(true);
+
+    //setContextMenuPolicy(Qt::CustomContextMenu);
 }
 
 GLWidget::~GLWidget(){

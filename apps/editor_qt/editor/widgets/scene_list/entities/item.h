@@ -32,6 +32,7 @@ struct Item{
     bool removeChild(Item* child);
 
     Item* makeClone();
+    void removeClone(Item* clone);
 
     void erase(std::vector<Item*>& allItems);
 

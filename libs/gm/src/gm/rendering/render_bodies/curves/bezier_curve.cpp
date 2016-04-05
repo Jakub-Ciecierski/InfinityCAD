@@ -18,6 +18,14 @@ BezierCurve::BezierCurve(SceneID id, std::string name) :
 
 }
 
+BezierCurve::BezierCurve(SceneID id, std::string name,
+        std::vector<ic::Point*>& points) :
+        RenderBody(id, name){
+    for(unsigned int i = 0;i < points.size(); i++){
+        this->points.push_back(points[i]);
+    }
+}
+
 BezierCurve::~BezierCurve(){
 
 }

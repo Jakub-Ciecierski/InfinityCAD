@@ -36,8 +36,8 @@ void SceneContextMenu::handle(const QAction* a,
 
     for(unsigned int i = 0; i < selectedItems.size(); i++){
         Item* item = selectedItems[i];
+        if(item == NULL || item->treeItem == NULL)  continue;
 
-        // TODO handle proper non existing str
         SceneCMHandler handler = handlerMap[actionString];
 
         handler.execute(item);

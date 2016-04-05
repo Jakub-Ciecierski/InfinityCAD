@@ -10,9 +10,7 @@ Color COLOR_SCENE_DEFAULT(0.2, 0.2, 0.2, 1.0);
 
 // Default color value of an object.
 Color COLOR_OBJECT_DEFAULT(0.0, 0.7, 0.0, 1.0);
-Color COLOR_OBJECT_ACTIVE(COLOR_OBJECT_DEFAULT.R + 0.5,
-                          COLOR_OBJECT_DEFAULT.G + 0.5,
-                          COLOR_OBJECT_DEFAULT.B + 0.5,
+Color COLOR_OBJECT_ACTIVE(1.0, 1.0, 0.0,
                           COLOR_OBJECT_DEFAULT.Alpha);
 
 Color COLOR_STEREOSCOPIC_LEFT_PROJ_DEFAULT(0.6, 0.0, 0.0, 1.0);

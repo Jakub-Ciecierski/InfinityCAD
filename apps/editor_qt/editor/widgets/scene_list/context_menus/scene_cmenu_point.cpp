@@ -78,19 +78,6 @@ QAction* SceneCMenuPoint::show(const QPoint& pos) {
             this->addHandler(childBezierName, handler);
         }
     }
-    /*
-    if(bezierRoot->treeItem != NULL)
-    for(int i = 0;i < item->childCount();i++){
-        auto* childItem = item->child(i);
-        std::string bezierName = childItem->text(0).toStdString();
 
-        Handler handler([=](string objectName){
-                ObjectManager objManager = ObjectManager::getInstance();
-                objManager.addPointToBezier(bezierRoot, objectName);
-            });
-        addToBezierSubMenu->addAction(bezierName);
-        this->addHandler(bezierName, handler);
-    }
-*/
     return SceneContextMenu::show(pos);
 }

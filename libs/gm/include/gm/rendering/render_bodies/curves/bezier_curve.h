@@ -24,10 +24,10 @@ protected:
 public:
 
     BezierCurve(SceneID id, std::string name);
+    BezierCurve(SceneID id, std::string name,
+                std::vector<ic::Point*>& points);
 
     ~BezierCurve();
-
-
 
     void addPoint(ic::Point* point);
     void removePoint(ic::Point* point);

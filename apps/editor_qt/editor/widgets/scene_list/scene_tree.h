@@ -26,7 +26,6 @@ private:
 
     Item* getRootItem(const Type& type);
     std::vector<Item*> treeItemsToItems(QList<QTreeWidgetItem *>& treeItems);
-    ContextMenu* getMenuBasedOnItems(QList<QTreeWidgetItem *>& selectedItems);
 
     QList<QTreeWidgetItem *> filterOutTopRootSelectedItems();
     QList<QTreeWidgetItem *> filterSelectedItems(const Type& type);
@@ -52,6 +51,7 @@ public:
     void addPointToBezier(QTreeWidgetItem* bezierTreeItem,
                           QTreeWidgetItem* pointTreeItem);
     void addPointToBezier(Item* bezierName, Item* pointName);
+    void moveItemWithinParent(Item* item);
 
     void activateObject(RenderBody* renderBody);
     void deactivateAll();

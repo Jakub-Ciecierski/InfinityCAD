@@ -29,10 +29,11 @@ public:
     void addObject(const Type& type);
     void addObject(const Type& type, std::string name);
 
-    void deleteObject(std::string name);
-    void changeName(std::string srcName);
-    void moveCross(std::string srcName);
-    void moveCamera(std::string objectName);
+    void addPointToBezier(Item* bezier, Item* objectName);
+    void deleteObject(Item* name);
+    void changeName(Item* srcName);
+    void moveCross(Item* srcName);
+    void moveCamera(Item* objectName);
 
     void setActive(SceneID id);
     void setDeactive(SceneID id);

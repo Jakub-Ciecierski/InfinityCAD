@@ -1,10 +1,14 @@
 #ifndef SCENECMENUFACTORY_H
 #define SCENECMENUFACTORY_H
 
-#include "context_menus/context_menu.h"
-#include <widgets/scene_list/scene_tree.h>
+#include <context_menus/scene_context_menu.h>
 #include <widgets/scene_list/context_menus/scene_cmenu_default.h>
 #include <widgets/scene_list/context_menus/scene_cmenu_point.h>
+#include <widgets/scene_list/context_menus/scene_cmenu_points.h>
+#include <widgets/scene_list/context_menus/scene_cmenu_points_bezier.h>
+#include <widgets/scene_list/context_menus/scene_cmenu_point_bezier.h>
+#include <widgets/scene_list/entities/item.h>
+#include <functional>
 
 class SceneCMenuFactory
 {
@@ -12,16 +16,29 @@ private:
     SceneCMenuFactory();
 
     SceneCMenuDefault* defaultMenu;
+
     SceneCMenuPoint* pointMenu;
+    SceneCMenuPoints* pointsMenu;
+
+    SceneCMenuPointBezier* pointBezierMenu;
+    SceneCMenuPointsBezier* pointsBezierMenu;
 
 public:
     ~SceneCMenuFactory();
     static SceneCMenuFactory& getInstance();
 
-    ContextMenu* create();
+    SceneContextMenu* create();
 
-    ContextMenu* getDefaultMenu();
-    ContextMenu* getPointMenu(RootItem* bezierRoot);
+    SceneContextMenu* getDefaultMenu();
+    SceneContextMenu* getPointMenu(Item* bezierRoot);
+    SceneContextMenu* getPointsMenu(Item* bezierRoot);
+    
+    int getSelectedTypeCount( const QList<QTreeWidgetItem *>& selectedItems,
+                              const Type& type,
+                              std::function<Item*(QTreeWidgetItem*)> getItemByTree);
+    SceneContextMenu* getProperMenu(const QList<QTreeWidgetItem *>& selectedItems,
+                               std::function<Item*(QTreeWidgetItem*)> getItemByTree,
+                               std::function<Item*(const Type&)> getRootItem);
 };
 
 #endif // SCENECMENUFACTORY_H

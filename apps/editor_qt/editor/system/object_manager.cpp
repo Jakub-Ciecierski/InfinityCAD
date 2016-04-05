@@ -94,17 +94,23 @@ void ObjectManager::addObject(const Type& type, string name){
     }
 }
 
-void ObjectManager::deleteObject(string name){
-    string text = "Delete " + name + " ?";
+void ObjectManager::addPointToBezier(Item* bezierName,
+                                     Item* objectItem){
+    sceneTree->addPointToBezier(bezierName, objectItem);
+    // TODO Add Point to Bezier in Scene;
+}
+
+void ObjectManager::deleteObject(Item* item){
+    string text = "Delete " + item->displayName + " ?";
     string title = "Delete";
     if(!EditorWindow::getInstance().showQuestionBox(title, text)) return;
 
-    SceneID id = this->sceneTree->deleteObject(name);
+    SceneID id = this->sceneTree->deleteObject(item);
 
     this->scene->removeObject(id);
 }
 
-void ObjectManager::changeName(string srcName){
+void ObjectManager::changeName(Item* item){
     string text = "Input new name";
     string title = "Change Name";
     string dstName = EditorWindow::getInstance().showInputBox(title, text);
@@ -117,11 +123,10 @@ void ObjectManager::changeName(string srcName){
     }
     if(dstName.empty()) return;
 
-    sceneTree->changeName(srcName, dstName);
+    sceneTree->changeName(item, dstName);
 }
 
-void ObjectManager::moveCross(string srcName){
-    Item* item = sceneTree->getItemByName(srcName);
+void ObjectManager::moveCross(Item* item){
     if(item == NULL) return;
     Cross* cross = scene->getCross();
     cross->moveTo(item->object);
@@ -132,8 +137,7 @@ void ObjectManager::moveCross(string srcName){
 
 }
 
-void ObjectManager::moveCamera(string objectName){
-    Item* item = sceneTree->getItemByName(objectName);
+void ObjectManager::moveCamera(Item * item){
     if(item == NULL) return;
 
     Camera* camera = scene->getActiveCamera();

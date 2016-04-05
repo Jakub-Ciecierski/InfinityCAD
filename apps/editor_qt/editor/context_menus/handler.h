@@ -2,17 +2,19 @@
 #define HANDLER_H
 
 #include <string>
+#include <functional>
 
 class Handler
 {
 public:
     Handler();
-    Handler(void (*handler)(std::string));
+
+    Handler(std::function<void(std::string)> handler);
 
     void execute(std::string objectName);
 
 private:
-    void (*handler)(std::string);
+    std::function<void(std::string)> handler;
 };
 
 #endif // HANDLER_H

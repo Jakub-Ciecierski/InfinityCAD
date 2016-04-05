@@ -1,17 +1,20 @@
 #ifndef SCENECMENUPOINT_H
 #define SCENECMENUPOINT_H
 
-#include <context_menus/context_menu.h>
+#include <context_menus/scene_context_menu.h>
 #include <widgets/scene_list/scene_tree.h>
 
-class SceneCMenuPoint : public ContextMenu
+/*
+ * Menu for when only one point is selected
+ * */
+class SceneCMenuPoint : public SceneContextMenu
 {
 private:
     void init();
     void initHandlers();
 
-    RootItem* bezierRoot;
-    ContextMenu* addToBezierSubMenu;
+    Item* bezierRoot;
+    SceneContextMenu* addToBezierSubMenu;
 
     std::string SCENE_MENU_MOVE_CROSS_NAME;
     std::string SCENE_MENU_MOVE_CAMERA_NAME;
@@ -19,15 +22,15 @@ private:
     std::string SCENE_MENU_CHANGE_NAME_NAME;
     std::string SCENE_MENU_BEZIER_NAME;
 
-    Handler SCENE_MENU_MOVE_CROSS_HANDLER;
-    Handler SCENE_MENU_MOVE_CAMERA_HANDLER;
-    Handler SCENE_MENU_DELETE_HANDLER;
-    Handler SCENE_MENU_CHANGE_NAME_HANDLER;
+    SceneCMHandler SCENE_MENU_MOVE_CROSS_HANDLER;
+    SceneCMHandler SCENE_MENU_MOVE_CAMERA_HANDLER;
+    SceneCMHandler SCENE_MENU_DELETE_HANDLER;
+    SceneCMHandler SCENE_MENU_CHANGE_NAME_HANDLER;
 
 public:
     SceneCMenuPoint();
 
-    void setBezierRoot(RootItem* bezierRoot);
+    void setBezierRoot(Item* bezierRoot);
 
     virtual QAction* show(const QPoint& pos) override;
 };

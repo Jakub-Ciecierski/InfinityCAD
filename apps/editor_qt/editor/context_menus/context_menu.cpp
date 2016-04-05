@@ -1,18 +1,23 @@
 #include "context_menu.h"
+#include <iostream>
 
 ContextMenu::ContextMenu()
 {
 
 }
 
-void ContextMenu::addAction(std::string name, Handler handler){
+void ContextMenu::addAction(std::string name){
+    QMenu::addAction(QString::fromStdString(name));
+}
+
+void ContextMenu::addActionAndHandler(std::string name, Handler handler){
     QMenu::addAction(QString::fromStdString(name));
 
     handlerMap[name] = handler;
 }
 
-void ContextMenu::addAction(std::string name){
-    QMenu::addAction(QString::fromStdString(name));
+void ContextMenu::addHandler(std::string name, Handler handler){
+    handlerMap[name] = handler;
 }
 
 QAction* ContextMenu::show(const QPoint& pos) {

@@ -240,6 +240,42 @@ vec3 Cross::getClosestPoint(const vec3 point){
     return vec3(0,0,0);
 }
 
+RenderBody* Cross::getClosestObject(const RayCast& ray,
+                                    int width, int height){
+    int distTol = 20;
+
+    float x = ray.currentX;
+    float y = ray.currentY;
+
+    float vX = 2.0 / (float) width;
+    int rayX = (x + 1.0f) / vX;
+
+    float vY = 2.0 / (float) height;
+    int rayY = (y + 1.0f) / vY;
+
+    for(unsigned int i = 1; i < sceneObjects->size(); i++){
+
+        RenderBody* body = (*sceneObjects)[i];
+        if(!body->isGrabable()) continue;
+        const vec3& bodyProjectedPosition = body->getProjectedPosition();
+
+        float bodyX = bodyProjectedPosition.x;
+        float bodyY = bodyProjectedPosition.y;
+
+        int bodypX = (bodyX + 1.0f) / vX;
+        int bodypY  = (bodyY + 1.0f) / vY;
+
+        int dx = rayX - bodypX;
+        int dy = rayY - bodypY;
+        int dist = sqrt(dx*dx + dy*dy);
+
+        if(dist < distTol){
+            return (body);
+        }
+
+    }
+    return NULL;
+}
 
 void Cross::scanAndMoveToClosestObject(const RayCast& ray, int width, int height){
     int distTol = 20;

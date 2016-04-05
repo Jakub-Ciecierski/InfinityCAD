@@ -35,7 +35,15 @@ SOURCES += glwidget.cpp \
     widgets/scene_list/context_menus/scene_cmenu_factory.cpp \
     system/ic_names.cpp \
     widgets/scene_list/context_menus/scene_cmenu_default.cpp \
-    widgets/scene_list/context_menus/scene_cmenu_point.cpp
+    widgets/scene_list/context_menus/scene_cmenu_point.cpp \
+    widgets/scene_list/entities/item_id.cpp \
+    widgets/scene_list/entities/item.cpp \
+    widgets/scene_list/entities/item_id_factory.cpp \
+    widgets/scene_list/context_menus/scene_cmenu_points.cpp \
+    widgets/scene_list/context_menus/scene_cmenu_point_bezier.cpp \
+    widgets/scene_list/context_menus/scene_cmenu_points_bezier.cpp \
+    context_menus/scene_context_menu.cpp \
+    context_menus/scene_cm_handler.cpp
 
 HEADERS  += glwidget.h \
     controls.h \
@@ -51,7 +59,15 @@ HEADERS  += glwidget.h \
     widgets/scene_list/context_menus/scene_cmenu_factory.h \
     system/ic_names.h \
     widgets/scene_list/context_menus/scene_cmenu_default.h \
-    widgets/scene_list/context_menus/scene_cmenu_point.h
+    widgets/scene_list/context_menus/scene_cmenu_point.h \
+    widgets/scene_list/entities/item_id.h \
+    widgets/scene_list/entities/item.h \
+    widgets/scene_list/entities/item_id_factory.h \
+    widgets/scene_list/context_menus/scene_cmenu_points.h \
+    widgets/scene_list/context_menus/scene_cmenu_point_bezier.h \
+    widgets/scene_list/context_menus/scene_cmenu_points_bezier.h \
+    context_menus/scene_context_menu.h \
+    context_menus/scene_cm_handler.h
 
 FORMS    += mainwindow.ui
 

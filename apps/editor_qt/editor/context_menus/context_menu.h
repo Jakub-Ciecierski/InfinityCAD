@@ -9,19 +9,21 @@
 
 class ContextMenu : public QMenu
 {
+protected:
+
+    std::map<std::string, Handler> handlerMap;
+
 public:
     ContextMenu();
 
-    void addAction(std::string name, Handler handler);
     void addAction(std::string name);
-
+    void addActionAndHandler(std::string name, Handler handler);
+    void addHandler(std::string name, Handler handler);
     virtual QAction* show(const QPoint& pos);
 
-    void handle(const QAction* a, const QList<QTreeWidgetItem *>& selected);
+    virtual void handle(const QAction* a,
+                        const QList<QTreeWidgetItem *>& selected);
 
-private:
-
-    std::map<std::string, Handler> handlerMap;
 };
 
 #endif // CONTEXTMENU_H

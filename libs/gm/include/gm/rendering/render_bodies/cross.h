@@ -60,7 +60,8 @@ public:
 
     void activateGrab();
     void deactivateGrab();
-
+    RenderBody* getClosestObject(const RayCast& ray,
+                                 int width, int height);
     void scanAndMoveToClosestObject(const RayCast& ray, int width, int height);
 
     virtual float intersect(const RayCast &ray) override;

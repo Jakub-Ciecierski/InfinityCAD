@@ -31,6 +31,7 @@ void ObjectsTreeFactory::setUpRenderableObjectsRoot(){
     renderableObjectsRoot->setText(0, QString::fromStdString(RB_ROOT_NAME));
 
     this->treeWidget->addTopLevelItem(renderableObjectsRoot);
+    renderableObjectsRoot->setExpanded(true);
 
     // Create Children
     QTreeWidgetItem *itm = new QTreeWidgetItem();

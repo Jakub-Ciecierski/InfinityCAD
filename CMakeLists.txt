@@ -83,7 +83,7 @@ file(GLOB_RECURSE FILES
         ${LIBS_PATH}/googletest/include/*.h
 )
 
-set(SPAM)
+set(SPAM libs/gm/src/gm/rendering/render_bodies/curves/bezier_curve.cpp libs/gm/include/gm/rendering/render_bodies/curves/bezier_curve.h)
 
 add_executable(${PROJECT_NAME} ${SPAM} ${FILES})
 

@@ -29,7 +29,13 @@ private:
     QPoint globalMouseDragPosition;
     QPoint mouseDragPosition;
     QPoint rightMouseDragPosition;
-    bool isMouseDrag;
+
+    QPoint leftMousePressPosition;
+    bool isLeftMousePressed;
+    bool isLeftMouseDrag;
+
+    QPoint rightMousePressPosition;
+    bool isRightMousePressed;
     bool isRightMouseDrag;
 
     void setupRenderer();

@@ -6,7 +6,7 @@ Handler::Handler(){
     handler = [](string){ };
 }
 
-Handler::Handler(void (*handler)(string)):
+Handler::Handler(function<void(string)> handler):
     handler(handler)
 {
 

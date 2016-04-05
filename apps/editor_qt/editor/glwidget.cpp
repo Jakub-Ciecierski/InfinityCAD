@@ -42,8 +42,10 @@ GLWidget::GLWidget(QWidget* parent) :
 
     startMainLoop();
 
-    isMouseDrag = false;
+    isLeftMousePressed = false;
+    isLeftMouseDrag = false;
     isRightMouseDrag = false;
+
     setMouseTracking(true);
 }
 
@@ -182,39 +184,90 @@ void GLWidget::keyReleaseEvent(QKeyEvent *event){
 //-----------------------------------------------------------//
 
 void GLWidget::mousePressEvent(QMouseEvent *event){
-
     if(event->buttons() & Qt::LeftButton){
-        Cross* cross = renderer->getScene()->getCross();
-        cross->scanAndMoveToClosestObject(*ray, renderer->getWindowWidth(), renderer->getWindowHeight());
-
-        if(!isMouseDrag){
+        leftMousePressPosition = event->pos();
+        isLeftMousePressed = true;
+        if(!isLeftMouseDrag){
             globalMouseDragPosition = QCursor::pos();
             mouseDragPosition = event->pos();
-            isMouseDrag = true;
+            isLeftMouseDrag = true;
         }
-
     }
     else if(event->buttons() & Qt::RightButton){
-        rightMouseDragPosition = event->pos();
-        isRightMouseDrag = true;
+        rightMousePressPosition = event->pos();
+        isRightMousePressed = true;
+        if(!isRightMouseDrag){
+            rightMouseDragPosition = event->pos();
+            isRightMouseDrag = true;
+        }
+
     }
 }
 
 void GLWidget::mouseReleaseEvent(QMouseEvent *event){
-    isMouseDrag = false;
+    bool isLeftMouseStill = false;
+    bool isRightMouseStill = false;
+    int stillnessTolerance = 5;
+
+    if(isLeftMousePressed) {
+        int dx = event->x() - leftMousePressPosition.x();
+        int dy = event->y() - leftMousePressPosition.y();
+        int dist = (dx*dx) + (dy*dy);
+
+        if(dist <= stillnessTolerance )
+            isLeftMouseStill = true;
+
+
+        isLeftMousePressed = false;
+    }
+    if(isRightMousePressed){
+        int dx = event->x() - rightMousePressPosition.x();
+        int dy = event->y() - rightMousePressPosition.y();
+        int dist = (dx*dx) + (dy*dy);
+
+        if(dist <= stillnessTolerance )
+            isRightMouseStill = true;
+
+        isRightMousePressed = false;
+    }
+
+    if(isLeftMouseStill){
+        Cross* cross = renderer->getScene()->getCross();
+
+        mouseTracker->update(event->x(), event->y());
+        RenderBody* closestBody = cross->getClosestObject(*ray,
+                                                          renderer->getWindowWidth(),
+                                                          renderer->getWindowHeight());
+        SceneTree* sceneTree = EditorWindow::getInstance().getUI()->sceneTree;
+
+        if(closestBody == NULL) {
+            sceneTree->deactivateAll();
+        } else{
+            if(event->modifiers() & Qt::ControlModifier){
+                sceneTree->activateObject(closestBody);
+            }else{
+                sceneTree->deactivateAll();
+                sceneTree->activateObject(closestBody);
+                cross->moveTo(closestBody);
+            }
+        }
+    }
+
+    if(isRightMouseStill){
+        std::cout << "Right click still" << std::endl;
+    }
+
+    isLeftMouseDrag = false;
     isRightMouseDrag = false;
 }
 
 void GLWidget::mouseMoveEvent(QMouseEvent *event){
-    mouseTracker->update(event->x(), event->y());
-
-    float moveDist = 0.002 * 5;
+    int dx = event->x() - mouseDragPosition.x();
+    int dy = event->y() - mouseDragPosition.y();
 
     // Move in FPS style
-    if(isMouseDrag){
+    if(isLeftMouseDrag){
         CameraFPS* camera = (CameraFPS*)renderer->getScene()->getActiveCamera();
-        int dx = event->x() - mouseDragPosition.x();
-        int dy = event->y() - mouseDragPosition.y();
 
         if(event->modifiers() & Qt::ShiftModifier){
             float speedBoost = 0.2;
@@ -227,16 +280,14 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event){
             if(dy > 0)
                 camera->moveBackward(speedBoost);
         }else{
-
-            camera->rotate(dx * camera->mouseSpeed,
-                           dy * camera->mouseSpeed,
-                           0);
-
+            camera->rotate(dx * camera->mouseSpeed, dy * camera->mouseSpeed, 0);
         }
         mouseDragPosition = event->pos();
     }
+
     // Move along axis
     if(isRightMouseDrag){
+        float moveDist = 0.002 * 5;
         Cross* cross = renderer->getScene()->getCross();
 
         //int dx = event->x() - rightMouseDragPosition.x();

@@ -38,7 +38,7 @@ void Scene::initSceneElements(){
     ObjectFactory objectFactory = ObjectFactory::getInstance();
 
 
-    AxisNet* axisNet = objectFactory.createAxisNet("Axis Net", 50);
+    AxisNet* axisNet = objectFactory.createAxisNet("Axis Net", 20);
     this->addRenderObject(axisNet);
 
     cross = objectFactory.createCross("Cross Grabber",&this->sceneObjects);

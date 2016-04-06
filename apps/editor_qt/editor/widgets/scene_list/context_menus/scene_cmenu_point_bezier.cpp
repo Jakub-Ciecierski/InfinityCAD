@@ -28,9 +28,10 @@ void SceneCMenuPointBezier::initHandlers(){
     });
 
     SCENE_MENU_MOVEDOWN_NAME = "Move down";
-    SCENE_MENU_MOVEDOWN_HANDLER = SceneCMHandler([](Item* objectName){
-        //ObjectManager objManager = ObjectManager::getInstance();
-        //objManager.deleteObject(objectName);
+    SCENE_MENU_MOVEDOWN_HANDLER = SceneCMHandler([](Item* objectItem){
+            ObjectManager objManager = ObjectManager::getInstance();
+            objManager.movePointDownBezier(objectItem);
+
     });
 
     SCENE_MENU_REMOVE_NAME = "Disconnect";

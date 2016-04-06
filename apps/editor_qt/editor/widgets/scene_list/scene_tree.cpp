@@ -158,6 +158,31 @@ void SceneTree::dropEvent(QDropEvent * event){
 //  PUBLIC
 //-----------------------------//
 
+void SceneTree::moveItemUpWithinParent(Item* item){
+    Item* parent = item->parent;
+    if(parent == NULL)
+        throw new std::invalid_argument("Swapping top level not implemented");
+
+    int i = parent->treeItem->indexOfChild(item->treeItem);
+    if (i <= 0) return;
+
+    parent->treeItem->removeChild(item->treeItem);
+    parent->treeItem->insertChild(i-1, item->treeItem);
+}
+
+void SceneTree::moveItemDownWithinParent(Item* item){
+    Item* parent = item->parent;
+    if(parent == NULL)
+        throw new std::invalid_argument("Swapping top level not implemented");
+
+    int i = parent->treeItem->indexOfChild(item->treeItem);
+    if (i < 0 || i == parent->treeItem->childCount() - 1) return;
+
+    parent->treeItem->removeChild(item->treeItem);
+    parent->treeItem->insertChild(i+1, item->treeItem);
+}
+
+
 bool SceneTree::objectExists(std::string name){
     for(unsigned int i = 0; i < allItems.size(); i++){
         Item* item = allItems[i];
@@ -186,7 +211,7 @@ Item* SceneTree::getItemByTree(QTreeWidgetItem* treeItem){
     return NULL;
 }
 
-void SceneTree::addObject(RenderBody* object, const Type& type){
+Item* SceneTree::addObject(RenderBody* object, const Type& type){
     Item* item = new Item(object, type);
 
     allItems.push_back(item);
@@ -197,6 +222,7 @@ void SceneTree::addObject(RenderBody* object, const Type& type){
             topRootItem->addChild(item);
         }
     }
+    return item;
 }
 
 SceneID SceneTree::deleteObject(Item* item){
@@ -235,19 +261,17 @@ void SceneTree::addPointToBezier(Item* bezierItem, Item* pointItem){
     allItems.push_back(cloneItem);
 }
 
-void SceneTree::moveItemWithinParent(Item* item){
-    Item* parent = item->parent;
-    if(parent == NULL)
-        throw new std::invalid_argument("Swapping top level not implemented");
-    /*
-    int i = parent->treeItem->indexOfChild(item->treeItem);
-    if (i <= 0) return;
-    parent->treeItem->removeChild(item->treeItem);
-    QString text = item->treeItem->text(0);
-    std::cout<< text.toStdString() << std::endl;
-    parent->treeItem->insertChild(i-1, item->treeItem);
-    std::cout<< text.toStdString() << std::endl;
-    */
+std::vector<Item*> SceneTree::getSelectedItems(const Type& type){
+    std::vector<Item*> items;
+
+    QList<QTreeWidgetItem *> selectedItems = this->selectedItems();
+    for(int i = 0; i < selectedItems.size(); i++){
+        Item* item  = getItemByTree(selectedItems[i]);
+        if(item != NULL && item->type == type)
+            items.push_back(item);
+    }
+
+    return items;
 }
 
 void SceneTree::activateObject(RenderBody* renderBody){
@@ -299,10 +323,6 @@ void SceneTree::ShowContextMenu(const QPoint& pos){
 void SceneTree::myitemActivated(QTreeWidgetItem* treeItem, int column){
     Item* item = getItemByTree(treeItem);
     if(item == NULL) return;
-
-    std::cout << "ID: " << item->getID(this) << std::endl;
-    std::cout << "Item count: " << allItems.size() << std::endl;
-    //ObjectManager::getInstance().setActive(item->object->getID());
 }
 
 void SceneTree::myitemSelectionChanged(){

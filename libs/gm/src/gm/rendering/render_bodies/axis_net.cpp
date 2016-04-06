@@ -65,7 +65,8 @@ void AxisNet::initLineSegment(glm::vec4 v1, glm::vec4 v2,
                               const Color* color, float width){
     initLine(v1, v2, currentVertex, color, width);
 
-    int SEGMENTS = 1;
+    int SEGMENTS = 15;
+
     float segDelta = 1 / (float)SEGMENTS;
     float currSeg = 0;
 
@@ -74,6 +75,15 @@ void AxisNet::initLineSegment(glm::vec4 v1, glm::vec4 v2,
         currSeg += segDelta;
 
         initLine(v1, v, currentVertex, color, width);
+    }
+
+    // clipping hack TODO
+    currSeg = 0;
+    while(currSeg <= 1){
+        vec4 v = v2 + currSeg*(v1-v2);
+        currSeg += segDelta;
+
+        initLine(v, v2, currentVertex, color, width);
     }
 }
 

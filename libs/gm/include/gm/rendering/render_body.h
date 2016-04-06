@@ -20,13 +20,14 @@ class RayCast;
  */
 class RenderBody : public RigidBody {
 private:
-    Color color;
 
     //-----------------------------------------------------------//
     //  PRIVATE METHODS
     //-----------------------------------------------------------//
 
 protected:
+    Color color;
+
     GLenum drawingMode;
 
     bool grabable;

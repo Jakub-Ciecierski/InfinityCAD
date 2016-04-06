@@ -342,7 +342,7 @@ bool GLWidget::do_movement(){
 
     float speedBoost = 0.3f;
     if(keys[KEY_SPACE]){
-        speedBoost = 3.0f;
+        //speedBoost = 3.0f;
         cross->activateGrab();
     }else{
         cross->deactivateGrab();

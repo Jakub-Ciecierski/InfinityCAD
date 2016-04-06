@@ -38,12 +38,15 @@ public:
     SceneTree(QWidget* parent);
     ~SceneTree();
 
+    void moveItemUpWithinParent(Item* item);
+    void moveItemDownWithinParent(Item* item);
+
     Item* getItemByName(std::string name);
     Item* getItemByTree(QTreeWidgetItem* treeItem);
 
     bool objectExists(std::string name);
 
-    void addObject(RenderBody* object, const Type& type);
+    Item* addObject(RenderBody* object, const Type& type);
     SceneID deleteObject(Item* name);
     void changeName(Item* srcName, std::string dstName);
 
@@ -51,7 +54,8 @@ public:
     void addPointToBezier(QTreeWidgetItem* bezierTreeItem,
                           QTreeWidgetItem* pointTreeItem);
     void addPointToBezier(Item* bezierName, Item* pointName);
-    void moveItemWithinParent(Item* item);
+
+    std::vector<Item*> getSelectedItems(const Type& type);
 
     void activateObject(RenderBody* renderBody);
     void deactivateAll();

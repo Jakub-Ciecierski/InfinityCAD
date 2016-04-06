@@ -47,7 +47,14 @@ RenderBody* ObjectManager::addPoint(string name){
     RenderBody* p = objectFactory.createPoint(name);
 
     this->scene->addRenderObject(p);
-    sceneTree->addObject(p, RB_POINT_TYPE);
+    Item* pointItem = sceneTree->addObject(p, RB_POINT_TYPE);
+
+    // Add Point to all selected bezier curves
+    std::vector<Item*> selectedBezierItems =
+            sceneTree->getSelectedItems(RB_BEZIER_TYPE);
+    for(unsigned int i = 0; i < selectedBezierItems.size(); i++){
+        addPointToBezier(selectedBezierItems[i], pointItem);
+    }
 
     return p;
 }
@@ -57,7 +64,14 @@ RenderBody* ObjectManager::addBezierCurve(string name){
     RenderBody* p = objectFactory.createBezier(name);
 
     this->scene->addRenderObject(p);
-    sceneTree->addObject(p, RB_BEZIER_TYPE);
+    Item* bezierItem = sceneTree->addObject(p, RB_BEZIER_TYPE);
+
+    // Add all selected points to curve
+    std::vector<Item*> selectedPointItems =
+            sceneTree->getSelectedItems(RB_POINT_TYPE);
+    for(unsigned int i = 0; i < selectedPointItems.size(); i++){
+        addPointToBezier(bezierItem, selectedPointItems[i]);
+    }
 
     return p;
 }
@@ -150,7 +164,7 @@ void ObjectManager::movePointUpBezier(Item* pointItem){
             pointItem->type != RB_POINT_BEZIER_TYPE)
         throw new std::invalid_argument("Invalid Item types");
 
-    sceneTree->moveItemWithinParent(pointItem);
+    sceneTree->moveItemUpWithinParent(pointItem);
 
     BezierCurve* bezierCurve = static_cast<BezierCurve*>(bezierItem->object);
     Point* point = static_cast<Point*>(pointItem->object);
@@ -165,7 +179,7 @@ void ObjectManager::movePointDownBezier(Item* pointItem){
             pointItem->type != RB_POINT_BEZIER_TYPE)
         throw new std::invalid_argument("Invalid Item types");
 
-    sceneTree->moveItemWithinParent(pointItem);
+    sceneTree->moveItemDownWithinParent(pointItem);
 
     BezierCurve* bezierCurve = static_cast<BezierCurve*>(bezierItem->object);
     Point* point = static_cast<Point*>(pointItem->object);

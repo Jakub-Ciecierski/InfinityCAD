@@ -14,8 +14,8 @@ int getCode(const glm::vec4& v,
             float bottom, float top);
 
 bool clip(glm::vec4& v1, glm::vec4& v2,
-          float left, float right,
-          float bottom, float top);
+          float left=-1, float right=1,
+          float bottom=-1, float top=1);
 
 
 #endif //MG1_SUTHERLAND_H

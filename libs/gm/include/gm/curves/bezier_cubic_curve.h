@@ -15,6 +15,8 @@ private:
     ic::Point* p2;
     ic::Point* p3;
 
+    std::vector<ic::Point**> points;
+
 public:
     static const int MAX_DEGREE_CUBIC = 3;
     static const int MAX_POINT_COUNT_CUBIC = 4;
@@ -22,8 +24,9 @@ public:
     BezierCubicCurve();
 
     glm::vec4 compute(float t);
-
     void addPoint(ic::Point* p);
+
+    const ic::Point* getPoint(int i);
 
     int degree();
 

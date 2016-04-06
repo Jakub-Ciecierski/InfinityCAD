@@ -5,6 +5,8 @@
 #include <gm/rendering/render_bodies/curves/bezier_curve.h>
 #include <algorithm>
 #include <iostream>
+#include <gm/rendering/clipping/sutherland.h>
+#include <gm/scene/object_factory.h>
 
 using namespace ic;
 using namespace std;
@@ -16,7 +18,11 @@ using namespace glm;
 
 BezierCurve::BezierCurve(SceneID id, std::string name) :
         RenderBody(id, name){
-    this->color = Color(0.8, 0, 0);
+    //this->color = Color(0.8, 0, 0, 1);
+    this->polygonColor = Color(1,1,1,1);
+
+    grabable = false;
+    setDrawBezierPolygon(true);
 }
 
 BezierCurve::BezierCurve(SceneID id, std::string name,
@@ -25,6 +31,8 @@ BezierCurve::BezierCurve(SceneID id, std::string name,
     for(unsigned int i = 0;i < points.size(); i++){
         this->points.push_back(points[i]);
     }
+    grabable = false;
+    setDrawBezierPolygon(false);
 
     buildBezierCurves_C0();
 }
@@ -40,8 +48,6 @@ BezierCurve::~BezierCurve(){
 
 
 void BezierCurve::buildBezierCurves_C0(){
-    std::cout << "Building Bezier Curves C0" << std::endl;
-
     unsigned int pointsCount = points.size();
     if(pointsCount == 0) return;
 
@@ -57,22 +63,10 @@ void BezierCurve::buildBezierCurves_C0(){
 
     bool addNewCurve = false;
     while(currentPointIndex < pointsCount){
-        std::cout << "Point Index: " << currentPointIndex << std::endl;
-        std::cout << "Curve Index: " << currentSegmentIndex << std::endl;
-
         if(addNewCurve){
             currentSegmentIndex++;
             bezierCurves.push_back(BezierCubicCurve());
         }
-        /*
-        BezierCubicCurve& currentCubicCurve =
-                bezierCurves[currentSegmentIndex];
-        if ((currentPointIndex %
-                    BezierCubicCurve::MAX_POINT_COUNT_CUBIC == 0)
-                && !currentCubicCurve.isFull()) {
-            currentSegmentIndex++;
-            bezierCurves.push_back(BezierCubicCurve());
-        }*/
 
         BezierCubicCurve& cubicCurve = bezierCurves[currentSegmentIndex];
 
@@ -89,32 +83,67 @@ void BezierCurve::buildBezierCurves_C0(){
         }
         currentPointIndex++;
     }
-    std::cout << "Finished Building Bezier Curves C0" << std::endl;
 }
 
-void BezierCurve::printStatusDEBUG() {
-    int curvesCount = this->bezierCurves.size();
-    std::cout << "---------------------" << std::endl;
-    std::cout << "Segment Count: " << curvesCount << std::endl;
-    if (curvesCount > 0) {
-        int deg = bezierCurves[curvesCount - 1].degree();
-        std::cout << "Degree of Last: " << deg  << std::endl;
+void BezierCurve::draw(const glm::mat4 &VP){
+    drawCurves(VP);
+    if(doDrawBezierPolygon)
+        drawBezierPolygon(VP);
+}
+
+void BezierCurve::drawBezierPolygon(const glm::mat4 &VP, int SEGMENTS){
+    unsigned int bezierCurvesCount = bezierCurves.size();
+
+    Color color(1,1,1,1);
+    setSurfaceColor(color);
+    glLineWidth((GLfloat)lineWidth);
+
+    glBegin(GL_LINES);
+    for(unsigned int i = 0;i < bezierCurvesCount; i++){
+        BezierCubicCurve& bezierCurveCubic = bezierCurves[i];
+        int degree = bezierCurveCubic.degree();
+        if(degree <= 0 ) return;
+
+        ObjectFactory& objectFactory = ObjectFactory::getInstance();
+
+        for(int i = 0; i < degree; i++){
+            const ic::Point* point1 = bezierCurveCubic.getPoint(i);
+            const ic::Point* point2 = bezierCurveCubic.getPoint(i+1);
+
+            const vec3& pos1 = point1->getPosition();
+            const vec3& pos2 = point2->getPosition();
+
+            vec4 v1 = vec4(pos1.x, pos1.y, pos1.z, 1);
+            vec4 v2 = vec4(pos2.x, pos2.y, pos2.z, 1);
+
+            float segDelta = 1 / (float)SEGMENTS;
+            float currSeg = 0;
+
+            while(currSeg <= 1){
+                vec4 v = v1 + currSeg*(v2-v1);
+                currSeg += segDelta;
+
+                Line* line = objectFactory.createLine("line", v1, v);
+                line->update();
+                line->render(VP, polygonColor);
+                delete line;
+            }
+
+            // clipping hack TODO
+            currSeg = 0;
+            while(currSeg <= 1){
+                vec4 v = v2 + currSeg*(v1-v2);
+                currSeg += segDelta;
+
+                Line* line = objectFactory.createLine("line", v, v2);
+                line->update();
+                line->render(VP, polygonColor);
+                delete line;
+            }
+        }
     }
-    std::cout << "---------------------" << std::endl << std::endl;
+    glEnd();
 }
-
-//-----------------------//
-//  PROTECTED
-//-----------------------//
-
-void BezierCurve::initVertices(){
-
-}
-
-void BezierCurve::initEdges(){
-
-}
-
 
 void BezierCurve::drawCurves(const glm::mat4 &VP) {
     unsigned int bezierCurvesCount = bezierCurves.size();
@@ -122,6 +151,7 @@ void BezierCurve::drawCurves(const glm::mat4 &VP) {
     int PIXELS_COUNT = 10000;
     float dt = 1/(float)PIXELS_COUNT;
 
+    setSurfaceColor(color);
     glPointSize(1.5f);
     glBegin(GL_POINTS);
     for(unsigned int i = 0;i < bezierCurvesCount; i++){
@@ -136,12 +166,23 @@ void BezierCurve::drawCurves(const glm::mat4 &VP) {
             point.x /= point.w;
             point.y /= point.w;
 
-            if(point.w < 0) continue;
+            if(point.w < 0) continue; // clip
             glVertex2f(point.x, point.y);
         }
-
     }
     glEnd();
+}
+
+//-----------------------//
+//  PROTECTED
+//-----------------------//
+
+void BezierCurve::initVertices(){
+
+}
+
+void BezierCurve::initEdges(){
+
 }
 
 
@@ -203,6 +244,14 @@ const vector<ic::Point*>& BezierCurve::getPoints(){
     return this->points;
 }
 
+void BezierCurve::setDrawBezierPolygon(bool value){
+    this->doDrawBezierPolygon = value;
+}
+
+bool BezierCurve::isDrawBezierPolygon(){
+    return this->doDrawBezierPolygon;
+}
+
 float BezierCurve::intersect(const RayCast &ray){
     return RAYCAST_NO_SOLUTION;
 }
@@ -212,13 +261,9 @@ glm::vec3 BezierCurve::getClosestPoint(const glm::vec3 point){
 }
 
 void BezierCurve::render(const glm::mat4 &VP) {
-    setSurfaceColor(this->color);
-    drawCurves(VP);
-
-    printStatusDEBUG();
+    draw(VP);
 }
 
 void BezierCurve::render(const glm::mat4 &VP, const Color &color) {
-    setSurfaceColor(color);
-    drawCurves(VP);
+    draw(VP);
 }

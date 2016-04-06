@@ -12,6 +12,8 @@ SceneCMenuFactory::SceneCMenuFactory() {
 
     pointBezierMenu = new SceneCMenuPointBezier();
     pointsBezierMenu = new SceneCMenuPointsBezier();
+
+    bezierMenu = new SceneCMenuBezier();
 }
 
 SceneCMenuFactory::~SceneCMenuFactory() {
@@ -22,6 +24,8 @@ SceneCMenuFactory::~SceneCMenuFactory() {
 
     delete pointBezierMenu;
     delete pointsBezierMenu;
+
+    delete bezierMenu;
 }
 
 SceneCMenuFactory& SceneCMenuFactory::getInstance(){
@@ -70,6 +74,10 @@ SceneContextMenu* SceneCMenuFactory::getProperMenu(
     int pointBezierCount = getSelectedTypeCount(selectedItems,
                                                 RB_POINT_BEZIER_TYPE,
                                                 getItemByTree);
+
+    int bezierCount = getSelectedTypeCount(selectedItems,
+                                           RB_BEZIER_TYPE,
+                                           getItemByTree);
     if(pointCount == totalCount){
         Item* bezierRoot = getRootItem(RB_BEZIER_TYPE);
         if(bezierRoot == NULL)
@@ -83,6 +91,10 @@ SceneContextMenu* SceneCMenuFactory::getProperMenu(
             return this->pointBezierMenu;
         else
             return this->pointsBezierMenu;
+    }else if (bezierCount == totalCount){
+        if(bezierCount == 1){
+            return this->bezierMenu;
+        }
     }
 
     return this->getDefaultMenu();

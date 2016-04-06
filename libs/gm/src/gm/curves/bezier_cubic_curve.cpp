@@ -9,6 +9,8 @@ using namespace std;
 
 #include <gm/polynomials/bernstein.h>
 #include <stdexcept>
+#include <gm/rendering/render_bodies/primitivies/line.h>
+#include <gm/scene/object_factory.h>
 
 //-----------------------//
 //  CONSTRUCTORS
@@ -16,6 +18,12 @@ using namespace std;
 
 BezierCubicCurve::BezierCubicCurve(){
     p0 = p1 = p2 = p3 = NULL;
+
+    points.resize(4);
+    points[0] = &p0;
+    points[1] = &p1;
+    points[2] = &p2;
+    points[3] = &p3;
 }
 
 //-----------------------//
@@ -56,12 +64,25 @@ void BezierCubicCurve::addPoint(ic::Point* p){
         p3 = p;
 }
 
+const ic::Point* BezierCubicCurve::getPoint(int i){
+    if(i == 0)
+        return p0;
+    else if(i == 1)
+        return p1;
+    else if(i == 2)
+        return p2;
+    else if(i == 3)
+        return p3;
+    else
+        return NULL;
+}
+
 int BezierCubicCurve::degree(){
-    if(p0 == NULL) return -1;
-    else if(p1 == NULL) return 0;
-    else if(p2 == NULL) return 1;
-    else if(p3 == NULL) return 2;
-    else return 3;
+    if(p0 == NULL) return -1;       // 0 points
+    else if(p1 == NULL) return 0;   // 1 point
+    else if(p2 == NULL) return 1;   // 2 points
+    else if(p3 == NULL) return 2;   // 3 points
+    else return 3;                  // 4 points
 }
 
 bool BezierCubicCurve::isEmpty(){

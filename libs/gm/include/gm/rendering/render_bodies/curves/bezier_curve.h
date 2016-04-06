@@ -20,15 +20,21 @@ private:
     std::vector<ic::Point*> points;
     std::vector<BezierCubicCurve> bezierCurves;
 
-    void printStatusDEBUG();
+    Color polygonColor;
+
+    bool doDrawBezierPolygon;
+
     void buildBezierCurves_C0();
+
+    void draw(const glm::mat4 &VP);
+    void drawCurves(const glm::mat4 &VP);
+    void drawBezierPolygon(const glm::mat4 &VP, int SEGMENTS = 50);
+
 
 protected:
     virtual void initVertices();
 
     virtual void initEdges();
-
-    void drawCurves(const glm::mat4 &VP);
 
 public:
 
@@ -48,6 +54,9 @@ public:
 
     int getPointIndex(ic::Point* point);
     const std::vector<ic::Point*>& getPoints();
+
+    void setDrawBezierPolygon(bool value);
+    bool isDrawBezierPolygon();
 
     virtual float intersect(const RayCast &ray);
     virtual glm::vec3 getClosestPoint(const glm::vec3 point);

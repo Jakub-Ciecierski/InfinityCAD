@@ -43,7 +43,8 @@ SOURCES += glwidget.cpp \
     widgets/scene_list/context_menus/scene_cmenu_point_bezier.cpp \
     widgets/scene_list/context_menus/scene_cmenu_points_bezier.cpp \
     context_menus/scene_context_menu.cpp \
-    context_menus/scene_cm_handler.cpp
+    context_menus/scene_cm_handler.cpp \
+    widgets/scene_list/context_menus/scene_cmenu_bezier.cpp
 
 HEADERS  += glwidget.h \
     controls.h \
@@ -67,7 +68,8 @@ HEADERS  += glwidget.h \
     widgets/scene_list/context_menus/scene_cmenu_point_bezier.h \
     widgets/scene_list/context_menus/scene_cmenu_points_bezier.h \
     context_menus/scene_context_menu.h \
-    context_menus/scene_cm_handler.h
+    context_menus/scene_cm_handler.h \
+    widgets/scene_list/context_menus/scene_cmenu_bezier.h
 
 FORMS    += mainwindow.ui
 

@@ -7,6 +7,7 @@
 #include <widgets/scene_list/context_menus/scene_cmenu_points.h>
 #include <widgets/scene_list/context_menus/scene_cmenu_points_bezier.h>
 #include <widgets/scene_list/context_menus/scene_cmenu_point_bezier.h>
+#include <widgets/scene_list/context_menus/scene_cmenu_bezier.h>
 #include <widgets/scene_list/entities/item.h>
 #include <functional>
 
@@ -22,6 +23,8 @@ private:
 
     SceneCMenuPointBezier* pointBezierMenu;
     SceneCMenuPointsBezier* pointsBezierMenu;
+
+    SceneCMenuBezier* bezierMenu;
 
 public:
     ~SceneCMenuFactory();

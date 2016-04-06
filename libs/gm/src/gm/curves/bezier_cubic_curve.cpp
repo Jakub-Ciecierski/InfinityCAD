@@ -9,8 +9,8 @@ using namespace std;
 
 #include <gm/polynomials/bernstein.h>
 #include <stdexcept>
-#include <gm/rendering/render_bodies/primitivies/line.h>
 #include <gm/scene/object_factory.h>
+#include <gm/util/utils.h>
 
 //-----------------------//
 //  CONSTRUCTORS
@@ -75,6 +75,46 @@ const ic::Point* BezierCubicCurve::getPoint(int i){
         return p3;
     else
         return NULL;
+}
+
+float BezierCubicCurve::getAverageDistanceBetweenPoints(){
+    int deg = degree();
+
+    float sumOfDistinctDinstances = 0;
+    int distancesCount = 0;
+    for(int i = 0; i < deg+1-1; i++){
+        for(int j = i+1; j < deg+1; j++){
+            const ic::Point* p1 = getPoint(i);
+            const ic::Point* p2 = getPoint(j);
+
+            sumOfDistinctDinstances +=
+                    gm::euclideanDistance(p1->getPosition(),
+                                          p2->getPosition());
+
+            distancesCount++;
+        }
+    }
+    return (sumOfDistinctDinstances / distancesCount);
+}
+
+float BezierCubicCurve::getMaximumDistanceBetweenPoints(){
+    int deg = degree();
+
+    float maxDistance = -1;
+    for(int i = 0; i < deg+1-1; i++){
+        for(int j = i+1; j < deg+1; j++){
+            const ic::Point* p1 = getPoint(i);
+            const ic::Point* p2 = getPoint(j);
+
+            float dist = gm::euclideanDistance(p1->getPosition(),
+                                               p2->getPosition());
+
+            if(maxDistance < dist){
+                maxDistance = dist;
+            }
+        }
+    }
+    return maxDistance;
 }
 
 int BezierCubicCurve::degree(){

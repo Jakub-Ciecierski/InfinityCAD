@@ -22,7 +22,7 @@ BezierCurve::BezierCurve(SceneID id, std::string name) :
     this->polygonColor = Color(1,1,1,1);
 
     grabable = false;
-    setDrawBezierPolygon(true);
+    setDrawBezierPolygon(false);
 }
 
 BezierCurve::BezierCurve(SceneID id, std::string name,
@@ -85,8 +85,8 @@ void BezierCurve::buildBezierCurves_C0(){
     }
 }
 
-void BezierCurve::draw(const glm::mat4 &VP){
-    drawCurves(VP);
+void BezierCurve::draw(const glm::mat4 &VP, const Color& color){
+    drawCurves(VP, color);
     if(doDrawBezierPolygon)
         drawBezierPolygon(VP);
 }
@@ -102,7 +102,7 @@ void BezierCurve::drawBezierPolygon(const glm::mat4 &VP, int SEGMENTS){
     for(unsigned int i = 0;i < bezierCurvesCount; i++){
         BezierCubicCurve& bezierCurveCubic = bezierCurves[i];
         int degree = bezierCurveCubic.degree();
-        if(degree <= 0 ) return;
+        if(degree <= 0 ) break;
 
         ObjectFactory& objectFactory = ObjectFactory::getInstance();
 
@@ -145,17 +145,20 @@ void BezierCurve::drawBezierPolygon(const glm::mat4 &VP, int SEGMENTS){
     glEnd();
 }
 
-void BezierCurve::drawCurves(const glm::mat4 &VP) {
+void BezierCurve::drawCurves(const glm::mat4 &VP, const Color& color) {
     unsigned int bezierCurvesCount = bezierCurves.size();
 
-    int PIXELS_COUNT = 10000;
-    float dt = 1/(float)PIXELS_COUNT;
+    int sumScreen = 4 * (screenWidth + screenHeight);
 
     setSurfaceColor(color);
-    glPointSize(1.5f);
+    glPointSize(1.0f);
     glBegin(GL_POINTS);
     for(unsigned int i = 0;i < bezierCurvesCount; i++){
         BezierCubicCurve& bezierCurveCubic = bezierCurves[i];
+        float maxDistance = bezierCurveCubic.getMaximumDistanceBetweenPoints();
+        if(maxDistance < 0) maxDistance = 1;
+
+        float dt = 1/((float)sumScreen * maxDistance);
 
         float t = 0;
         while(t <= 1){
@@ -261,9 +264,9 @@ glm::vec3 BezierCurve::getClosestPoint(const glm::vec3 point){
 }
 
 void BezierCurve::render(const glm::mat4 &VP) {
-    draw(VP);
+    draw(VP, this->color);
 }
 
 void BezierCurve::render(const glm::mat4 &VP, const Color &color) {
-    draw(VP);
+    draw(VP, color);
 }

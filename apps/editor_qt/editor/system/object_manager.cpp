@@ -125,35 +125,38 @@ void ObjectManager::addPointToBezier(Item* bezierItem,
                                      Item* objectItem){
     if(bezierItem == NULL || objectItem == NULL ||
             bezierItem->type != RB_BEZIER_TYPE ||
-            objectItem->type != RB_POINT_TYPE)
-        throw new std::invalid_argument("Invalid Item types");
+            objectItem->type != RB_POINT_TYPE){
+        return;
+        //throw new std::invalid_argument("Invalid Item types");
+    }
 
     // Check if point is already added
-    for(int i = 0; i < bezierItem->children.size();i++){
+    for(unsigned int i = 0; i < bezierItem->children.size();i++){
         Item* childItem = bezierItem->children[i];
         if(childItem != NULL && *childItem == *objectItem)
             return;
     }
-
-    sceneTree->addPointToBezier(bezierItem, objectItem);
-
     BezierCurve* bezierCurve = static_cast<BezierCurve*>(bezierItem->object);
     Point* point = static_cast<Point*>(objectItem->object);
+
+    sceneTree->addPointToBezier(bezierItem, objectItem);
     bezierCurve->addPoint(point);
+
+    return;
 }
 
 void ObjectManager::removePointFromBezier(Item* pointItem){
     Item* bezierItem = pointItem->parent;
     if(bezierItem == NULL || pointItem == NULL ||
             bezierItem->type != RB_BEZIER_TYPE ||
-            pointItem->type != RB_POINT_BEZIER_TYPE)
-        throw new std::invalid_argument("Invalid Item types");
-
-    sceneTree->deleteObject(pointItem);
-
+            pointItem->type != RB_POINT_BEZIER_TYPE){
+        return;
+        //throw new std::invalid_argument("Invalid Item types");
+    }
     BezierCurve* bezierCurve = static_cast<BezierCurve*>(bezierItem->object);
     Point* point = static_cast<Point*>(pointItem->object);
 
+    sceneTree->deleteObject(pointItem);
     bezierCurve->removePoint(point);
 }
 
@@ -161,14 +164,15 @@ void ObjectManager::movePointUpBezier(Item* pointItem){
     Item* bezierItem = pointItem->parent;
     if(bezierItem == NULL || pointItem == NULL ||
             bezierItem->type != RB_BEZIER_TYPE ||
-            pointItem->type != RB_POINT_BEZIER_TYPE)
-        throw new std::invalid_argument("Invalid Item types");
-
-    sceneTree->moveItemUpWithinParent(pointItem);
+            pointItem->type != RB_POINT_BEZIER_TYPE) {
+        return;
+        //throw new std::invalid_argument("Invalid Item types");
+    }
 
     BezierCurve* bezierCurve = static_cast<BezierCurve*>(bezierItem->object);
     Point* point = static_cast<Point*>(pointItem->object);
 
+    sceneTree->moveItemUpWithinParent(pointItem);
     bezierCurve->moveUp(point);
 }
 
@@ -176,14 +180,14 @@ void ObjectManager::movePointDownBezier(Item* pointItem){
     Item* bezierItem = pointItem->parent;
     if(bezierItem == NULL || pointItem == NULL ||
             bezierItem->type != RB_BEZIER_TYPE ||
-            pointItem->type != RB_POINT_BEZIER_TYPE)
-        throw new std::invalid_argument("Invalid Item types");
-
-    sceneTree->moveItemDownWithinParent(pointItem);
-
+            pointItem->type != RB_POINT_BEZIER_TYPE){
+        return;
+        //throw new std::invalid_argument("Invalid Item types");
+    }
     BezierCurve* bezierCurve = static_cast<BezierCurve*>(bezierItem->object);
     Point* point = static_cast<Point*>(pointItem->object);
 
+    sceneTree->moveItemDownWithinParent(pointItem);
     bezierCurve->moveDown(point);
 }
 

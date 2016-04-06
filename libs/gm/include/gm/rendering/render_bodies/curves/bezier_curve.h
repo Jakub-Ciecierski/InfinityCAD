@@ -17,6 +17,9 @@
  */
 class BezierCurve : public RenderBody{
 private:
+    int screenWidth = 1300;
+    int screenHeight = 700;
+
     std::vector<ic::Point*> points;
     std::vector<BezierCubicCurve> bezierCurves;
 
@@ -26,8 +29,8 @@ private:
 
     void buildBezierCurves_C0();
 
-    void draw(const glm::mat4 &VP);
-    void drawCurves(const glm::mat4 &VP);
+    void draw(const glm::mat4 &VP, const Color& color);
+    void drawCurves(const glm::mat4 &VP, const Color& color);
     void drawBezierPolygon(const glm::mat4 &VP, int SEGMENTS = 50);
 
 

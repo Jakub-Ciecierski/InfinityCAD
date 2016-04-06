@@ -1,4 +1,5 @@
 #include <widgets/scene_list/entities/item.h>
+#include <system/object_manager.h>
 #include <iostream>
 
 Item::Item(){
@@ -24,11 +25,18 @@ Item::Item(RenderBody* object, const Type& type){
 Item::~Item(){
     for(unsigned int i = 0;i < children.size(); i++){
         Item* currChild = children[i];
-        if(!currChild->isClone()) delete currChild;
+        if(currChild != NULL && !currChild->isClone()) {
+            delete currChild;
+        }
     }
+
     for(unsigned int i = 0;i < clones.size(); i++){
         Item* currClone = clones[i];
-        delete currClone;
+        if(currClone != NULL) {
+            //delete currClone;
+            ObjectManager& objManager = ObjectManager::getInstance();
+            objManager.removePointFromBezier(currClone);
+        }
     }
     if(isClone()){
         clonedFrom->removeClone(this);
@@ -88,8 +96,11 @@ Item* Item::makeClone(){
 }
 
 void Item::removeClone(Item* clone){
-    clones.erase(remove(clones.begin(), clones.end(), clone),
-                   clones.end());
+    for(unsigned int i = 0; i < clones.size(); i++){
+        if(clone == clones[i]){
+            clones[i] == NULL;
+        }
+    }
 }
 
 void Item::erase(std::vector<Item*>& allItems){

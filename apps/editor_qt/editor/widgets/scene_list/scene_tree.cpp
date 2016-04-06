@@ -152,6 +152,7 @@ void SceneTree::dropEvent(QDropEvent * event){
             objManager.addPointToBezier(destItem, selectedItem);
         }
     }
+    return;
 }
 
 //-----------------------------//
@@ -327,17 +328,20 @@ void SceneTree::myitemActivated(QTreeWidgetItem* treeItem, int column){
 
 void SceneTree::myitemSelectionChanged(){
     QList<QTreeWidgetItem *> selectedItems = this->selectedItems();
+    ObjectManager& objManager = ObjectManager::getInstance();
 
     for(unsigned int i = 0;i < allItems.size(); i++){
         Item* item = allItems[i];
         if(item == NULL || item->object == NULL) continue;
-        ObjectManager::getInstance().setDeactive(item->object->getID());
+        RenderBody* body = item->object;
+        const SceneID& id = body->getID();
+        objManager.setDeactive(id);
     }
 
     for(int i = 0; i < selectedItems.size();i++){
         Item* item = getItemByTree(selectedItems[i]);
         if(item == NULL) continue;
-        ObjectManager::getInstance().setActive(item->object->getID());
+        objManager.setActive(item->object->getID());
     }
 }
 

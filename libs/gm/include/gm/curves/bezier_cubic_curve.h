@@ -28,6 +28,9 @@ public:
 
     const ic::Point* getPoint(int i);
 
+    float getAverageDistanceBetweenPoints();
+    float getMaximumDistanceBetweenPoints();
+
     int degree();
 
     bool isEmpty();

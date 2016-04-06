@@ -11,7 +11,9 @@
 
 struct Type{
     std::string type;
-    Type(){}
+    Type(){
+        type = "";
+    }
     Type(std::string type){
         this->type = type;
     }

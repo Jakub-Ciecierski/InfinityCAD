@@ -53,3 +53,4 @@ apps/editor_qt/editor/editor.pro.user
 *.pro.user.*
 *.pro.*
 
+apps/ifc_editor_qt/Makefile

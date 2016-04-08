@@ -49,4 +49,7 @@ out
 core
 
 apps/editor_qt/editor/editor.pro.user
+*.pro.user
+*.pro.user.*
+*.pro.*
 

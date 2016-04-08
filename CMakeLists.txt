@@ -9,6 +9,14 @@ project(${PROJECT_NAME})
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -g -Wall -MMD")
 
+include_directories(/home/jakub/programming/ic/apps/ifc_editor_qt/src/)
+include_directories(/home/jakub/ide/qt/5.5/gcc_64/include)
+include_directories(/home/jakub/ide/qt/5.5/gcc_64/include/QtWidgets)
+include_directories(/home/jakub/ide/qt/5.5/gcc_64/include/QtCore)
+include_directories(/home/jakub/ide/qt/5.5/gcc_64/include/QtOpenGL/)
+include_directories(/home/jakub/ide/qt/5.5/gcc_64/include/QtGui)
+include_directories(/home/jakub/programming/ic/apps/ifc_editor_qt)
+
 #############################################################################
 
 MACRO(FIND_INCLUDE_DIR return_list regex)
@@ -83,8 +91,25 @@ file(GLOB_RECURSE FILES
         ${LIBS_PATH}/googletest/include/*.h
 )
 
-set(SPAM libs/gm/src/gm/rendering/render_bodies/curves/bezier_curve.cpp libs/gm/include/gm/rendering/render_bodies/curves/bezier_curve.h libs/gm/src/gm/polynomials/bernstein.cpp libs/gm/src/gm/polynomials/bernstein.cpp libs/gm/include/gm/polynomials/bernstein.h libs/gm/src/gm/curves/bezier_cubic_curve.cpp libs/gm/include/gm/curves/bezier_cubic_curve.h)
+set(SPAM)
 
-add_executable(${PROJECT_NAME} ${SPAM} ${FILES})
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-target_link_libraries(${PROJECT_NAME} gtest gtest_main)
+set(CMAKE_PREFIX_PATH $ENV{HOME}/ide/qt/5.5/gcc_64/)
+
+find_package(Qt5Widgets  REQUIRED)
+find_package(Qt5Core REQUIRED)
+find_package(Qt5OpenGL REQUIRED)
+find_package(Qt5Gui REQUIRED)
+
+qt5_wrap_ui(UI_HEADERS /home/jakub/programming/infinityCAD/apps/ifc_editor_qt/mainwindow.ui)
+
+add_executable(${PROJECT_NAME} ${SPAM} ${FILES} ${UI_HEADERS})
+
+target_link_libraries(${PROJECT_NAME} gtest gtest_main ${Qt5Core_QTMAIN_LIBRARIES}
+        Qt5Widgets Qt5Core Qt5OpenGL Qt5Gui)
+
+
+#Qt5::Widgets Qt5::Core Qt5::OpenGL Qt5::Gui

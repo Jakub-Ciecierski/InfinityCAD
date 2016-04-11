@@ -1,6 +1,8 @@
+#include <system/object_manager.h>
+
 #include "editor_window.h"
 #include "ui_mainwindow.h"
-#include "system/ic_names.h"
+#include "system/ifc_types.h"
 
 #include <gm/cameras/camera.h>
 #include <gm/scene/scene_id_factory.h>
@@ -13,7 +15,6 @@
 #include <gm/scene/object_factory.h>
 
 #include <iostream>
-#include <system/object_manager.h>
 
 using namespace std;
 using namespace Ui;
@@ -30,6 +31,8 @@ ObjectManager::ObjectManager(){
     this->glWidget = ui->glRendererWidget;
     this->scene = ui->glRendererWidget->getRenderer()->getScene();
     this->sceneTree = ui->sceneTree;
+
+    bSplineBinding = new BSplineBinding(scene, sceneTree);
 }
 
 RenderBody* ObjectManager::addTorus(string name){
@@ -53,9 +56,13 @@ RenderBody* ObjectManager::addPoint(string name){
     std::vector<Item*> selectedBezierItems =
             sceneTree->getSelectedItems(RB_BEZIER_TYPE);
     for(unsigned int i = 0; i < selectedBezierItems.size(); i++){
-        addPointToBezier(selectedBezierItems[i], pointItem);
+        addChildItem(selectedBezierItems[i], pointItem);
     }
 
+    selectedBezierItems = sceneTree->getSelectedItems(RB_BSPLINE_TYPE);
+    for(unsigned int i = 0; i < selectedBezierItems.size(); i++){
+        addChildItem(selectedBezierItems[i], pointItem);
+    }
     return p;
 }
 
@@ -70,7 +77,7 @@ RenderBody* ObjectManager::addBezierCurve(string name){
     std::vector<Item*> selectedPointItems =
             sceneTree->getSelectedItems(RB_POINT_TYPE);
     for(unsigned int i = 0; i < selectedPointItems.size(); i++){
-        addPointToBezier(bezierItem, selectedPointItems[i]);
+        addChildItem(bezierItem, selectedPointItems[i]);
     }
 
     return p;
@@ -86,6 +93,10 @@ string ObjectManager::getDefaultName(const Type& type){
 //--------------------------//
 //  PUBLIC
 //--------------------------//
+
+ObjectManager::~ObjectManager(){
+    delete bSplineBinding;
+}
 
 ObjectManager& ObjectManager::getInstance(){
     static ObjectManager objectManager;
@@ -114,6 +125,8 @@ void ObjectManager::addObject(const Type& type, string name){
         body = addPoint(name);
     }else if(type == RB_BEZIER_TYPE){
         addBezierCurve(name);
+    }else if(type == RB_BSPLINE_TYPE){
+        bSplineBinding->createBSpline(name);
     }
 
     if(body != NULL){
@@ -121,74 +134,81 @@ void ObjectManager::addObject(const Type& type, string name){
     }
 }
 
-void ObjectManager::addPointToBezier(Item* bezierItem,
-                                     Item* objectItem){
-    if(bezierItem == NULL || objectItem == NULL ||
-            bezierItem->type != RB_BEZIER_TYPE ||
-            objectItem->type != RB_POINT_TYPE){
+void ObjectManager::addChildItem(Item* parentItem,
+                                 Item* childItem){
+    if(parentItem == NULL || childItem == NULL ||
+            childItem->type != RB_POINT_TYPE){
         return;
-        //throw new std::invalid_argument("Invalid Item types");
     }
 
     // Check if point is already added
-    for(unsigned int i = 0; i < bezierItem->children.size();i++){
-        Item* childItem = bezierItem->children[i];
-        if(childItem != NULL && *childItem == *objectItem)
+    for(unsigned int i = 0; i < parentItem->children.size();i++){
+        Item* currentChildItem = parentItem->children[i];
+        if(currentChildItem != NULL && *currentChildItem == *childItem)
             return;
     }
-    BezierCurve* bezierCurve = static_cast<BezierCurve*>(bezierItem->object);
-    Point* point = static_cast<Point*>(objectItem->object);
 
-    sceneTree->addPointToBezier(bezierItem, objectItem);
-    bezierCurve->addPoint(point);
+    if(parentItem->type == RB_BEZIER_TYPE ||
+            parentItem->type == RB_BSPLINE_TYPE ){
+        Spline* spline = static_cast<Spline*>(parentItem->object);
+        Point* point = static_cast<Point*>(childItem->object);
+
+        sceneTree->addChildItem(parentItem, childItem);
+        //spline->addPoint(point);
+    }
+
 
     return;
 }
 
-void ObjectManager::removePointFromBezier(Item* pointItem){
-    Item* bezierItem = pointItem->parent;
-    if(bezierItem == NULL || pointItem == NULL ||
-            bezierItem->type != RB_BEZIER_TYPE ||
-            pointItem->type != RB_POINT_BEZIER_TYPE){
+void ObjectManager::removeChildItem(Item* objectItem){
+    Item* bezierItem = objectItem->parent;
+    if(bezierItem == NULL || objectItem == NULL ||
+            objectItem->type != RB_POINT_CLONE_TYPE){
         return;
-        //throw new std::invalid_argument("Invalid Item types");
     }
-    BezierCurve* bezierCurve = static_cast<BezierCurve*>(bezierItem->object);
-    Point* point = static_cast<Point*>(pointItem->object);
 
-    sceneTree->deleteObject(pointItem);
-    bezierCurve->removePoint(point);
+    if(bezierItem->type == RB_BEZIER_TYPE ||
+            bezierItem->type == RB_BSPLINE_TYPE ){
+        Spline* spline = static_cast<Spline*>(bezierItem->object);
+        Point* point = static_cast<Point*>(objectItem->object);
+
+        sceneTree->deleteObject(objectItem);
+        spline->removePoint(point);
+    }
 }
 
-void ObjectManager::movePointUpBezier(Item* pointItem){
-    Item* bezierItem = pointItem->parent;
-    if(bezierItem == NULL || pointItem == NULL ||
-            bezierItem->type != RB_BEZIER_TYPE ||
-            pointItem->type != RB_POINT_BEZIER_TYPE) {
+void ObjectManager::moveUpItem(Item* objectItem){
+    Item* bezierItem = objectItem->parent;
+    if(bezierItem == NULL || objectItem == NULL ||
+            objectItem->type != RB_POINT_CLONE_TYPE) {
         return;
-        //throw new std::invalid_argument("Invalid Item types");
     }
 
-    BezierCurve* bezierCurve = static_cast<BezierCurve*>(bezierItem->object);
-    Point* point = static_cast<Point*>(pointItem->object);
+    if(bezierItem->type == RB_BEZIER_TYPE ||
+            bezierItem->type == RB_BSPLINE_TYPE ){
+        Spline* spline = static_cast<Spline*>(bezierItem->object);
+        Point* point = static_cast<Point*>(objectItem->object);
 
-    sceneTree->moveItemUpWithinParent(pointItem);
-    bezierCurve->moveUp(point);
+        sceneTree->moveItemUpWithinParent(objectItem);
+        spline->moveUp(point);
+    }
 }
 
-void ObjectManager::movePointDownBezier(Item* pointItem){
-    Item* bezierItem = pointItem->parent;
-    if(bezierItem == NULL || pointItem == NULL ||
-            bezierItem->type != RB_BEZIER_TYPE ||
-            pointItem->type != RB_POINT_BEZIER_TYPE){
+void ObjectManager::moveDownItem(Item* objectItem){
+    Item* bezierItem = objectItem->parent;
+    if(bezierItem == NULL || objectItem == NULL ||
+            objectItem->type != RB_POINT_CLONE_TYPE){
         return;
-        //throw new std::invalid_argument("Invalid Item types");
     }
-    BezierCurve* bezierCurve = static_cast<BezierCurve*>(bezierItem->object);
-    Point* point = static_cast<Point*>(pointItem->object);
+    if(bezierItem->type == RB_BEZIER_TYPE ||
+            bezierItem->type == RB_BSPLINE_TYPE ){
+        Spline* spline = static_cast<Spline*>(bezierItem->object);
+        Point* point = static_cast<Point*>(objectItem->object);
 
-    sceneTree->moveItemDownWithinParent(pointItem);
-    bezierCurve->moveDown(point);
+        sceneTree->moveItemDownWithinParent(objectItem);
+        spline->moveDown(point);
+    }
 }
 
 void ObjectManager::deleteObject(Item* item){

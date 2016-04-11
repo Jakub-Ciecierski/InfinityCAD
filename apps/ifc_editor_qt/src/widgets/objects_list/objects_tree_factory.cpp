@@ -1,5 +1,5 @@
 #include <widgets/objects_list/objects_tree_factory.h>
-#include "system/ic_names.h"
+#include "system/ifc_types.h"
 
 ObjectsTreeFactory::ObjectsTreeFactory(QTreeWidget* treeWidget)
 {
@@ -43,6 +43,10 @@ void ObjectsTreeFactory::setUpRenderableObjectsRoot(){
 
     itm = new QTreeWidgetItem();
     itm->setText(0, QString::fromStdString(RB_BEZIER_NAME));
+    renderableObjectsRoot->addChild(itm);
+
+    itm = new QTreeWidgetItem();
+    itm->setText(0, QString::fromStdString(RB_BSPLINE_NAME));
     renderableObjectsRoot->addChild(itm);
 }
 

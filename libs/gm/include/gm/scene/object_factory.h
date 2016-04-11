@@ -13,6 +13,7 @@
 #include <gm/rendering/render_bodies/cross.h>
 #include <gm/rendering/render_bodies/cloud.h>
 #include <gm/rendering/render_bodies/curves/bezier_curve.h>
+#include <gm/rendering/render_bodies/curves/bspline.h>
 #include "gm/scene/scene_id_factory.h"
 
 /*
@@ -55,6 +56,8 @@ public:
     BezierCurve* createBezier(std::string name);
     BezierCurve* createBezier(std::string name,
                              std::vector<ic::Point*>& points);
+
+    BSpline* createBSpline(std::string name);
 
     Camera* createCameraFPS(std::string name,
                             Projection* projection);

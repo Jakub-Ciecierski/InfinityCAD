@@ -16,11 +16,6 @@ private:
     Item* bezierRoot;
     SceneContextMenu* addToBezierSubMenu;
 
-    std::string SCENE_MENU_DELETE_NAME;
-    std::string SCENE_MENU_BEZIER_NAME;
-
-    SceneCMHandler SCENE_MENU_DELETE_HANDLER;
-
 public:
     SceneCMenuPoints();
 

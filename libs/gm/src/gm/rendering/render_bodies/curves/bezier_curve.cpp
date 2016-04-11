@@ -17,24 +17,24 @@ using namespace glm;
 //-----------------------//
 
 BezierCurve::BezierCurve(SceneID id, std::string name) :
-        RenderBody(id, name){
+        Spline(id, name){
     //this->color = Color(0.8, 0, 0, 1);
     this->polygonColor = Color(1,1,1,1);
 
     grabable = false;
-    setDrawBezierPolygon(false);
+    setDrawBezierPolygon(false );
 }
 
 BezierCurve::BezierCurve(SceneID id, std::string name,
         std::vector<ic::Point*>& points) :
-        RenderBody(id, name){
+        Spline(id, name){
     for(unsigned int i = 0;i < points.size(); i++){
         this->points.push_back(points[i]);
     }
     grabable = false;
     setDrawBezierPolygon(false);
 
-    buildBezierCurves_C0();
+    buildCurve();
 }
 
 BezierCurve::~BezierCurve(){
@@ -47,7 +47,7 @@ BezierCurve::~BezierCurve(){
 //-----------------------//
 
 
-void BezierCurve::buildBezierCurves_C0(){
+void BezierCurve::buildCurve(){
     unsigned int pointsCount = points.size();
     if(pointsCount == 0) return;
 
@@ -192,81 +192,3 @@ void BezierCurve::initEdges(){
 //-----------------------//
 //  PUBLIC
 //-----------------------//
-
-
-void BezierCurve::addPoint(ic::Point* point){
-    this->points.push_back(point);
-
-    buildBezierCurves_C0();
-}
-
-void BezierCurve::removePoint(ic::Point* point){
-    points.erase(remove(points.begin(), points.end(), point),
-                 points.end());
-
-    buildBezierCurves_C0();
-}
-
-void BezierCurve::swapPoints(int i, int j){
-    if(i < 0 || j < 0 || i >= points.size() || j >= points.size()) return;
-
-    Point* pointTMP = points[i];
-    points[i] = points[j];
-    points[j] = pointTMP;
-
-    buildBezierCurves_C0();
-
-}
-
-void BezierCurve::moveUp(ic::Point* point){
-    int i = getPointIndex(point);
-    if(i <= 0) return;
-
-    swapPoints(i, i-1);
-
-    buildBezierCurves_C0();
-}
-
-void BezierCurve::moveDown(ic::Point* point){
-    int i = getPointIndex(point);
-    if(i < 0 || i == points.size() - 1) return;
-
-    swapPoints(i, i+1);
-
-    buildBezierCurves_C0();
-}
-
-int BezierCurve::getPointIndex(ic::Point* point){
-    for(unsigned int i = 0; i < points.size(); i++){
-        if (points[i] == point) return i;
-    }
-    return -1;
-}
-
-const vector<ic::Point*>& BezierCurve::getPoints(){
-    return this->points;
-}
-
-void BezierCurve::setDrawBezierPolygon(bool value){
-    this->doDrawBezierPolygon = value;
-}
-
-bool BezierCurve::isDrawBezierPolygon(){
-    return this->doDrawBezierPolygon;
-}
-
-float BezierCurve::intersect(const RayCast &ray){
-    return RAYCAST_NO_SOLUTION;
-}
-
-glm::vec3 BezierCurve::getClosestPoint(const glm::vec3 point){
-    return vec3(0,0,0);
-}
-
-void BezierCurve::render(const glm::mat4 &VP) {
-    draw(VP, this->color);
-}
-
-void BezierCurve::render(const glm::mat4 &VP, const Color &color) {
-    draw(VP, color);
-}

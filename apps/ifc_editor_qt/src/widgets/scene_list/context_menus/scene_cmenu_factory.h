@@ -8,6 +8,7 @@
 #include <widgets/scene_list/context_menus/scene_cmenu_points_bezier.h>
 #include <widgets/scene_list/context_menus/scene_cmenu_point_bezier.h>
 #include <widgets/scene_list/context_menus/scene_cmenu_bezier.h>
+#include <widgets/scene_list/context_menus/scm_bspline.h>
 #include <widgets/scene_list/entities/item.h>
 #include <functional>
 
@@ -25,6 +26,7 @@ private:
     SceneCMenuPointsBezier* pointsBezierMenu;
 
     SceneCMenuBezier* bezierMenu;
+    SCMBSpline* bsplineMenu;
 
 public:
     ~SceneCMenuFactory();

@@ -1,14 +1,12 @@
-#include <gm/rendering/render_bodies/curves/bezier_curve.h>
-#include <widgets/scene_list/context_menus/scene_cmenu_bezier.h>
-#include "system/object_manager.h"
+#include "scm_bspline.h"
 #include <widgets/scene_list/context_menus/scene_cmenu_handlers.h>
 
-SceneCMenuBezier::SceneCMenuBezier()
+SCMBSpline::SCMBSpline()
 {
     init();
 }
 
-void SceneCMenuBezier::init(){
+void SCMBSpline::init(){
     this->addHandlerAndAction(SCENE_MENU_MOVE_CROSS_HANDLER);
 
     this->addHandlerAndAction(SCENE_MENU_MOVE_CAMERA_HANDLER);
@@ -19,6 +17,7 @@ void SceneCMenuBezier::init(){
 
     this->addSeparator();
     this->addHandlerAndAction(SCENE_MENU_POLYGON_HANDLER);
+    this->addHandlerAndAction(SCM_SWITCH_SPLINE_BASIS_HANDLER);
 
     this->addSeparator();
     this->addHandlerAndAction(SCENE_MENU_DELETE_HANDLER);

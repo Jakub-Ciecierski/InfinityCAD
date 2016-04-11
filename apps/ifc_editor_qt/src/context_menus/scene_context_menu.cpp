@@ -10,16 +10,13 @@ void SceneContextMenu::addAction(std::string name){
     QMenu::addAction(QString::fromStdString(name));
 }
 
-void SceneContextMenu::addActionAndHandler(std::string name,
-                                           SceneCMHandler handler){
-    QMenu::addAction(QString::fromStdString(name));
-
-    handlerMap[name] = handler;
+void SceneContextMenu::addHandler(SceneCMHandler handler){
+    handlerMap[handler.getName()] = handler;
 }
 
-void SceneContextMenu::addHandler(std::string name,
-                                  SceneCMHandler handler){
-    handlerMap[name] = handler;
+void SceneContextMenu::addHandlerAndAction(SceneCMHandler handler){
+    QMenu::addAction(QString::fromStdString(handler.getName()));
+    handlerMap[handler.getName()] = handler;
 }
 
 QAction* SceneContextMenu::show(const QPoint& pos) {

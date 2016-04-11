@@ -2,16 +2,19 @@
 #define OBJECTMANAGER_H
 
 #include "glwidget.h"
-#include <gm/scene/scene.h>
+
 #include <gm/scene/scene_id.h>
-#include <string>
+#include <gm/scene/scene.h>
 #include "widgets/scene_list/scene_tree.h"
+#include <system/system_binding/bspline_binding.h>
+#include <string>
 
 class ObjectManager
 {
 private:
     ObjectManager();
 
+    BSplineBinding* bSplineBinding;
 
     GLWidget* glWidget;
     Scene* scene;
@@ -24,16 +27,18 @@ private:
     std::string getDefaultName(const Type& type);
 
 public:
+    ~ObjectManager();
+
     static ObjectManager& getInstance();
 
     void addObject(const Type& type);
     void addObject(const Type& type, std::string name);
 
     // TODO split
-    void addPointToBezier(Item* bezier, Item* objectName);
-    void removePointFromBezier(Item* pointItem);
-    void movePointUpBezier(Item* pointItem);
-    void movePointDownBezier(Item* pointItem);
+    void addChildItem(Item* bezier, Item* objectName);
+    void removeChildItem(Item* pointItem);
+    void moveUpItem(Item* pointItem);
+    void moveDownItem(Item* pointItem);
 
     void deleteObject(Item* name);
     void changeName(Item* srcName);

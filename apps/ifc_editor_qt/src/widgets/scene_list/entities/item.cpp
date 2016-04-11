@@ -35,7 +35,7 @@ Item::~Item(){
         if(currClone != NULL) {
             //delete currClone;
             ObjectManager& objManager = ObjectManager::getInstance();
-            objManager.removePointFromBezier(currClone);
+            objManager.removeChildItem(currClone);
         }
     }
     if(isClone()){

@@ -3,7 +3,7 @@
 
 #include <QTreeWidget>
 #include <gm/rendering/render_body.h>
-#include "system/ic_names.h"
+#include "system/ifc_types.h"
 
 #include <widgets/scene_list/entities/item_id.h>
 

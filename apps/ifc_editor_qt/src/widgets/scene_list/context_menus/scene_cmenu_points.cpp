@@ -1,5 +1,6 @@
 #include <widgets/scene_list/context_menus/scene_cmenu_points.h>
 #include "system/object_manager.h"
+#include <widgets/scene_list/context_menus/scene_cmenu_handlers.h>
 
 using namespace std;
 
@@ -9,27 +10,14 @@ SceneCMenuPoints::SceneCMenuPoints()
 }
 
 void SceneCMenuPoints::init(){
-    initHandlers();
-
     addToBezierSubMenu = new SceneContextMenu();
-    addToBezierSubMenu->setTitle(QString::fromStdString((SCENE_MENU_BEZIER_NAME)));
+    addToBezierSubMenu->setTitle("Add to Bezier");
 
 
     this->addMenu(addToBezierSubMenu);
     this->addSeparator();
 
-    this->addActionAndHandler((SCENE_MENU_DELETE_NAME),
-                    SCENE_MENU_DELETE_HANDLER);
-}
-
-void SceneCMenuPoints::initHandlers(){
-    SCENE_MENU_DELETE_NAME = "Delete";
-    SCENE_MENU_DELETE_HANDLER = SceneCMHandler([](Item* objectName){
-        ObjectManager objManager = ObjectManager::getInstance();
-        objManager.deleteObject(objectName);
-    });
-
-    SCENE_MENU_BEZIER_NAME = "Add to Bezier";
+    this->addHandlerAndAction(SCENE_MENU_DELETE_HANDLER);
 }
 
 void SceneCMenuPoints::setBezierRoot(Item* bezierRoot){
@@ -44,12 +32,14 @@ QAction* SceneCMenuPoints::show(const QPoint& pos) {
             Item* childBezierItem = bezierRoot->children[i];
             std::string childBezierName = childBezierItem->displayName;
 
-            SceneCMHandler handler([=](Item* item){
-                    ObjectManager objManager = ObjectManager::getInstance();
-                    objManager.addPointToBezier(childBezierItem, item);
+            SceneCMHandler handler(
+                        childBezierName,
+                        [=](Item* item){
+                    ObjectManager& objManager = ObjectManager::getInstance();
+                    objManager.addChildItem(childBezierItem, item);
                 });
             addToBezierSubMenu->addAction(childBezierName);
-            this->addHandler(childBezierName, handler);
+            this->addHandler(handler);
         }
     }
     return SceneContextMenu::show(pos);

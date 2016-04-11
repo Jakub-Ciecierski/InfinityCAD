@@ -3,7 +3,6 @@
 
 #include <QMainWindow>
 #include "context_menus/context_menu.h"
-#include <widgets/objects_list/context_menus/objects_cmenu_settings.h>
 
 namespace Ui {
 class MainWindow;

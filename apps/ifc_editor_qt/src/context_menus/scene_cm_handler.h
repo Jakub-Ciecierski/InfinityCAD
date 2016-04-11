@@ -11,9 +11,16 @@ public:
 
     SceneCMHandler(std::function<void(Item*)> handler);
 
+    SceneCMHandler(std::string name,
+                   std::function<void(Item*)> handler);
+
+    std::string getName();
+
     void execute(Item* item);
 
 private:
+    std::string name;
+
     std::function<void(Item*)> handler;
 };
 #endif // SCENECMHANDLER_H

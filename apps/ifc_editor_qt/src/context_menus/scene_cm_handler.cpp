@@ -11,6 +11,18 @@ SceneCMHandler::SceneCMHandler(function<void(Item*)> handler):
 
 }
 
+SceneCMHandler::SceneCMHandler(std::string name,
+                               std::function<void(Item*)> handler) :
+    name(name), handler(handler){
+
+}
+
 void SceneCMHandler::execute(Item* objectID){
     handler(objectID);
+}
+
+
+
+std::string SceneCMHandler::getName(){
+    return this->name;
 }

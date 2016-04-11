@@ -1,0 +1,23 @@
+#ifndef SCENECMENUHANDLERS_H
+#define SCENECMENUHANDLERS_H
+
+#include <context_menus/scene_context_menu.h>
+
+extern SceneCMHandler SCENE_MENU_MOVE_CROSS_HANDLER;
+extern SceneCMHandler SCENE_MENU_MOVE_CAMERA_HANDLER;
+
+extern SceneCMHandler SCENE_MENU_DELETE_HANDLER;
+
+extern SceneCMHandler SCENE_MENU_CHANGE_NAME_HANDLER;
+
+extern SceneCMHandler SCENE_MENU_POLYGON_HANDLER;
+
+
+extern SceneCMHandler SCENE_MENU_MOVEUP_HANDLER;
+extern SceneCMHandler SCENE_MENU_MOVEDOWN_HANDLER;
+
+extern SceneCMHandler SCENE_MENU_REMOVE_HANDLER;
+
+extern SceneCMHandler SCM_SWITCH_SPLINE_BASIS_HANDLER;
+
+#endif // SCENECMENUHANDLERS_H

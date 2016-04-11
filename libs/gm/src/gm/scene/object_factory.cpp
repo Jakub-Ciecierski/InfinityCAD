@@ -3,7 +3,6 @@
 //
 
 #include <gm/rendering/render_bodies/primitivies/point.h>
-#include <bits/stringfwd.h>
 #include <gm/scene/object_factory.h>
 #include <gm/cameras/camera_fps.h>
 
@@ -104,6 +103,7 @@ BezierCurve* ObjectFactory::createBezier(std::string name){
 
     return bezierCurve;
 }
+
 BezierCurve* ObjectFactory::createBezier(std::string name,
                          std::vector<ic::Point*>& points){
     SceneID id = sceneIDFactory.createNextAvailableID();
@@ -111,6 +111,14 @@ BezierCurve* ObjectFactory::createBezier(std::string name,
     BezierCurve* bezierCurve = new BezierCurve(id, name,
                                                points);
     return bezierCurve;
+}
+
+BSpline* ObjectFactory::createBSpline(std::string name){
+    SceneID id = sceneIDFactory.createNextAvailableID();
+
+    BSpline* bSpline = new BSpline(id, name);
+
+    return bSpline;
 }
 
 Camera* ObjectFactory::createCameraFPS(std::string name,

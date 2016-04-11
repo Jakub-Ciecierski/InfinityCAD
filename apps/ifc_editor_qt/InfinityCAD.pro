@@ -15,6 +15,7 @@ PRE_TARGETDEPS += .buildfile
 QT       += core gui opengl widgets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+
 CONFIG += c++11 silent
 QMAKE_CXXFLAGS += -std=c++11 -g
 
@@ -32,6 +33,7 @@ for(dir, INC_DIRS): exists($$dir/*.h) {
     #HEADERS += $$dir/*.h
 }
 INCLUDEPATH += ./include
+INCLUDEPATH += ./src
 
 
 SOURCES += src/glwidget.cpp \
@@ -45,9 +47,7 @@ SOURCES += src/glwidget.cpp \
     src/widgets/scene_list/scene_tree.cpp \
     src/widgets/objects_list/objects_tree.cpp \
     src/widgets/objects_list/context_menus/objects_cmenu_factory.cpp \
-    src/widgets/objects_list/context_menus/objects_cmenu_settings.cpp \
     src/widgets/scene_list/context_menus/scene_cmenu_factory.cpp \
-    src/system/ic_names.cpp \
     src/widgets/scene_list/context_menus/scene_cmenu_default.cpp \
     src/widgets/scene_list/context_menus/scene_cmenu_point.cpp \
     src/widgets/scene_list/entities/item_id.cpp \
@@ -58,32 +58,42 @@ SOURCES += src/glwidget.cpp \
     src/widgets/scene_list/context_menus/scene_cmenu_points_bezier.cpp \
     src/context_menus/scene_context_menu.cpp \
     src/context_menus/scene_cm_handler.cpp \
-    src/widgets/scene_list/context_menus/scene_cmenu_bezier.cpp
+    src/widgets/scene_list/context_menus/scene_cmenu_bezier.cpp \
+    src/system/system_binding/bspline_binding.cpp \
+    src/widgets/scene_list/context_menus/scene_cmenu_handlers.cpp \
+    src/widgets/objects_list/context_menus/objects_cmenu_settings.cpp \
+    src/system/ifc_types.cpp \
+    src/widgets/scene_list/context_menus/scm_bspline.cpp
 
-HEADERS  += include/glwidget.h \
-    include/controls.h \
-    include/context_menus/context_menu.h \
-    include/context_menus/handler.h \
-    include/widgets/objects_list/objects_tree_factory.h \
-    include/editor_window.h \
-    include/system/object_manager.h \
-    include/widgets/scene_list/scene_tree.h \
-    include/widgets/objects_list/objects_tree.h \
-    include/widgets/objects_list/context_menus/objects_cmenu_factory.h \
-    include/widgets/objects_list/context_menus/objects_cmenu_settings.h \
-    include/widgets/scene_list/context_menus/scene_cmenu_factory.h \
-    include/system/ic_names.h \
-    include/widgets/scene_list/context_menus/scene_cmenu_default.h \
-    include/widgets/scene_list/context_menus/scene_cmenu_point.h \
-    include/widgets/scene_list/entities/item_id.h \
-    include/widgets/scene_list/entities/item.h \
-    include/widgets/scene_list/entities/item_id_factory.h \
-    include/widgets/scene_list/context_menus/scene_cmenu_points.h \
-    include/widgets/scene_list/context_menus/scene_cmenu_point_bezier.h \
-    include/widgets/scene_list/context_menus/scene_cmenu_points_bezier.h \
-    include/context_menus/scene_context_menu.h \
-    include/context_menus/scene_cm_handler.h \
-    include/widgets/scene_list/context_menus/scene_cmenu_bezier.h
+HEADERS  += build/ui/ui_mainwindow.h \
+    src/context_menus/context_menu.h \
+    src/context_menus/handler.h \
+    src/context_menus/scene_cm_handler.h \
+    src/context_menus/scene_context_menu.h \
+    src/system/system_binding/bspline_binding.h \
+    src/system/object_manager.h \
+    src/system/ifc_types.h \
+    src/widgets/objects_list/context_menus/objects_cmenu_factory.h \
+    src/widgets/objects_list/objects_tree.h \
+    src/widgets/objects_list/objects_tree_factory.h \
+    src/widgets/scene_list/context_menus/scene_cmenu_bezier.h \
+    src/widgets/scene_list/context_menus/scene_cmenu_default.h \
+    src/widgets/scene_list/context_menus/scene_cmenu_factory.h \
+    src/widgets/scene_list/context_menus/scene_cmenu_point.h \
+    src/widgets/scene_list/context_menus/scene_cmenu_point_bezier.h \
+    src/widgets/scene_list/context_menus/scene_cmenu_points.h \
+    src/widgets/scene_list/context_menus/scene_cmenu_points_bezier.h \
+    src/widgets/scene_list/entities/item.h \
+    src/widgets/scene_list/entities/item_id.h \
+    src/widgets/scene_list/entities/item_id_factory.h \
+    src/widgets/scene_list/scene_tree.h \
+    src/controls.h \
+    src/editor_window.h \
+    src/glwidget.h \
+    src/widgets/scene_list/context_menus/scene_cmenu_handlers.h \
+    build/ui/ui_mainwindow.h \
+    src/widgets/objects_list/context_menus/objects_cmenu_settings.h \
+    src/widgets/scene_list/context_menus/scm_bspline.h
 
 
 ##############################

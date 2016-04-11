@@ -91,11 +91,7 @@ file(GLOB_RECURSE FILES
         ${LIBS_PATH}/googletest/include/*.h
 )
 
-set(SPAM)
-
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTOUIC ON)
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(SPAM libs/gm/src/gm/rendering/render_bodies/curves/bspline.cpp libs/gm/include/gm/rendering/render_bodies/curves/bspline.h libs/gm/src/gm/rendering/render_bodies/curves/spline.cpp libs/gm/include/gm/rendering/render_bodies/curves/spline.h)
 
 set(CMAKE_PREFIX_PATH $ENV{HOME}/ide/qt/5.5/gcc_64/)
 
@@ -110,6 +106,3 @@ add_executable(${PROJECT_NAME} ${SPAM} ${FILES} ${UI_HEADERS})
 
 target_link_libraries(${PROJECT_NAME} gtest gtest_main ${Qt5Core_QTMAIN_LIBRARIES}
         Qt5Widgets Qt5Core Qt5OpenGL Qt5Gui)
-
-
-#Qt5::Widgets Qt5::Core Qt5::OpenGL Qt5::Gui

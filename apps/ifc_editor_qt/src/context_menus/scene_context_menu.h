@@ -17,9 +17,10 @@ private:
 public:
     SceneContextMenu();
 
+    void addHandlerAndAction(SceneCMHandler handler);
     void addAction(std::string name);
-    void addActionAndHandler(std::string name, SceneCMHandler handler);
-    void addHandler(std::string name, SceneCMHandler handler);
+    void addHandler(SceneCMHandler handler);
+
     virtual QAction* show(const QPoint& pos);
 
     void handle(const QAction* a,

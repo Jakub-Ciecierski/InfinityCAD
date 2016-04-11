@@ -2,7 +2,7 @@
 #include <editor_window.h>
 #include <iostream>
 #include "system/object_manager.h"
-#include "system/ic_names.h"
+#include "system/ifc_types.h"
 #include <widgets/scene_list/context_menus/scene_cmenu_factory.h>
 
 using namespace std;
@@ -41,6 +41,7 @@ void SceneTree::setupRootItems(){
     topRootItems.push_back(new RootItem(RB_TORUS_TYPE, "Toruses"));
     topRootItems.push_back(new RootItem(RB_POINT_TYPE, "Points"));
     topRootItems.push_back(new RootItem(RB_BEZIER_TYPE, "Bezier Curves"));
+    topRootItems.push_back(new RootItem(RB_BSPLINE_TYPE, "B-Splines"));
 }
 
 void SceneTree::setupContextMenu(){
@@ -139,14 +140,15 @@ void SceneTree::dropEvent(QDropEvent * event){
     QTreeWidgetItem* destinationTreeItem = itemFromIndex(index);
     Item* destItem = getItemByTree(destinationTreeItem);
 
-    // Points to Bezier
-    if(destItem != NULL && destItem->type == RB_BEZIER_TYPE) {
+    // Points to Spline
+    if(destItem != NULL && (destItem->type == RB_BEZIER_TYPE ||
+            destItem->type == RB_BSPLINE_TYPE)) {
         ObjectManager& objManager = ObjectManager::getInstance();
         QList<QTreeWidgetItem *> selectedPoints = filterSelectedItems(RB_POINT_TYPE);
 
         for(auto* selectedTreeItem : selectedPoints){
             Item* selectedItem = getItemByTree(selectedTreeItem);
-            objManager.addPointToBezier(destItem, selectedItem);
+            objManager.addChildItem(destItem, selectedItem);
         }
     }
     return;
@@ -239,7 +241,7 @@ void SceneTree::changeName(Item* item, string dstName){
 }
 
 
-void SceneTree::addPointToBezier(QTreeWidgetItem* bezierTreeItem,
+void SceneTree::addChildItem(QTreeWidgetItem* bezierTreeItem,
                                  QTreeWidgetItem* pointTreeItem){
     Item* bezierItem = getItemByTree(bezierTreeItem);
     Item* pointItem = getItemByTree(pointTreeItem);
@@ -248,12 +250,12 @@ void SceneTree::addPointToBezier(QTreeWidgetItem* bezierTreeItem,
             pointItem->type != RB_POINT_TYPE)
         throw new std::invalid_argument("Invalid Item types");
 
-   addPointToBezier(bezierItem, pointItem);
+   addChildItem(bezierItem, pointItem);
 }
 
-void SceneTree::addPointToBezier(Item* bezierItem, Item* pointItem){
+void SceneTree::addChildItem(Item* bezierItem, Item* pointItem){
     Item* cloneItem = pointItem->makeClone();
-    cloneItem->type = RB_POINT_BEZIER_TYPE;
+    cloneItem->type = RB_POINT_CLONE_TYPE;
 
     bezierItem->addChild(cloneItem);
     allItems.push_back(cloneItem);

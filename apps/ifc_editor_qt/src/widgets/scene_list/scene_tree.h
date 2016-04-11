@@ -9,7 +9,7 @@
 #include <string>
 #include <gm/scene/scene_id.h>
 #include <gm/rendering/render_body.h>
-#include "system/ic_names.h"
+#include "system/ifc_types.h"
 #include <widgets/scene_list/entities/item.h>
 
 class SceneTree : public QTreeWidget
@@ -51,9 +51,9 @@ public:
     void changeName(Item* srcName, std::string dstName);
 
 
-    void addPointToBezier(QTreeWidgetItem* bezierTreeItem,
+    void addChildItem(QTreeWidgetItem* bezierTreeItem,
                           QTreeWidgetItem* pointTreeItem);
-    void addPointToBezier(Item* bezierName, Item* pointName);
+    void addChildItem(Item* bezierName, Item* pointName);
 
     std::vector<Item*> getSelectedItems(const Type& type);
 

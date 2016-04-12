@@ -154,7 +154,7 @@ void ObjectManager::addChildItem(Item* parentItem,
         Point* point = static_cast<Point*>(childItem->object);
 
         sceneTree->addChildItem(parentItem, childItem);
-        //spline->addPoint(point);
+        spline->addPoint(point);
     }
 
 

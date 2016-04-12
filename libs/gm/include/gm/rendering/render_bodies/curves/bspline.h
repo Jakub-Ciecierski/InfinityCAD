@@ -8,8 +8,19 @@
 #include <gm/rendering/render_body.h>
 #include <gm/rendering/render_bodies/curves/spline.h>
 
+/**
+ * The control points in BSpline are called de Boor points.
+ *
+ * Knot Vector is defined based on degree and number of control points.
+ * Let  n = number of control points.
+ *      d = degree
+ *      m = n + d = number of knots
+ */
 class BSpline : public Spline{
 private:
+    std::vector<float> knotVector;
+
+    int degree;
 
 protected:
     virtual void initVertices();
@@ -26,9 +37,15 @@ public:
     ~BSpline();
 
     virtual float intersect(const RayCast &ray);
-
     virtual glm::vec3 getClosestPoint(const glm::vec3 point);
 
+    int getDegree();
+    int getControlPointCount();
+
+    int getKnotCount();
+    float getKnotMin();
+    float getKnowMax();
+    const std::vector<float>& getKnotVector();
 };
 
 

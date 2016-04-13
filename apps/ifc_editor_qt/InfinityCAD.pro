@@ -95,7 +95,6 @@ HEADERS  += build/ui/ui_mainwindow.h \
     src/widgets/objects_list/context_menus/objects_cmenu_settings.h \
     src/widgets/scene_list/context_menus/scm_bspline.h
 
-
 ##############################
 
 #system(mkdir -p build)

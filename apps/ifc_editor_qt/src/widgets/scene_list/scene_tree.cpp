@@ -290,6 +290,10 @@ void SceneTree::deactivateAll(){
     }
 }
 
+const std::vector<Item*>& SceneTree::getAllItems(){
+    return this->allItems;
+}
+
 //-----------------------------//
 //  SLOTS
 //-----------------------------//

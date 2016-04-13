@@ -20,7 +20,9 @@ class BSpline : public Spline{
 private:
     std::vector<float> knotVector;
 
-    int degree;
+    int MAX_DEGREE = 3;
+
+    int computeDegree();
 
 protected:
     virtual void initVertices();
@@ -43,8 +45,9 @@ public:
     int getControlPointCount();
 
     int getKnotCount();
-    float getKnotMin();
-    float getKnowMax();
+
+    float getKnotMin(int degree);
+    float getKnotMax();
     const std::vector<float>& getKnotVector();
 };
 

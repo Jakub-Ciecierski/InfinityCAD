@@ -47,6 +47,8 @@ public:
 
     void setActive(SceneID id);
     void setDeactive(SceneID id);
+
+    void TEST_BSPLINE();
 };
 
 #endif // OBJECTMANAGER_H

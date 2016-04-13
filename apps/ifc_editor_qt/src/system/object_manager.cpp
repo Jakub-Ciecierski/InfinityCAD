@@ -269,3 +269,33 @@ void ObjectManager::setDeactive(SceneID id){
     if(body != NULL)
         body->setColor(COLOR_OBJECT_DEFAULT);
 }
+
+//--------------------------//
+//  DEBUG
+//--------------------------//
+
+void ObjectManager::TEST_BSPLINE(){
+    addObject(RB_POINT_TYPE, "test1");
+    addObject(RB_POINT_TYPE, "test2");
+    addObject(RB_POINT_TYPE, "test3");
+
+    addObject(RB_BSPLINE_TYPE, "test4");
+
+    const std::vector<Item*>& allItems = sceneTree->getAllItems();
+    Item* spline;
+    for(unsigned int i = 0; i < allItems.size(); i++){
+        Item* item = allItems[i];
+        if(item->type == RB_BSPLINE_TYPE)
+            spline = item;
+    }
+
+    for(unsigned int i = 0; i < allItems.size(); i++){
+        Item* item = allItems[i];
+        if(item->type == RB_POINT_TYPE){
+            item->object->moveTo((float)i/5, (float)i/5 , 0);
+            addChildItem(spline, item);
+        }
+
+    }
+
+}

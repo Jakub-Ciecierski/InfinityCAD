@@ -60,6 +60,7 @@ public:
     void activateObject(RenderBody* renderBody);
     void deactivateAll();
 
+    const std::vector<Item*>& getAllItems();
 public slots:
     void ShowContextMenu(const QPoint& pos);
     void myitemActivated(QTreeWidgetItem* item, int column);

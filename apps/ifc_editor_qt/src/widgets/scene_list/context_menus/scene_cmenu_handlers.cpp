@@ -1,6 +1,7 @@
 #include "scene_cmenu_handlers.h"
 #include <system/object_manager.h>
 #include <gm/rendering/render_bodies/curves/bezier_curve.h>
+#include <gm/rendering/render_bodies/curves/bspline.h>
 
 SceneCMHandler SCENE_MENU_MOVE_CROSS_HANDLER(
         "Move Cross",
@@ -33,8 +34,9 @@ SceneCMHandler SCENE_MENU_CHANGE_NAME_HANDLER(
 SceneCMHandler SCENE_MENU_POLYGON_HANDLER(
         "Show/Hide Polygon",
         [](Item* item){
-    BezierCurve* bezierCurve = static_cast<BezierCurve*>(item->object);
-    bezierCurve->setDrawBezierPolygon(!(bezierCurve->isDrawBezierPolygon()));
+    Spline* spline = static_cast<Spline*>(item->object);
+    bool value = spline->isDrawBezierPolygon();
+    spline->setDrawBezierPolygon(!value);
 });
 
 
@@ -63,5 +65,6 @@ SceneCMHandler SCENE_MENU_REMOVE_HANDLER(
 SceneCMHandler SCM_SWITCH_SPLINE_BASIS_HANDLER(
         "Bezier/B-Spline Basis",
         [](Item* item){
-
+    BSpline* bSpline = static_cast<BSpline*>(item->object);
+    bSpline->setDrawBezierBasis(!(bSpline->isDrawBezierBasis()));
 });

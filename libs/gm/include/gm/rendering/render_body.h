@@ -24,6 +24,7 @@ private:
     //-----------------------------------------------------------//
     //  PRIVATE METHODS
     //-----------------------------------------------------------//
+    bool doRender;
 
 protected:
     Color color;
@@ -38,6 +39,8 @@ protected:
 
     std::vector<glm::vec4> NDCVertices;
     glm::vec3 NDCPosition;
+
+    std::vector<RenderBody*> children;
 
     //-----------------------------------------------------------//
     //  PROTECTED METHODS
@@ -74,6 +77,12 @@ public:
     //-----------------------------------------------------------//
     //  PUBLIC METHODS
     //-----------------------------------------------------------//
+
+    void setShow(bool value);
+
+    void addChild(RenderBody* body);
+
+    virtual const std::vector<RenderBody*>& getChildren();
 
     void setDrawingMode(GLenum mode);
     void setLineWidth(float width);

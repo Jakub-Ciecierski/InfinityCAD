@@ -14,11 +14,11 @@ using namespace glm;
 
 Spline::Spline(SceneID sceneID, std::string name) :
     RenderBody(sceneID, name){
-
+    grabable = false;
 }
 
 Spline::~Spline(){
-
+    grabable = false;
 }
 
 

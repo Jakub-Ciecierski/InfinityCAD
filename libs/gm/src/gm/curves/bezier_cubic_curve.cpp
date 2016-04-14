@@ -64,7 +64,7 @@ void BezierCubicCurve::addPoint(ic::Point* p){
         p3 = p;
 }
 
-const ic::Point* BezierCubicCurve::getPoint(int i){
+ic::Point* BezierCubicCurve::getPoint(int i){
     if(i == 0)
         return p0;
     else if(i == 1)

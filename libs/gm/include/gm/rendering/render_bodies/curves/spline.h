@@ -45,7 +45,7 @@ public:
     int getPointIndex(ic::Point* point);
     const std::vector<ic::Point*>& getPoints();
 
-    void setDrawBezierPolygon(bool value);
+    virtual void setDrawBezierPolygon(bool value);
     bool isDrawBezierPolygon();
 
     virtual float intersect(const RayCast &ray);

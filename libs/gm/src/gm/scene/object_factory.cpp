@@ -113,6 +113,23 @@ BezierCurve* ObjectFactory::createBezier(std::string name,
     return bezierCurve;
 }
 
+BezierSpline* ObjectFactory::createBezierSpline(std::string name,
+                                                std::vector<ic::Point*>& points){
+    SceneID id = sceneIDFactory.createNextAvailableID();
+
+    BezierSpline* bSpline = new BezierSpline(id, name, points);
+
+    return bSpline;
+}
+
+BezierSpline* ObjectFactory::createBezierSpline(std::string name){
+    SceneID id = sceneIDFactory.createNextAvailableID();
+
+    BezierSpline* bSpline = new BezierSpline(id, name);
+
+    return bSpline;
+}
+
 BSpline* ObjectFactory::createBSpline(std::string name){
     SceneID id = sceneIDFactory.createNextAvailableID();
 

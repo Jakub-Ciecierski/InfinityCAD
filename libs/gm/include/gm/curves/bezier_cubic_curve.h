@@ -26,7 +26,7 @@ public:
     glm::vec4 compute(float t);
     void addPoint(ic::Point* p);
 
-    const ic::Point* getPoint(int i);
+    ic::Point* getPoint(int i);
 
     float getAverageDistanceBetweenPoints();
     float getMaximumDistanceBetweenPoints();

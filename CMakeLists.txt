@@ -91,7 +91,7 @@ file(GLOB_RECURSE FILES
         ${LIBS_PATH}/googletest/include/*.h
 )
 
-set(SPAM libs/gm/src/gm/rendering/render_bodies/curves/bspline.cpp libs/gm/include/gm/rendering/render_bodies/curves/bspline.h libs/gm/src/gm/rendering/render_bodies/curves/spline.cpp libs/gm/include/gm/rendering/render_bodies/curves/spline.h libs/gm/src/gm/polynomials/bspline_basis.cpp libs/gm/include/gm/polynomials/bspline_basis.h libs/gm/test/src/bspline_tests/bspline_test.cpp)
+set(SPAM libs/gm/src/gm/rendering/render_bodies/curves/bspline.cpp libs/gm/include/gm/rendering/render_bodies/curves/bspline.h libs/gm/src/gm/rendering/render_bodies/curves/spline.cpp libs/gm/include/gm/rendering/render_bodies/curves/spline.h libs/gm/src/gm/polynomials/bspline_basis.cpp libs/gm/include/gm/polynomials/bspline_basis.h libs/gm/test/src/bspline_tests/bspline_test.cpp libs/gm/src/gm/rendering/render_bodies/curves/bezier_spline.cpp libs/gm/include/gm/rendering/render_bodies/curves/bezier_spline.h)
 
 set(CMAKE_PREFIX_PATH $ENV{HOME}/ide/qt/5.5/gcc_64/)
 

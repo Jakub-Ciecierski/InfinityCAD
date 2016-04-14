@@ -20,7 +20,9 @@ RenderBody::RenderBody(SceneID id) :
     RigidBody(id),
     color(COLOR_OBJECT_DEFAULT){
     lineWidth = 1.0f;
+
     grabable = true;
+    doRender = true;
 
     drawingMode = GL_LINES;
 }
@@ -28,13 +30,17 @@ RenderBody::RenderBody(SceneID id, std::string name) :
         RigidBody(id, name),
         color(COLOR_OBJECT_DEFAULT){
     lineWidth = 1.0f;
+
     grabable = true;
+    doRender = true;
 
     drawingMode = GL_LINES;
 }
 
 RenderBody::~RenderBody() {
-
+    for(unsigned int i = 0;i < children.size(); i++){
+        delete children[i];
+    }
 }
 
 //-----------------------------------------------------------//
@@ -119,6 +125,18 @@ void RenderBody::drawLines(const std::vector<glm::vec4>& vertices,
 //  PUBLIC METHODS
 //-----------------------------------------------------------//
 
+void RenderBody::setShow(bool value){
+    doRender = value;
+}
+
+void RenderBody::addChild(RenderBody* body){
+    return this->children.push_back(body);
+}
+
+const std::vector<RenderBody*>& RenderBody::getChildren(){
+    return this->children;
+}
+
 void RenderBody::setDrawingMode(GLenum mode){
     this->drawingMode = mode;
 }
@@ -128,6 +146,7 @@ void RenderBody::setLineWidth(float width){
 }
 
 bool RenderBody::isGrabable() {
+    if(!doRender) return false;
     return grabable;
 }
 
@@ -145,15 +164,17 @@ const Color* RenderBody::getColor() {
 
 void RenderBody::render(const mat4 &VP) {
     transform(VP);
-
-    setSurfaceColor(this->color);
-    drawLines(NDCVertices, true);
+    if(doRender) {
+        setSurfaceColor(this->color);
+        drawLines(NDCVertices, true);
+    }
 }
 
 void RenderBody::render(const glm::mat4 &VP, const Color &color) {
     transform(VP);
-
-    setSurfaceColor(color);
-    drawLines(NDCVertices, false);
+    if(doRender) {
+        setSurfaceColor(color);
+        drawLines(NDCVertices, false);
+    }
 }
 

@@ -278,8 +278,9 @@ void ObjectManager::TEST_BSPLINE(){
     addObject(RB_POINT_TYPE, "test1");
     addObject(RB_POINT_TYPE, "test2");
     addObject(RB_POINT_TYPE, "test3");
+    addObject(RB_POINT_TYPE, "test4");
 
-    addObject(RB_BSPLINE_TYPE, "test4");
+    addObject(RB_BSPLINE_TYPE, "test5");
 
     const std::vector<Item*>& allItems = sceneTree->getAllItems();
     Item* spline;

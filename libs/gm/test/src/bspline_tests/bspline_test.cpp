@@ -7,6 +7,7 @@
 #include <gm/scene/object_factory.h>
 #include <gm/polynomials/bspline_basis.h>
 
+/*
 TEST(BSpline3D, KnotVectorCount) {
     ObjectFactory& objectFactory = ObjectFactory::getInstance();
 
@@ -29,7 +30,9 @@ TEST(BSpline3D, KnotVectorCount) {
 
     EXPECT_EQ(expectedKnotCount, actualKnotCount);
 }
+*/
 
+/*
 TEST(BSpline3D, KnotVectorValues) {
     ObjectFactory& objectFactory = ObjectFactory::getInstance();
 
@@ -54,7 +57,8 @@ TEST(BSpline3D, KnotVectorValues) {
     delete spline;
     for(int i = 0; i < n; i++) delete points[i];
 }
-
+ */
+/*
 TEST(BSpline3D, KnotVectorMin) {
     ObjectFactory& objectFactory = ObjectFactory::getInstance();
 
@@ -77,6 +81,7 @@ TEST(BSpline3D, KnotVectorMin) {
 
     EXPECT_EQ(expectedKnotMin, actualKnotMin);
 }
+ */
 /*
 TEST(BSpline3D, KnotVectorMax) {
     ObjectFactory& objectFactory = ObjectFactory::getInstance();

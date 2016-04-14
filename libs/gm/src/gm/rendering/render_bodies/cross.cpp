@@ -190,9 +190,20 @@ void Cross::activateGrab() {
     float minDistance = 1000;
     RenderBody* minBody = NULL;
 
+    // TODO children hack
     const vec3 crossPos = this->getPosition();
+    std::vector<RenderBody*> allSceneObjects;
     for(unsigned int i = 0; i < sceneObjects->size(); i++){
         RenderBody* body = (*sceneObjects)[i];
+        allSceneObjects.push_back(body);
+        const std::vector<RenderBody*>& children = body->getChildren();
+        for(unsigned int j = 0; j < children.size(); j++){
+            allSceneObjects.push_back(children[j]);
+        }
+    }
+
+    for(unsigned int i = 0; i < allSceneObjects.size(); i++){
+        RenderBody* body = (allSceneObjects)[i];
         if(!body->isGrabable()) continue;
 
         const vec3& bodyPos = body->getPosition();
@@ -255,7 +266,54 @@ RenderBody* Cross::getClosestObject(const RayCast& ray,
 
     for(unsigned int i = 1; i < sceneObjects->size(); i++){
 
+
         RenderBody* body = (*sceneObjects)[i];
+
+        // ---------------------
+        // TODO children
+        const std::vector<RenderBody*>& curr_children = body->getChildren();
+        for(unsigned int i = 0 ; i < curr_children.size(); i++){
+            RenderBody* child = curr_children[i];
+
+            const vec3& bodyProjectedPosition = child->getProjectedPosition();
+
+            float bodyX = bodyProjectedPosition.x;
+            float bodyY = bodyProjectedPosition.y;
+
+            int bodypX = (bodyX + 1.0f) / vX;
+            int bodypY  = (bodyY + 1.0f) / vY;
+
+            int dx = rayX - bodypX;
+            int dy = rayY - bodypY;
+            int dist = sqrt(dx*dx + dy*dy);
+
+            if(dist < distTol){
+                return (child);
+            }
+        }
+        // ---------------------
+
+        if(!body->isGrabable()) continue;
+
+        const vec3& bodyProjectedPosition = body->getProjectedPosition();
+
+        float bodyX = bodyProjectedPosition.x;
+        float bodyY = bodyProjectedPosition.y;
+
+        int bodypX = (bodyX + 1.0f) / vX;
+        int bodypY  = (bodyY + 1.0f) / vY;
+
+        int dx = rayX - bodypX;
+        int dy = rayY - bodypY;
+        int dist = sqrt(dx*dx + dy*dy);
+
+        if(dist < distTol){
+            return (body);
+        }
+
+        /*
+        RenderBody* body = (*sceneObjects)[i];
+
         if(!body->isGrabable()) continue;
         const vec3& bodyProjectedPosition = body->getProjectedPosition();
 
@@ -272,6 +330,7 @@ RenderBody* Cross::getClosestObject(const RayCast& ray,
         if(dist < distTol){
             return (body);
         }
+         */
 
     }
     return NULL;

@@ -5,7 +5,6 @@
 #include <gm/rendering/render_bodies/curves/bezier_curve.h>
 #include <algorithm>
 #include <iostream>
-#include <gm/rendering/clipping/sutherland.h>
 #include <gm/scene/object_factory.h>
 
 using namespace ic;

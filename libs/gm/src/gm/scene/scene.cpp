@@ -110,6 +110,7 @@ bool Scene::removeObject(RigidBody *object) {
     for(unsigned int i = 0; i < sceneObjects.size(); i++){
         if (object == sceneObjects[i]){
             sceneObjects.erase(sceneObjects.begin()+i);
+            delete object;
             return true;
         }
     }
@@ -119,7 +120,10 @@ bool Scene::removeObject(RigidBody *object) {
 bool Scene::removeObject(const SceneID &sceneID) {
     for(unsigned int i = 0; i < sceneObjects.size(); i++){
         if (sceneID == sceneObjects[i]->getID()){
+            // TODO check if works
+            RenderBody* renderBody = sceneObjects[i];
             sceneObjects.erase(sceneObjects.begin()+i);
+            delete renderBody;
             return true;
         }
     }

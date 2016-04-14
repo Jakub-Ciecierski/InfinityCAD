@@ -6,7 +6,6 @@
 #include <gm/polynomials/bspline_basis.h>
 #include <iostream>
 #include <gm/scene/object_factory.h>
-#include <gm/curves/bezier_cubic_curve.h>
 
 using namespace glm;
 using namespace std;
@@ -20,10 +19,14 @@ BSpline::BSpline(SceneID id, std::string name) :
     bezierSpline = NULL;
 
     setDrawBezierBasis(false);
+    setDrawBezierPolygon(false);
 }
 
 BSpline::~BSpline(){
     if(bezierSpline != NULL) delete bezierSpline;
+    for(unsigned int i = 0 ;i < points.size();i++){
+        points[i]->setShow(true);
+    }
 }
 
 //-----------------------//
@@ -50,6 +53,8 @@ void BSpline::initEdges() { }
 
 
 void BSpline::draw(const glm::mat4 &VP, const Color& color) {
+    if(getControlPointCount() < 4) return;
+
     if(drawBezierBasis){
         drawBezierSpline(VP, color);
         for(unsigned int i = 0 ;i < points.size();i++){
@@ -60,9 +65,9 @@ void BSpline::draw(const glm::mat4 &VP, const Color& color) {
             points[i]->setShow(true);
         }
         drawSpline(VP, color);
-        if(doDrawBezierPolygon)
-            drawPolygon(VP);
     }
+    if(doDrawBezierPolygon)
+        drawPolygon(VP);
 }
 
 void BSpline::drawBezierSpline(const glm::mat4 &VP, const Color& color){
@@ -130,9 +135,15 @@ void BSpline::drawSpline(const glm::mat4 &VP, const Color& color){
     int degree = computeDegree();
     if(degree == -1) return;
 
-    float dt = 0.0001;
+    float dt = -1;
+    if(bezierSpline != NULL)
+        dt = bezierSpline->getDT();
+    if(dt == -1)
+        dt = 0.0001;
+
     float t_max = getKnotMax();
     float t = getKnotMin(degree);
+    dt *= t_max;
 
     setSurfaceColor(color);
     glPointSize(1.0f);
@@ -173,7 +184,7 @@ void BSpline::drawSpline(const glm::mat4 &VP, const Color& color){
 }
 
 void BSpline::drawPolygon(const glm::mat4 &VP, int SEGMENTS){
-    Color color(1,1,1,1);
+    Color color(0.6,0.6,0.6,1);
     setSurfaceColor(color);
     glLineWidth((GLfloat)lineWidth);
 
@@ -199,7 +210,7 @@ void BSpline::drawPolygon(const glm::mat4 &VP, int SEGMENTS){
 
             Line* line = objectFactory.createLine("line", v1, v);
             line->update();
-            line->render(VP, polygonColor);
+            line->render(VP, color);
             delete line;
         }
 
@@ -211,7 +222,7 @@ void BSpline::drawPolygon(const glm::mat4 &VP, int SEGMENTS){
 
             Line* line = objectFactory.createLine("line", v, v2);
             line->update();
-            line->render(VP, polygonColor);
+            line->render(VP, color);
             delete line;
         }
 

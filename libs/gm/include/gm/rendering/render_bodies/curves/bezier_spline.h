@@ -17,9 +17,9 @@ class BezierSpline : public Spline{
 private:
     std::vector<BezierCubicCurve> bezierCurves;
 
+    float dt;
+
     void C2Continuity();
-    void C2ContinuityLeft();
-    void C2ContinuityRight();
 protected:
 
     virtual void buildCurve() override;
@@ -39,6 +39,8 @@ public:
                 std::vector<ic::Point*>& points);
 
     ~BezierSpline();
+
+    float getDT();
 
     std::vector<BezierCubicCurve>& getCurves();
 

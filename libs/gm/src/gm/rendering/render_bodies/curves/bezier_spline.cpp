@@ -20,7 +20,8 @@ BezierSpline::BezierSpline(SceneID id, std::string name) :
     this->polygonColor = Color(1,1,1,1);
 
     grabable = false;
-    setDrawBezierPolygon(false );
+    setDrawBezierPolygon(false);
+    dt = -1;
 }
 
 BezierSpline::BezierSpline(SceneID id, std::string name,
@@ -34,6 +35,8 @@ BezierSpline::BezierSpline(SceneID id, std::string name,
     setDrawBezierPolygon(false);
 
     buildCurve();
+
+    dt = -1;
 }
 
 BezierSpline::~BezierSpline(){
@@ -60,17 +63,17 @@ void BezierSpline::C2Continuity(){
         const vec3 posP3 = p3->getPosition();
         const vec3 posP2 = p2->getPosition();
         const vec3 posQ1 = q1->getPosition();
-
+/*
         vec3 newPosP2 = posP3*2.0f - posQ1;
         p2->moveTo(newPosP2);
+*/
 
-        /*
         vec3 newPosQ1 = posP3*2.0f - posP2;
-        q1->moveTo(newPosQ1);*/
+        q1->moveTo(newPosQ1);
 
     }
     // C2
-/*
+
     for(unsigned int i = 0;i < bezierCurves.size() - 1; i++){
         BezierCubicCurve& curve1 = bezierCurves[i];
         BezierCubicCurve& curve2 = bezierCurves[i+1];
@@ -93,105 +96,7 @@ void BezierSpline::C2Continuity(){
 
         q2->moveTo(newPos1);
         //p1->moveTo(newPos2);
-    }*/
-}
-
-void BezierSpline::C2ContinuityRight(){
-    // http://www.cse.iitd.ernet.in/~pkalra/csl859/slides/bezier2.PDF
-    // C1
-    for(unsigned int i = 0;i < bezierCurves.size() - 1; i++){
-        BezierCubicCurve& curve1 = bezierCurves[i];
-        BezierCubicCurve& curve2 = bezierCurves[i+1];
-
-        ic::Point* p3 = curve1.getPoint(3);
-        ic::Point* p2 = curve1.getPoint(2);
-
-        ic::Point* q1 = curve2.getPoint(1);
-
-        const vec3 posP3 = p3->getPosition();
-        const vec3 posP2 = p2->getPosition();
-        const vec3 posQ1 = q1->getPosition();
-/*
-        vec3 newPos1 = posP3*2.0f - posP2;
-        q1->moveTo(newPos1);
-  */
-        vec3 newPos2 = posP3*2.0f - posQ1;
-        p2->moveTo(newPos2);
     }
-    // C2
-/*
-    for(unsigned int i = 0;i < bezierCurves.size() - 1; i++){
-        BezierCubicCurve& curve1 = bezierCurves[i];
-        BezierCubicCurve& curve2 = bezierCurves[i+1];
-
-        ic::Point* p3 = curve1.getPoint(3);
-        ic::Point* p2 = curve1.getPoint(2);
-        ic::Point* p1 = curve1.getPoint(1);
-
-        ic::Point* q1 = curve2.getPoint(1);
-        ic::Point* q2 = curve2.getPoint(2);
-
-        const vec3& posP3 = p3->getPosition();
-        const vec3& posP2 = p2->getPosition();
-        const vec3& posP1 = p1->getPosition();
-
-        const vec3& posQ1 = q1->getPosition();
-        //const vec3& posQ2 = q2->getPosition();
-
-        vec3 newPos1 = 4.0f*(posP3 - posP2) + posP1;
-
-        q2->moveTo(newPos1);
-        //p1->moveTo(newPos2);
-    }*/
-}
-
-void BezierSpline::C2ContinuityLeft(){
-    // http://www.cse.iitd.ernet.in/~pkalra/csl859/slides/bezier2.PDF
-    // C1
-    for(unsigned int i = 0;i < bezierCurves.size() - 1; i++){
-        BezierCubicCurve& curve1 = bezierCurves[i];
-        BezierCubicCurve& curve2 = bezierCurves[i+1];
-
-        ic::Point* p3 = curve1.getPoint(3);
-        ic::Point* p2 = curve1.getPoint(2);
-
-        ic::Point* q1 = curve2.getPoint(1);
-
-        const vec3 posP3 = p3->getPosition();
-        const vec3 posP2 = p2->getPosition();
-        const vec3 posQ1 = q1->getPosition();
-
-        vec3 newPos1 = posP3*2.0f - posP2;
-        q1->moveTo(newPos1);
-/*
-        vec3 newPos2 = posP3*2.0f - newPos1;
-        p2->moveTo(newPos2);*/
-    }
-    // C2
-/*
-    for(unsigned int i = 0;i < bezierCurves.size() - 1; i++){
-        BezierCubicCurve& curve1 = bezierCurves[i];
-        BezierCubicCurve& curve2 = bezierCurves[i+1];
-
-        ic::Point* p3 = curve1.getPoint(3);
-        ic::Point* p2 = curve1.getPoint(2);
-        ic::Point* p1 = curve1.getPoint(1);
-
-        ic::Point* q1 = curve2.getPoint(1);
-        ic::Point* q2 = curve2.getPoint(2);
-
-        const vec3& posP3 = p3->getPosition();
-        const vec3& posP2 = p2->getPosition();
-        const vec3& posP1 = p1->getPosition();
-
-        const vec3& posQ1 = q1->getPosition();
-        //const vec3& posQ2 = q2->getPosition();
-
-        vec3 newPos1 = 4.0f*(posP3 - posP2) + posP1;
-
-        q2->moveTo(newPos1);
-        //p1->moveTo(newPos2);
-    }*/
 }
 
 void BezierSpline::initVertices(){
@@ -313,7 +218,7 @@ void BezierSpline::drawCurves(const glm::mat4 &VP, const Color& color) {
         float maxDistance = bezierCurveCubic.getMaximumDistanceBetweenPoints();
         if(maxDistance < 0) maxDistance = 1;
 
-        float dt = 1/((float)sumScreen * maxDistance);
+        dt = 1/((float)sumScreen * maxDistance);
 
         float t = 0;
         while(t <= 1){
@@ -335,6 +240,10 @@ void BezierSpline::drawCurves(const glm::mat4 &VP, const Color& color) {
 //  PUBLIC
 //-----------------------//
 
+float BezierSpline::getDT(){
+    return dt;
+}
+
 std::vector<BezierCubicCurve>& BezierSpline::getCurves(){
     return this->bezierCurves;
 }
@@ -351,9 +260,8 @@ void BezierSpline::render(const glm::mat4 &VP, const Color &color) {
         Color c(1,0,0); // red
         children[i]->render(VP, c);
     }
-    //C2ContinuityLeft();
     draw(VP, color);
-    //C2ContinuityRight();
+
 }
 
 void BezierSpline::update() {

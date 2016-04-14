@@ -51,9 +51,12 @@ void BezierSpline::C2Continuity(){
 
     // http://www.cse.iitd.ernet.in/~pkalra/csl859/slides/bezier2.PDF
     // C1
-    for(unsigned int i = 0;i < bezierCurves.size() - 1; i++){
-        BezierCubicCurve& curve1 = bezierCurves[i];
-        BezierCubicCurve& curve2 = bezierCurves[i+1];
+    int i = 0;
+    if(bezierCurves.size() == 1) return;
+/*
+    while(i < bezierCurves.size()){
+        BezierCubicCurve& curve1 = bezierCurves[i++];
+        BezierCubicCurve& curve2 = bezierCurves[i++];
 
         ic::Point* p3 = curve1.getPoint(3);
         ic::Point* p2 = curve1.getPoint(2);
@@ -63,13 +66,86 @@ void BezierSpline::C2Continuity(){
         const vec3 posP3 = p3->getPosition();
         const vec3 posP2 = p2->getPosition();
         const vec3 posQ1 = q1->getPosition();
-/*
-        vec3 newPosP2 = posP3*2.0f - posQ1;
-        p2->moveTo(newPosP2);
+
+        if(!p2->isSelected()) {
+            vec3 newPosP2 = posP3 * 2.0f - posQ1;
+            p2->moveTo(newPosP2);
+        }
+
+        if(!q1->isSelected()) {
+            vec3 newPosQ1 = posP3 * 2.0f - posP2;
+            q1->moveTo(newPosQ1);
+        }
+
+    }
+    // C2
+
+    i = 0;
+    while(i < bezierCurves.size()){
+        BezierCubicCurve& curve1 = bezierCurves[i++];
+        BezierCubicCurve& curve2 = bezierCurves[i++];
+
+        ic::Point* p3 = curve1.getPoint(3);
+        ic::Point* p2 = curve1.getPoint(2);
+        ic::Point* p1 = curve1.getPoint(1);
+
+        ic::Point* q1 = curve2.getPoint(1);
+        ic::Point* q2 = curve2.getPoint(2);
+
+        const vec3& posP3 = p3->getPosition();
+        const vec3& posP2 = p2->getPosition();
+        const vec3& posP1 = p1->getPosition();
+
+        const vec3& posQ1 = q1->getPosition();
+        const vec3& posQ2 = q2->getPosition();
+
+        if(!q2->isSelected()) {
+            vec3 newPos1 = 4.0f * (posP3 - posP2) + posP1;
+            q2->moveTo(newPos1);
+        }if(!p1->isSelected()){
+            vec3 newPos1 = 4.0f * (posP3 - posQ1) + posQ2;
+            p1->moveTo(newPos1);
+        }
+
+    }
 */
 
-        vec3 newPosQ1 = posP3*2.0f - posP2;
-        q1->moveTo(newPosQ1);
+
+
+
+    // C1
+
+    for(unsigned int i = 0;i < bezierCurves.size() - 1; i++){
+        BezierCubicCurve& curve1 = bezierCurves[i];
+        BezierCubicCurve& curve2 = bezierCurves[i+1];
+
+        ic::Point* p3 = curve1.getPoint(3);
+        ic::Point* p2 = curve1.getPoint(2);
+
+        ic::Point* q1 = curve2.getPoint(1);
+
+        const vec3& posP3 = p3->getPosition();
+        const vec3& posP2 = p2->getPosition();
+        const vec3& posQ1 = q1->getPosition();
+
+        //if(!p2->isSelected() && !q1->isSelected()) return;
+
+        if(p3->isSelected()){
+            vec3 newPosP2 = posP3 * 2.0f - posQ1;
+            p2->moveTo(newPosP2);
+
+            vec3 newPosQ1 = posP3 * 2.0f - posP2;
+            q1->moveTo(newPosQ1);
+        }
+
+        if(!p2->isSelected()) {
+            vec3 newPosP2 = posP3 * 2.0f - posQ1;
+            p2->moveTo(newPosP2);
+        }
+        else if(!q1->isSelected()) {
+            vec3 newPosQ1 = posP3 * 2.0f - posP2;
+            q1->moveTo(newPosQ1);
+        }
 
     }
     // C2
@@ -90,12 +166,20 @@ void BezierSpline::C2Continuity(){
         const vec3& posP1 = p1->getPosition();
 
         const vec3& posQ1 = q1->getPosition();
-        //const vec3& posQ2 = q2->getPosition();
+        const vec3& posQ2 = q2->getPosition();
 
-        vec3 newPos1 = 4.0f*(posP3 - posP2) + posP1;
+        //if(!q2->isSelected() && !p1->isSelected()) continue;
 
-        q2->moveTo(newPos1);
-        //p1->moveTo(newPos2);
+        if(!q2->isSelected()) {
+            vec3 newPos1 = 4.0f * (posP3 - posP2) + posP1;
+            q2->moveTo(newPos1);
+
+        }
+        else if(!p1->isSelected()){
+            vec3 newPos1 = 4.0f * (posP3 - posQ1) + posQ2;
+            p1->moveTo(newPos1);
+        }
+
     }
 }
 
@@ -218,7 +302,8 @@ void BezierSpline::drawCurves(const glm::mat4 &VP, const Color& color) {
         float maxDistance = bezierCurveCubic.getMaximumDistanceBetweenPoints();
         if(maxDistance < 0) maxDistance = 1;
 
-        dt = 1/((float)sumScreen * maxDistance);
+        float dt = 1/((float)sumScreen * maxDistance);
+        if(this->dt < dt) this->dt = dt;
 
         float t = 0;
         while(t <= 1){

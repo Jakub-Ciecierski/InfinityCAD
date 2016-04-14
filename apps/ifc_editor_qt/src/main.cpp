@@ -6,8 +6,8 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     EditorWindow& w = EditorWindow::getInstance();
 
-    //ObjectManager& objManager = ObjectManager::getInstance();
-    //objManager.TEST_BSPLINE();
+    ObjectManager& objManager = ObjectManager::getInstance();
+    objManager.TEST_BSPLINE();
 
     w.show();
 

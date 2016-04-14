@@ -25,6 +25,8 @@ RenderBody::RenderBody(SceneID id) :
     doRender = true;
 
     drawingMode = GL_LINES;
+
+    setSelected(false);
 }
 RenderBody::RenderBody(SceneID id, std::string name) :
         RigidBody(id, name),
@@ -35,6 +37,8 @@ RenderBody::RenderBody(SceneID id, std::string name) :
     doRender = true;
 
     drawingMode = GL_LINES;
+
+    setSelected(false);
 }
 
 RenderBody::~RenderBody() {
@@ -161,6 +165,14 @@ const vec3& RenderBody::getProjectedPosition(){
 const Color* RenderBody::getColor() {
     return &color;
 }
+void RenderBody::setSelected(bool v){
+    selected = v;
+}
+
+bool RenderBody::isSelected(){
+    return selected;
+}
+
 
 void RenderBody::render(const mat4 &VP) {
     transform(VP);

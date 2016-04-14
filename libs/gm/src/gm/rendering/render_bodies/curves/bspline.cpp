@@ -143,7 +143,7 @@ void BSpline::drawSpline(const glm::mat4 &VP, const Color& color){
 
     float t_max = getKnotMax();
     float t = getKnotMin(degree);
-    dt *= t_max;
+    //dt /= 5*t_max;
 
     setSurfaceColor(color);
     glPointSize(1.0f);
@@ -323,6 +323,9 @@ void BSpline::setDrawBezierBasis(bool value){
         buildBezierSpline();
 
     this->drawBezierBasis = value;
+
+    if(this->bezierSpline != NULL)
+        this->bezierSpline->setDrawBezierPolygon(this->isDrawBezierPolygon());
 }
 
 int BSpline::getDegree(){

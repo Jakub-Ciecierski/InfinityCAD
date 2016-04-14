@@ -226,6 +226,7 @@ void Cross::activateGrab() {
         grabedMap.clear();
         grabedMap[minBody] = BodyInfo(minDistance, *minBody->getColor());
         minBody->setColor(grabedColor);
+        minBody->setSelected(true);
     }
 
 
@@ -239,6 +240,7 @@ void Cross::deactivateGrab() {
         RenderBody* body = item.first;
         BodyInfo info = item.second;
         body->setColor(info.color);
+        body->setSelected(false);
     }
     grabedMap.clear();
 }

@@ -34,6 +34,8 @@ protected:
     bool grabable;
     float lineWidth;
 
+    bool selected;
+
     std::vector<glm::vec4> vertices;
     std::vector<Edge> edges;
 
@@ -97,6 +99,9 @@ public:
     virtual float intersect(const RayCast& ray) = 0;
 
     virtual glm::vec3 getClosestPoint(const glm::vec3 point) = 0;
+
+    void setSelected(bool v);
+    bool isSelected();
 
     virtual void render(const glm::mat4& VP);
     virtual void render(const glm::mat4& VP, const Color& color);

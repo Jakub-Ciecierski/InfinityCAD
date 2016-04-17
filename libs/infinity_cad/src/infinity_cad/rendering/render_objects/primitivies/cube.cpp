@@ -16,13 +16,11 @@ Cube::Cube(SceneID id) :
         RenderObject(id){
     initVertices();
     initEdges();
-    NDCVertices.resize(vertices.size());
 }
 Cube::Cube(SceneID id, std::string name) :
         RenderObject(id, name){
     initVertices();
     initEdges();
-    NDCVertices.resize(vertices.size());
 }
 
 Cube::~Cube() {

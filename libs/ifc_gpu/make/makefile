@@ -199,7 +199,7 @@ INCLUDES += -I /usr/local/cuda-7.0/include
 # Use '-shared' for shared libraries
 LD_FLAGS +=
 C_FLAGS += -std=c++11 -Wall
-NVCC_FLAGS += -arch=sm_20 -dlink -dc -shared -Xcompiler -fPIC
+NVCC_FLAGS += -arch=sm_20 -shared -Xcompiler -fPIC
 
 #----------------- PRINT OUTS -----------------#
 

@@ -74,6 +74,8 @@ public slots:
     void set3DRendering(bool value);
     void set3DDistance(QString distance);
 
+    void setCUDA(bool value);
+
     void leftEyeColorPicker();
     void rightEyeColorPicker();
 

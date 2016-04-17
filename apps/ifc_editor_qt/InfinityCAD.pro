@@ -112,13 +112,21 @@ FORMS    += mainwindow.ui
 
 #############################################################################
 
-# Geometry Lib
+# InfinityCAD
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../dependencies/lib/ifc/release/ -lifc
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../dependencies/lib/ifc/debug/ -lifc
 else:unix: LIBS += -L$$PWD/../../dependencies/lib/ifc/ -lifc
 INCLUDEPATH += $$PWD/../../dependencies/include/ifc
 DEPENDPATH += $$PWD/../../dependencies/include/ifc
 LIBS += -Wl,-rpath $$PWD/../../dependencies/lib/ifc/
+
+# ifcgpu
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../dependencies/lib/ifcgpu/release/ -lifcgpu
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../dependencies/lib/ifcgpu/debug/ -lifcgpu
+else:unix: LIBS += -L$$PWD/../../dependencies/lib/ifcgpu/ -lifcgpu
+INCLUDEPATH += $$PWD/../../dependencies/include/ifcgpu
+DEPENDPATH += $$PWD/../../dependencies/include/ifcgpu
+LIBS += -Wl,-rpath $$PWD/../../dependencies/lib/ifcgpu/
 
 # GLM
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../dependencies/lib/glm/release/ -lglm

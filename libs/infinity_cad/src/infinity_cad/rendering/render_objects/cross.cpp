@@ -24,7 +24,6 @@ Cross::Cross(SceneID id, const std::vector<RenderObject *>* sceneObjects) :
 
     initVertices();
     initEdges();
-    NDCVertices.resize(vertices.size());
 
     this->sceneObjects = sceneObjects;
     isGrabActive = false;
@@ -45,7 +44,6 @@ Cross::Cross(SceneID id, std::string name,
 
     initVertices();
     initEdges();
-    NDCVertices.resize(vertices.size());
 
     this->sceneObjects = sceneObjects;
     isGrabActive = false;

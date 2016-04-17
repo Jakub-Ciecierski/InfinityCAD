@@ -20,7 +20,6 @@ Point::Point(SceneID id) :
 
     initVertices();
     initEdges();
-    NDCVertices.resize(vertices.size());
 
     drawingMode = GL_TRIANGLE_FAN;
 }
@@ -31,7 +30,6 @@ Point::Point(SceneID id, std::string name) :
 
     initVertices();
     initEdges();
-    NDCVertices.resize(vertices.size());
 
     drawingMode = GL_TRIANGLE_FAN;
 }

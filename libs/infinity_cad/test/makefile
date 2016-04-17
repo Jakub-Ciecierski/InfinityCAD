@@ -54,7 +54,8 @@ MAKE_EXTERNAL = '$(GTEST_ROOT)/make/'
 #---------------- LIBRARIES -------------------#
 
 # Paths and names of libraries to link with
-LIBS += $(GTEST_ROOT)/make/gtest_main.a -lpthread -lGL
+LIBS += $(GTEST_ROOT)/make/gtest_main.a -lpthread -lGL -lifc -lifcgpu \
+		-L /usr/local/cuda-7.0/lib64 -lcudart -lcuda -lcudadevrt
 
 #----------------- INCLUDES -------------------#
 
@@ -172,7 +173,7 @@ run:
 #------------------ LINKER --------------------#
 
 ${APP_NAME}: ${OBJECTS}
-	@$(CC) -o ${BIN}/${APP_NAME} ${TST_OBJS} $^ $(L_FLAGS)
+	@$(CC) -o ${BIN}/${APP_NAME} ${TST_OBJS}  $^ $(L_FLAGS)
 
 #----------------- COMPILERS ------------------#
 

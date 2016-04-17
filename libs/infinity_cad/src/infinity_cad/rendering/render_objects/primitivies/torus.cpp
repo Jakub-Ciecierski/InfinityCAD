@@ -18,12 +18,11 @@ Torus::Torus(SceneID id) :
     outerRadius = 0.2f;
     innerRadius = 0.5f;
 
-    sidesCount = 30;
-    ringsCount = 30;
+    sidesCount = 100;
+    ringsCount = 100;
 
     initVertices();
     initEdges();
-    NDCVertices.resize(vertices.size());
 }
 
 Torus::Torus(SceneID id, std::string name) :
@@ -31,12 +30,11 @@ Torus::Torus(SceneID id, std::string name) :
     outerRadius = 0.2f;
     innerRadius = 0.5f;
 
-    sidesCount = 30;
-    ringsCount = 30;
+    sidesCount = 100;
+    ringsCount = 100;
 
     initVertices();
     initEdges();
-    NDCVertices.resize(vertices.size());
 }
 
 Torus::~Torus() {

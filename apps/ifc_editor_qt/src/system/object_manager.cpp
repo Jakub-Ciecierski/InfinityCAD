@@ -290,3 +290,10 @@ void ObjectManager::TEST_BSPLINE(){
     }
 
 }
+
+void ObjectManager::TEST_PERFORMANCE(){
+    int torusCount = 10;
+    for(int i = 0; i < torusCount; i++){
+        addObject(RB_TORUS_TYPE, "test" + std::to_string(i));
+    }
+}

@@ -41,8 +41,8 @@ protected:
     std::vector<glm::vec4> vertices;
     std::vector<Edge> edges;
 
-    std::vector<glm::vec4> NDCVertices;
     glm::vec3 NDCPosition;
+    glm::vec4* NDCVertices;
 
     std::vector<RenderObject *> children;
 
@@ -65,8 +65,7 @@ protected:
      * Draws lines after transformation of vertices.
      * Drawing is based on the Edges created in the initialization process
      */
-    virtual void drawLines(const std::vector<glm::vec4>& vertices,
-                           bool costumColor);
+    virtual void drawLines(bool costumColor);
 
 public:
     //-----------------------------------------------------------//

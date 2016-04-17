@@ -20,7 +20,6 @@ AxisNet::AxisNet(SceneID id, int netSize) :
 
     initVertices();
     initEdges();
-    NDCVertices.resize(vertices.size());
 
     grabable = false;
 }
@@ -33,7 +32,6 @@ AxisNet::AxisNet(SceneID id, std::string name, int netSize) :
 
     initVertices();
     initEdges();
-    NDCVertices.resize(vertices.size());
 
     grabable = false;
 }

@@ -7,7 +7,7 @@ int main(int argc, char *argv[])
     EditorWindow& w = EditorWindow::getInstance();
 
     ObjectManager& objManager = ObjectManager::getInstance();
-    objManager.TEST_BSPLINE();
+    objManager.TEST_PERFORMANCE();
 
     w.show();
 

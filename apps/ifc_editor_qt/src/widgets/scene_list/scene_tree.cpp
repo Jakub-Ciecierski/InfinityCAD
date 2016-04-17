@@ -31,8 +31,11 @@ SceneTree::~SceneTree(){
 //-----------//
 
 void SceneTree::setupBinding(){
+    /*
     this->connect(this, SIGNAL(itemPressed(QTreeWidgetItem*,int)),
                  this, SLOT(myitemActivated(QTreeWidgetItem*,int)));
+                 */
+
     this->connect(this, SIGNAL(itemSelectionChanged()),
                  this, SLOT(myitemSelectionChanged()));
 }

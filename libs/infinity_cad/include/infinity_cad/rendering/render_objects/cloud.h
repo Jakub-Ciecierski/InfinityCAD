@@ -18,8 +18,7 @@ protected:
     virtual void initVertices() override;
     virtual void initEdges() override;
 
-    virtual void drawLines(const std::vector<glm::vec4> &vertices,
-                           bool costumColor) override;
+    virtual void drawLines(bool costumColor) override;
 
     virtual void transform(const glm::mat4 &VP) override;
 public:

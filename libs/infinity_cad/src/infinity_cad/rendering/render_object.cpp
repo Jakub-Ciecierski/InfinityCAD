@@ -7,6 +7,11 @@
 #include <infinity_cad/rendering/visibility/ray_cast.h>
 #include <infinity_cad/rendering/clipping/sutherland.h>
 
+#include <stdexcept>
+#include <ifc_gpu/projection/ndc_gpu.h>
+#include <iostream>
+#include <infinity_cad/settings/settings.h>
+
 
 using namespace glm;
 using namespace std;
@@ -26,6 +31,8 @@ RenderObject::RenderObject(SceneID id) :
     drawingMode = GL_LINES;
 
     setSelected(false);
+
+    NDCVertices = NULL;
 }
 RenderObject::RenderObject(SceneID id, std::string name) :
         RigidObject(id, name),
@@ -38,12 +45,15 @@ RenderObject::RenderObject(SceneID id, std::string name) :
     drawingMode = GL_LINES;
 
     setSelected(false);
+
+    NDCVertices = NULL;
 }
 
 RenderObject::~RenderObject() {
     for(unsigned int i = 0;i < children.size(); i++){
         delete children[i];
     }
+    if(NDCVertices != NULL) delete NDCVertices;
 }
 
 //-----------------------------------------------------------//
@@ -79,18 +89,24 @@ void RenderObject::transform(const mat4 &VP){
     mat4 MVP = VP * getModelMatrix();
     transformPosition(VP);
 
-    for(unsigned int i = 0; i < NDCVertices.size(); i++){
-        NDCVertices[i] = MVP * vertices[i];
+    unsigned int verticesSize = vertices.size();
+    if (NDCVertices == NULL)
+        NDCVertices = (vec4 *) malloc(vertices.size() * sizeof(vec4));
 
-        NDCVertices[i].x /= NDCVertices[i].w;
-        NDCVertices[i].y /= NDCVertices[i].w;
-        NDCVertices[i].z /= NDCVertices[i].w;
+    if(verticesSize > ifc::VERTEX_LOWER_BOUND_CUDA && ifc::RUN_CUDA) {
+        ndc_compute(vertices.data(), vertices.size(), &MVP, &NDCVertices);
+    }else{
+        for(unsigned int i = 0; i < verticesSize; i++){
+            NDCVertices[i] = MVP * vertices[i];
 
+            NDCVertices[i].x /= NDCVertices[i].w;
+            NDCVertices[i].y /= NDCVertices[i].w;
+            NDCVertices[i].z /= NDCVertices[i].w;
+        }
     }
 }
 
-void RenderObject::drawLines(const std::vector<glm::vec4>& vertices,
-                             bool costumColor){
+void RenderObject::drawLines(bool costumColor){
     const vector<Edge>& edges = getEdges();
 
     glLineWidth((GLfloat)lineWidth);
@@ -101,25 +117,15 @@ void RenderObject::drawLines(const std::vector<glm::vec4>& vertices,
 
         unsigned int index1 = edges[i].getVertex1();
         unsigned int index2 = edges[i].getVertex2();
-        vec4 v1 = vertices[index1];
-        vec4 v2 = vertices[index2];
 
-        bool doDraw = clip(v1, v2,
-                           -1, 1,
-                           -1, 1);
+        vec4* v1 = &(NDCVertices[index1]);
+        vec4* v2 = &(NDCVertices[index2]);
+
+        bool doDraw = clip(*v1, *v2, -1, 1, -1, 1);
         if(doDraw) {
-            /*
-            if(((v1.x < -1.0 || v1.x > 1.0) || (v2.x < -1.0 || v2.x > 1.0)) ||
-            ((v1.y < -1.0 || v1.y > 1.0) || (v2.y < -1.0 || v2.y > 1.0)))
-                continue;*/
-            glVertex2f(v1.x,
-                       v1.y);
-
-            glVertex2f(v2.x,
-                       v2.y);
-            //std::cout << "DRAWING" << std::endl;
+            glVertex2f(v1->x, v1->y);
+            glVertex2f(v2->x, v2->y);
         }
-
     }
     glEnd();
 }
@@ -181,7 +187,7 @@ void RenderObject::render(const mat4 &VP) {
     transform(VP);
     if(doRender) {
         setSurfaceColor(this->color);
-        drawLines(NDCVertices, true);
+        drawLines(true);
     }
 }
 
@@ -189,7 +195,7 @@ void RenderObject::render(const glm::mat4 &VP, const Color &color) {
     transform(VP);
     if(doRender) {
         setSurfaceColor(color);
-        drawLines(NDCVertices, false);
+        drawLines(false);
     }
 }
 

@@ -21,7 +21,6 @@ Sphere::Sphere(SceneID id, std::string name,
         radius(radius), ringsCount(ringsCount), sectionCount(sectionCount) {
     initVertices();
     initEdges();
-    NDCVertices.resize(vertices.size());
 
     //drawingMode = GL_TRIANGLE_FAN;
 }
@@ -32,7 +31,6 @@ Sphere::Sphere(SceneID id,
         radius(radius), ringsCount(ringsCount), sectionCount(sectionCount) {
     initVertices();
     initEdges();
-    NDCVertices.resize(vertices.size());
 
     //drawingMode = GL_TRIANGLE_FAN;
 }

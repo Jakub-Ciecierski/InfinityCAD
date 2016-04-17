@@ -16,7 +16,6 @@ Line::Line(SceneID id , glm::vec4 v1, glm::vec4 v2) :
         v1(v1), v2(v2){
     initVertices();
     initEdges();
-    NDCVertices.resize(vertices.size());
 
     setColor(COLOR_OBJECT_DEFAULT);
 
@@ -28,7 +27,6 @@ Line::Line(SceneID id , std::string name,
         v1(v1), v2(v2){
     initVertices();
     initEdges();
-    NDCVertices.resize(vertices.size());
 
     setColor(COLOR_OBJECT_DEFAULT);
 

@@ -17,6 +17,8 @@ include_directories(/home/jakub/ide/qt/5.5/gcc_64/include/QtOpenGL/)
 include_directories(/home/jakub/ide/qt/5.5/gcc_64/include/QtGui)
 include_directories(/home/jakub/programming/ic/apps/ifc_editor_qt)
 
+include_directories(/usr/local/cuda/include/)
+
 #############################################################################
 
 MACRO(FIND_INCLUDE_DIR return_list regex)
@@ -64,6 +66,7 @@ FIND_SRC_DIR(APPS_TEST_SRC_DIRS ${APPS_PATH}/*/src/test/*.cpp)
 FIND_INCLUDE_DIR(LIBS_INC_DIRS ${LIBS_PATH}/*/include/*.h)
 FIND_INCLUDE_DIR(LIBS_INC_DIRS_HPP ${LIBS_PATH}/*/include/*.hpp)
 FIND_SRC_DIR(LIBS_SRC_DIRS ${LIBS_PATH}/*/src/*.cpp)
+FIND_SRC_DIR(LIBS_CUDA_SRC_DIRS ${LIBS_PATH}/*/src/*.cu)
 
 FIND_INCLUDE_DIR(LIBS_TEST_INC_DIRS ${LIBS_PATH}/*/test/include/*.h)
 FIND_SRC_DIR(LIBS_TEST_SRC_DIRS ${LIBS_PATH}/*/test/src/*.cpp)
@@ -76,6 +79,8 @@ include_directories(${APPS_TEST_SRC_DIRS})
 include_directories(${LIBS_INC_DIRS})
 include_directories(${LIBS_INC_DIRS_HPP})
 include_directories(${LIBS_SRC_DIRS})
+include_directories(${LIBS_CUDA_SRC_DIRS})
+
 include_directories(${LIBS_TEST_INC_DIRS})
 include_directories(${LIBS_TEST_SRC_DIRS})
 
@@ -86,12 +91,13 @@ file(GLOB_RECURSE FILES
         ${APPS_PATH}/*.cpp
         ${APPS_PATH}/*.h
         ${LIBS_PATH}/*.cpp
+        ${LIBS_PATH}/*.cu
         ${LIBS_PATH}/*.h
         ${LIBS_PATH}/*.hpp
         ${LIBS_PATH}/googletest/include/*.h
 )
 
-set(SPAM libs/infinity_cad/src/infinity_cad/rendering/render_objects/curves/bspline.cpp libs/infinity_cad/include/infinity_cad/rendering/render_objects/curves/bspline.h libs/infinity_cad/src/infinity_cad/rendering/render_objects/curves/spline.cpp libs/infinity_cad/include/infinity_cad/rendering/render_objects/curves/spline.h libs/infinity_cad/src/infinity_cad/geometry/polynomials/bspline_basis.cpp libs/infinity_cad/include/infinity_cad/geometry/polynomials/bspline_basis.h libs/infinity_cad/test/src/bspline_tests/bspline_test.cpp libs/infinity_cad/src/infinity_cad/rendering/render_objects/curves/bezier_spline_c2.cpp libs/infinity_cad/include/infinity_cad/rendering/render_objects/curves/bezier_spline_c2.h libs/infinity_cad/src/infinity_cad/math/math.cpp libs/infinity_cad/include/infinity_cad/math/math.h)
+set(SPAM libs/infinity_cad/include/infinity_cad/settings/settings.cpp libs/infinity_cad/include/infinity_cad/settings/settings.h)
 
 set(CMAKE_PREFIX_PATH $ENV{HOME}/ide/qt/5.5/gcc_64/)
 

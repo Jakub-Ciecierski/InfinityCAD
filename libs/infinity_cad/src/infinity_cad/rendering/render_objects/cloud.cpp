@@ -19,7 +19,6 @@ Cloud::Cloud(SceneID id, std::vector<glm::vec4>& points) :
     initEdges();
 
     worldVertices.resize(vertices.size());
-    NDCVertices.resize(vertices.size());
 }
 Cloud::Cloud(SceneID id, std::string name,
              std::vector<glm::vec4>& points) :
@@ -29,7 +28,6 @@ Cloud::Cloud(SceneID id, std::string name,
     initEdges();
 
     worldVertices.resize(vertices.size());
-    NDCVertices.resize(vertices.size());
 }
 
 Cloud::~Cloud() {
@@ -50,15 +48,13 @@ void Cloud::initEdges() {
 
 }
 
-void Cloud::drawLines(const std::vector<glm::vec4> &vertices,
-                      bool costumColor) {
+void Cloud::drawLines(bool costumColor) {
     glPointSize(5.0f);
     glBegin(GL_POINTS);
     for(unsigned int i = 0; i < vertices.size(); i++){
-        if(vertices[i].w < 0) continue;
+        if(NDCVertices[i].w < 0) continue;
 
-        glVertex2f(vertices[i].x,
-                   vertices[i].y);
+        glVertex2f(NDCVertices[i].x, NDCVertices[i].y);
     }
     glEnd();
 }
@@ -76,7 +72,11 @@ void Cloud::transform(const glm::mat4 &VP) {
     mat4 MVP = VP * ModelMatrix;
     transformPosition(VP);
 
-    for(unsigned int i = 0; i < NDCVertices.size(); i++){
+    unsigned int verticesSize = vertices.size();
+    if (NDCVertices == NULL)
+        NDCVertices = (vec4 *) malloc(vertices.size() * sizeof(vec4));
+
+    for(unsigned int i = 0; i < verticesSize ; i++){
         worldVertices[i] = ModelMatrix * vertices[i];
 
         NDCVertices[i] = MVP * vertices[i];

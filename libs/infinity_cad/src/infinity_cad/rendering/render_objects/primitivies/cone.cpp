@@ -21,7 +21,6 @@ Cone::Cone(SceneID id,
         baseVerticesCount(baseVerticesCount) {
     initVertices();
     initEdges();
-    NDCVertices.resize(vertices.size());
 
     drawingMode = GL_TRIANGLE_FAN;
 }
@@ -33,7 +32,6 @@ Cone::Cone(SceneID id, std::string name,
         baseVerticesCount(baseVerticesCount) {
     initVertices();
     initEdges();
-    NDCVertices.resize(vertices.size());
 
     drawingMode = GL_TRIANGLE_FAN;
 }

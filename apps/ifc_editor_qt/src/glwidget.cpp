@@ -11,6 +11,8 @@
 #include <infinity_cad/rendering/scene/object_factory.h>
 #include <infinity_cad/rendering/cameras/camera_fps.h>
 #include <infinity_cad/rendering/color/color_convertor.h>
+#include "infinity_cad/settings/settings.h"
+
 #include <widgets/scene_list/scene_tree.h>
 
 #include "ui_mainwindow.h"
@@ -404,7 +406,7 @@ void GLWidget::paintGL(){
     renderer->update();
     renderer->render();
 
-    //ray->render(renderer->getScene()->getMVP());
+    updateCrossView();
 }
 
 void GLWidget::resizeGL(int width, int height){
@@ -435,6 +437,10 @@ void GLWidget::set3DDistance(QString distance){
         projection->setDistance3D(distanceFloat);
         projection->update();
     }
+}
+
+void GLWidget::setCUDA(bool value){
+    ifc::RUN_CUDA = value;
 }
 
 void GLWidget::leftEyeColorPicker(){

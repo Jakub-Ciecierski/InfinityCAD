@@ -378,6 +378,13 @@ QMenu::separator {
         </widget>
        </item>
        <item>
+        <widget class="QCheckBox" name="cudaCheckBox">
+         <property name="text">
+          <string>NVidia</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <spacer name="horizontalSpacer">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -531,8 +538,8 @@ QMenu::separator {
                    <rect>
                     <x>0</x>
                     <y>0</y>
-                    <width>564</width>
-                    <height>581</height>
+                    <width>566</width>
+                    <height>583</height>
                    </rect>
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -1307,6 +1314,7 @@ QMenu::separator {
     <slot>set3DDistance(QString)</slot>
     <slot>leftEyeColorPicker()</slot>
     <slot>rightEyeColorPicker()</slot>
+    <slot>setCUDA(bool)</slot>
    </slots>
   </customwidget>
   <customwidget>
@@ -1383,6 +1391,22 @@ QMenu::separator {
     <hint type="destinationlabel">
      <x>308</x>
      <y>359</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cudaCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>glRendererWidget</receiver>
+   <slot>setCUDA(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>156</x>
+     <y>44</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>366</x>
+     <y>415</y>
     </hint>
    </hints>
   </connection>

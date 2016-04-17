@@ -376,16 +376,16 @@ bool GLWidget::do_movement(){
 
     return changed;
 }
-
+/*
 void GLWidget::wheelEvent(QWheelEvent* event){
-    /*
+
     float speedBoost = 0.0001;
     if(event->modifiers() & Qt::ControlModifier){
         speedBoost = 0.001;
     }
     int x = event->delta();
-    */
-};
+
+}*/
 
 Renderer* GLWidget::getRenderer(){
     return this->renderer;

@@ -2,10 +2,11 @@
 // Created by jakub on 4/2/16.
 //
 
-
 #include <infinity_cad/rendering/clipping/sutherland.h>
 
 using namespace glm;
+
+static int LEFT=1,RIGHT=2,BOTTOM=4,TOP=8;
 
 int getCode(const vec4& v,
             float left, float right,
@@ -29,7 +30,6 @@ bool clip(vec4& v1, vec4& v2,
     if(v1.z > -1.0f || v2.z > -1.0f) {
         return false;
     }
-
 
     int outcode1=getCode(v1, left, right, bottom, top);
     int outcode2=getCode(v2, left, right, bottom, top);

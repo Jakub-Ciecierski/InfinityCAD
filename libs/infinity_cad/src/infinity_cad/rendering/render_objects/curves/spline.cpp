@@ -55,7 +55,8 @@ void Spline::removePoint(ifc::Point* point){
 }
 
 void Spline::swapPoints(int i, int j){
-    if(i < 0 || j < 0 || i >= points.size() || j >= points.size()) return;
+    int pointsCount = points.size();
+    if(i < 0 || j < 0 || i >= pointsCount  || j >= pointsCount ) return;
 
     Point* pointTMP = points[i];
     points[i] = points[j];
@@ -76,7 +77,8 @@ void Spline::moveUp(ifc::Point* point){
 
 void Spline::moveDown(ifc::Point* point){
     int i = getPointIndex(point);
-    if(i < 0 || i == points.size() - 1) return;
+    int pointsCount = points.size();
+    if(i < 0 || i == pointsCount - 1) return;
 
     swapPoints(i, i+1);
 

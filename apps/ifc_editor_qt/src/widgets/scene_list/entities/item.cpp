@@ -98,7 +98,7 @@ Item* Item::makeClone(){
 void Item::removeClone(Item* clone){
     for(unsigned int i = 0; i < clones.size(); i++){
         if(clone == clones[i]){
-            clones[i] == NULL;
+            clones[i] = NULL;
         }
     }
 }

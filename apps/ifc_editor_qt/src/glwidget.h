@@ -55,7 +55,7 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
 
-    void wheelEvent(QWheelEvent* event);
+    //void wheelEvent(QWheelEvent* event);
 public:
     explicit GLWidget(QWidget* parent = 0);
     ~GLWidget();

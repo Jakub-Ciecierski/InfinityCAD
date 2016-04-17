@@ -34,7 +34,7 @@ QAction* SceneCMenuPoint::show(const QPoint& pos) {
     addToBezierSubMenu->clear();
 
     if(bezierRoot->treeItem != NULL){
-        for(int i = 0;i < bezierRoot->children.size();i++){
+        for(unsigned int i = 0;i < bezierRoot->children.size();i++){
             Item* childBezierItem = bezierRoot->children[i];
             std::string childBezierName = childBezierItem->displayName;
 

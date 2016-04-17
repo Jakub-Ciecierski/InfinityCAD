@@ -57,7 +57,7 @@ vec4 cubicBernstein(const vec3& p0, const vec3& p1,
 vec4 cubicBernstein(const vec3& p0, const vec3& p1,
                     const vec3& p2, const vec3& p3,
                     float t){
-
+/*
     float t2 = t*t;
     float t3 = t*t*t;
 
@@ -65,7 +65,7 @@ vec4 cubicBernstein(const vec3& p0, const vec3& p1,
     float B1 = 3*t - 6*t2 + t3;
     float B2 = 3*t2 - 3*t3;
     float B3 = t3;
-
+*/
     float x = pow(1-t, 3) * p0.x +
               pow(1-t, 2) * 3*t * p1.x +
             (1-t) * 3 *t *t * p2.x +

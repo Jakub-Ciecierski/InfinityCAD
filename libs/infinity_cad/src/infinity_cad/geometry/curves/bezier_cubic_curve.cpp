@@ -47,6 +47,9 @@ vec4 BezierCubicCurve::compute(float t){
     }else if(deg == 3){
         return (cubicBernstein(p0->getPosition(), p1->getPosition(),
                                p2->getPosition(), p3->getPosition(), t));
+    }else{
+        throw new std::invalid_argument(
+                "Degree: " + std::to_string(deg) + " not supported");
     }
 }
 

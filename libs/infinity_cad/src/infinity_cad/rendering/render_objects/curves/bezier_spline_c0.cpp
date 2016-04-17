@@ -48,7 +48,7 @@ BezierSplineC0::~BezierSplineC0(){
 
 
 void BezierSplineC0::buildCurve(){
-    unsigned int pointsCount = points.size();
+    int pointsCount = points.size();
     if(pointsCount == 0) return;
 
     int currentPointIndex = 0;

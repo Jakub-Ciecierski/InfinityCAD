@@ -64,7 +64,7 @@ public:
     RigidObject(SceneID id);
     RigidObject(SceneID id, std::string name);
 
-    ~RigidObject();
+    virtual ~RigidObject();
 
     //-----------------------------------------------------------//
     //  PUBLIC METHODS

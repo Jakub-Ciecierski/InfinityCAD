@@ -67,10 +67,10 @@ bool EditorWindow::showQuestionBox(string title, string text){
 }
 
 void EditorWindow::showInfoBox(string title, string text){
-    QMessageBox::StandardButton reply;
-    reply = QMessageBox::question(this, QString::fromStdString(title),
-                                    QString::fromStdString(text),
-                                    QMessageBox::Yes|QMessageBox::No);
+    //QMessageBox::StandardButton reply;
+    QMessageBox::question(this, QString::fromStdString(title),
+                          QString::fromStdString(text),
+                          QMessageBox::Yes|QMessageBox::No);
 }
 
 string EditorWindow::showInputBox(string title, string text){

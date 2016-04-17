@@ -3,7 +3,7 @@
 using namespace std;
 
 SceneCMHandler::SceneCMHandler(){
-    handler = [](Item* item){ };
+    handler = [](Item* item){ if(item != NULL) return; };
 }
 
 SceneCMHandler::SceneCMHandler(function<void(Item*)> handler):
@@ -20,8 +20,6 @@ SceneCMHandler::SceneCMHandler(std::string name,
 void SceneCMHandler::execute(Item* objectID){
     handler(objectID);
 }
-
-
 
 std::string SceneCMHandler::getName(){
     return this->name;

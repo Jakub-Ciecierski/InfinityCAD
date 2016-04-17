@@ -32,7 +32,7 @@ void ContextMenu::handle(const QAction* a,
     if(selected.empty()) return;
     std::string actionString = a->text().toStdString();
 
-    for(unsigned int i = 0; i < selected.size(); i++){
+    for(int i = 0; i < selected.size(); i++){
         QTreeWidgetItem* item = selected.at(i);
 
         std::string selectedObject = item->text(0).toStdString();

@@ -20,7 +20,7 @@ namespace ifc {
         Object(SceneID id);
         Object(SceneID id, std::string name);
 
-        ~Object();
+        virtual ~Object();
 
         void setName(std::string name);
 

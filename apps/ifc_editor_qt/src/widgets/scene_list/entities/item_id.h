@@ -23,8 +23,12 @@ struct ItemID{
         return os;
     }
 
-    bool operator==(const ItemID& ItemID) const{
-        return false;
+    bool operator==(const ItemID& itemID) const{
+        for(unsigned int i = 0; i < id_values.size(); i++){
+            if(itemID.id_values[i] != this->id_values[i])
+                return false;
+        }
+        return true;
     }
 };
 

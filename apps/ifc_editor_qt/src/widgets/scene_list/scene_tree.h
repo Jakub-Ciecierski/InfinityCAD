@@ -61,7 +61,7 @@ public:
     const std::vector<Item*>& getAllItems();
 public slots:
     void ShowContextMenu(const QPoint& pos);
-    void myitemActivated(QTreeWidgetItem* item, int column);
+    //void myitemActivated(QTreeWidgetItem* item, int column);
     void myitemSelectionChanged();
 };
 

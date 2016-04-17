@@ -7,8 +7,6 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-static int LEFT=1,RIGHT=2,BOTTOM=4,TOP=8;
-
 int getCode(const glm::vec4& v,
             float left, float right,
             float bottom, float top);

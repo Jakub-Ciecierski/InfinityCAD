@@ -323,12 +323,12 @@ void SceneTree::ShowContextMenu(const QPoint& pos){
     menu->handle(action, items);
 }
 
-
+/*
 void SceneTree::myitemActivated(QTreeWidgetItem* treeItem, int column){
     Item* item = getItemByTree(treeItem);
     if(item == NULL) return;
 }
-
+*/
 void SceneTree::myitemSelectionChanged(){
     QList<QTreeWidgetItem *> selectedItems = this->selectedItems();
     ObjectManager& objManager = ObjectManager::getInstance();

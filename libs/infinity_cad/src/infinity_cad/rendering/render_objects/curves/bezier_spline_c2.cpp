@@ -53,7 +53,7 @@ void BezierSplineC2::C2Continuity(){
 
     // http://www.cse.iitd.ernet.in/~pkalra/csl859/slides/bezier2.PDF
     // C1
-    int i = 0;
+    //int i = 0;
     if(bezierCurves.size() == 1) return;
 
     // C1
@@ -135,7 +135,7 @@ void BezierSplineC2::initEdges(){
 }
 
 void BezierSplineC2::buildCurve(){
-    unsigned int pointsCount = points.size();
+    int pointsCount = points.size();
     if(pointsCount == 0) return;
 
     int currentPointIndex = 0;

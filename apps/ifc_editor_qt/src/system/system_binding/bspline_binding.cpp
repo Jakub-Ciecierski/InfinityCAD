@@ -1,16 +1,16 @@
 #include "bspline_binding.h"
-#include <gm/scene/object_factory.h>
 #include <system/object_manager.h>
+#include <infinity_cad/rendering/scene/object_factory.h>
 
 BSplineBinding::BSplineBinding(Scene* scene, SceneTree* sceneTree) {
     this->scene = scene;
     this->sceneTree = sceneTree;
 }
 
-RenderBody* BSplineBinding::createBSpline(std::string name){
+RenderObject * BSplineBinding::createBSpline(std::string name){
     ObjectManager& objManager = ObjectManager::getInstance();
     ObjectFactory& objectFactory = ObjectFactory::getInstance();
-    RenderBody* t = objectFactory.createBSpline(name);
+    RenderObject * t = objectFactory.createBSpline(name);
 
     this->scene->addRenderObject(t);
     Item* bezierItem = sceneTree->addObject(t, RB_BSPLINE_TYPE);

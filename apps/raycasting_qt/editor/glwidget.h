@@ -10,7 +10,7 @@
 #include <vector>
 
 #include <gm/rendering/renderer.h>
-#include <gm/scene/scene.h>
+#include "infinity_cad"
 #include <rc/ray.h>
 #include <rc/ellipsoid.h>
 

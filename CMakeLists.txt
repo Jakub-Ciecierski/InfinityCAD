@@ -91,7 +91,7 @@ file(GLOB_RECURSE FILES
         ${LIBS_PATH}/googletest/include/*.h
 )
 
-set(SPAM libs/gm/src/gm/rendering/render_bodies/curves/bspline.cpp libs/gm/include/gm/rendering/render_bodies/curves/bspline.h libs/gm/src/gm/rendering/render_bodies/curves/spline.cpp libs/gm/include/gm/rendering/render_bodies/curves/spline.h libs/gm/src/gm/polynomials/bspline_basis.cpp libs/gm/include/gm/polynomials/bspline_basis.h libs/gm/test/src/bspline_tests/bspline_test.cpp libs/gm/src/gm/rendering/render_bodies/curves/bezier_spline.cpp libs/gm/include/gm/rendering/render_bodies/curves/bezier_spline.h)
+set(SPAM libs/infinity_cad/src/infinity_cad/rendering/render_objects/curves/bspline.cpp libs/infinity_cad/include/infinity_cad/rendering/render_objects/curves/bspline.h libs/infinity_cad/src/infinity_cad/rendering/render_objects/curves/spline.cpp libs/infinity_cad/include/infinity_cad/rendering/render_objects/curves/spline.h libs/infinity_cad/src/infinity_cad/geometry/polynomials/bspline_basis.cpp libs/infinity_cad/include/infinity_cad/geometry/polynomials/bspline_basis.h libs/infinity_cad/test/src/bspline_tests/bspline_test.cpp libs/infinity_cad/src/infinity_cad/rendering/render_objects/curves/bezier_spline_c2.cpp libs/infinity_cad/include/infinity_cad/rendering/render_objects/curves/bezier_spline_c2.h libs/infinity_cad/src/infinity_cad/math/math.cpp libs/infinity_cad/include/infinity_cad/math/math.h)
 
 set(CMAKE_PREFIX_PATH $ENV{HOME}/ide/qt/5.5/gcc_64/)
 

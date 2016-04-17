@@ -211,7 +211,7 @@ Item* SceneTree::getItemByTree(QTreeWidgetItem* treeItem){
     return NULL;
 }
 
-Item* SceneTree::addObject(RenderBody* object, const Type& type){
+Item* SceneTree::addObject(RenderObject * object, const Type& type){
     Item* item = new Item(object, type);
 
     allItems.push_back(item);
@@ -274,7 +274,7 @@ std::vector<Item*> SceneTree::getSelectedItems(const Type& type){
     return items;
 }
 
-void SceneTree::activateObject(RenderBody* renderBody){
+void SceneTree::activateObject(RenderObject * renderBody){
     for(unsigned int i = 0; i < allItems.size(); i++){
         Item* item = allItems[i];
         if(item->object == renderBody) {
@@ -336,7 +336,7 @@ void SceneTree::myitemSelectionChanged(){
     for(unsigned int i = 0;i < allItems.size(); i++){
         Item* item = allItems[i];
         if(item == NULL || item->object == NULL) continue;
-        RenderBody* body = item->object;
+        RenderObject * body = item->object;
         const SceneID& id = body->getID();
         objManager.setDeactive(id);
     }

@@ -9,10 +9,10 @@
 
 #include <vector>
 
-#include <gm/rendering/ray_cast.h>
-#include <gm/rendering/renderer.h>
-#include <gm/scene/scene.h>
-#include <gm/rendering/mouse_tracker.h>
+#include <infinity_cad/rendering/visibility/ray_cast.h>
+#include <infinity_cad/rendering/renderer.h>
+#include <infinity_cad/rendering/visibility/mouse_tracker.h>
+
 
 class GLWidget : public QGLWidget
 {

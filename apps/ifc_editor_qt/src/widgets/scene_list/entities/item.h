@@ -2,13 +2,13 @@
 #define ITEM_H
 
 #include <QTreeWidget>
-#include <gm/rendering/render_body.h>
 #include "system/ifc_types.h"
-
 #include <widgets/scene_list/entities/item_id.h>
 
+#include <infinity_cad/rendering/render_object.h>
+
 struct Item{
-    RenderBody* object;
+    RenderObject * object;
     QTreeWidgetItem* treeItem;
     Type type;
 
@@ -23,7 +23,7 @@ struct Item{
     Item* clonedFrom;
 
     Item();
-    Item(RenderBody* object, const Type& type);
+    Item(RenderObject * object, const Type& type);
     virtual ~Item();
 
     void setName(std::string name);

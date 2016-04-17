@@ -6,8 +6,8 @@
 #define MG1_RAY_H
 
 #include <glm/gtc/matrix_transform.hpp>
-#include <gm/rendering/renderer.h>
 #include <rc/ellipsoid.h>
+#include <infinity_cad/rendering/renderer.h>
 
 class Ray {
 private:

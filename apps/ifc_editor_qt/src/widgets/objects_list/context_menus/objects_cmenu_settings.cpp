@@ -3,8 +3,6 @@
 #include "editor_window.h"
 #include "ui_mainwindow.h"
 
-#include <gm/scene/scene.h>
-
 #include "system/object_manager.h"
 
 

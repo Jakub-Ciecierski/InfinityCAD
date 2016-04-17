@@ -1,7 +1,7 @@
 #include "scene_cmenu_handlers.h"
 #include <system/object_manager.h>
-#include <gm/rendering/render_bodies/curves/bezier_curve.h>
-#include <gm/rendering/render_bodies/curves/bspline.h>
+#include <infinity_cad/rendering/render_objects/curves/spline.h>
+#include <infinity_cad/rendering/render_objects/curves/bspline.h>
 
 SceneCMHandler SCENE_MENU_MOVE_CROSS_HANDLER(
         "Move Cross",

@@ -3,8 +3,6 @@
 
 #include "glwidget.h"
 
-#include <gm/scene/scene_id.h>
-#include <gm/scene/scene.h>
 #include "widgets/scene_list/scene_tree.h"
 #include <system/system_binding/bspline_binding.h>
 #include <string>
@@ -20,9 +18,9 @@ private:
     Scene* scene;
     SceneTree* sceneTree;
 
-    RenderBody* addTorus(std::string name);
-    RenderBody* addPoint(std::string name);
-    RenderBody* addBezierCurve(std::string name);
+    RenderObject * addTorus(std::string name);
+    RenderObject * addPoint(std::string name);
+    RenderObject * addBezierCurve(std::string name);
 
     std::string getDefaultName(const Type& type);
 

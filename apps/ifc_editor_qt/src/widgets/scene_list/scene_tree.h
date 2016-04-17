@@ -7,8 +7,6 @@
 #include <context_menus/context_menu.h>
 
 #include <string>
-#include <gm/scene/scene_id.h>
-#include <gm/rendering/render_body.h>
 #include "system/ifc_types.h"
 #include <widgets/scene_list/entities/item.h>
 
@@ -46,7 +44,7 @@ public:
 
     bool objectExists(std::string name);
 
-    Item* addObject(RenderBody* object, const Type& type);
+    Item* addObject(RenderObject * object, const Type& type);
     SceneID deleteObject(Item* name);
     void changeName(Item* srcName, std::string dstName);
 
@@ -57,7 +55,7 @@ public:
 
     std::vector<Item*> getSelectedItems(const Type& type);
 
-    void activateObject(RenderBody* renderBody);
+    void activateObject(RenderObject * renderBody);
     void deactivateAll();
 
     const std::vector<Item*>& getAllItems();

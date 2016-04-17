@@ -1,24 +1,14 @@
 #include <system/object_manager.h>
-
-#include "editor_window.h"
-#include "ui_mainwindow.h"
 #include "system/ifc_types.h"
 
-#include <gm/cameras/camera.h>
-#include <gm/scene/scene_id_factory.h>
-#include <gm/scene/scene_id.h>
-#include <gm/rendering/render_bodies/primitivies/torus.h>
-#include <gm/rendering/render_bodies/primitivies/point.h>
-#include <gm/rendering/render_bodies/curves/bezier_curve.h>
+#include <infinity_cad/rendering/scene/object_factory.h>
+#include <infinity_cad/rendering/color/color_settings.h>
 
-#include <gm/color/color_settings.h>
-#include <gm/scene/object_factory.h>
-
-#include <iostream>
+#include <ui_mainwindow.h>
 
 using namespace std;
 using namespace Ui;
-using namespace ic;
+using namespace ifc;
 
 //--------------------------//
 //  PRIVATE
@@ -35,9 +25,9 @@ ObjectManager::ObjectManager(){
     bSplineBinding = new BSplineBinding(scene, sceneTree);
 }
 
-RenderBody* ObjectManager::addTorus(string name){
+RenderObject * ObjectManager::addTorus(string name){
     ObjectFactory& objectFactory = ObjectFactory::getInstance();
-    RenderBody* t = objectFactory.createTorus(name);
+    RenderObject * t = objectFactory.createTorus(name);
 
     this->scene->addRenderObject(t);
     sceneTree->addObject(t, RB_TORUS_TYPE);
@@ -45,9 +35,9 @@ RenderBody* ObjectManager::addTorus(string name){
     return t;
 }
 
-RenderBody* ObjectManager::addPoint(string name){
+RenderObject * ObjectManager::addPoint(string name){
     ObjectFactory& objectFactory = ObjectFactory::getInstance();
-    RenderBody* p = objectFactory.createPoint(name);
+    RenderObject * p = objectFactory.createPoint(name);
 
     this->scene->addRenderObject(p);
     Item* pointItem = sceneTree->addObject(p, RB_POINT_TYPE);
@@ -66,9 +56,9 @@ RenderBody* ObjectManager::addPoint(string name){
     return p;
 }
 
-RenderBody* ObjectManager::addBezierCurve(string name){
+RenderObject * ObjectManager::addBezierCurve(string name){
     ObjectFactory& objectFactory = ObjectFactory::getInstance();
-    RenderBody* p = objectFactory.createBezier(name);
+    RenderObject * p = objectFactory.createBezier(name);
 
     this->scene->addRenderObject(p);
     Item* bezierItem = sceneTree->addObject(p, RB_BEZIER_TYPE);
@@ -118,7 +108,7 @@ void ObjectManager::addObject(const Type& type, string name){
         return;
     }
 
-    RenderBody* body = NULL;
+    RenderObject * body = NULL;
     if(type == RB_TORUS_TYPE){
         body = addTorus(name);
     }else if(type == RB_POINT_TYPE){
@@ -259,13 +249,13 @@ void ObjectManager::moveCamera(Item * item){
 
 void ObjectManager::setActive(SceneID id){
 
-    RenderBody* body = scene->getRenderBody(id);
+    RenderObject * body = scene->getRenderBody(id);
     if(body != NULL)
         body->setColor(COLOR_OBJECT_ACTIVE);
 }
 
 void ObjectManager::setDeactive(SceneID id){
-    RenderBody* body = scene->getRenderBody(id);
+    RenderObject * body = scene->getRenderBody(id);
     if(body != NULL)
         body->setColor(COLOR_OBJECT_DEFAULT);
 }

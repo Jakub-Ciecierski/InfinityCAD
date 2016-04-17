@@ -113,12 +113,12 @@ FORMS    += mainwindow.ui
 #############################################################################
 
 # Geometry Lib
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../dependencies/lib/gm/release/ -lgm
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../dependencies/lib/gm/debug/ -lgm
-else:unix: LIBS += -L$$PWD/../../dependencies/lib/gm/ -lgm
-INCLUDEPATH += $$PWD/../../dependencies/include/gm
-DEPENDPATH += $$PWD/../../dependencies/include/gm
-LIBS += -Wl,-rpath $$PWD/../../dependencies/lib/gm/
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../dependencies/lib/ifc/release/ -lifc
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../dependencies/lib/ifc/debug/ -lifc
+else:unix: LIBS += -L$$PWD/../../dependencies/lib/ifc/ -lifc
+INCLUDEPATH += $$PWD/../../dependencies/include/ifc
+DEPENDPATH += $$PWD/../../dependencies/include/ifc
+LIBS += -Wl,-rpath $$PWD/../../dependencies/lib/ifc/
 
 # GLM
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../dependencies/lib/glm/release/ -lglm

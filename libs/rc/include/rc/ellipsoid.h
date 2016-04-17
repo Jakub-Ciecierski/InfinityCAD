@@ -6,7 +6,7 @@
 #define MG1_ELLIPSOID_H
 
 #include <glm/gtc/matrix_transform.hpp>
-#include <gm/color/color.h>
+#include <infinity_cad/rendering/color/color.h>
 
 class Ellipsoid {
 private:

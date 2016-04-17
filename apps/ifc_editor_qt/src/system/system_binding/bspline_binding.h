@@ -1,8 +1,8 @@
 #ifndef BSPLINEBINDING_H
 #define BSPLINEBINDING_H
 
-#include <gm/scene/scene.h>
 #include <widgets/scene_list/scene_tree.h>
+#include <infinity_cad/rendering/scene/scene.h>
 
 class BSplineBinding
 {
@@ -12,7 +12,7 @@ private:
 public:
     BSplineBinding(Scene* scene, SceneTree* sceneTree);
 
-    RenderBody* createBSpline(std::string name);
+    RenderObject * createBSpline(std::string name);
 };
 
 #endif // BSPLINEBINDING_H

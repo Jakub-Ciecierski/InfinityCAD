@@ -1,0 +1,1 @@
+Strings library for string functionality

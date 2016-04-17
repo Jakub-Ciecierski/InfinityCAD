@@ -1,7 +1,7 @@
-#include <gm/rendering/render_bodies/curves/bezier_curve.h>
 #include <widgets/scene_list/context_menus/scene_cmenu_bezier.h>
-#include "system/object_manager.h"
 #include <widgets/scene_list/context_menus/scene_cmenu_handlers.h>
+
+#include "system/object_manager.h"
 
 SceneCMenuBezier::SceneCMenuBezier()
 {

@@ -2,23 +2,16 @@
 #include "glwidget.h"
 #include <iostream>
 
-#include <gm/color/color.h>
-#include <gm/color/color_convertor.h>
-#include "gm/rendering/render_body.h"
-
-#include <gm/rendering/render_bodies/primitivies/torus.h>
-#include <gm/rendering/render_bodies/cross.h>
-#include <gm/rendering/render_bodies/primitivies/cube.h>
-#include <gm/projections/perspective_projection.h>
-#include <gm/projections/stereoscopic_projection.h>
-#include <gm/projections/indentity_projection.h>
-#include <gm/cameras/camera_fps.h>
-#include <gm/scene/object_factory.h>
 
 #include <QColorDialog>
 #include <QMessageBox>
 #include <QLineEdit>
 #include <QDesktopWidget>
+#include <infinity_cad/rendering/projections/stereoscopic_projection.h>
+#include <infinity_cad/rendering/scene/object_factory.h>
+#include <infinity_cad/rendering/cameras/camera_fps.h>
+#include <infinity_cad/rendering/color/color_convertor.h>
+#include <widgets/scene_list/scene_tree.h>
 
 #include "ui_mainwindow.h"
 
@@ -237,9 +230,9 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *event){
         Cross* cross = renderer->getScene()->getCross();
 
         mouseTracker->update(event->x(), event->y());
-        RenderBody* closestBody = cross->getClosestObject(*ray,
-                                                          renderer->getWindowWidth(),
-                                                          renderer->getWindowHeight());
+        RenderObject * closestBody = cross->getClosestObject(*ray,
+                                                             renderer->getWindowWidth(),
+                                                             renderer->getWindowHeight());
         SceneTree* sceneTree = EditorWindow::getInstance().getUI()->sceneTree;
 
         if(closestBody == NULL) {
@@ -472,7 +465,7 @@ void GLWidget::rightEyeColorPicker(){
 }
 
 void GLWidget::moveObject(const SceneID& id, glm::vec3& pos){
-    RenderBody* body = scene->getRenderBody(id);
+    RenderObject * body = scene->getRenderBody(id);
 
     body->moveTo(pos);
 }

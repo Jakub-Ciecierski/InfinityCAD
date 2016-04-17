@@ -9,7 +9,7 @@ Item::Item(){
     parent = NULL;
 }
 
-Item::Item(RenderBody* object, const Type& type){
+Item::Item(RenderObject * object, const Type& type){
     this->object = object;
     this->type = type;
 

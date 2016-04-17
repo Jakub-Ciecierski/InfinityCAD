@@ -4,10 +4,10 @@
 
 #include "render_bodies"
 #include "render_bodies"
-#include <gm/projections/perspective_projection.h>
-#include <gm/projections/indentity_projection.h>
-#include <gm/cameras/camera_std.h>
-#include <gm/cameras/camera_fps.h>
+#include "infinity_cad"
+#include "infinity_cad"
+#include "cameras"
+#include "infinity_cad"
 
 #include <QLineEdit>
 

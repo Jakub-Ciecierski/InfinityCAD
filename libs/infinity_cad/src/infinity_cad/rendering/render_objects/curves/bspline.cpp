@@ -6,7 +6,9 @@
 #include <infinity_cad/rendering/render_objects/curves/bspline.h>
 #include <infinity_cad/geometry/polynomials/bspline_basis.h>
 #include <infinity_cad/rendering/scene/object_factory.h>
-
+#include <iostream>
+#include <infinity_cad/settings/settings.h>
+#include <ifc_gpu/splines/bspline_gpu.h>
 
 using namespace glm;
 using namespace std;
@@ -21,6 +23,8 @@ BSpline::BSpline(SceneID id, std::string name) :
 
     setDrawBezierBasis(false);
     setDrawBezierPolygon(false);
+
+    curvePoints = (vec4 *) malloc(MAX_PIXEL_COUNT * sizeof(vec4));
 }
 
 BSpline::~BSpline(){
@@ -28,6 +32,7 @@ BSpline::~BSpline(){
     for(unsigned int i = 0 ;i < points.size();i++){
         points[i]->setShow(true);
     }
+    delete curvePoints;
 }
 
 //-----------------------//
@@ -144,24 +149,14 @@ void BSpline::drawSpline(const glm::mat4 &VP, const Color& color){
 
     float t_max = getKnotMax();
     float t = getKnotMin(degree);
-    //dt /= 5*t_max;
 
-    setSurfaceColor(color);
-    glPointSize(1.0f);
-    glBegin(GL_POINTS);
-    while(t < t_max){
-        vec4 point = computeBSpline(points, knotVector, t, degree);
-        t += dt;
+    int pixelCount = (t_max - t) / dt;
 
-        point = VP * point;
-        point.x /= point.w;
-        point.y /= point.w;
-
-        if(point.w < 0) continue; // clip
-        glVertex2f(point.x, point.y);
+    if(ifc::RUN_CUDA){
+        drawSplineGPU(VP, color, pixelCount, t, dt, degree);
+    }else{
+        drawSplineCPU(VP, color, degree, t, t_max, dt);
     }
-
-    glEnd();
 
     // ---------
 
@@ -182,6 +177,56 @@ void BSpline::drawSpline(const glm::mat4 &VP, const Color& color){
     }
     glEnd();
 
+}
+
+void BSpline::drawSplineCPU(const glm::mat4 &VP, const Color& color,
+                            int degree, float t, float t_max, float dt){
+    setSurfaceColor(color);
+    glPointSize(1.0f);
+    glBegin(GL_POINTS);
+
+    while(t < t_max){
+        vec4 point = computeBSpline(points, knotVector, t, degree);
+        t += dt;
+
+        point = VP * point;
+        point.x /= point.w;
+        point.y /= point.w;
+
+        if(point.w < 0) continue; // clip
+        glVertex2f(point.x, point.y);
+    }
+
+    glEnd();
+}
+void BSpline::drawSplineGPU(const glm::mat4 &VP, const Color& color,
+                            int pixelCount, float t, float dt, int degree){
+    int pointSize = points.size();
+    std::vector<vec3> posPoints(pointSize);
+    for(int i = 0;i < pointSize; i++){
+        posPoints[i] = points[i]->getPosition();
+    }
+
+    if(pixelCount > MAX_PIXEL_COUNT){
+        delete curvePoints;
+        MAX_PIXEL_COUNT = pixelCount;
+        curvePoints = (vec4*) malloc(MAX_PIXEL_COUNT * sizeof(vec4));
+    }
+
+    ifc_gpu::computeBSpline(posPoints.data(), pointSize,
+                            knotVector.data(), knotVector.size(),
+                            curvePoints, pixelCount, t, dt, degree, &VP);
+
+    setSurfaceColor(color);
+    glPointSize(1.0f);
+    glBegin(GL_POINTS);
+
+    for(int i = 0; i < pixelCount; i++){
+        if(curvePoints[i].w < 0) continue; // clip
+        glVertex2f(curvePoints[i].x, curvePoints[i].y);
+    }
+
+    glEnd();
 }
 
 void BSpline::drawPolygon(const glm::mat4 &VP, int SEGMENTS){

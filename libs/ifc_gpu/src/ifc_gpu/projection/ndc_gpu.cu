@@ -50,7 +50,6 @@ void ndc_compute(const vec4* vertices, int count,
 
     if ((err = cudaMemcpy(d_vertices, vertices, verticesMemSize,
                           cudaMemcpyHostToDevice)) != cudaSuccess) C_ERR(err);
-
     if ((err = cudaMemcpy(d_MVP, MVP, mvpMemSize,
                           cudaMemcpyHostToDevice)) != cudaSuccess) C_ERR(err);
 

@@ -34,6 +34,9 @@ private:
     BezierSplineC2 * bezierSpline;
     bool drawBezierBasis;
 
+    int MAX_PIXEL_COUNT = 100000;
+    glm::vec4* curvePoints;
+
     int computeDegree();
 protected:
     virtual void initVertices();
@@ -44,6 +47,13 @@ protected:
     virtual void draw(const glm::mat4 &VP, const Color& color) override;
     void drawBezierSpline(const glm::mat4 &VP, const Color& color);
     void drawSpline(const glm::mat4 &VP, const Color& color);
+
+    void drawSplineCPU(const glm::mat4 &VP, const Color& color,
+                       int degree, float t, float t_max, float dt);
+
+    void drawSplineGPU(const glm::mat4 &VP, const Color& color,
+                       int pixelCount, float t, float dt, int degree);
+
     void drawPolygon(const glm::mat4 &VP, int SEGMENTS = 50);
 
     virtual void buildCurve() override;

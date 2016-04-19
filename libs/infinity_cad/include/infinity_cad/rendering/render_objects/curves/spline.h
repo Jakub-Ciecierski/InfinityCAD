@@ -33,7 +33,6 @@ protected:
     virtual void initEdges() override;
 
     virtual void draw(const glm::mat4 &VP, const Color& color) = 0;
-
     virtual void buildCurve() = 0;
 public:
 

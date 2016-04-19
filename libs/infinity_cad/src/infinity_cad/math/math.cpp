@@ -29,3 +29,23 @@ float ifc::angleToRadians(float angle) {
     float radians = angle * PI_OVER_180;
     return radians;
 }
+
+void ifc::solveTridiagonalSystem(std::vector<float>& belowDiagonal,
+                                 std::vector<float>& mainDiagonal,
+                                 std::vector<float>& aboveDiagonal,
+                                 std::vector<float>& d){
+    int n = mainDiagonal.size();
+
+    aboveDiagonal[0] /= mainDiagonal[0];
+    d[0] /= mainDiagonal[0];
+
+    for(int i = 1; i < n; i++){
+        aboveDiagonal[i] /= mainDiagonal[i] -
+                belowDiagonal[i] * aboveDiagonal[i - 1];
+        d[i] = (d[i] - belowDiagonal[i] * d[i - 1]) /
+                (mainDiagonal[i] - belowDiagonal[i] * aboveDiagonal[i - 1]);
+    }
+    for(int i = n-1; i-- > 0;){
+        d[i] -= aboveDiagonal[i] * d[i + 1];
+    }
+}

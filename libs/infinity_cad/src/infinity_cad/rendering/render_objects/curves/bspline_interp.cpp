@@ -29,11 +29,12 @@ void BSplineInterp::computeChordParameters(){
     int n = points.size();
     parameters.clear();
     parameters.resize(n);
-    float lengthOfPolygon = 0;
+
+    interpolatingPolygonLength = 0;
     for(int i = 1; i < n ; i++){
         float dist = ifc::euclideanDistance(points[i]->getPosition(),
                                             points[i-1]->getPosition());
-        lengthOfPolygon += dist;
+        interpolatingPolygonLength += dist;
     }
     parameters[0] = 0;
     for(int i = 1; i < n -1; i++){
@@ -43,7 +44,7 @@ void BSplineInterp::computeChordParameters(){
                                                 points[k-1]->getPosition());
             sumOfDistances += dist;
         }
-        parameters[i] = sumOfDistances / lengthOfPolygon;
+        parameters[i] = sumOfDistances / interpolatingPolygonLength;
     }
     parameters[n-1] = 1.0f;
 }
@@ -102,7 +103,8 @@ void BSplineInterp::computeControlPoints(){
     aboveDiagonal[n-1] = 0;
 
     controlPoints.clear();
-    controlPoints.resize(n);
+    controlPoints.resize(n+2);
+    //controlPoints.resize(n);
     for(int s = 0; s < DIMENSION; s++){
         vector<float> d(n);
         vector<float> aboveDiagonalTMP(aboveDiagonal);
@@ -116,11 +118,65 @@ void BSplineInterp::computeControlPoints(){
                                     aboveDiagonalTMP, d);
 
         for(int i = 0; i < n; i++){
-            vec3& v = controlPoints[i];
+            vec3& v = controlPoints[i+1];
             v[s] = d[i];
         }
     }
+    controlPoints[0] = points[0]->getPosition();
+    controlPoints[n+1] = points[n-1]->getPosition();
 }
+
+
+void BSplineInterp::computeChordParameters(std::vector<float>& parameters,
+                                           const std::vector<glm::vec3>& points){
+    int n = points.size();
+    parameters.clear();
+    parameters.resize(n);
+    float lengthOfPolygon = 0;
+    for(int i = 1; i < n ; i++){
+        float dist = ifc::euclideanDistance(points[i],
+                                            points[i-1]);
+        lengthOfPolygon += dist;
+    }
+    parameters[0] = 0;
+    for(int i = 1; i < n -1; i++){
+        float sumOfDistances = 0;
+        for(int k = 1; k <= i; k++){
+            float dist = ifc::euclideanDistance(points[k],
+                                                points[k-1]);
+            sumOfDistances += dist;
+        }
+        parameters[i] = sumOfDistances / lengthOfPolygon;
+    }
+    parameters[n-1] = 1.0f;
+}
+
+void BSplineInterp::computeKnotVector(std::vector<float>& knotVector,
+                                      const std::vector<float>& parameters,
+                                      const std::vector<glm::vec3>& points){
+    int n = points.size();
+    int knotVectorCount = n + DEGREE + 1;
+
+    knotVector.clear();
+    knotVector.resize(knotVectorCount);
+    for(int i = 0; i <= DEGREE; i++){
+        knotVector[i] = 0;
+    }
+    int j;
+    for(j = 1; j < n-DEGREE; j++){
+        float sum = 0;
+        for(int i = j; i < j + DEGREE; i++){
+            sum += parameters[i];
+        }
+        knotVector[j+ DEGREE] = sum / DEGREE;
+    }
+    float l = 1.0f;
+    for(int i = j+DEGREE; i < knotVectorCount; i++){
+        knotVector[i] = l;
+    }
+}
+
+
 void BSplineInterp::drawSplineCPU(const glm::mat4 &VP, const Color& color,
                             int degree, float t, float t_max, float dt){
     setSurfaceColor(color);
@@ -128,7 +184,8 @@ void BSplineInterp::drawSplineCPU(const glm::mat4 &VP, const Color& color,
     glBegin(GL_POINTS);
 
     while(t < t_max){
-        vec4 point = computeBSpline(controlPoints, knotVector, t, degree);
+        vec4 point = computeBSpline(controlPoints,
+                                    knotVectorControl, t, degree);
         t += dt;
 
         point = VP * point;
@@ -152,7 +209,7 @@ void BSplineInterp::drawSplineGPU(const glm::mat4 &VP, const Color& color,
     }
 
     ifc_gpu::computeBSpline(controlPoints.data(), pointSize,
-                            knotVector.data(), knotVector.size(),
+                            knotVectorControl.data(), knotVectorControl.size(),
                             curvePoints, pixelCount, t, dt, degree, &VP);
 
     setSurfaceColor(color);
@@ -182,7 +239,9 @@ void BSplineInterp::draw(const glm::mat4 &VP, const Color& color) {
     //t = knotVector[DEGREE+1];
     //t_max = knotVector[knotVector.size() - DEGREE - 1];
 
-    float dt = 0.00001;
+    float sceenLength = 4*(screenWidth + screenHeight);
+    float dt = 1/(sceenLength * interpolatingPolygonLength);
+
     int pixelCount = (t_max - t) / dt;
 
     if(ifc::RUN_CUDA){
@@ -196,7 +255,11 @@ void BSplineInterp::draw(const glm::mat4 &VP, const Color& color) {
 void BSplineInterp::buildCurve() {
     computeChordParameters();
     computeKnotVector();
+
     computeControlPoints();
+
+    computeChordParameters(parametersControl, controlPoints);
+    computeKnotVector(knotVectorControl, parametersControl, controlPoints);
 }
 
 

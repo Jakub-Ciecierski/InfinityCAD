@@ -166,8 +166,7 @@ void ObjectManager::removeChildItem(Item* objectItem){
         return;
     }
 
-    if(bezierItem->type == RB_BEZIER_TYPE ||
-            bezierItem->type == RB_BSPLINE_TYPE ){
+    if(canAddChildren(bezierItem->type)){
         Spline* spline = static_cast<Spline*>(bezierItem->object);
         Point* point = static_cast<Point*>(objectItem->object);
 
@@ -183,8 +182,7 @@ void ObjectManager::moveUpItem(Item* objectItem){
         return;
     }
 
-    if(bezierItem->type == RB_BEZIER_TYPE ||
-            bezierItem->type == RB_BSPLINE_TYPE ){
+    if(canAddChildren(bezierItem->type)){
         Spline* spline = static_cast<Spline*>(bezierItem->object);
         Point* point = static_cast<Point*>(objectItem->object);
 
@@ -199,8 +197,7 @@ void ObjectManager::moveDownItem(Item* objectItem){
             objectItem->type != RB_POINT_CLONE_TYPE){
         return;
     }
-    if(bezierItem->type == RB_BEZIER_TYPE ||
-            bezierItem->type == RB_BSPLINE_TYPE ){
+    if(canAddChildren(bezierItem->type)){
         Spline* spline = static_cast<Spline*>(bezierItem->object);
         Point* point = static_cast<Point*>(objectItem->object);
 

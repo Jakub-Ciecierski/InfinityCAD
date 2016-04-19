@@ -3,6 +3,7 @@
 #include <infinity_cad/geometry/polynomials/bspline_basis.h>
 #include <infinity_cad/settings/settings.h>
 #include <ifc_gpu/splines/bspline_gpu.h>
+#include <iostream>
 
 using namespace std;
 using namespace glm;
@@ -44,7 +45,7 @@ void BSplineInterp::computeChordParameters(){
         }
         parameters[i] = sumOfDistances / lengthOfPolygon;
     }
-    parameters[n-1] = 1;
+    parameters[n-1] = 1.0f;
 }
 
 void BSplineInterp::computeKnotVector(){
@@ -53,7 +54,6 @@ void BSplineInterp::computeKnotVector(){
 
     knotVector.clear();
     knotVector.resize(knotVectorCount);
-
     for(int i = 0; i <= DEGREE; i++){
         knotVector[i] = 0;
     }
@@ -65,8 +65,9 @@ void BSplineInterp::computeKnotVector(){
         }
         knotVector[j+ DEGREE] = sum / DEGREE;
     }
+    float l = 1.0f;
     for(int i = j+DEGREE; i < knotVectorCount; i++){
-        knotVector[i] = 1;
+        knotVector[i] = l;
     }
 }
 
@@ -76,12 +77,22 @@ void BSplineInterp::computeControlPoints(){
     vector<float> mainDiagonal(n);
     vector<float> aboveDiagonal(n);
 
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j < n; j++){
+            float value = bsplineRecurive(parameters[i], DEGREE, j,
+                                          knotVector);
+            std::cout << value << ", ";
+        }
+        std::cout << std::endl;
+    }
+    std::cout << std::endl << std::endl;
+
     belowDiagonal[0] = 0;
     for(int i = 1; i < n; i++){
         belowDiagonal[i] = bsplineRecurive(parameters[i], DEGREE, i-1,
                                            knotVector);
     }
-    for(int i = 0; i < n ;i++){
+    for(int i = 0; i < n; i++){
         mainDiagonal[i] = bsplineRecurive(parameters[i], DEGREE, i, knotVector);
     }
     for(int i = 0; i < n-1; i++){
@@ -167,7 +178,11 @@ void BSplineInterp::draw(const glm::mat4 &VP, const Color& color) {
 
     float t_max = 1.0f;
     float t = 0.0f;
-    float dt = 0.001;
+
+    //t = knotVector[DEGREE+1];
+    //t_max = knotVector[knotVector.size() - DEGREE - 1];
+
+    float dt = 0.00001;
     int pixelCount = (t_max - t) / dt;
 
     if(ifc::RUN_CUDA){

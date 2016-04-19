@@ -41,6 +41,10 @@ vec4 computeBSpline(const vector<ifc::Point*>& deboorPoints,
 
 float bsplineRecurive(float t, int n, int i,
                       const vector<float>& knotVector){
+    if(t == knotVector[0] && i == 0) return 1.0f;
+    if(t == knotVector[knotVector.size()-1]
+        && i == knotVector.size() - n - 2) return 1.0f;
+
     if (n == 0){
         if(t >= knotVector[i] && t < knotVector[i+1])
             return 1;
@@ -50,14 +54,14 @@ float bsplineRecurive(float t, int n, int i,
     float leftRecursion = (t - knotVector[i]);
     float leftDenominator = (knotVector[i+n] - knotVector[i]);
     if(leftRecursion == 0 || leftDenominator == 0)
-        leftRecursion = 1;
+        leftRecursion = 0;
     else
         leftRecursion /= leftDenominator;
 
     float rightRecursion = knotVector[i+1+n] - t;
     float rightDenominator = (knotVector[i+1+n] - knotVector[i+1]);
     if(rightRecursion == 0 || rightDenominator == 0)
-        rightRecursion = 1;
+        rightRecursion = 0;
     else
         rightRecursion /= rightDenominator;
 

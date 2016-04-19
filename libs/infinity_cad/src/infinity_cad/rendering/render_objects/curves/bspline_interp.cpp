@@ -20,6 +20,8 @@ BSplineInterp::~BSplineInterp(){
 
 void BSplineInterp::computeChordParameters(){
     int n = points.size();
+    parameters.clear();
+    parameters.resize(n);
     float lengthOfPolygon = 0;
     for(int i = 1; i < n ; i++){
         float dist = ifc::euclideanDistance(points[i]->getPosition(),
@@ -36,10 +38,30 @@ void BSplineInterp::computeChordParameters(){
         }
         parameters[i] = sumOfDistances / lengthOfPolygon;
     }
+    parameters[n-1] = 1;
 }
 
 void BSplineInterp::computeKnotVector(){
+    int n = points.size();
+    int knotVectorCount = n + DEGREE + 1;
 
+    knotVector.clear();
+    knotVector.resize(knotVectorCount);
+
+    for(int i = 0; i <= DEGREE; i++){
+        knotVector[i] = 0;
+    }
+    int j;
+    for(j = 1; j < n-DEGREE; j++){
+        float sum = 0;
+        for(int i = j; i < j + DEGREE; i++){
+            sum += parameters[i];
+        }
+        knotVector[j+ DEGREE] = sum / DEGREE;
+    }
+    for(int i = j+DEGREE; i < knotVectorCount; i++){
+        knotVector[i] = 1;
+    }
 }
 
 void BSplineInterp::computeControlPoints(){

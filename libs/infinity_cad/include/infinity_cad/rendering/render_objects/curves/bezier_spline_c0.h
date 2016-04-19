@@ -15,8 +15,6 @@
 #include <string>
 #include <glm/gtc/matrix_transform.hpp>
 
-
-
 /**
  * Top Point has index 0
  * The last index is Bottom.

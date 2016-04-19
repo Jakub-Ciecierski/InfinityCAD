@@ -17,7 +17,11 @@
  */
 class BSplineInterp : public Spline{
 private:
+    int MAX_PIXEL_COUNT = 10000;
+    glm::vec4* curvePoints;
+
     int DEGREE = 3;
+    int DIMENSION = 3;
 
     std::vector<float> parameters;
     std::vector<float> knotVector;
@@ -26,6 +30,11 @@ private:
     void computeChordParameters();
     void computeKnotVector();
     void computeControlPoints();
+
+    void drawSplineGPU(const glm::mat4 &VP, const Color& color,
+                       int pixelCount, float t, float dt, int degree);
+    void drawSplineCPU(const glm::mat4 &VP, const Color& color,
+                       int degree, float t, float t_max, float dt);
 
 protected:
 

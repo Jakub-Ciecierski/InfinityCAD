@@ -10,6 +10,10 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <vector>
 
+glm::vec4 computeBSpline(const std::vector<glm::vec3>& deboorPoints,
+                         const std::vector<float>& knotVector,
+                         float t, int n);
+
 glm::vec4 computeBSpline(const std::vector<ifc::Point*>& deboorPoints,
                          const std::vector<float>& knotVector,
                          float t, int n);

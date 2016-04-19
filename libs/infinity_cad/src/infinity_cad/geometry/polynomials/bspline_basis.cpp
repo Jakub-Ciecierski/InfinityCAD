@@ -7,6 +7,22 @@
 using namespace glm;
 using namespace std;
 
+vec4 computeBSpline(const vector<vec3>& deboorPoints,
+                    const vector<float>& knotVector,
+                    float t, int n){
+    float x,y,z;
+    x = y = z = 0;
+    for(unsigned int i = 0; i < deboorPoints.size(); i++){
+        float bsplineBasisValue = bsplineRecurive(t, n, i, knotVector);
+
+        const vec3& pos = deboorPoints[i];
+        x += pos.x * bsplineBasisValue;
+        y += pos.y * bsplineBasisValue;
+        z += pos.z * bsplineBasisValue;
+    }
+    return vec4(x,y,z,1);
+}
+
 vec4 computeBSpline(const vector<ifc::Point*>& deboorPoints,
                     const vector<float>& knotVector,
                     float t, int n){

@@ -8,6 +8,7 @@ const string RB_TORUS_NAME = "Torus";
 const string RB_POINT_NAME = "Point";
 const string RB_BEZIER_NAME = "Bezier Curve";
 const string RB_BSPLINE_NAME = "B-Spline";
+const string RB_BSPLINE_INTERPOLATING_NAME = "B-Spline Interpolating";
 const string RB_POINT_BEZIER_NAME = "Point Bezier";
 const string RB_POINT_CLONE_NAME = "Point Clone";
 
@@ -19,6 +20,7 @@ const Type RB_TORUS_TYPE(RB_TORUS_NAME);
 const Type RB_POINT_TYPE(RB_POINT_NAME);
 const Type RB_BEZIER_TYPE(RB_BEZIER_NAME);
 const Type RB_BSPLINE_TYPE(RB_BSPLINE_NAME);
+const Type RB_BSPLINE_INTERPOLATING_TYPE(RB_BSPLINE_INTERPOLATING_NAME);
 const Type RB_POINT_BEZIER_TYPE(RB_POINT_BEZIER_NAME);
 const Type RB_POINT_CLONE_TYPE(RB_POINT_CLONE_NAME);
 
@@ -36,6 +38,8 @@ Type typeFromString(std::string typeStr){
         return RB_BEZIER_TYPE;
     if(typeStr == RB_BSPLINE_NAME)
         return RB_BSPLINE_TYPE;
+    if(typeStr == RB_BSPLINE_INTERPOLATING_NAME)
+        return RB_BSPLINE_INTERPOLATING_TYPE;
 
     if(typeStr == RB_POINT_CLONE_NAME)
         return RB_POINT_CLONE_TYPE;
@@ -46,4 +50,10 @@ Type typeFromString(std::string typeStr){
         return OBJ_CAMERA_TYPE;
 
     throw new std::invalid_argument("No such Type: " + typeStr);
+}
+
+bool canAddChildren(const Type& type){
+    return  (type == RB_BEZIER_TYPE ||
+             type == RB_BSPLINE_TYPE ||
+             type == RB_BSPLINE_INTERPOLATING_TYPE);
 }

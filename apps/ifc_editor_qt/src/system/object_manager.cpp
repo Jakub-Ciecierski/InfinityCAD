@@ -23,6 +23,7 @@ ObjectManager::ObjectManager(){
     this->sceneTree = ui->sceneTree;
 
     bSplineBinding = new BSplineBinding(scene, sceneTree);
+    bSplineInterpBinding = new BSplineInterpBinding(scene, sceneTree);
 }
 
 RenderObject * ObjectManager::addTorus(string name){
@@ -50,6 +51,12 @@ RenderObject * ObjectManager::addPoint(string name){
     }
 
     selectedBezierItems = sceneTree->getSelectedItems(RB_BSPLINE_TYPE);
+    for(unsigned int i = 0; i < selectedBezierItems.size(); i++){
+        addChildItem(selectedBezierItems[i], pointItem);
+    }
+
+    selectedBezierItems =
+            sceneTree->getSelectedItems(RB_BSPLINE_INTERPOLATING_TYPE);
     for(unsigned int i = 0; i < selectedBezierItems.size(); i++){
         addChildItem(selectedBezierItems[i], pointItem);
     }
@@ -86,6 +93,7 @@ string ObjectManager::getDefaultName(const Type& type){
 
 ObjectManager::~ObjectManager(){
     delete bSplineBinding;
+    delete bSplineInterpBinding;
 }
 
 ObjectManager& ObjectManager::getInstance(){
@@ -117,8 +125,9 @@ void ObjectManager::addObject(const Type& type, string name){
         addBezierCurve(name);
     }else if(type == RB_BSPLINE_TYPE){
         bSplineBinding->createBSpline(name);
+    }else if(type == RB_BSPLINE_INTERPOLATING_TYPE){
+        bSplineInterpBinding->createBSplineInterp(name);
     }
-
     if(body != NULL){
         body->moveTo(scene->getCross());
     }
@@ -138,8 +147,7 @@ void ObjectManager::addChildItem(Item* parentItem,
             return;
     }
 
-    if(parentItem->type == RB_BEZIER_TYPE ||
-            parentItem->type == RB_BSPLINE_TYPE ){
+    if(canAddChildren(parentItem->type)){
         Spline* spline = static_cast<Spline*>(parentItem->object);
         Point* point = static_cast<Point*>(childItem->object);
 
@@ -296,4 +304,32 @@ void ObjectManager::TEST_PERFORMANCE(){
     for(int i = 0; i < torusCount; i++){
         addObject(RB_TORUS_TYPE, "test" + std::to_string(i));
     }
+}
+
+void ObjectManager::TEST_BSPLINE_INTERP(){
+    addObject(RB_POINT_TYPE, "test1");
+    addObject(RB_POINT_TYPE, "test2");
+    addObject(RB_POINT_TYPE, "test3");
+    addObject(RB_POINT_TYPE, "test4");
+    addObject(RB_POINT_TYPE, "test5");
+
+    addObject(RB_BSPLINE_INTERPOLATING_TYPE, "test6");
+
+    const std::vector<Item*>& allItems = sceneTree->getAllItems();
+    Item* spline;
+    for(unsigned int i = 0; i < allItems.size(); i++){
+        Item* item = allItems[i];
+        if(item->type == RB_BSPLINE_INTERPOLATING_TYPE)
+            spline = item;
+    }
+
+    for(unsigned int i = 0; i < allItems.size(); i++){
+        Item* item = allItems[i];
+        if(item->type == RB_POINT_TYPE){
+            item->object->moveTo((float)i/5, (float)i/5 , 0);
+            addChildItem(spline, item);
+        }
+
+    }
+
 }

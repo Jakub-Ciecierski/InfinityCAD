@@ -16,6 +16,7 @@
 #include <infinity_cad/rendering/render_objects/curves/bezier_spline_c0.h>
 #include <infinity_cad/rendering/render_object.h>
 #include <infinity_cad/rendering/projections/projection.h>
+#include <infinity_cad/rendering/render_objects/curves/bspline_interp.h>
 #include "infinity_cad/rendering/scene/scene_id_factory.h"
 
 
@@ -36,6 +37,8 @@ public:
     ~ObjectFactory();
 
     static ObjectFactory& getInstance();
+
+    Camera* createCameraFPS(std::string name, Projection* projection);
 
     ifc::Point* createPoint(std::string name);
 
@@ -66,8 +69,7 @@ public:
     
     BSpline* createBSpline(std::string name);
 
-    Camera* createCameraFPS(std::string name,
-                            Projection* projection);
+    BSplineInterp* createBSplineInterp(std::string name);
 
 };
 

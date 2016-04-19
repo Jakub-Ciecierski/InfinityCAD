@@ -5,6 +5,7 @@
 
 #include "widgets/scene_list/scene_tree.h"
 #include <system/system_binding/bspline_binding.h>
+#include <system/system_binding/bspline_interp_binding.h>
 #include <string>
 
 class ObjectManager
@@ -13,6 +14,7 @@ private:
     ObjectManager();
 
     BSplineBinding* bSplineBinding;
+    BSplineInterpBinding* bSplineInterpBinding;
 
     GLWidget* glWidget;
     Scene* scene;
@@ -48,6 +50,7 @@ public:
 
     void TEST_BSPLINE();
     void TEST_PERFORMANCE();
+    void TEST_BSPLINE_INTERP();
 };
 
 #endif // OBJECTMANAGER_H

@@ -48,6 +48,11 @@ void ObjectsTreeFactory::setUpRenderableObjectsRoot(){
     itm = new QTreeWidgetItem();
     itm->setText(0, QString::fromStdString(RB_BSPLINE_NAME));
     renderableObjectsRoot->addChild(itm);
+
+    itm = new QTreeWidgetItem();
+    itm->setText(0, QString::fromStdString(RB_BSPLINE_INTERPOLATING_NAME));
+    renderableObjectsRoot->addChild(itm);
+
 }
 
 void ObjectsTreeFactory::create(){

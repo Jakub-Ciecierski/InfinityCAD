@@ -37,7 +37,7 @@ void BSplineInterp::computeChordParameters(){
     parameters[0] = 0;
     for(int i = 1; i < n -1; i++){
         float sumOfDistances = 0;
-        for(int k = 1; k < i; k++){
+        for(int k = 1; k <= i; k++){
             float dist = ifc::euclideanDistance(points[k]->getPosition(),
                                                 points[k-1]->getPosition());
             sumOfDistances += dist;
@@ -161,9 +161,9 @@ void BSplineInterp::drawSplineGPU(const glm::mat4 &VP, const Color& color,
 //-----------------------//
 
 void BSplineInterp::draw(const glm::mat4 &VP, const Color& color) {
-    buildCurve();
+    if(points.size() < 2) return;
 
-    if(controlPoints.size() < 4) return;
+    buildCurve();
 
     float t_max = 1.0f;
     float t = 0.0f;

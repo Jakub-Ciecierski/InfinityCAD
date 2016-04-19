@@ -45,6 +45,7 @@ void SceneTree::setupRootItems(){
     topRootItems.push_back(new RootItem(RB_POINT_TYPE, "Points"));
     topRootItems.push_back(new RootItem(RB_BEZIER_TYPE, "Bezier Curves"));
     topRootItems.push_back(new RootItem(RB_BSPLINE_TYPE, "B-Splines"));
+    topRootItems.push_back(new RootItem(RB_BSPLINE_INTERPOLATING_TYPE, "B-Splines Interpolating"));
 }
 
 void SceneTree::setupContextMenu(){
@@ -144,8 +145,7 @@ void SceneTree::dropEvent(QDropEvent * event){
     Item* destItem = getItemByTree(destinationTreeItem);
 
     // Points to Spline
-    if(destItem != NULL && (destItem->type == RB_BEZIER_TYPE ||
-            destItem->type == RB_BSPLINE_TYPE)) {
+    if(destItem != NULL && canAddChildren(destItem->type)) {
         ObjectManager& objManager = ObjectManager::getInstance();
         QList<QTreeWidgetItem *> selectedPoints = filterSelectedItems(RB_POINT_TYPE);
 

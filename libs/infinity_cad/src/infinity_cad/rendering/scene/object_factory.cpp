@@ -33,7 +33,14 @@ ObjectFactory& ObjectFactory::getInstance(){
     return factory;
 }
 
+Camera* ObjectFactory::createCameraFPS(std::string name,
+                                       Projection* projection){
+    SceneID id = sceneIDFactory.createNextAvailableID();
 
+    Camera* camera = new CameraFPS(id, name, projection);
+
+    return camera;
+}
 
 Point* ObjectFactory::createPoint(std::string name) {
     SceneID id = sceneIDFactory.createNextAvailableID();
@@ -138,11 +145,10 @@ BSpline* ObjectFactory::createBSpline(std::string name){
     return bSpline;
 }
 
-Camera* ObjectFactory::createCameraFPS(std::string name,
-                                       Projection* projection){
+BSplineInterp* ObjectFactory::createBSplineInterp(std::string name){
     SceneID id = sceneIDFactory.createNextAvailableID();
 
-    Camera* camera = new CameraFPS(id, name, projection);
+    BSplineInterp* bSpline = new BSplineInterp(id, name);
 
-    return camera;
+    return bSpline;
 }

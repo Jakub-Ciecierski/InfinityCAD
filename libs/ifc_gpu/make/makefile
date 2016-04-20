@@ -185,13 +185,13 @@ DOC = ${PROJECT_ROOT}/${STRUCT_DOC}
 #---------------- LIBRARIES -------------------#
 
 # Paths and names of libraries to link with
-LIBS += -lpthread -L /usr/local/cuda-7.0/lib64 -lcudart -lcuda
+LIBS += -lpthread
 
 
 #----------------- INCLUDES -------------------#
 
 # Paths to all Includes
-INCLUDES += -I /usr/local/cuda-7.0/include
+INCLUDES += -I /usr/local/cuda-7.0/include -I /opt/cuda/include
 
 #------------------- FLAGS --------------------#
 

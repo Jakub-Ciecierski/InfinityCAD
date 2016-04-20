@@ -105,7 +105,7 @@ $(shell find ${DEPENDENCIES}/lib/ \
 # RULES
 #--------------------------------------------
 
-${MAKE_ALL}: ${MAKE_LIBS} ${MAKE_APPS}
+${MAKE_ALL}: ${MAKE_LIBS} #${MAKE_APPS}
 
 ${MAKE_APPS}: ${APPS_MODULES}
 

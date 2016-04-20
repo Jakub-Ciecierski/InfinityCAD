@@ -16,6 +16,7 @@ done
 
 # Run externals
 for (( p=0; p<${#MAKE_EXTERNAL[@]}; p++ )) do
+    echo ${MAKE_EXTERNAL[$p]}
     make ${MAKE_EXTERNAL_RULE[$p]} -C ${MAKE_EXTERNAL[$p]} \
     INSTALL_ROOT_PATH=${INSTALL_ROOT_PATH} >/dev/null
     ERROR_CODE=$?

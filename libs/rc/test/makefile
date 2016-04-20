@@ -55,7 +55,7 @@ MAKE_EXTERNAL = '$(GTEST_ROOT)/make/'
 
 # Paths and names of libraries to link with
 LIBS += $(GTEST_ROOT)/make/gtest_main.a -lpthread -lGL -lifc -lifcgpu \
--L /usr/local/cuda-7.0/lib64 -lcudart -lcuda -lcudadevrt
+-L /opt/cuda/lib64/ -L /usr/local/cuda-7.0/lib64 -lcudart -lcuda -lcudadevrt
 
 #----------------- INCLUDES -------------------#
 
@@ -112,7 +112,7 @@ INCLUDES += -I ${INC} -I ../${INC} \
 			${EXTERNAL_LIBS_INCLUDE_MODULES}
 
 CC = g++
-NVCC = nvcc 
+NVCC = nvcc
 
 L_FLAGS += ${LIBS}
 C_FLAGS += ${INCLUDES} -MMD
@@ -125,7 +125,7 @@ NVCC_FLAGS +=
 CPP_SOURCES += $(shell find ${SRC} -name *${CPP_EXT} 2>/dev/null)
 CUDA_SOURCES = $(shell find ${SRC} -name *${CUDA_EXT} 2>/dev/null)
 
-# List of all subdirectories in source directory 
+# List of all subdirectories in source directory
 MODULES += $(shell find ${SRC} -type d 2>/dev/null)
 
 # All objects to be compiled
@@ -211,7 +211,7 @@ $(MAKE_EXTERNAL):
 init:
 	@mkdir -p ${OBJ} ${BIN} ${SRC} ${LIB} ${INC} ${TST}
 
-clean: 
+clean:
 	@$(RM) *.o *~ ${OBJ}/*.o ${OBJ}/*.d ${OBJ}/*~ ${BIN}/*
 
 
@@ -228,9 +228,9 @@ info_prefix:
 	@echo
 	@echo ${INFO_SEPARATOR}
 	@echo ${INFO_SEPARATOR}
-	@echo 
+	@echo
 	@echo ${INFO_FILLER}"MAKING:" ${APP_NAME}
-	@echo 
+	@echo
 	@echo
 
 info_suffix:
@@ -250,7 +250,7 @@ info_suffix:
 ######################################################################
 
 #--------------- DEPENDENCY GRAPH -------------#
-	
+
 # Automatic dependency graph generation
 # Must be inserted at the end of the makefile (TODO verify)
 -include $(OBJECTS:.o=.d)

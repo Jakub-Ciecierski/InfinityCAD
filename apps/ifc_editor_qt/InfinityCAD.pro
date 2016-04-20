@@ -114,6 +114,10 @@ FORMS    += mainwindow.ui
 
 #############################################################################
 
+# CUDA
+LIBS += -L /opt/cuda/lib64 -lcuda -lcudart
+#LIBS += -Wl,-rpath /opt/cuda/lib64
+
 # InfinityCAD
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../dependencies/lib/ifc/release/ -lifc
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../dependencies/lib/ifc/debug/ -lifc

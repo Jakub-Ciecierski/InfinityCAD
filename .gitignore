@@ -54,3 +54,5 @@ apps/editor_qt/editor/editor.pro.user
 *.pro.*
 
 apps/ifc_editor_qt/Makefile
+apps/raycasting_qt/build-editor-Desktop-Debug/
+apps/build-InfinityCAD-Desktop-Debug/

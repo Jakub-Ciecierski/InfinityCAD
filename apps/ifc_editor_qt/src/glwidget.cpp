@@ -111,9 +111,9 @@ QColor GLWidget::GMColorToQColor(const Color& c){
     return qColor;
 }
 
-//-----------------------------------------------------------//
+//------------------------------//
 //  KEY EVENTS
-//-----------------------------------------------------------//
+//------------------------------//
 
 void GLWidget::keyPressEvent(QKeyEvent *event){
 

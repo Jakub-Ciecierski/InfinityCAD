@@ -71,6 +71,63 @@ void BSplineInterp::computeKnotVector(){
         knotVector[i] = l;
     }
 }
+/*
+void BSplineInterp::computeControlPoints(){
+    int n = points.size();
+    vector<float> belowDiagonal(n);
+    vector<float> mainDiagonal(n);
+    vector<float> aboveDiagonal(n);
+
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j < n; j++){
+            float value = bsplineRecurive(parameters[i], DEGREE, j,
+                                          knotVector);
+            std::string str = "x";
+            if(value == 0) str = "0";
+            std::cout << str << ", ";
+        }
+        std::cout << std::endl;
+    }
+    std::cout << std::endl << std::endl;
+
+    belowDiagonal[0] = 0;
+    for(int i = 1; i < n; i++){
+        belowDiagonal[i] = bsplineRecurive(parameters[i], DEGREE, i-1,
+                                           knotVector);
+    }
+    for(int i = 0; i < n; i++){
+        mainDiagonal[i] = bsplineRecurive(parameters[i], DEGREE, i, knotVector);
+    }
+    for(int i = 0; i < n-1; i++){
+        aboveDiagonal[i] = bsplineRecurive(parameters[i], DEGREE, i+1,
+                                           knotVector);
+    }
+    aboveDiagonal[n-1] = 0;
+
+    controlPoints.clear();
+    controlPoints.resize(n+2);
+    //controlPoints.resize(n);
+    for(int s = 0; s < DIMENSION; s++){
+        vector<float> d(n);
+        vector<float> aboveDiagonalTMP(aboveDiagonal);
+
+        for(int i = 0; i < n; i++){
+            const vec3& pos = points[i]->getPosition();
+            d[i] = pos[s];
+        }
+
+        ifc::solveTridiagonalSystem(belowDiagonal, mainDiagonal,
+                                    aboveDiagonalTMP, d);
+
+        for(int i = 0; i < n; i++){
+            vec3& v = controlPoints[i+1];
+            v[s] = d[i];
+        }
+    }
+    controlPoints[0] = points[0]->getPosition();
+    controlPoints[n+1] = points[n-1]->getPosition();
+}
+*/
 
 void BSplineInterp::computeControlPoints(){
     int n = points.size();
@@ -82,6 +139,9 @@ void BSplineInterp::computeControlPoints(){
         for(int j = 0; j < n; j++){
             float value = bsplineRecurive(parameters[i], DEGREE, j,
                                           knotVector);
+            std::string str = "x";
+            if(value == 0) str = "0";
+            //std::cout << str << ", ";
             std::cout << value << ", ";
         }
         std::cout << std::endl;
@@ -125,7 +185,6 @@ void BSplineInterp::computeControlPoints(){
     controlPoints[0] = points[0]->getPosition();
     controlPoints[n+1] = points[n-1]->getPosition();
 }
-
 
 void BSplineInterp::computeChordParameters(std::vector<float>& parameters,
                                            const std::vector<glm::vec3>& points){

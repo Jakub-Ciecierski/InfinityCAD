@@ -47,6 +47,7 @@ private:
 
     Color QColorToGMColor(const QColor& qc);
     QColor GMColorToQColor(const Color& c);
+
 protected:
     void keyPressEvent(QKeyEvent *event);
     void keyReleaseEvent(QKeyEvent *event);

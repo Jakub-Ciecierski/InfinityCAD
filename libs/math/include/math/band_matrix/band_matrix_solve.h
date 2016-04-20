@@ -11,12 +11,33 @@
  */
 
 #include <math.h>
+#include <iostream>
 
 #define SWAP(a,b) {dum=(a);(a)=(b);(b)=dum;}
 #define TINY 1.0e-20
 
 inline int MAX(int i, int j) { return (i>j ? i : j);}
 inline int MIN(int i, int j) { return (i<j ? i : j);}
+
+
+void printVec(float* a, int n){
+    for(int i = 1; i < n+1; i++){
+        std::cout << a[i] << ", ";
+    }
+    std::cout << std::endl << std::endl;
+}
+
+void printMat(float** a, int n, int m){
+    for(int i = 1; i < n+1; i++){
+        for(int j = 1; j < m+1; j++){
+            std::cout << a[i][j] << ", ";
+        }
+        std::cout << std::endl;
+    }
+    std::cout << std::endl << std::endl;
+}
+
+/*
 
 /*
 Matrix multiply b = A · x, where A is band diagonal with m1 rows below the diagonal and m2

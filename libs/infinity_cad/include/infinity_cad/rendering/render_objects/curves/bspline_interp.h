@@ -14,6 +14,9 @@
  * but the interpolating points.
  * Control points are computed by System of Linear equations
  * using Thomas Algorithm.
+ *
+ * Sources:
+ * http://www.cs.mtu.edu/~shene/COURSES/cs3621/NOTES/INT-APP/SURF-INT-global.html
  */
 class BSplineInterp : public Spline{
 private:

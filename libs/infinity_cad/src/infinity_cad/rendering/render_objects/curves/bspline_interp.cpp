@@ -50,7 +50,7 @@ void BSplineInterp::computeChordParameters(){
     parameters[n-1] = 1.0f;
 }
 
-void BSplineInterp::computeKnotVector(){
+void BSplineInterp::computeKnotVector(int DEGREE){
     int n = points.size();
     int knotVectorCount = n + DEGREE + 1;
 
@@ -72,155 +72,17 @@ void BSplineInterp::computeKnotVector(){
         knotVector[i] = l;
     }
 }
-/*
-void BSplineInterp::computeControlPoints(){
-    int n = points.size();
-    vector<float> belowDiagonal(n);
-    vector<float> mainDiagonal(n);
-    vector<float> aboveDiagonal(n);
 
-    for(int i = 0; i < n; i++){
-        for(int j = 0; j < n; j++){
-            float value = bsplineRecurive(parameters[i], DEGREE, j,
-                                          knotVector);
-            std::string str = "x";
-            if(value == 0) str = "0";
-            std::cout << str << ", ";
-        }
-        std::cout << std::endl;
+void BSplineInterp::computeControlPoints(int degree){
+    if(degree == 3){
+        computeControlPointsDeg3(degree);
     }
-    std::cout << std::endl << std::endl;
-
-    belowDiagonal[0] = 0;
-    for(int i = 1; i < n; i++){
-        belowDiagonal[i] = bsplineRecurive(parameters[i], DEGREE, i-1,
-                                           knotVector);
+    if(degree == 2 || degree == 1){
+        computeControlPointsDeg12(degree);
     }
-    for(int i = 0; i < n; i++){
-        mainDiagonal[i] = bsplineRecurive(parameters[i], DEGREE, i, knotVector);
-    }
-    for(int i = 0; i < n-1; i++){
-        aboveDiagonal[i] = bsplineRecurive(parameters[i], DEGREE, i+1,
-                                           knotVector);
-    }
-    aboveDiagonal[n-1] = 0;
-
-    controlPoints.clear();
-    controlPoints.resize(n+2);
-    //controlPoints.resize(n);
-    for(int s = 0; s < DIMENSION; s++){
-        vector<float> d(n);
-        vector<float> aboveDiagonalTMP(aboveDiagonal);
-
-        for(int i = 0; i < n; i++){
-            const vec3& pos = points[i]->getPosition();
-            d[i] = pos[s];
-        }
-
-        ifc::solveTridiagonalSystem(belowDiagonal, mainDiagonal,
-                                    aboveDiagonalTMP, d);
-
-        for(int i = 0; i < n; i++){
-            vec3& v = controlPoints[i+1];
-            v[s] = d[i];
-        }
-    }
-    controlPoints[0] = points[0]->getPosition();
-    controlPoints[n+1] = points[n-1]->getPosition();
 }
-*/
-/*
-void BSplineInterp::computeControlPoints(){
-    int n = points.size();
 
-    const int SUB_DIAG_COUNT = 2;
-    const int SUPER_DIAG_COUNT = 2;
-    const int DIAG_COUNT = 5;
-
-    float** bandMatrix = (float**)malloc(sizeof(float*) * (n+1));
-    float** lowerMatrix = (float**)malloc(sizeof(float*) * (n+1));
-    for(int i = 0; i < n;i++){
-        bandMatrix[i] = (float*)malloc(sizeof(float) * (DIAG_COUNT+1));
-        lowerMatrix[i] = (float*)malloc(sizeof(float) * (SUB_DIAG_COUNT+1);
-    }
-
-    unsigned long* index = (unsigned long*)malloc(sizeof(unsigned long) * (n+1);
-
-
-    // ---------------------------------------
-    bandMatrix[0][0] = 0;
-    bandMatrix[1][0] = 0;
-
-
-    for(int i = 2; i < n; i++){
-        bandMatrix[i][0] = bsplineRecurive(parameters[i], DEGREE, i-2,
-                                           knotVector);
-    }
-    bandMatrix[0][1] = 0;
-
-    for(int i = 1; i < n; i++){
-        bandMatrix[i][1] = bsplineRecurive(parameters[i], DEGREE, i-1,
-                                           knotVector);
-    }
-    for(int i = 0; i < n; i++){
-        bandMatrix[i][2] = bsplineRecurive(parameters[i], DEGREE, i, knotVector);
-    }
-    for(int i = 0; i < n-1; i++){
-        bandMatrix[i][3] = bsplineRecurive(parameters[i], DEGREE, i+1,
-                                           knotVector);
-    }
-    bandMatrix[n-1][3] = 0;
-
-    for(int i = 0; i < n-2; i++){
-        bandMatrix[i][4] = bsplineRecurive(parameters[i], DEGREE, i+2,
-                                             knotVector);
-    }
-    bandMatrix[n-1][4] = 0;
-    bandMatrix[n-2][4] = 0;
-    // ---------------------------------------
-
-    printMat(bandMatrix, n, DIAG_COUNT);
-    float evenOdd = 0;
-    bandec(bandMatrix, n, SUB_DIAG_COUNT, SUPER_DIAG_COUNT, lowerMatrix,
-           index, &evenOdd);
-
-    printMat(bandMatrix, n, DIAG_COUNT);
-    printMat(lowerMatrix, n, SUB_DIAG_COUNT);
-
-    controlPoints.clear();
-    controlPoints.resize(n+2);
-    for(int s = 0; s < DIMENSION; s++){
-        float* d = (float*)malloc(sizeof(float) * n);
-
-        for(int i = 0; i < n; i++){
-            const vec3& pos = points[i]->getPosition();
-            d[i] = pos[s];
-            std::cout << d[i] << std::endl;
-        }
-
-        banbks(bandMatrix, n , SUB_DIAG_COUNT, SUPER_DIAG_COUNT, lowerMatrix,
-               index, d);
-
-        for(int i = 0; i < n; i++){
-            vec3& v = controlPoints[i+1];
-            v[s] = d[i];
-            std::cout << d[i] << std::endl;
-        }
-        delete d;
-    }
-    for(int i = 0; i < n; i++){
-        delete bandMatrix[i];
-        delete lowerMatrix[i];
-    }
-    delete bandMatrix;
-    delete lowerMatrix;
-
-    controlPoints[0] = points[0]->getPosition();
-    controlPoints[n+1] = points[n-1]->getPosition();
-}
-*/
-
-void BSplineInterp::computeControlPoints(){
+void BSplineInterp::computeControlPointsDeg3(int DEGREE){
     int n = points.size();
 
     const int SUB_DIAG_COUNT = 2;
@@ -235,8 +97,7 @@ void BSplineInterp::computeControlPoints(){
     }
 
     unsigned long* index = (unsigned long*)malloc(sizeof(unsigned long) *
-                                                          (n+1));
-
+                                                  (n+1));
 
     // ---------------------------------------
     bandMatrix[1][1] = 0;
@@ -271,16 +132,11 @@ void BSplineInterp::computeControlPoints(){
     bandMatrix[n-1][5] = 0;
     // ---------------------------------------
 
-    printMat(bandMatrix, n, DIAG_COUNT);
     float evenOdd = 0;
     bandec(bandMatrix, n, SUB_DIAG_COUNT, SUPER_DIAG_COUNT, lowerMatrix,
            index, &evenOdd);
 
-    printMat(bandMatrix, n, DIAG_COUNT);
-    printMat(lowerMatrix, n, SUB_DIAG_COUNT);
-
     controlPoints.clear();
-    //controlPoints.resize(n+2);
     controlPoints.resize(n);
     for(int s = 0; s < DIMENSION; s++){
         float* d = (float*)malloc(sizeof(float) * (n+1));
@@ -288,17 +144,14 @@ void BSplineInterp::computeControlPoints(){
         for(int i = 1; i < n+1; i++){
             const vec3& pos = points[i-1]->getPosition();
             d[i] = pos[s];
-            std::cout << d[i] << std::endl;
         }
 
         banbks(bandMatrix, n , SUB_DIAG_COUNT, SUPER_DIAG_COUNT, lowerMatrix,
                index, d);
 
         for(int i = 1; i < n+1; i++){
-            //vec3& v = controlPoints[i];
             vec3& v = controlPoints[i-1];
             v[s] = d[i];
-            std::cout << d[i] << std::endl;
         }
         delete d;
     }
@@ -309,60 +162,75 @@ void BSplineInterp::computeControlPoints(){
     delete index;
     delete bandMatrix;
     delete lowerMatrix;
-
-    //controlPoints[0] = points[0]->getPosition();
-    //controlPoints[n+1] = points[n-1]->getPosition();
 }
 
-void BSplineInterp::computeChordParameters(std::vector<float>& parameters,
-                                           const std::vector<glm::vec3>& points){
+void BSplineInterp::computeControlPointsDeg12(int DEGREE){
     int n = points.size();
-    parameters.clear();
-    parameters.resize(n);
-    float lengthOfPolygon = 0;
-    for(int i = 1; i < n ; i++){
-        float dist = ifc::euclideanDistance(points[i],
-                                            points[i-1]);
-        lengthOfPolygon += dist;
+
+    const int SUB_DIAG_COUNT = 1;
+    const int SUPER_DIAG_COUNT = 1;
+    const int DIAG_COUNT = 3;
+
+    float** bandMatrix = (float**)malloc(sizeof(float*) * (n+1));
+    float** lowerMatrix = (float**)malloc(sizeof(float*) * (n+1));
+    for(int i = 1; i < n+1;i++){
+        bandMatrix[i] = (float*)malloc(sizeof(float) * (DIAG_COUNT+1));
+        lowerMatrix[i] = (float*)malloc(sizeof(float) * (SUB_DIAG_COUNT+1));
     }
-    parameters[0] = 0;
-    for(int i = 1; i < n -1; i++){
-        float sumOfDistances = 0;
-        for(int k = 1; k <= i; k++){
-            float dist = ifc::euclideanDistance(points[k],
-                                                points[k-1]);
-            sumOfDistances += dist;
+
+    unsigned long* index = (unsigned long*)malloc(sizeof(unsigned long) *
+                                                  (n+1));
+
+    bandMatrix[1][1] = 0;
+    for(int i = 2; i < n+1; i++){
+        bandMatrix[i][1] = bsplineRecurive(parameters[i-1], DEGREE, i - 2,
+                                           knotVector);
+    }
+
+    for(int i = 1; i < n+1; i++){
+        bandMatrix[i][2] = bsplineRecurive(parameters[i-1], DEGREE, i-1,
+                                           knotVector);
+    }
+
+    for(int i = 1; i < n; i++){
+        bandMatrix[i][3] = bsplineRecurive(parameters[i-1], DEGREE, i,
+                                           knotVector);
+    }
+    bandMatrix[n][3] = 0;
+
+    // ---------------------------------------
+
+    float evenOdd = 0;
+    bandec(bandMatrix, n, SUB_DIAG_COUNT, SUPER_DIAG_COUNT, lowerMatrix,
+           index, &evenOdd);
+
+    controlPoints.clear();
+    controlPoints.resize(n);
+    for(int s = 0; s < DIMENSION; s++){
+        float* d = (float*)malloc(sizeof(float) * (n+1));
+
+        for(int i = 1; i < n+1; i++){
+            const vec3& pos = points[i-1]->getPosition();
+            d[i] = pos[s];
         }
-        parameters[i] = sumOfDistances / lengthOfPolygon;
-    }
-    parameters[n-1] = 1.0f;
-}
 
-void BSplineInterp::computeKnotVector(std::vector<float>& knotVector,
-                                      const std::vector<float>& parameters,
-                                      const std::vector<glm::vec3>& points){
-    int n = points.size();
-    int knotVectorCount = n + DEGREE + 1;
+        banbks(bandMatrix, n , SUB_DIAG_COUNT, SUPER_DIAG_COUNT, lowerMatrix,
+               index, d);
 
-    knotVector.clear();
-    knotVector.resize(knotVectorCount);
-    for(int i = 0; i <= DEGREE; i++){
-        knotVector[i] = 0;
-    }
-    int j;
-    for(j = 1; j < n-DEGREE; j++){
-        float sum = 0;
-        for(int i = j; i < j + DEGREE; i++){
-            sum += parameters[i];
+        for(int i = 1; i < n+1; i++){
+            vec3& v = controlPoints[i-1];
+            v[s] = d[i];
         }
-        knotVector[j+ DEGREE] = sum / DEGREE;
+        delete d;
     }
-    float l = 1.0f;
-    for(int i = j+DEGREE; i < knotVectorCount; i++){
-        knotVector[i] = l;
+    for(int i = 1; i < n+1; i++){
+        delete bandMatrix[i];
+        delete lowerMatrix[i];
     }
+    delete index;
+    delete bandMatrix;
+    delete lowerMatrix;
 }
-
 
 void BSplineInterp::drawSplineCPU(const glm::mat4 &VP, const Color& color,
                             int degree, float t, float t_max, float dt){
@@ -416,15 +284,17 @@ void BSplineInterp::drawSplineGPU(const glm::mat4 &VP, const Color& color,
 //-----------------------//
 
 void BSplineInterp::draw(const glm::mat4 &VP, const Color& color) {
-    if(points.size() < 5) return;
+    updateCurve();
 
-    buildCurve();
+    int n = points.size();
+    int degree = DEGREE;
+    if(n < MIN_POINTS){
+        degree = DEGREE - (MIN_POINTS - n);
+    }
+    if(degree == 0) return;
 
     float t_max = 1.0f;
     float t = 0.0f;
-
-    //t = knotVector[DEGREE+1];
-    //t_max = knotVector[knotVector.size() - DEGREE - 1];
 
     float sceenLength = 4*(screenWidth + screenHeight);
     float dt = 1/(sceenLength * interpolatingPolygonLength);
@@ -432,23 +302,25 @@ void BSplineInterp::draw(const glm::mat4 &VP, const Color& color) {
     int pixelCount = (t_max - t) / dt;
 
     if(ifc::RUN_CUDA){
-        drawSplineGPU(VP, color, pixelCount, t, dt, DEGREE);
+        drawSplineGPU(VP, color, pixelCount, t, dt, degree);
     }else{
-        drawSplineCPU(VP, color, DEGREE, t, t_max, dt);
+        drawSplineCPU(VP, color, degree, t, t_max, dt);
     }
 
 }
 
-void BSplineInterp::buildCurve() {
-    if(points.size() < 5) return;
+void BSplineInterp::updateCurve() {
+    int n = points.size();
+    int degree = DEGREE;
+    if(n < MIN_POINTS){
+        degree = DEGREE - (MIN_POINTS - n);
+    }
 
     computeChordParameters();
-    computeKnotVector();
-
-    computeControlPoints();
-/*
-    computeChordParameters(parametersControl, controlPoints);
-    computeKnotVector(knotVectorControl, parametersControl, controlPoints);*/
+    computeKnotVector(degree);
+    computeControlPoints(degree);
 }
 
+void BSplineInterp::buildCurve(){
 
+}

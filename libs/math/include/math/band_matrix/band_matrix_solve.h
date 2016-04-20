@@ -38,8 +38,6 @@ void printMat(float** a, int n, int m){
 }
 
 /*
-
-/*
 Matrix multiply b = A · x, where A is band diagonal with m1 rows below the diagonal and m2
 rows above. The input vector x and output vector b are stored as x[1..n] and b[1..n],
 respectively. The array a[1..n][1..m1+m2+1] stores A as follows: The diagonal elements

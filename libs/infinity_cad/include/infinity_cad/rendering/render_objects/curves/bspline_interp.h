@@ -27,30 +27,25 @@ private:
 
     int DEGREE = 3;
     int DIMENSION = 3;
+    int MIN_POINTS = 4;
 
     std::vector<float> parameters;
     std::vector<float> knotVector;
 
     std::vector<glm::vec3> controlPoints;
 
-    // Used when drawing with computed control points
-    std::vector<float> parametersControl;
-    std::vector<float> knotVectorControl;
-
-    void computeChordParameters(std::vector<float>& parameters,
-                                const std::vector<glm::vec3>& points);
-    void computeKnotVector(std::vector<float>& knotVector,
-                           const std::vector<float>& parameters,
-                           const std::vector<glm::vec3>& points);
-
     void computeChordParameters();
-    void computeKnotVector();
-    void computeControlPoints();
+    void computeKnotVector(int degree);
+    void computeControlPoints(int degree);
+    void computeControlPointsDeg3(int degree);
+    void computeControlPointsDeg12(int degree);
 
     void drawSplineGPU(const glm::mat4 &VP, const Color& color,
                        int pixelCount, float t, float dt, int degree);
     void drawSplineCPU(const glm::mat4 &VP, const Color& color,
                        int degree, float t, float t_max, float dt);
+
+    void updateCurve();
 
 protected:
 

@@ -18,13 +18,13 @@ public:
 
     static EditorWindow& getInstance();
 
-    ContextMenu& getObjectsListContextMenu();
-
     Ui::MainWindow* getUI();
 
     bool showQuestionBox(std::string title, std::string text);
     void showInfoBox(std::string title, std::string text);
     std::string showInputBox(std::string title, std::string text);
+protected:
+    void closeEvent (QCloseEvent *event);
 
 public slots:
     void showObjectsDialog();
@@ -35,11 +35,7 @@ private:
     Ui::MainWindow *ui;
     ObjectsDialog* objectsDialog;
 
-    ContextMenu* objectListContextMenu;
-
     void setupProperties();
-
-    void setupContextMenus();
 
     void setUpAllObjectsTree();
     void setupBinding();

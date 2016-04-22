@@ -1,8 +1,6 @@
 #include "editor_window.h"
 #include "ui_mainwindow.h"
 #include "widgets/objects_list/objects_tree_factory.h"
-
-#include <widgets/objects_list/context_menus/objects_cmenu_factory.h>
 #include <widgets/scene_list/context_menus/scene_cmenu_factory.h>
 #include <iostream>
 
@@ -18,12 +16,8 @@ EditorWindow::EditorWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    
-    ObjectsTreeFactory objTreeFactory(ui->objectsListTree);
-    objTreeFactory.create();
 
     setupProperties();
-    setupContextMenus();
     setupBinding();
     setupSplitters();
 
@@ -34,8 +28,6 @@ EditorWindow::EditorWindow(QWidget *parent) :
 EditorWindow::~EditorWindow()
 {
     delete ui;
-
-    delete objectListContextMenu;
 
     delete objectsDialog;
 }
@@ -52,10 +44,6 @@ EditorWindow& EditorWindow::getInstance(){
 
 Ui::MainWindow* EditorWindow::getUI(){
     return this->ui;
-}
-
-ContextMenu& EditorWindow::getObjectsListContextMenu(){
-    return *objectListContextMenu;
 }
 
 bool EditorWindow::showQuestionBox(string title, string text){
@@ -106,9 +94,14 @@ void EditorWindow::showObjectsDialog(){
     }
 }
 
+
 //-------------------------//
 //  PRIVATE METHODS
 //-------------------------//
+
+void EditorWindow::closeEvent(QCloseEvent *event){
+    objectsDialog->hide();
+}
 
 void EditorWindow::setupProperties(){
     QLineEdit* x = ui->positionXInput;
@@ -127,33 +120,18 @@ void EditorWindow::setupProperties(){
     z->setText("0.0");
 }
 
-void EditorWindow::setupContextMenus(){
-    ObjectsCMenuFactory objCMFactory;
-
-    objectListContextMenu = objCMFactory.create();
-/*
-    connect(ui->glRendererWidget, SIGNAL(customContextMenuRequested(const QPoint&)),
-        ui->sceneTree, SLOT(ShowContextMenu(const QPoint&)));
-        */
-}
-
 void EditorWindow::setupBinding(){
 
 }
 
 void EditorWindow::setupSplitters(){
-    ui->objectsTreeToRenderSplitter->setStretchFactor(0,2);
-    ui->objectsTreeToRenderSplitter->setStretchFactor(1,20);
-
-    ui->renderToPropertiesSplitter->setStretchFactor(0,10);
-    ui->renderToPropertiesSplitter->setStretchFactor(1,2);
+    ui->renderToPropertiesSplitter->setStretchFactor(10,0);
+    ui->renderToPropertiesSplitter->setStretchFactor(2,1);
 
     ui->sceneProperitesSplitter->setStretchFactor(0,2);
     ui->sceneProperitesSplitter->setStretchFactor(1,1);
 
     ui->renderToPropertiesSplitter->
-            setStyleSheet("QSplitter::handle{background: orange;}");
-    ui->objectsTreeToRenderSplitter->
             setStyleSheet("QSplitter::handle{background: orange;}");
 
 }

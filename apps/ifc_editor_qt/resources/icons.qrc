@@ -11,6 +11,7 @@
         <file>icons/bspline_interp.png</file>
         <file>icons/bspline.png</file>
         <file>icons/bezier_c0.png</file>
+        <file>icons/geometry_white.png</file>
     </qresource>
     <qresource prefix="/objects">
         <file>icons/torus.png</file>

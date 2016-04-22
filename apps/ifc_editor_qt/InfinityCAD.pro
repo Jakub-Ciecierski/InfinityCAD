@@ -41,12 +41,9 @@ SOURCES += src/glwidget.cpp \
     src/controls.cpp \
     src/context_menus/context_menu.cpp \
     src/context_menus/handler.cpp \
-    src/widgets/objects_list/objects_tree_factory.cpp \
     src/editor_window.cpp \
     src/system/object_manager.cpp \
     src/widgets/scene_list/scene_tree.cpp \
-    src/widgets/objects_list/objects_tree.cpp \
-    src/widgets/objects_list/context_menus/objects_cmenu_factory.cpp \
     src/widgets/scene_list/context_menus/scene_cmenu_factory.cpp \
     src/widgets/scene_list/context_menus/scene_cmenu_default.cpp \
     src/widgets/scene_list/context_menus/scene_cmenu_point.cpp \
@@ -61,7 +58,6 @@ SOURCES += src/glwidget.cpp \
     src/widgets/scene_list/context_menus/scene_cmenu_bezier.cpp \
     src/system/system_binding/bspline_binding.cpp \
     src/widgets/scene_list/context_menus/scene_cmenu_handlers.cpp \
-    src/widgets/objects_list/context_menus/objects_cmenu_settings.cpp \
     src/system/ifc_types.cpp \
     src/widgets/scene_list/context_menus/scm_bspline.cpp \
     src/system/system_binding/bspline_interp_binding.cpp \
@@ -75,9 +71,6 @@ HEADERS  += build/ui/ui_mainwindow.h \
     src/system/system_binding/bspline_binding.h \
     src/system/object_manager.h \
     src/system/ifc_types.h \
-    src/widgets/objects_list/context_menus/objects_cmenu_factory.h \
-    src/widgets/objects_list/objects_tree.h \
-    src/widgets/objects_list/objects_tree_factory.h \
     src/widgets/scene_list/context_menus/scene_cmenu_bezier.h \
     src/widgets/scene_list/context_menus/scene_cmenu_default.h \
     src/widgets/scene_list/context_menus/scene_cmenu_factory.h \
@@ -94,7 +87,6 @@ HEADERS  += build/ui/ui_mainwindow.h \
     src/glwidget.h \
     src/widgets/scene_list/context_menus/scene_cmenu_handlers.h \
     build/ui/ui_mainwindow.h \
-    src/widgets/objects_list/context_menus/objects_cmenu_settings.h \
     src/widgets/scene_list/context_menus/scm_bspline.h \
     src/system/system_binding/bspline_interp_binding.h \
     src/objects_dialog.h

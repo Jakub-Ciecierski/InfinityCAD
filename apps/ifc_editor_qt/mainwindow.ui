@@ -479,8 +479,21 @@ QMenu::separator {
        </item>
        <item>
         <widget class="QPushButton" name="showObjectsDialogButton">
+         <property name="toolTip">
+          <string>Objects</string>
+         </property>
          <property name="text">
-          <string>Dialog</string>
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="resources/icons.qrc">
+           <normaloff>:/cameraButton/icons/geometry_white.png</normaloff>:/cameraButton/icons/geometry_white.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>25</width>
+           <height>25</height>
+          </size>
          </property>
         </widget>
        </item>
@@ -501,140 +514,131 @@ QMenu::separator {
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
       </property>
-      <layout class="QHBoxLayout" name="horizontalLayout_9">
+      <layout class="QHBoxLayout" name="horizontalLayout_7">
        <item>
         <widget class="QSplitter" name="renderToPropertiesSplitter">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
          <property name="handleWidth">
-          <number>5</number>
+          <number>3</number>
          </property>
-         <widget class="QSplitter" name="objectsTreeToRenderSplitter">
+         <widget class="GLWidget" name="glRendererWidget" native="true">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+            <horstretch>6</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="toolTip">
+           <string>Show Points</string>
+          </property>
+         </widget>
+         <widget class="QSplitter" name="sceneProperitesSplitter">
           <property name="orientation">
-           <enum>Qt::Horizontal</enum>
+           <enum>Qt::Vertical</enum>
           </property>
           <property name="handleWidth">
            <number>5</number>
           </property>
-          <widget class="ObjectsTree" name="objectsListTree">
+          <widget class="SceneTree" name="sceneTree">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-             <horstretch>1</horstretch>
-             <verstretch>0</verstretch>
+             <horstretch>7</horstretch>
+             <verstretch>1</verstretch>
             </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>300</width>
-             <height>16777215</height>
-            </size>
            </property>
            <column>
             <property name="text">
-             <string>Objects</string>
+             <string notr="true">Scene</string>
             </property>
            </column>
           </widget>
-          <widget class="GLWidget" name="glRendererWidget" native="true">
+          <widget class="QFrame" name="propertiesFrame">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-             <horstretch>6</horstretch>
-             <verstretch>0</verstretch>
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <horstretch>2</horstretch>
+             <verstretch>5</verstretch>
             </sizepolicy>
            </property>
-           <property name="toolTip">
-            <string>Show Points</string>
+           <property name="frameShape">
+            <enum>QFrame::StyledPanel</enum>
            </property>
-          </widget>
-         </widget>
-         <widget class="QFrame" name="scenePropertiesFrame">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="frameShape">
-           <enum>QFrame::StyledPanel</enum>
-          </property>
-          <property name="frameShadow">
-           <enum>QFrame::Raised</enum>
-          </property>
-          <layout class="QVBoxLayout" name="verticalLayout">
-           <item>
-            <widget class="QSplitter" name="sceneProperitesSplitter">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="handleWidth">
-              <number>5</number>
-             </property>
-             <widget class="SceneTree" name="sceneTree">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                <horstretch>7</horstretch>
-                <verstretch>1</verstretch>
-               </sizepolicy>
+           <property name="frameShadow">
+            <enum>QFrame::Raised</enum>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_2">
+            <property name="spacing">
+             <number>0</number>
+            </property>
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QScrollArea" name="propertiesScrollArea">
+              <property name="widgetResizable">
+               <bool>true</bool>
               </property>
-              <column>
-               <property name="text">
-                <string notr="true">Scene</string>
+              <widget class="QWidget" name="scrollAreaWidgetContents">
+               <property name="geometry">
+                <rect>
+                 <x>0</x>
+                 <y>0</y>
+                 <width>250</width>
+                 <height>587</height>
+                </rect>
                </property>
-              </column>
-             </widget>
-             <widget class="QFrame" name="propertiesFrame">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                <horstretch>2</horstretch>
-                <verstretch>5</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::StyledPanel</enum>
-              </property>
-              <property name="frameShadow">
-               <enum>QFrame::Raised</enum>
-              </property>
-              <layout class="QVBoxLayout" name="verticalLayout_2">
-               <property name="spacing">
-                <number>0</number>
-               </property>
-               <property name="leftMargin">
-                <number>0</number>
-               </property>
-               <property name="topMargin">
-                <number>0</number>
-               </property>
-               <property name="rightMargin">
-                <number>0</number>
-               </property>
-               <property name="bottomMargin">
-                <number>0</number>
-               </property>
-               <item>
-                <widget class="QScrollArea" name="propertiesScrollArea">
-                 <property name="widgetResizable">
-                  <bool>true</bool>
-                 </property>
-                 <widget class="QWidget" name="scrollAreaWidgetContents">
-                  <property name="geometry">
-                   <rect>
-                    <x>0</x>
-                    <y>0</y>
-                    <width>563</width>
-                    <height>570</height>
-                   </rect>
+               <layout class="QVBoxLayout" name="verticalLayout_5">
+                <item>
+                 <widget class="QFrame" name="positionFrame">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
                   </property>
-                  <layout class="QVBoxLayout" name="verticalLayout_5">
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>180</height>
+                   </size>
+                  </property>
+                  <property name="frameShape">
+                   <enum>QFrame::StyledPanel</enum>
+                  </property>
+                  <property name="frameShadow">
+                   <enum>QFrame::Raised</enum>
+                  </property>
+                  <property name="lineWidth">
+                   <number>1</number>
+                  </property>
+                  <layout class="QVBoxLayout" name="verticalLayout_3">
+                   <property name="spacing">
+                    <number>0</number>
+                   </property>
+                   <property name="leftMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="topMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="bottomMargin">
+                    <number>0</number>
+                   </property>
                    <item>
-                    <widget class="QFrame" name="positionFrame">
+                    <widget class="QLabel" name="positionLabel">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                        <horstretch>0</horstretch>
@@ -644,7 +648,36 @@ QMenu::separator {
                      <property name="maximumSize">
                       <size>
                        <width>16777215</width>
-                       <height>180</height>
+                       <height>15</height>
+                      </size>
+                     </property>
+                     <property name="text">
+                      <string>Cross Position</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="Line" name="line">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QFrame" name="positionXFrame">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>16777215</width>
+                       <height>40</height>
                       </size>
                      </property>
                      <property name="frameShape">
@@ -653,215 +686,40 @@ QMenu::separator {
                      <property name="frameShadow">
                       <enum>QFrame::Raised</enum>
                      </property>
-                     <property name="lineWidth">
-                      <number>1</number>
-                     </property>
-                     <layout class="QVBoxLayout" name="verticalLayout_3">
-                      <property name="spacing">
-                       <number>0</number>
-                      </property>
-                      <property name="leftMargin">
-                       <number>0</number>
-                      </property>
-                      <property name="topMargin">
-                       <number>0</number>
-                      </property>
-                      <property name="rightMargin">
-                       <number>0</number>
-                      </property>
-                      <property name="bottomMargin">
-                       <number>0</number>
-                      </property>
+                     <layout class="QHBoxLayout" name="horizontalLayout_2">
                       <item>
-                       <widget class="QLabel" name="positionLabel">
-                        <property name="sizePolicy">
-                         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                          <horstretch>0</horstretch>
-                          <verstretch>0</verstretch>
-                         </sizepolicy>
-                        </property>
+                       <widget class="QLabel" name="positionXLabel">
                         <property name="maximumSize">
                          <size>
-                          <width>16777215</width>
-                          <height>15</height>
+                          <width>35</width>
+                          <height>35</height>
                          </size>
+                        </property>
+                        <property name="font">
+                         <font>
+                          <pointsize>9</pointsize>
+                         </font>
                         </property>
                         <property name="text">
-                         <string>Cross Position</string>
-                        </property>
-                        <property name="alignment">
-                         <set>Qt::AlignCenter</set>
+                         <string>X</string>
                         </property>
                        </widget>
                       </item>
                       <item>
-                       <widget class="Line" name="line">
-                        <property name="orientation">
-                         <enum>Qt::Horizontal</enum>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QFrame" name="positionXFrame">
-                        <property name="sizePolicy">
-                         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                          <horstretch>0</horstretch>
-                          <verstretch>0</verstretch>
-                         </sizepolicy>
-                        </property>
+                       <widget class="QLineEdit" name="positionXInput">
                         <property name="maximumSize">
                          <size>
-                          <width>16777215</width>
-                          <height>40</height>
+                          <width>45</width>
+                          <height>45</height>
                          </size>
                         </property>
-                        <property name="frameShape">
-                         <enum>QFrame::StyledPanel</enum>
-                        </property>
-                        <property name="frameShadow">
-                         <enum>QFrame::Raised</enum>
-                        </property>
-                        <layout class="QHBoxLayout" name="horizontalLayout_2">
-                         <item>
-                          <widget class="QLabel" name="positionXLabel">
-                           <property name="maximumSize">
-                            <size>
-                             <width>35</width>
-                             <height>35</height>
-                            </size>
-                           </property>
-                           <property name="font">
-                            <font>
-                             <pointsize>9</pointsize>
-                            </font>
-                           </property>
-                           <property name="text">
-                            <string>X</string>
-                           </property>
-                          </widget>
-                         </item>
-                         <item>
-                          <widget class="QLineEdit" name="positionXInput">
-                           <property name="maximumSize">
-                            <size>
-                             <width>45</width>
-                             <height>45</height>
-                            </size>
-                           </property>
-                          </widget>
-                         </item>
-                        </layout>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QFrame" name="positionYFrame">
-                        <property name="sizePolicy">
-                         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                          <horstretch>0</horstretch>
-                          <verstretch>0</verstretch>
-                         </sizepolicy>
-                        </property>
-                        <property name="maximumSize">
-                         <size>
-                          <width>16777215</width>
-                          <height>40</height>
-                         </size>
-                        </property>
-                        <property name="frameShape">
-                         <enum>QFrame::StyledPanel</enum>
-                        </property>
-                        <property name="frameShadow">
-                         <enum>QFrame::Raised</enum>
-                        </property>
-                        <layout class="QHBoxLayout" name="horizontalLayout_3">
-                         <item>
-                          <widget class="QLabel" name="positionYLabel">
-                           <property name="maximumSize">
-                            <size>
-                             <width>35</width>
-                             <height>35</height>
-                            </size>
-                           </property>
-                           <property name="font">
-                            <font>
-                             <pointsize>9</pointsize>
-                            </font>
-                           </property>
-                           <property name="text">
-                            <string>Y</string>
-                           </property>
-                          </widget>
-                         </item>
-                         <item>
-                          <widget class="QLineEdit" name="positionYInput">
-                           <property name="maximumSize">
-                            <size>
-                             <width>45</width>
-                             <height>35</height>
-                            </size>
-                           </property>
-                          </widget>
-                         </item>
-                        </layout>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QFrame" name="positionZFrame">
-                        <property name="sizePolicy">
-                         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                          <horstretch>0</horstretch>
-                          <verstretch>0</verstretch>
-                         </sizepolicy>
-                        </property>
-                        <property name="maximumSize">
-                         <size>
-                          <width>16777215</width>
-                          <height>40</height>
-                         </size>
-                        </property>
-                        <property name="frameShape">
-                         <enum>QFrame::StyledPanel</enum>
-                        </property>
-                        <property name="frameShadow">
-                         <enum>QFrame::Raised</enum>
-                        </property>
-                        <layout class="QHBoxLayout" name="horizontalLayout_4">
-                         <item>
-                          <widget class="QLabel" name="positionZLabel">
-                           <property name="maximumSize">
-                            <size>
-                             <width>35</width>
-                             <height>35</height>
-                            </size>
-                           </property>
-                           <property name="font">
-                            <font>
-                             <pointsize>9</pointsize>
-                            </font>
-                           </property>
-                           <property name="text">
-                            <string>Z</string>
-                           </property>
-                          </widget>
-                         </item>
-                         <item>
-                          <widget class="QLineEdit" name="positionZInput">
-                           <property name="maximumSize">
-                            <size>
-                             <width>45</width>
-                             <height>35</height>
-                            </size>
-                           </property>
-                          </widget>
-                         </item>
-                        </layout>
                        </widget>
                       </item>
                      </layout>
                     </widget>
                    </item>
                    <item>
-                    <widget class="QFrame" name="anglesFrame">
+                    <widget class="QFrame" name="positionYFrame">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                        <horstretch>0</horstretch>
@@ -871,7 +729,7 @@ QMenu::separator {
                      <property name="maximumSize">
                       <size>
                        <width>16777215</width>
-                       <height>150</height>
+                       <height>40</height>
                       </size>
                      </property>
                      <property name="frameShape">
@@ -880,171 +738,275 @@ QMenu::separator {
                      <property name="frameShadow">
                       <enum>QFrame::Raised</enum>
                      </property>
-                     <layout class="QVBoxLayout" name="verticalLayout_4">
-                      <property name="spacing">
-                       <number>0</number>
-                      </property>
-                      <property name="leftMargin">
-                       <number>0</number>
-                      </property>
-                      <property name="topMargin">
-                       <number>0</number>
-                      </property>
-                      <property name="rightMargin">
-                       <number>0</number>
-                      </property>
-                      <property name="bottomMargin">
-                       <number>0</number>
-                      </property>
+                     <layout class="QHBoxLayout" name="horizontalLayout_3">
                       <item>
-                       <widget class="QLabel" name="label_5">
+                       <widget class="QLabel" name="positionYLabel">
                         <property name="maximumSize">
                          <size>
-                          <width>16777215</width>
-                          <height>15</height>
+                          <width>35</width>
+                          <height>35</height>
                          </size>
+                        </property>
+                        <property name="font">
+                         <font>
+                          <pointsize>9</pointsize>
+                         </font>
                         </property>
                         <property name="text">
-                         <string>Cross Window Position </string>
-                        </property>
-                        <property name="alignment">
-                         <set>Qt::AlignCenter</set>
+                         <string>Y</string>
                         </property>
                        </widget>
                       </item>
                       <item>
-                       <widget class="Line" name="line_2">
-                        <property name="orientation">
-                         <enum>Qt::Horizontal</enum>
-                        </property>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QFrame" name="angleXFrame">
-                        <property name="sizePolicy">
-                         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                          <horstretch>0</horstretch>
-                          <verstretch>7</verstretch>
-                         </sizepolicy>
-                        </property>
+                       <widget class="QLineEdit" name="positionYInput">
                         <property name="maximumSize">
                          <size>
-                          <width>16777215</width>
-                          <height>40</height>
+                          <width>45</width>
+                          <height>35</height>
                          </size>
                         </property>
-                        <property name="frameShape">
-                         <enum>QFrame::StyledPanel</enum>
-                        </property>
-                        <property name="frameShadow">
-                         <enum>QFrame::Raised</enum>
-                        </property>
-                        <layout class="QHBoxLayout" name="horizontalLayout_5">
-                         <item>
-                          <widget class="QLabel" name="angleXLabel">
-                           <property name="maximumSize">
-                            <size>
-                             <width>35</width>
-                             <height>35</height>
-                            </size>
-                           </property>
-                           <property name="font">
-                            <font>
-                             <pointsize>9</pointsize>
-                            </font>
-                           </property>
-                           <property name="text">
-                            <string>X</string>
-                           </property>
-                          </widget>
-                         </item>
-                         <item>
-                          <widget class="QLineEdit" name="angleXInput">
-                           <property name="minimumSize">
-                            <size>
-                             <width>0</width>
-                             <height>0</height>
-                            </size>
-                           </property>
-                           <property name="maximumSize">
-                            <size>
-                             <width>45</width>
-                             <height>35</height>
-                            </size>
-                           </property>
-                          </widget>
-                         </item>
-                        </layout>
-                       </widget>
-                      </item>
-                      <item>
-                       <widget class="QFrame" name="frame_5">
-                        <property name="sizePolicy">
-                         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                          <horstretch>0</horstretch>
-                          <verstretch>7</verstretch>
-                         </sizepolicy>
-                        </property>
-                        <property name="maximumSize">
-                         <size>
-                          <width>16777215</width>
-                          <height>40</height>
-                         </size>
-                        </property>
-                        <property name="frameShape">
-                         <enum>QFrame::StyledPanel</enum>
-                        </property>
-                        <property name="frameShadow">
-                         <enum>QFrame::Raised</enum>
-                        </property>
-                        <layout class="QHBoxLayout" name="horizontalLayout_6">
-                         <item>
-                          <widget class="QLabel" name="angleYLabel">
-                           <property name="maximumSize">
-                            <size>
-                             <width>35</width>
-                             <height>35</height>
-                            </size>
-                           </property>
-                           <property name="font">
-                            <font>
-                             <pointsize>9</pointsize>
-                            </font>
-                           </property>
-                           <property name="text">
-                            <string>Y</string>
-                           </property>
-                          </widget>
-                         </item>
-                         <item>
-                          <widget class="QLineEdit" name="angleYInput">
-                           <property name="maximumSize">
-                            <size>
-                             <width>45</width>
-                             <height>35</height>
-                            </size>
-                           </property>
-                          </widget>
-                         </item>
-                        </layout>
                        </widget>
                       </item>
                      </layout>
-                     <zorder>label_5</zorder>
-                     <zorder>angleXFrame</zorder>
-                     <zorder>frame_5</zorder>
-                     <zorder>line_2</zorder>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QFrame" name="positionZFrame">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>16777215</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                     <property name="frameShape">
+                      <enum>QFrame::StyledPanel</enum>
+                     </property>
+                     <property name="frameShadow">
+                      <enum>QFrame::Raised</enum>
+                     </property>
+                     <layout class="QHBoxLayout" name="horizontalLayout_4">
+                      <item>
+                       <widget class="QLabel" name="positionZLabel">
+                        <property name="maximumSize">
+                         <size>
+                          <width>35</width>
+                          <height>35</height>
+                         </size>
+                        </property>
+                        <property name="font">
+                         <font>
+                          <pointsize>9</pointsize>
+                         </font>
+                        </property>
+                        <property name="text">
+                         <string>Z</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QLineEdit" name="positionZInput">
+                        <property name="maximumSize">
+                         <size>
+                          <width>45</width>
+                          <height>35</height>
+                         </size>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
                     </widget>
                    </item>
                   </layout>
                  </widget>
-                </widget>
-               </item>
-              </layout>
+                </item>
+                <item>
+                 <widget class="QFrame" name="anglesFrame">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>150</height>
+                   </size>
+                  </property>
+                  <property name="frameShape">
+                   <enum>QFrame::StyledPanel</enum>
+                  </property>
+                  <property name="frameShadow">
+                   <enum>QFrame::Raised</enum>
+                  </property>
+                  <layout class="QVBoxLayout" name="verticalLayout_4">
+                   <property name="spacing">
+                    <number>0</number>
+                   </property>
+                   <property name="leftMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="topMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="bottomMargin">
+                    <number>0</number>
+                   </property>
+                   <item>
+                    <widget class="QLabel" name="label_5">
+                     <property name="maximumSize">
+                      <size>
+                       <width>16777215</width>
+                       <height>15</height>
+                      </size>
+                     </property>
+                     <property name="text">
+                      <string>Cross Window Position </string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="Line" name="line_2">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QFrame" name="angleXFrame">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>7</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>16777215</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                     <property name="frameShape">
+                      <enum>QFrame::StyledPanel</enum>
+                     </property>
+                     <property name="frameShadow">
+                      <enum>QFrame::Raised</enum>
+                     </property>
+                     <layout class="QHBoxLayout" name="horizontalLayout_5">
+                      <item>
+                       <widget class="QLabel" name="angleXLabel">
+                        <property name="maximumSize">
+                         <size>
+                          <width>35</width>
+                          <height>35</height>
+                         </size>
+                        </property>
+                        <property name="font">
+                         <font>
+                          <pointsize>9</pointsize>
+                         </font>
+                        </property>
+                        <property name="text">
+                         <string>X</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QLineEdit" name="angleXInput">
+                        <property name="minimumSize">
+                         <size>
+                          <width>0</width>
+                          <height>0</height>
+                         </size>
+                        </property>
+                        <property name="maximumSize">
+                         <size>
+                          <width>45</width>
+                          <height>35</height>
+                         </size>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QFrame" name="frame_5">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>7</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>16777215</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                     <property name="frameShape">
+                      <enum>QFrame::StyledPanel</enum>
+                     </property>
+                     <property name="frameShadow">
+                      <enum>QFrame::Raised</enum>
+                     </property>
+                     <layout class="QHBoxLayout" name="horizontalLayout_6">
+                      <item>
+                       <widget class="QLabel" name="angleYLabel">
+                        <property name="maximumSize">
+                         <size>
+                          <width>35</width>
+                          <height>35</height>
+                         </size>
+                        </property>
+                        <property name="font">
+                         <font>
+                          <pointsize>9</pointsize>
+                         </font>
+                        </property>
+                        <property name="text">
+                         <string>Y</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QLineEdit" name="angleYInput">
+                        <property name="maximumSize">
+                         <size>
+                          <width>45</width>
+                          <height>35</height>
+                         </size>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </widget>
+                   </item>
+                  </layout>
+                  <zorder>label_5</zorder>
+                  <zorder>angleXFrame</zorder>
+                  <zorder>frame_5</zorder>
+                  <zorder>line_2</zorder>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
              </widget>
-            </widget>
-           </item>
-          </layout>
+            </item>
+           </layout>
+          </widget>
          </widget>
         </widget>
        </item>
@@ -1188,11 +1150,6 @@ QMenu::separator {
    </slots>
   </customwidget>
   <customwidget>
-   <class>ObjectsTree</class>
-   <extends>QTreeWidget</extends>
-   <header>widgets/objects_list/objects_tree.h</header>
-  </customwidget>
-  <customwidget>
    <class>SceneTree</class>
    <extends>QTreeWidget</extends>
    <header>widgets/scene_list/scene_tree.h</header>
@@ -1206,18 +1163,34 @@ QMenu::separator {
  </resources>
  <connections>
   <connection>
-   <sender>threeDCheckBox</sender>
+   <sender>showPointsCheckbox</sender>
    <signal>toggled(bool)</signal>
-   <receiver>glRendererWidget</receiver>
-   <slot>set3DRendering(bool)</slot>
+   <receiver>sceneTree</receiver>
+   <slot>showPointsToogled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>97</x>
-     <y>58</y>
+     <x>220</x>
+     <y>45</y>
     </hint>
     <hint type="destinationlabel">
-     <x>230</x>
-     <y>177</y>
+     <x>856</x>
+     <y>125</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>showObjectsDialogButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>showObjectsDialog()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1128</x>
+     <y>45</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>580</x>
+     <y>383</y>
     </hint>
    </hints>
   </connection>
@@ -1234,6 +1207,22 @@ QMenu::separator {
     <hint type="destinationlabel">
      <x>308</x>
      <y>359</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>threeDCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>glRendererWidget</receiver>
+   <slot>set3DRendering(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>97</x>
+     <y>58</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>230</x>
+     <y>177</y>
     </hint>
    </hints>
   </connection>
@@ -1282,38 +1271,6 @@ QMenu::separator {
     <hint type="destinationlabel">
      <x>366</x>
      <y>415</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>showPointsCheckbox</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>sceneTree</receiver>
-   <slot>showPointsToogled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>220</x>
-     <y>45</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>856</x>
-     <y>125</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>showObjectsDialogButton</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>showObjectsDialog()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>1128</x>
-     <y>45</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>580</x>
-     <y>383</y>
     </hint>
    </hints>
   </connection>

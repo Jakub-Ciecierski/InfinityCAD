@@ -25,7 +25,11 @@ Item::Item(RenderObject * object, const Type& type){
 Item::~Item(){
     for(unsigned int i = 0;i < children.size(); i++){
         Item* currChild = children[i];
+        /*
         if(currChild != NULL && !currChild->isClone()) {
+            delete currChild;
+        }*/
+        if(currChild != NULL) {
             delete currChild;
         }
     }
@@ -98,7 +102,8 @@ Item* Item::makeClone(){
 void Item::removeClone(Item* clone){
     for(unsigned int i = 0; i < clones.size(); i++){
         if(clone == clones[i]){
-            clones[i] = NULL;
+            clones.erase(clones.begin() + i);
+            return;
         }
     }
 }

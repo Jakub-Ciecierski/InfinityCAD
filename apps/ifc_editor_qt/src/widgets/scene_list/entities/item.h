@@ -55,6 +55,7 @@ struct RootItem : public Item{
         this->treeItem = NULL;
         this->displayName = displayName;
     }
+
     ~RootItem(){
 
     }

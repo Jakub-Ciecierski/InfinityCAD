@@ -287,6 +287,7 @@ void BSplineInterp::draw(const glm::mat4 &VP, const Color& color) {
     updateCurve();
 
     int n = points.size();
+    if(n < 2) return;
     int degree = DEGREE;
     if(n < MIN_POINTS){
         degree = DEGREE - (MIN_POINTS - n);
@@ -311,6 +312,7 @@ void BSplineInterp::draw(const glm::mat4 &VP, const Color& color) {
 
 void BSplineInterp::updateCurve() {
     int n = points.size();
+    if(n < 2) return;
     int degree = DEGREE;
     if(n < MIN_POINTS){
         degree = DEGREE - (MIN_POINTS - n);

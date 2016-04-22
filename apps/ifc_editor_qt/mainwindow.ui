@@ -344,13 +344,13 @@ QMenu::separator {
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <property name="leftMargin">
-        <number>5</number>
+        <number>9</number>
        </property>
        <property name="topMargin">
         <number>5</number>
        </property>
        <property name="rightMargin">
-        <number>5</number>
+        <number>9</number>
        </property>
        <property name="bottomMargin">
         <number>5</number>
@@ -448,6 +448,23 @@ QMenu::separator {
         </widget>
        </item>
        <item>
+        <widget class="QCheckBox" name="showPointsCheckbox">
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="resources/icons.qrc">
+           <normaloff>:/cameraButton/icons/points_white.png</normaloff>:/cameraButton/icons/points_white.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>25</width>
+           <height>25</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
         <spacer name="horizontalSpacer">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -459,6 +476,13 @@ QMenu::separator {
           </size>
          </property>
         </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="showObjectsDialogButton">
+         <property name="text">
+          <string>Dialog</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -524,6 +548,9 @@ QMenu::separator {
              <horstretch>6</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
+           </property>
+           <property name="toolTip">
+            <string>Show Points</string>
            </property>
           </widget>
          </widget>
@@ -1169,6 +1196,9 @@ QMenu::separator {
    <class>SceneTree</class>
    <extends>QTreeWidget</extends>
    <header>widgets/scene_list/scene_tree.h</header>
+   <slots>
+    <slot>showPointsToogled(bool)</slot>
+   </slots>
   </customwidget>
  </customwidgets>
  <resources>
@@ -1182,8 +1212,8 @@ QMenu::separator {
    <slot>set3DRendering(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>22</x>
-     <y>48</y>
+     <x>97</x>
+     <y>58</y>
     </hint>
     <hint type="destinationlabel">
      <x>230</x>
@@ -1230,8 +1260,8 @@ QMenu::separator {
    <slot>setCUDA(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>156</x>
-     <y>44</y>
+     <x>59</x>
+     <y>58</y>
     </hint>
     <hint type="destinationlabel">
      <x>366</x>
@@ -1246,8 +1276,8 @@ QMenu::separator {
    <slot>setFPSCamera(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>232</x>
-     <y>44</y>
+     <x>180</x>
+     <y>57</y>
     </hint>
     <hint type="destinationlabel">
      <x>366</x>
@@ -1255,5 +1285,40 @@ QMenu::separator {
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>showPointsCheckbox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>sceneTree</receiver>
+   <slot>showPointsToogled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>220</x>
+     <y>45</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>856</x>
+     <y>125</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>showObjectsDialogButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>showObjectsDialog()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1128</x>
+     <y>45</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>580</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
+ <slots>
+  <slot>showObjectsDialog()</slot>
+ </slots>
 </ui>

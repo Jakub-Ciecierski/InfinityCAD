@@ -27,6 +27,8 @@ EditorWindow::EditorWindow(QWidget *parent) :
     setupBinding();
     setupSplitters();
 
+    objectsDialog = new ObjectsDialog();
+    objectsDialog->setWindowFlags(Qt::WindowStaysOnTopHint);
 }
 
 EditorWindow::~EditorWindow()
@@ -34,6 +36,8 @@ EditorWindow::~EditorWindow()
     delete ui;
 
     delete objectListContextMenu;
+
+    delete objectsDialog;
 }
 
 //-------------------------//
@@ -87,6 +91,19 @@ string EditorWindow::showInputBox(string title, string text){
         return reply.toStdString();
     }
     return "";
+}
+
+//-------------------------//
+//  PUBLIC SLOTS
+//-------------------------//
+
+void EditorWindow::showObjectsDialog(){
+    if(objectsDialog->isHidden()){
+        objectsDialog->show();
+        objectsDialog->move(this->x(),this->y());
+    }else{
+        objectsDialog->hide();
+    }
 }
 
 //-------------------------//

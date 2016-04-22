@@ -13,6 +13,8 @@ SceneTree::SceneTree(QWidget* parent) :
     setupContextMenu();
     setupBinding();
     setupRootItems();
+
+    showPoints = true;
 }
 
 SceneTree::~SceneTree(){
@@ -225,6 +227,11 @@ Item* SceneTree::addObject(RenderObject * object, const Type& type){
             topRootItem->addChild(item);
         }
     }
+
+    if(type == RB_POINT_TYPE){
+        object->setShow(showPoints);
+    }
+
     return item;
 }
 
@@ -348,6 +355,16 @@ void SceneTree::myitemSelectionChanged(){
         Item* item = getItemByTree(selectedItems[i]);
         if(item == NULL) continue;
         objManager.setActive(item->object->getID());
+    }
+}
+
+void SceneTree::showPointsToogled(bool value){
+    showPoints = value;
+    for(unsigned int i = 0; i < this->allItems.size(); i++){
+        Item* item = allItems[i];
+        if(item->type == RB_POINT_TYPE){
+            item->object->setShow(value);
+        }
     }
 }
 

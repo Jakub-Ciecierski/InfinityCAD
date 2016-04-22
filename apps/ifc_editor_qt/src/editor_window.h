@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "context_menus/context_menu.h"
+#include "objects_dialog.h"
 
 namespace Ui {
 class MainWindow;
@@ -25,10 +26,14 @@ public:
     void showInfoBox(std::string title, std::string text);
     std::string showInputBox(std::string title, std::string text);
 
+public slots:
+    void showObjectsDialog();
+
 private:
     explicit EditorWindow(QWidget *parent = 0);
 
     Ui::MainWindow *ui;
+    ObjectsDialog* objectsDialog;
 
     ContextMenu* objectListContextMenu;
 

@@ -18,6 +18,8 @@ private:
     std::vector<RootItem*> topRootItems;
     std::vector<Item*> allItems;
 
+    bool showPoints;
+
     void setupContextMenu();
     void setupRootItems();
     void setupBinding();
@@ -63,6 +65,7 @@ public slots:
     void ShowContextMenu(const QPoint& pos);
     //void myitemActivated(QTreeWidgetItem* item, int column);
     void myitemSelectionChanged();
+    void showPointsToogled(bool value);
 };
 
 #endif // SCENETREE_H

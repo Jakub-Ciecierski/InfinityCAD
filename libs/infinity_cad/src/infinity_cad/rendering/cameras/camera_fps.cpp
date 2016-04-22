@@ -106,40 +106,37 @@ void CameraFPS::update() {
                  cos(angleToRadians(rotationAngles.x) - M_PI_2)
     );
 
-    direction = normalize(direction);
-    right = normalize(right);
+    vec3& Z = direction;
+    vec3& Y = up;
+    vec3& X = right;
+    Y = cross(Z, X);
 
-    up = cross(right, direction);
-    up = normalize(up);
-
-    vec3 X = right;
-    up = cross(direction, X);
-
+    Z = normalize(Z);
+    Y = normalize(Y);
     X = normalize(X);
-    up = normalize(up);
 
     viewMatrix[0].x = X.x;
     viewMatrix[1].x = X.y;
     viewMatrix[2].x = X.z;
-    viewMatrix[3].x = (X.x * -position.x + X.y * -position.y + X.z * -position.z);
+    viewMatrix[3].x = -ifc::dot(X, position);
 
-    viewMatrix[0].y = up.x;
-    viewMatrix[1].y = up.y;
-    viewMatrix[2].y = up.z;
-    viewMatrix[3].y = (up.x * -position.x + up.y * -position.y + up.z * -position.z);
+    viewMatrix[0].y = Y.x;
+    viewMatrix[1].y = Y.y;
+    viewMatrix[2].y = Y.z;
+    viewMatrix[3].y = -ifc::dot(Y, position);
 
-    viewMatrix[0].z = direction.x;
-    viewMatrix[1].z = direction.y;
-    viewMatrix[2].z = direction.z;
-    viewMatrix[3].z = (direction.x * -position.x +
-            direction.y * -position.y +
-            direction.z * -position.z);
+    viewMatrix[0].z = Z.x;
+    viewMatrix[1].z = Z.y;
+    viewMatrix[2].z = Z.z;
+    viewMatrix[3].z = -ifc::dot(Z, position);
 
     viewMatrix[0].w = 0;
     viewMatrix[1].w = 0;
     viewMatrix[2].w = 0;
     viewMatrix[3].w = 1.0f;
 
+    //viewMatrix = glm::lookAt(position, vec3(0,0,0), up);
 
     VP = projection->getProjectionMatrix() * viewMatrix;
+
 }

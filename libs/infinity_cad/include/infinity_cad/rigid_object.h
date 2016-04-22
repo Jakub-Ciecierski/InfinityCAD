@@ -78,6 +78,7 @@ public:
     void rotate(float dxAngle, float dyAngle, float dzAngle);
     void rotateTo(float xAngle, float yAngle, float zAngle);
 
+
     void scale(float scale);
     void scaleDt(float scale);
 

@@ -18,6 +18,7 @@
 #include <infinity_cad/rendering/projections/projection.h>
 #include <infinity_cad/rendering/render_objects/curves/bspline_interp.h>
 #include "infinity_cad/rendering/scene/scene_id_factory.h"
+#include "scene.h"
 
 
 /*
@@ -37,6 +38,8 @@ public:
     ~ObjectFactory();
 
     static ObjectFactory& getInstance();
+
+    Scene* createScene(std::string name);
 
     Camera* createCameraFPS(std::string name, Projection* projection);
 

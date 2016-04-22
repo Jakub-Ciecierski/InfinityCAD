@@ -10,7 +10,8 @@
 
 using namespace glm;
 
-Scene::Scene() :
+Scene::Scene(SceneID ID, std::string name) :
+        RigidObject(ID, name),
         sceneColor(COLOR_SCENE_DEFAULT), sceneIDFactory(){
     set3DRendering(false);
 
@@ -44,7 +45,7 @@ void Scene::initSceneElements(){
 }
 
 void Scene::updateMVP() {
-    MVP = activeCamera->getVPMatrix();
+    MVP = activeCamera->getVPMatrix() * this->getModelMatrix();
 }
 
 
@@ -57,7 +58,7 @@ void Scene::renderAllObjects() {
 void Scene::renderAllObjects3D() {
     const StereoscopicProjection* projection
             = (const StereoscopicProjection*)activeCamera->getProjection();
-    mat4 MV = activeCamera->getViewMatrix();
+    mat4 MV = activeCamera->getViewMatrix() * this->getModelMatrix();
 
     mat4 leftMVP = projection->getLeftProjectionMatrix() *
             activeCamera->getViewMatrix();
@@ -202,12 +203,14 @@ void Scene::renderScene() {
 }
 
 void Scene::update() {
+    RigidObject::update();
+
     activeCamera->update();
+
+    if(!rendering3DEnabled)
+        updateMVP();
 
     for(unsigned int i = 0; i < sceneObjects.size(); i++){
         sceneObjects[i]->update();
     }
-
-    if(!rendering3DEnabled)
-        updateMVP();
 }

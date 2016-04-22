@@ -112,6 +112,7 @@ UI_DIR = build/ui
 
 FORMS    += mainwindow.ui
 
+RESOURCES += resources/icons.qrc
 #############################################################################
 
 # CUDA

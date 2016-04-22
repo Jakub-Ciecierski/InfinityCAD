@@ -13,7 +13,7 @@
 /*
  * Scene is responsible for deallocating all objects in the scene
  */
-class Scene{
+class Scene : public RigidObject{
 private:
     //-----------------------------------------------------------//
     //  PRIVATE FIELDS
@@ -47,7 +47,7 @@ public:
     //  CONSTRUCTORS
     //-----------------------------------------------------------//
 
-    Scene();
+    Scene(SceneID ID, std::string name);
 
     ~Scene();
 
@@ -98,8 +98,6 @@ public:
     RenderObject * getRenderBody(const SceneID& id);
 
     SceneID getNextAvailableID();
-
-    RenderObject * getActiveRenderBody();
 
     Cross* getCross();
 

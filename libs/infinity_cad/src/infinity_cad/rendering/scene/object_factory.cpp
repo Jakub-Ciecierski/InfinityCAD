@@ -33,6 +33,15 @@ ObjectFactory& ObjectFactory::getInstance(){
     return factory;
 }
 
+Scene* ObjectFactory::createScene(std::string name){
+    SceneID id = sceneIDFactory.createNextAvailableID();
+
+    Scene* scene = new Scene(id, name);
+
+    return scene;
+}
+
+
 Camera* ObjectFactory::createCameraFPS(std::string name,
                                        Projection* projection){
     SceneID id = sceneIDFactory.createNextAvailableID();

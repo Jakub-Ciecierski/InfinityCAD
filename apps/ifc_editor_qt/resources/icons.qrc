@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/cameraButton">
+        <file>icons/camera.ico</file>
+        <file>icons/3d.ico</file>
+        <file>icons/nvidia1.ico</file>
+        <file>icons/nvidia2.ico</file>
+    </qresource>
+</RCC>

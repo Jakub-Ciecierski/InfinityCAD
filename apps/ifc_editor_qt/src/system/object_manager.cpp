@@ -238,11 +238,6 @@ void ObjectManager::moveCross(Item* item){
     if(item == NULL) return;
     Cross* cross = scene->getCross();
     cross->moveTo(item->object);
-
-    EditorWindow& m = EditorWindow::getInstance();
-    MainWindow* ui = m.getUI();
-    ui->glRendererWidget->updateCrossView();
-
 }
 
 void ObjectManager::moveCamera(Item * item){

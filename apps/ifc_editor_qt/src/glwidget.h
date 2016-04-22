@@ -38,8 +38,16 @@ private:
     bool isRightMousePressed;
     bool isRightMouseDrag;
 
+    QPoint middleMousePressPosition;
+    QPoint middleMouseDragPosition;
+    bool isMiddleMousePressed;
+    bool isMiddleMouseDrag;
+
+    bool isFPSCamera;
+
     void setupRenderer();
     void setupFocusPolicy();
+    void setCameraDefaultPosition();
 
     void startMainLoop();
 
@@ -56,7 +64,9 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
 
-    //void wheelEvent(QWheelEvent* event);
+    void wheelEvent(QWheelEvent* event);
+
+    void focusOutEvent(QFocusEvent* event);
 public:
     explicit GLWidget(QWidget* parent = 0);
     ~GLWidget();
@@ -76,6 +86,7 @@ public slots:
     void set3DDistance(QString distance);
 
     void setCUDA(bool value);
+    void setFPSCamera(bool value);
 
     void leftEyeColorPicker();
     void rightEyeColorPicker();

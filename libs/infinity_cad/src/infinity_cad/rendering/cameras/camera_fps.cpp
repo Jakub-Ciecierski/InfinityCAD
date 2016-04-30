@@ -80,6 +80,13 @@ const vec3& CameraFPS::getDirection(){
     return this->direction;
 }
 
+const glm::vec3& CameraFPS::getUp(){
+    return this->up;
+}
+const glm::vec3& CameraFPS::getRight(){
+    return this->right;
+}
+
 const mat4 &CameraFPS::getViewMatrix() {
     return viewMatrix;
 }
@@ -134,8 +141,6 @@ void CameraFPS::update() {
     viewMatrix[1].w = 0;
     viewMatrix[2].w = 0;
     viewMatrix[3].w = 1.0f;
-
-    //viewMatrix = glm::lookAt(position, vec3(0,0,0), up);
 
     VP = projection->getProjectionMatrix() * viewMatrix;
 

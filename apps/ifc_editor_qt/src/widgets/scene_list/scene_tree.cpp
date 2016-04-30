@@ -1,6 +1,7 @@
 #include <QMenu>
 #include <editor_window.h>
 #include <iostream>
+#include <algorithm>
 #include "system/object_manager.h"
 #include "system/ifc_types.h"
 #include <widgets/scene_list/context_menus/scene_cmenu_factory.h>
@@ -284,6 +285,22 @@ std::vector<Item*> SceneTree::getSelectedItems(const Type& type){
     return items;
 }
 
+std::vector<RenderObject*> SceneTree::getSelectedObjects(){
+    std::vector<RenderObject*> objects;
+
+    QList<QTreeWidgetItem *> selectedItems = this->selectedItems();
+    for(int i = 0; i < selectedItems.size(); i++){
+        Item* item  = getItemByTree(selectedItems[i]);
+        if(item != NULL){
+            if(!(std::find(objects.begin(),
+                         objects.end(), item->object) != objects.end())) {
+                objects.push_back(item->object);
+            }
+        }
+    }
+    return objects;
+}
+
 void SceneTree::activateObject(RenderObject * renderBody){
     for(unsigned int i = 0; i < allItems.size(); i++){
         Item* item = allItems[i];
@@ -355,6 +372,12 @@ void SceneTree::myitemSelectionChanged(){
         Item* item = getItemByTree(selectedItems[i]);
         if(item == NULL) continue;
         objManager.setActive(item->object->getID());
+        /*
+        for(unsigned int i = 0; i < item->children.size(); i++){
+            Item* child = item->children[i];
+            child->treeItem->setSelected(true);
+            objManager.setActive(child->object->getID());
+        }*/
     }
 }
 

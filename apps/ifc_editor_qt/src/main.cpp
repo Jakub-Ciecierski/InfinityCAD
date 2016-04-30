@@ -16,6 +16,7 @@ int main(int argc, char *argv[])
     Ui::MainWindow* ui = w.getUI();
     ui->cudaCheckBox->toggle();
     ui->showPointsCheckbox->toggle();
+    ui->cameraTypeCheckbox->toggle();
 
     w.show();
 

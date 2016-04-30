@@ -12,10 +12,12 @@
 #include <infinity_cad/rendering/cameras/camera_fps.h>
 #include <infinity_cad/rendering/color/color_convertor.h>
 #include "infinity_cad/settings/settings.h"
-
+#include <infinity_cad/math/math.h>
 #include <widgets/scene_list/scene_tree.h>
 
 #include "ui_mainwindow.h"
+
+using namespace glm;
 
 bool keys[1024];
 const int KEY_W = 0;
@@ -192,6 +194,12 @@ void GLWidget::keyReleaseEvent(QKeyEvent *event){
 
 void GLWidget::mousePressEvent(QMouseEvent *event){
     if(event->buttons() & Qt::LeftButton){
+        Cross* cross = renderer->getScene()->getCross();
+        mouseTracker->update(event->x(), event->y());
+        cross->pickCones(*ray,
+                         renderer->getWindowWidth(),
+                         renderer->getWindowHeight());
+
         leftMousePressPosition = event->pos();
         isLeftMousePressed = true;
         if(!isLeftMouseDrag){
@@ -223,6 +231,8 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *event){
     bool isRightMouseStill = false;
     int stillnessTolerance = 5;
 
+    Cross* cross = renderer->getScene()->getCross();
+
     if(isLeftMousePressed) {
         int dx = event->x() - leftMousePressPosition.x();
         int dy = event->y() - leftMousePressPosition.y();
@@ -230,7 +240,6 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *event){
 
         if(dist <= stillnessTolerance )
             isLeftMouseStill = true;
-
 
         isLeftMousePressed = false;
     }
@@ -249,8 +258,6 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *event){
     }
 
     if(isLeftMouseStill){
-        Cross* cross = renderer->getScene()->getCross();
-
         mouseTracker->update(event->x(), event->y());
         RenderObject * closestBody = cross->getClosestObject(*ray,
                                                              renderer->getWindowWidth(),
@@ -277,6 +284,9 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *event){
     isLeftMouseDrag = false;
     isRightMouseDrag = false;
     isMiddleMouseDrag = false;
+
+    cross->unPickCones();
+    cross->deactivateGrab();
 }
 
 void GLWidget::mouseMoveEvent(QMouseEvent *event){
@@ -287,10 +297,82 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event){
     Cross* cross = renderer->getScene()->getCross();
 
     if(isLeftMouseDrag){
-        if(isFPSCamera){
-            camera->rotate(dx * camera->mouseSpeed, dy * camera->mouseSpeed, 0.0f);
-        }else{
-            scene->rotate(0, dx * camera->mouseSpeed, 0);
+        AxisType axis = cross->getPickedCone();
+        if(axis != NONE){
+            SceneTree* sceneTree = EditorWindow::getInstance().getUI()->sceneTree;
+            cross->activateGrab(sceneTree->getSelectedObjects());
+
+            const vec3& xDir = cross->getXDirection();
+            const vec3& yDir = cross->getYDirection();
+            const vec3& zDir = cross->getZDirection();
+            const vec3& camDir = camera->getDirection();
+            const vec3& camUp = camera->getUp();
+            const vec3& camRight = camera->getRight();
+
+            float xAngle = ifc::dot(xDir, camDir);
+            //float yAngle = ifc::dot(yDir, camDir);
+            float zAngle = ifc::dot(zDir, camDir);
+
+            float zUpAngle = ifc::dot(zDir, camUp);
+            float xUpAngle = ifc::dot(xDir, camUp);
+            float yUpAngle = ifc::dot(yDir, camUp);
+
+            float xRightAngle = ifc::dot(xDir, camRight);
+            float zRightAngle = ifc::dot(zDir, camRight);
+
+            float moveDist = 0.002 * 5;
+            int dx = event->x() - mouseDragPosition.x();
+            int dy = event->y() - mouseDragPosition.y();
+
+            int dXAxis = -dy;
+            int dYAxis = -dy;
+            int dZAxis = -dy;
+
+            if(abs(zAngle) >= 0.0f && abs(zAngle) <= 0.5f &&
+                    abs(zUpAngle) < 0.5f){
+                dZAxis = dx;
+                if(zRightAngle < 0.0f){
+                    dZAxis = -dZAxis;
+                }
+            }else{
+                if(zUpAngle < 0.0f){
+                    dZAxis = -dZAxis;
+                }
+            }
+            if(abs(xAngle) >= 0.0f && abs(xAngle) <= 0.5f &&
+                    abs(xUpAngle) < 0.5f ){
+                dXAxis = dx;
+                if(xRightAngle < 0.0f){
+                    dXAxis = -dXAxis;
+                }
+            }else{
+                if(xUpAngle < 0.0f){
+                    dXAxis = -dXAxis;
+                }
+            }
+            if(yUpAngle < 0.0f){
+                dYAxis = -dYAxis;
+            }
+
+            // Z
+            if(axis == AxisType::ZAxis){
+                cross->move(0, 0, (float)dZAxis * moveDist);
+            }
+            // Y
+            else if(axis == YAxis){
+                cross->move(0, (float)dYAxis * moveDist, 0);
+            }
+            // X
+            else if(axis == XAxis){
+                cross->move((float)dXAxis * moveDist, 0, 0);
+            }
+        }
+        else{
+            if(isFPSCamera){
+                camera->rotate(dx * camera->mouseSpeed, dy * camera->mouseSpeed, 0.0f);
+            }else{
+                scene->rotate(0, dx * camera->mouseSpeed, 0);
+            }
         }
 
         mouseDragPosition = event->pos();
@@ -298,21 +380,69 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event){
 
     // Cross
     if(isRightMouseDrag){
+        const vec3& xDir = cross->getXDirection();
+        const vec3& yDir = cross->getYDirection();
+        const vec3& zDir = cross->getZDirection();
+        const vec3& camDir = camera->getDirection();
+        const vec3& camUp = camera->getUp();
+        const vec3& camRight = camera->getRight();
+
+        float xAngle = ifc::dot(xDir, camDir);
+        //float yAngle = ifc::dot(yDir, camDir);
+        float zAngle = ifc::dot(zDir, camDir);
+
+        float zUpAngle = ifc::dot(zDir, camUp);
+        float xUpAngle = ifc::dot(xDir, camUp);
+        float yUpAngle = ifc::dot(yDir, camUp);
+
+        float xRightAngle = ifc::dot(xDir, camRight);
+        float zRightAngle = ifc::dot(zDir, camRight);
+
         float moveDist = 0.002 * 5;
-        //int dx = event->x() - rightMouseDragPosition.x();
+        int dx = event->x() - rightMouseDragPosition.x();
         int dy = event->y() - rightMouseDragPosition.y();
+
+        int dXAxis = -dy;
+        int dYAxis = -dy;
+        int dZAxis = -dy;
+
+        if(abs(zAngle) >= 0.0f && abs(zAngle) <= 0.5f &&
+                abs(zUpAngle) < 0.5f){
+            dZAxis = dx;
+            if(zRightAngle < 0.0f){
+                dZAxis = -dZAxis;
+            }
+        }else{
+            if(zUpAngle < 0.0f){
+                dZAxis = -dZAxis;
+            }
+        }
+        if(abs(xAngle) >= 0.0f && abs(xAngle) <= 0.5f &&
+                abs(xUpAngle) < 0.5f ){
+            dXAxis = dx;
+            if(xRightAngle < 0.0f){
+                dXAxis = -dXAxis;
+            }
+        }else{
+            if(xUpAngle < 0.0f){
+                dXAxis = -dXAxis;
+            }
+        }
+        if(yUpAngle < 0.0f){
+            dYAxis = -dYAxis;
+        }
 
         // Z
         if(event->modifiers() & Qt::ControlModifier){
-            cross->move(0, 0, (float)dy * moveDist);
+            cross->move(0, 0, (float)dZAxis * moveDist);
         }
         // Y
         else if(event->modifiers() & Qt::ShiftModifier){
-            cross->move(0, (float)dy * moveDist, 0);
+            cross->move(0, (float)dYAxis * moveDist, 0);
         }
         // X
         else{
-            cross->move((float)dy * moveDist, 0, 0);
+            cross->move((float)dXAxis * moveDist, 0, 0);
         }
 
         rightMouseDragPosition = event->pos();
@@ -382,7 +512,8 @@ bool GLWidget::do_movement(){
     float speedBoost = 0.3f;
     if(keys[KEY_SPACE]){
         //speedBoost = 3.0f;
-        cross->activateGrab();
+        SceneTree* sceneTree = EditorWindow::getInstance().getUI()->sceneTree;
+        cross->activateGrab(sceneTree->getSelectedObjects());
     }else{
         cross->deactivateGrab();
     }
@@ -519,3 +650,4 @@ void GLWidget::moveObject(const SceneID& id, glm::vec3& pos){
 }
 
 #include "moc_glwidget.cpp"
+

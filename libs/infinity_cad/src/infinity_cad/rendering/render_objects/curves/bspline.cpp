@@ -63,13 +63,15 @@ void BSpline::draw(const glm::mat4 &VP, const Color& color) {
 
     if(drawBezierBasis){
         drawBezierSpline(VP, color);
+        /*
         for(unsigned int i = 0 ;i < points.size();i++){
             points[i]->setShow(false);
-        }
+        }*/
     }else {
+        /*
         for(unsigned int i = 0 ;i < points.size();i++){
             points[i]->setShow(true);
-        }
+        }*/
         drawSpline(VP, color);
     }
     if(doDrawBezierPolygon)

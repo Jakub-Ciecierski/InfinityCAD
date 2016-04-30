@@ -35,13 +35,12 @@ Scene::~Scene() {
 
 void Scene::initSceneElements(){
     ObjectFactory objectFactory = ObjectFactory::getInstance();
-
+    
+    cross = objectFactory.createCross("Cross Grabber", &this->sceneObjects);
+    this->addRenderObject(cross);
 
     AxisNet* axisNet = objectFactory.createAxisNet("Axis Net", 20);
     this->addRenderObject(axisNet);
-
-    cross = objectFactory.createCross("Cross Grabber",&this->sceneObjects);
-    this->addRenderObject(cross);
 }
 
 void Scene::updateMVP() {
@@ -50,9 +49,11 @@ void Scene::updateMVP() {
 
 
 void Scene::renderAllObjects() {
-    for(unsigned int i = 0; i < sceneObjects.size(); i++){
+    int size = sceneObjects.size();
+    for(int i = 0; i < size; i++){
         sceneObjects[i]->render(MVP);
     }
+    cross->render(MVP);
 }
 
 void Scene::renderAllObjects3D() {
@@ -60,15 +61,14 @@ void Scene::renderAllObjects3D() {
             = (const StereoscopicProjection*)activeCamera->getProjection();
     mat4 MV = activeCamera->getViewMatrix() * this->getModelMatrix();
 
-    mat4 leftMVP = projection->getLeftProjectionMatrix() *
-            activeCamera->getViewMatrix();
-    mat4 rightMVP = projection->getRightProjectionMatrix() *
-            activeCamera->getViewMatrix();
+    mat4 leftMVP = projection->getLeftProjectionMatrix() * MV;
+    mat4 rightMVP = projection->getRightProjectionMatrix() * MV;
 
     Color leftColor = projection->getLeftColor();
     Color rightColor = projection->getRightColor();
 
-    for(unsigned int i = 0; i < sceneObjects.size(); i++){
+    int size = sceneObjects.size();
+    for(int i = 0; i < size; i++){
         glDisable(GL_BLEND);
 
         sceneObjects[i]->render(leftMVP, leftColor);
@@ -80,6 +80,17 @@ void Scene::renderAllObjects3D() {
 
         glDisable(GL_BLEND);
     }
+
+    glDisable(GL_BLEND);
+
+    cross->render(leftMVP, leftColor);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_COLOR, GL_ONE);
+
+    cross->render(rightMVP, rightColor);
+
+    glDisable(GL_BLEND);
 }
 
 
@@ -206,9 +217,7 @@ void Scene::update() {
     RigidObject::update();
 
     activeCamera->update();
-
-    if(!rendering3DEnabled)
-        updateMVP();
+    updateMVP();
 
     for(unsigned int i = 0; i < sceneObjects.size(); i++){
         sceneObjects[i]->update();

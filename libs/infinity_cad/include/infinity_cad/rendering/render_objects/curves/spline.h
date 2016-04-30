@@ -24,10 +24,10 @@ protected:
     int screenWidth = 1300;
     int screenHeight = 700;
 
-    std::vector<ifc::Point*> points;
-
     Color polygonColor;
     bool doDrawBezierPolygon;
+
+    std::vector<ifc::Point*> points;
 
     void initVertices() override;
     virtual void initEdges() override;
@@ -49,7 +49,6 @@ public:
     void moveDown(ifc::Point* point);
 
     int getPointIndex(ifc::Point* point);
-    const std::vector<ifc::Point*>& getPoints();
 
     virtual void setDrawBezierPolygon(bool value);
     bool isDrawBezierPolygon();

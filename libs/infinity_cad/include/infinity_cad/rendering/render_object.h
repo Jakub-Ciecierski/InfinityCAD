@@ -44,7 +44,10 @@ protected:
     glm::vec3 NDCPosition;
     glm::vec4* NDCVertices;
 
+    // children are deleted with the object
     std::vector<RenderObject *> children;
+    // components are not deleted
+    std::vector<RenderObject *> components;
 
     //-----------------------------------------------------------//
     //  PROTECTED METHODS
@@ -86,6 +89,7 @@ public:
     void addChild(RenderObject * body);
 
     virtual const std::vector<RenderObject *>& getChildren();
+    const std::vector<RenderObject *>& getComponents();
 
     void setDrawingMode(GLenum mode);
     void setLineWidth(float width);

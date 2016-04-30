@@ -56,6 +56,7 @@ public:
     void addChildItem(Item* bezierName, Item* pointName);
 
     std::vector<Item*> getSelectedItems(const Type& type);
+    std::vector<RenderObject*> getSelectedObjects();
 
     void activateObject(RenderObject * renderBody);
     void deactivateAll();

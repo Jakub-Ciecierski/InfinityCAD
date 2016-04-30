@@ -1,6 +1,5 @@
 #include "editor_window.h"
 #include "ui_mainwindow.h"
-#include "widgets/objects_list/objects_tree_factory.h"
 #include <widgets/scene_list/context_menus/scene_cmenu_factory.h>
 #include <iostream>
 

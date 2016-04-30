@@ -15,11 +15,22 @@
 #include <map>
 #include <string>
 
+enum AxisType{
+    XAxis, YAxis, ZAxis, NONE
+};
+
 class Cross : public RenderObject {
 private:
+    glm::vec3 xDirection;
+    glm::vec3 yDirection;
+    glm::vec3 zDirection;
+
     Cone* xCone;
     Cone* yCone;
     Cone* zCone;
+
+    Cone* pickedCone;
+    std::vector<Cone*> cones;
 
     Color xAxisColor;
     Color yAxisColor;
@@ -66,10 +77,19 @@ public:
     ~Cross();
 
     void activateGrab();
+    void activateGrab(const std::vector<RenderObject*>& renderObjects);
     void deactivateGrab();
     RenderObject * getClosestObject(const RayCast& ray,
                                     int width, int height);
     void scanAndMoveToClosestObject(const RayCast& ray, int width, int height);
+
+    void pickCones(const RayCast& ray, int width, int height);
+    void unPickCones();
+    AxisType getPickedCone();
+
+    const glm::vec3& getXDirection();
+    const glm::vec3& getYDirection();
+    const glm::vec3& getZDirection();
 
     virtual void render(const glm::mat4& VP) override;
     virtual void render(const glm::mat4& VP, const Color& color) override;

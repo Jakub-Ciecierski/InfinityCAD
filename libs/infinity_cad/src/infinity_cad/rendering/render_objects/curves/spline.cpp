@@ -43,6 +43,7 @@ void Spline::initEdges(){
 
 void Spline::addPoint(ifc::Point* point){
     this->points.push_back(point);
+    this->components.push_back(point);
 
     buildCurve();
 }
@@ -50,7 +51,8 @@ void Spline::addPoint(ifc::Point* point){
 void Spline::removePoint(ifc::Point* point){
     points.erase(remove(points.begin(), points.end(), point),
                  points.end());
-
+    components.erase(remove(components.begin(), components.end(), point),
+                     components.end());
     buildCurve();
 }
 
@@ -58,7 +60,7 @@ void Spline::swapPoints(int i, int j){
     int pointsCount = points.size();
     if(i < 0 || j < 0 || i >= pointsCount  || j >= pointsCount ) return;
 
-    Point* pointTMP = points[i];
+    Point* pointTMP = (ifc::Point*)points[i];
     points[i] = points[j];
     points[j] = pointTMP;
 
@@ -90,10 +92,6 @@ int Spline::getPointIndex(ifc::Point* point){
         if (points[i] == point) return i;
     }
     return -1;
-}
-
-const vector<ifc::Point*>& Spline::getPoints(){
-    return this->points;
 }
 
 void Spline::setDrawBezierPolygon(bool value){

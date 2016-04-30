@@ -41,6 +41,8 @@ public:
     void moveDown(float speedBoost );
 
     virtual const glm::vec3& getDirection() override;
+    const glm::vec3& getUp();
+    const glm::vec3& getRight();
 
     const glm::mat4& getVPMatrix();
     virtual const glm::mat4 &getViewMatrix();

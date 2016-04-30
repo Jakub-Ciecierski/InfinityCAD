@@ -142,8 +142,12 @@ void RenderObject::addChild(RenderObject * body){
     return this->children.push_back(body);
 }
 
-const std::vector<RenderObject *>&RenderObject::getChildren(){
+const std::vector<RenderObject *>& RenderObject::getChildren(){
     return this->children;
+}
+
+const std::vector<RenderObject *>& RenderObject::getComponents(){
+    return this->components;
 }
 
 void RenderObject::setDrawingMode(GLenum mode){

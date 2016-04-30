@@ -20,7 +20,7 @@ Cross::Cross(SceneID id, const std::vector<RenderObject *>* sceneObjects) :
         zAxisColor(COLOR_Z_AXIS),
         grabedColor(COLOR_GRABED){
     lineWidth = 1.5f;
-    grabRadius = 0.1;
+    grabRadius = 0.2;
 
     initVertices();
     initEdges();
@@ -40,7 +40,7 @@ Cross::Cross(SceneID id, std::string name,
         zAxisColor(COLOR_Z_AXIS),
         grabedColor(COLOR_GRABED){
     lineWidth = 1.5f;
-    grabRadius = 0.1;
+    grabRadius = 0.2;
 
     initVertices();
     initEdges();
@@ -91,6 +91,15 @@ void Cross::initCones(){
     zCone->rotate(90, 0, 0);
     zCone->move(0, 0, grabRadius - ((h-0.1)*scaleFactor));
 
+    xDirection = vec3(1,0,0);
+    yDirection = vec3(0,1,0);
+    zDirection = vec3(0,0,1);
+
+    pickedCone = NULL;
+
+    cones.push_back(xCone);
+    cones.push_back(yCone);
+    cones.push_back(zCone);
 }
 
 //-----------------------//
@@ -226,14 +235,33 @@ void Cross::activateGrab() {
 
 }
 
+void Cross::activateGrab(const std::vector<RenderObject*>& renderObjects) {
+    if(isGrabActive) return;
+    isGrabActive = true;
+    grabedMap.clear();
+
+    for(unsigned int i = 0; i < renderObjects.size();i++){
+        RenderObject* object = renderObjects[i];
+
+        grabedMap[object] = BodyInfo(0, *(object->getColor()));
+        object->setSelected(true);
+
+        const std::vector<RenderObject*>& components = object->getComponents();
+        for(unsigned int i = 0 ; i < components.size(); i++){
+            grabedMap[components[i]] = BodyInfo(0, *(components[i]->getColor()));
+            components[i]->setSelected(true);
+        }
+    }
+
+
+}
+
 void Cross::deactivateGrab() {
     if(!isGrabActive) return;
     isGrabActive = false;
 
     for(auto &item: grabedMap){
         RenderObject * body = item.first;
-        BodyInfo info = item.second;
-        body->setColor(info.color);
         body->setSelected(false);
     }
     grabedMap.clear();
@@ -336,9 +364,46 @@ void Cross::scanAndMoveToClosestObject(const RayCast& ray, int width, int height
     float vY = 2.0 / (float) height;
     int rayY = (y + 1.0f) / vY;
 
-    for(unsigned int i = 1; i < sceneObjects->size(); i++){
+    for(unsigned int i = 0; i < sceneObjects->size(); i++){
 
         RenderObject * body = (*sceneObjects)[i];
+        const vec3& bodyProjectedPosition = body->getProjectedPosition();
+
+        float bodyX = bodyProjectedPosition.x;
+        float bodyY = bodyProjectedPosition.y;
+
+        int bodypX = (bodyX + 1.0f) / vX;
+        int bodypY  = (bodyY + 1.0f) / vY;
+
+        int dx = rayX - bodypX;
+        int dy = rayY - bodypY;
+        float dist = sqrt(dx*dx + dy*dy);
+
+        if(dist < distTol){
+            this->moveTo(body);
+        }
+
+    }
+}
+
+void Cross::pickCones(const RayCast& ray, int width, int height){
+    int distTol = 15;
+
+    float x = ray.currentX;
+    float y = ray.currentY;
+
+    float vX = 2.0 / (float) width;
+    int rayX = (x + 1.0f) / vX;
+
+    float vY = 2.0 / (float) height;
+    int rayY = (y + 1.0f) / vY;
+
+    float minDist = 9999.0f;
+    Cone* minBody = NULL;
+
+    for(unsigned int i = 0; i < cones.size(); i++){
+
+        Cone* body = cones[i];
         const vec3& bodyProjectedPosition = body->getProjectedPosition();
 
         float bodyX = bodyProjectedPosition.x;
@@ -352,10 +417,53 @@ void Cross::scanAndMoveToClosestObject(const RayCast& ray, int width, int height
         int dist = sqrt(dx*dx + dy*dy);
 
         if(dist < distTol){
-            this->moveTo(body);
+            if(dist < minDist){
+                minDist = dist;
+                minBody = body;
+            }
         }
-
     }
+    if(minBody != NULL){
+        this->pickedCone = minBody;
+        this->pickedCone->setColor(COLOR_OBJECT_ACTIVE);
+        return;
+    }
+
+}
+
+void Cross::unPickCones(){
+    if(this->pickedCone != NULL){
+        if(this->pickedCone == xCone){
+            this->pickedCone->setColor(xAxisColor);
+        }else if(this->pickedCone == yCone){
+            this->pickedCone->setColor(yAxisColor);
+        }else if(this->pickedCone == zCone){
+            this->pickedCone->setColor(zAxisColor);
+        }
+    }
+    this->pickedCone = NULL;
+}
+
+AxisType Cross::getPickedCone(){
+    if(this->pickedCone == xCone){
+        return XAxis;
+    }else if(this->pickedCone == yCone){
+        return YAxis;
+    }else if(this->pickedCone == zCone){
+        return ZAxis;
+    }
+    return NONE;
+
+}
+
+const glm::vec3& Cross::getXDirection(){
+    return this->xDirection;
+}
+const glm::vec3& Cross::getYDirection(){
+    return this->yDirection;
+}
+const glm::vec3& Cross::getZDirection(){
+    return this->zDirection;
 }
 
 void Cross::render(const glm::mat4 &VP) {

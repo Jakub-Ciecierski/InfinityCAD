@@ -17,287 +17,7 @@
    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">/*
-	Copyright 2013 Emanuel Claesson
-
-	Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
-	you may not use this file except in compliance with the License.
-	You may obtain a copy of the License at
-
-		http://www.apache.org/licenses/LICENSE-2.0
-
-	Unless required by applicable law or agreed to in writing, software
-	distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
-	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	See the License for the specific language governing permissions and
-	limitations under the License.
-*/
-
-/*
-	COLOR_DARK     = #191919
-	COLOR_MEDIUM   = #353535
-	COLOR_MEDLIGHT = #5A5A5A
-	COLOR_LIGHT    = #DDDDDD
-	COLOR_ACCENT   = #3D7848
-*/
-
-* {
-	background: #191919;
-	color: #DDDDDD;
-	border: 1px solid #5A5A5A;
-}
-
-QWidget::item:selected {
-	background: #3D7848;
-}
-
-QCheckBox, QRadioButton {
-	border: none;
-}
-
-QRadioButton::indicator, QCheckBox::indicator {
-	width: 13px;
-	height: 13px;
-}
-
-QRadioButton::indicator::unchecked, QCheckBox::indicator::unchecked {
-	border: 1px solid #5A5A5A;
-	background: none;
-}
-
-QRadioButton::indicator:unchecked:hover, QCheckBox::indicator:unchecked:hover {
-	border: 1px solid #DDDDDD;
-}
-
-QRadioButton::indicator::checked, QCheckBox::indicator::checked {
-	border: 1px solid #5A5A5A;
-	background: #5A5A5A;
-}
-
-QRadioButton::indicator:checked:hover, QCheckBox::indicator:checked:hover {
-	border: 1px solid #DDDDDD;
-	background: #DDDDDD;
-}
-
-QGroupBox {
-	margin-top: 6px;
-}
-
-QGroupBox::title {
-	top: -7px;
-	left: 7px;
-}
-
-QScrollBar {
-	border: 1px solid #5A5A5A;
-	background: #191919;
-}
-
-QScrollBar:horizontal {
-	height: 15px;
-	margin: 0px 0px 0px 32px;
-}
-
-QScrollBar:vertical {
-	width: 15px;
-	margin: 32px 0px 0px 0px;
-}
-
-QScrollBar::handle {
-	background: #353535;
-	border: 1px solid #5A5A5A;
-}
-
-QScrollBar::handle:horizontal {
-	border-width: 0px 1px 0px 1px;
-}
-
-QScrollBar::handle:vertical {
-	border-width: 1px 0px 1px 0px;
-}
-
-QScrollBar::handle:horizontal {
-	min-width: 20px;
-}
-
-QScrollBar::handle:vertical {
-	min-height: 20px;
-}
-
-QScrollBar::add-line, QScrollBar::sub-line {
-	background:#353535;
-	border: 1px solid #5A5A5A;
-	subcontrol-origin: margin;
-}
-
-QScrollBar::add-line {
-	position: absolute;
-}
-
-QScrollBar::add-line:horizontal {
-	width: 15px;
-	subcontrol-position: left;
-	left: 15px;
-}
-
-QScrollBar::add-line:vertical {
-	height: 15px;
-	subcontrol-position: top;
-	top: 15px;
-}
-
-QScrollBar::sub-line:horizontal {
-	width: 15px;
-	subcontrol-position: top left;
-}
-
-QScrollBar::sub-line:vertical {
-	height: 15px;
-	subcontrol-position: top;
-}
-
-QScrollBar:left-arrow, QScrollBar::right-arrow, QScrollBar::up-arrow, QScrollBar::down-arrow {
-	border: 1px solid #5A5A5A;
-	width: 3px;
-	height: 3px;
-}
-
-QScrollBar::add-page, QScrollBar::sub-page {
-	background: none;
-}
-
-QAbstractButton:hover {
-	background: #353535;
-}
-
-QAbstractButton:pressed {
-	background: #5A5A5A;
-}
-
-QAbstractItemView {
-	show-decoration-selected: 1;
-	selection-background-color: #3D7848;
-	selection-color: #DDDDDD;
-	alternate-background-color: #353535;
-}
-
-QHeaderView {
-	border: 1px solid #5A5A5A;
-}
-
-QHeaderView::section {
-	background: #191919;
-	border: 1px solid #5A5A5A;
-	padding: 4px;
-}
-
-QHeaderView::section:selected, QHeaderView::section::checked {
-	background: #353535;
-}
-
-QTableView {
-	gridline-color: #5A5A5A;
-}
-
-QTabBar {
-	margin-left: 2px;
-}
-
-QTabBar::tab {
-	border-radius: 0px;
-	padding: 4px;
-	margin: 4px;
-}
-
-QTabBar::tab:selected {
-	background: #353535;
-}
-
-QComboBox::down-arrow {
-	border: 1px solid #5A5A5A;
-	background: #353535;
-}
-
-QComboBox::drop-down {
-	border: 1px solid #5A5A5A;
-	background: #353535;
-}
-
-QComboBox::down-arrow {
-	width: 3px;
-	height: 3px;
-	border: 1px solid #5A5A5A;
-}
-
-QAbstractSpinBox {
-	padding-right: 15px;
-}
-
-QAbstractSpinBox::up-button, QAbstractSpinBox::down-button {
-	border: 1px solid #5A5A5A;
-	background: #353535;
-	subcontrol-origin: border;
-}
-
-QAbstractSpinBox::up-arrow, QAbstractSpinBox::down-arrow {
-	width: 3px;
-	height: 3px;
-	border: 1px solid #5A5A5A;
-}
-
-QSlider {
-	border: none;
-}
-
-QSlider::groove:horizontal {
-	height: 5px;
-	margin: 4px 0px 4px 0px;
-}
-
-QSlider::groove:vertical {
-	width: 5px;
-	margin: 0px 4px 0px 4px;
-}
-
-QSlider::handle {
-	border: 1px solid #5A5A5A;
-	background: #353535;
-}
-
-QSlider::handle:horizontal {
-	width: 15px;
-	margin: -4px 0px -4px 0px;
-}
-
-QSlider::handle:vertical {
-	height: 15px;
-	margin: 0px -4px 0px -4px;
-}
-
-QSlider::add-page:vertical, QSlider::sub-page:horizontal {
-	background: #3D7848;
-}
-
-QSlider::sub-page:vertical, QSlider::add-page:horizontal {
-	background: #353535;
-}
-
-QLabel {
-	border: none;
-}
-
-QProgressBar {
-	text-align: center;
-}
-
-QProgressBar::chunk {
-	width: 1px;
-	background-color: #3D7848;
-}
-
-QMenu::separator {
-	background: #353535;
-}</string>
+   <string notr="true"/>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -596,8 +316,8 @@ QMenu::separator {
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>250</width>
-                 <height>587</height>
+                 <width>252</width>
+                 <height>593</height>
                 </rect>
                </property>
                <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -680,7 +400,7 @@ QMenu::separator {
                      <property name="maximumSize">
                       <size>
                        <width>16777215</width>
-                       <height>40</height>
+                       <height>25</height>
                       </size>
                      </property>
                      <property name="frameShape">
@@ -690,6 +410,18 @@ QMenu::separator {
                       <enum>QFrame::Raised</enum>
                      </property>
                      <layout class="QHBoxLayout" name="horizontalLayout_2">
+                      <property name="leftMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="topMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="rightMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="bottomMargin">
+                       <number>0</number>
+                      </property>
                       <item>
                        <widget class="QLabel" name="positionXLabel">
                         <property name="maximumSize">
@@ -713,7 +445,7 @@ QMenu::separator {
                         <property name="maximumSize">
                          <size>
                           <width>45</width>
-                          <height>45</height>
+                          <height>50</height>
                          </size>
                         </property>
                        </widget>
@@ -732,7 +464,7 @@ QMenu::separator {
                      <property name="maximumSize">
                       <size>
                        <width>16777215</width>
-                       <height>40</height>
+                       <height>25</height>
                       </size>
                      </property>
                      <property name="frameShape">
@@ -742,6 +474,18 @@ QMenu::separator {
                       <enum>QFrame::Raised</enum>
                      </property>
                      <layout class="QHBoxLayout" name="horizontalLayout_3">
+                      <property name="leftMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="topMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="rightMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="bottomMargin">
+                       <number>0</number>
+                      </property>
                       <item>
                        <widget class="QLabel" name="positionYLabel">
                         <property name="maximumSize">
@@ -784,7 +528,7 @@ QMenu::separator {
                      <property name="maximumSize">
                       <size>
                        <width>16777215</width>
-                       <height>40</height>
+                       <height>25</height>
                       </size>
                      </property>
                      <property name="frameShape">
@@ -794,6 +538,18 @@ QMenu::separator {
                       <enum>QFrame::Raised</enum>
                      </property>
                      <layout class="QHBoxLayout" name="horizontalLayout_4">
+                      <property name="leftMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="topMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="rightMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="bottomMargin">
+                       <number>0</number>
+                      </property>
                       <item>
                        <widget class="QLabel" name="positionZLabel">
                         <property name="maximumSize">
@@ -898,7 +654,7 @@ QMenu::separator {
                      <property name="maximumSize">
                       <size>
                        <width>16777215</width>
-                       <height>40</height>
+                       <height>25</height>
                       </size>
                      </property>
                      <property name="frameShape">
@@ -908,6 +664,18 @@ QMenu::separator {
                       <enum>QFrame::Raised</enum>
                      </property>
                      <layout class="QHBoxLayout" name="horizontalLayout_5">
+                      <property name="leftMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="topMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="rightMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="bottomMargin">
+                       <number>0</number>
+                      </property>
                       <item>
                        <widget class="QLabel" name="angleXLabel">
                         <property name="maximumSize">
@@ -956,7 +724,7 @@ QMenu::separator {
                      <property name="maximumSize">
                       <size>
                        <width>16777215</width>
-                       <height>40</height>
+                       <height>25</height>
                       </size>
                      </property>
                      <property name="frameShape">
@@ -966,6 +734,18 @@ QMenu::separator {
                       <enum>QFrame::Raised</enum>
                      </property>
                      <layout class="QHBoxLayout" name="horizontalLayout_6">
+                      <property name="leftMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="topMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="rightMargin">
+                       <number>0</number>
+                      </property>
+                      <property name="bottomMargin">
+                       <number>0</number>
+                      </property>
                       <item>
                        <widget class="QLabel" name="angleYLabel">
                         <property name="maximumSize">
@@ -1024,7 +804,7 @@ QMenu::separator {
      <x>0</x>
      <y>0</y>
      <width>1162</width>
-     <height>24</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -1036,19 +816,20 @@ QMenu::separator {
     <property name="title">
      <string>Edit</string>
     </property>
-    <widget class="QMenu" name="menuSettings">
-     <property name="title">
-      <string>Stereoscopic</string>
-     </property>
-     <addaction name="actionLeft_Eye_Color"/>
-     <addaction name="actionRight_Eye_Color"/>
-    </widget>
     <widget class="QMenu" name="menuColors">
      <property name="title">
       <string>Colors</string>
      </property>
+     <widget class="QMenu" name="menuStereoscopic">
+      <property name="title">
+       <string>Stereoscopic</string>
+      </property>
+      <addaction name="actionLeft_Eye_Color"/>
+      <addaction name="actionRight_Eye_Color"/>
+     </widget>
      <addaction name="actionBackground"/>
      <addaction name="actionObjects_Color"/>
+     <addaction name="menuStereoscopic"/>
     </widget>
     <widget class="QMenu" name="menuCross">
      <property name="title">
@@ -1075,7 +856,6 @@ QMenu::separator {
      <addaction name="actionGrab_Radius_Sphere"/>
      <addaction name="menuVisibility"/>
     </widget>
-    <addaction name="menuSettings"/>
     <addaction name="menuColors"/>
     <addaction name="menuCross"/>
    </widget>
@@ -1150,6 +930,7 @@ QMenu::separator {
     <slot>rightEyeColorPicker()</slot>
     <slot>setCUDA(bool)</slot>
     <slot>setFPSCamera(bool)</slot>
+    <slot>backgroundColorPicker()</slot>
    </slots>
   </customwidget>
   <customwidget>
@@ -1274,6 +1055,22 @@ QMenu::separator {
     <hint type="destinationlabel">
      <x>366</x>
      <y>415</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionBackground</sender>
+   <signal>triggered()</signal>
+   <receiver>glRendererWidget</receiver>
+   <slot>backgroundColorPicker()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>451</x>
+     <y>414</y>
     </hint>
    </hints>
   </connection>

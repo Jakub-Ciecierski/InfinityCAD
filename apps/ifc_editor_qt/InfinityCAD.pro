@@ -107,7 +107,8 @@ UI_DIR = build/ui
 FORMS    += mainwindow.ui \
     objects_dialog.ui
 
-RESOURCES += resources/icons.qrc
+RESOURCES += resources/icons.qrc \
+    qdarkstyle/style.qrc
 #############################################################################
 
 # CUDA

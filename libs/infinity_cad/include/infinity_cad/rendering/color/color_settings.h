@@ -27,4 +27,6 @@ extern Color COLOR_PLANE;
 
 extern Color COLOR_GRABED;
 
+extern Color COLOR_BLACK;
+
 #endif //MG1_COLOR_SETTINGS_H

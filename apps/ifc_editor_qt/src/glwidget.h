@@ -90,6 +90,7 @@ public slots:
 
     void leftEyeColorPicker();
     void rightEyeColorPicker();
+    void backgroundColorPicker();
 
     void moveObject(const SceneID& id, glm::vec3& pos);
 

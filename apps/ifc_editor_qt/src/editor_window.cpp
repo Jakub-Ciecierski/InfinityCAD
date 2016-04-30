@@ -129,8 +129,4 @@ void EditorWindow::setupSplitters(){
 
     ui->sceneProperitesSplitter->setStretchFactor(0,2);
     ui->sceneProperitesSplitter->setStretchFactor(1,1);
-
-    ui->renderToPropertiesSplitter->
-            setStyleSheet("QSplitter::handle{background: orange;}");
-
 }

@@ -623,11 +623,15 @@ void GLWidget::leftEyeColorPicker(){
     Color gmInitColor = projection->getLeftColor();
 
     QColor qInitColor = GMColorToQColor(gmInitColor);
-    QColor qcolor = QColorDialog::getColor(qInitColor, this);
 
-    Color gmColor = QColorToGMColor(qcolor);
+    QColorDialog *ColorDialog = new QColorDialog(this);
+    QColor qcolor = ColorDialog->getColor(qInitColor, this, "Left Eye");
+    if(qcolor.isValid()){
+        Color gmColor = QColorToGMColor(qcolor);
+        projection->setLeftColor(gmColor);
+    }
+    delete ColorDialog;
 
-    projection->setLeftColor(gmColor);
 }
 
 void GLWidget::rightEyeColorPicker(){
@@ -636,11 +640,28 @@ void GLWidget::rightEyeColorPicker(){
 
     Color gmInitColor = projection->getRightColor();
     QColor qInitColor = GMColorToQColor(gmInitColor);
-    QColor qcolor = QColorDialog::getColor(qInitColor, this);
 
-    Color gmColor = QColorToGMColor(qcolor);
+    QColorDialog *ColorDialog = new QColorDialog(this);
+    QColor qcolor = ColorDialog->getColor(qInitColor, this, "Right Eye");
+    if(qcolor.isValid()){
+        Color gmColor = QColorToGMColor(qcolor);
+        projection->setRightColor(gmColor);
+    }
+    delete ColorDialog;
+}
 
-    projection->setRightColor(gmColor);
+void GLWidget::backgroundColorPicker(){
+    Color gmInitColor = scene->getColor();
+    QColor qInitColor = GMColorToQColor(gmInitColor);
+    //QColor qcolor = QColorDialog::getColor(qInitColor, this, "Background");
+
+    QColorDialog *ColorDialog = new QColorDialog(this);
+    QColor qcolor = ColorDialog->getColor(qInitColor, this,"Background");
+    if(qcolor.isValid()){
+        Color gmColor = QColorToGMColor(qcolor);
+        scene->setColor(gmColor);
+    }
+    delete ColorDialog;
 }
 
 void GLWidget::moveObject(const SceneID& id, glm::vec3& pos){

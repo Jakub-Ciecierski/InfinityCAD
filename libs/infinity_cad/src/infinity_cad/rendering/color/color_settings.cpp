@@ -2,7 +2,7 @@
 // Created by jakub on 3/5/16.
 //
 
-#include <infinity_cad/rendering/color/color.h>
+#include <infinity_cad/rendering/color/color_settings.h>
 
 // Default color value for the scene
 Color COLOR_SCENE_DEFAULT(0.2, 0.2, 0.2, 1.0);
@@ -26,3 +26,6 @@ Color COLOR_GRABED(COLOR_OBJECT_DEFAULT.R,
                    COLOR_OBJECT_DEFAULT.G + 0.5,
                    COLOR_OBJECT_DEFAULT.B,
                    COLOR_OBJECT_DEFAULT.Alpha);
+
+
+Color COLOR_BLACK(0.0, 0.0, 0.0, 1.0);

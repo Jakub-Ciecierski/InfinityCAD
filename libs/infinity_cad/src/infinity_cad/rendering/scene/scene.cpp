@@ -49,6 +49,9 @@ void Scene::updateMVP() {
 
 
 void Scene::renderAllObjects() {
+    glClearColor(sceneColor.R, sceneColor.G, sceneColor.B,
+                 sceneColor.Alpha);
+
     int size = sceneObjects.size();
     for(int i = 0; i < size; i++){
         sceneObjects[i]->render(MVP);
@@ -66,6 +69,9 @@ void Scene::renderAllObjects3D() {
 
     Color leftColor = projection->getLeftColor();
     Color rightColor = projection->getRightColor();
+
+    glClearColor(COLOR_BLACK.R, COLOR_BLACK.G, COLOR_BLACK.B,
+                 COLOR_BLACK.Alpha);
 
     int size = sceneObjects.size();
     for(int i = 0; i < size; i++){

@@ -161,3 +161,12 @@ BSplineInterp* ObjectFactory::createBSplineInterp(std::string name){
 
     return bSpline;
 }
+
+SelectionBox* ObjectFactory::createSelectionBox(std::string name,
+                                                const glm::vec2& startPos){
+    SceneID id = sceneIDFactory.createNextAvailableID();
+
+    SelectionBox* selectionBox = new SelectionBox(id, name, startPos);
+
+    return selectionBox;
+}

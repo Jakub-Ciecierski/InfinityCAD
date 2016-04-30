@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>298</width>
-    <height>316</height>
+    <width>172</width>
+    <height>220</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Objects</string>
   </property>
   <property name="styleSheet">
    <string notr="true"/>
@@ -39,8 +39,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>296</width>
-        <height>314</height>
+        <width>170</width>
+        <height>218</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -87,6 +87,18 @@
           <enum>QFrame::Raised</enum>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
           <item>
            <widget class="QPushButton" name="pointButton">
             <property name="toolTip">
@@ -101,8 +113,8 @@
             </property>
             <property name="iconSize">
              <size>
-              <width>45</width>
-              <height>45</height>
+              <width>30</width>
+              <height>30</height>
              </size>
             </property>
            </widget>
@@ -121,8 +133,8 @@
             </property>
             <property name="iconSize">
              <size>
-              <width>45</width>
-              <height>45</height>
+              <width>30</width>
+              <height>30</height>
              </size>
             </property>
            </widget>
@@ -177,6 +189,18 @@
           <enum>QFrame::Raised</enum>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
           <item>
            <widget class="QPushButton" name="bezierButton">
             <property name="toolTip">
@@ -191,8 +215,8 @@
             </property>
             <property name="iconSize">
              <size>
-              <width>45</width>
-              <height>45</height>
+              <width>30</width>
+              <height>30</height>
              </size>
             </property>
            </widget>
@@ -208,8 +232,8 @@
             </property>
             <property name="iconSize">
              <size>
-              <width>45</width>
-              <height>45</height>
+              <width>30</width>
+              <height>30</height>
              </size>
             </property>
            </widget>
@@ -225,8 +249,8 @@
             </property>
             <property name="iconSize">
              <size>
-              <width>45</width>
-              <height>45</height>
+              <width>30</width>
+              <height>30</height>
              </size>
             </property>
            </widget>

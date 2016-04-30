@@ -12,7 +12,7 @@
 #include <infinity_cad/rendering/visibility/ray_cast.h>
 #include <infinity_cad/rendering/renderer.h>
 #include <infinity_cad/rendering/visibility/mouse_tracker.h>
-
+#include <infinity_cad/rendering/render_objects/selection_box.h>
 
 class GLWidget : public QGLWidget
 {
@@ -23,6 +23,8 @@ private:
     Scene* scene;
 
     MouseTracker* mouseTracker;
+
+    SelectionBox* selectionBox;
 
     QTimer timer;
 
@@ -91,6 +93,8 @@ public slots:
     void leftEyeColorPicker();
     void rightEyeColorPicker();
     void backgroundColorPicker();
+
+    void homeButtonClicked();
 
     void moveObject(const SceneID& id, glm::vec3& pos);
 

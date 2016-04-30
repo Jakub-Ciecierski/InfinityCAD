@@ -18,8 +18,17 @@ namespace ifc {
 
     float angleToRadians(float angle);
 
+    float radiansToDegree(float rad);
+
+    bool equal(const glm::vec3& v1, const glm::vec3& v2, float error);
+
     void solveTridiagonalSystem(std::vector<float>&belowDiagonal, std::vector<float>&mainDiagonal,
                                 std::vector<float>&aboveDiagonal, std::vector<float>& d);
+
+    float xPixelToGLCoord(int p, int width);
+    float yPixelToGLCoord(int p, int height);
+    int xGLToPixelCoord(float x, int width);
+    int yGLToPixelCoord(float y, int height);
 }
 
 #endif //IC_MATH_H

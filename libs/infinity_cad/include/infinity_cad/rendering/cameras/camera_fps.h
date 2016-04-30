@@ -26,6 +26,8 @@ public:
 
     ~CameraFPS();
 
+    void setDirection(const glm::vec3& direction);
+
     void moveForward();
     void moveBackward();
     void moveLeft();

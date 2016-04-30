@@ -13,6 +13,7 @@
 #include <infinity_cad/rendering/color/color_convertor.h>
 #include "infinity_cad/settings/settings.h"
 #include <infinity_cad/math/math.h>
+#include <infinity_cad/geometry/quaternion.h>
 #include <widgets/scene_list/scene_tree.h>
 
 #include "ui_mainwindow.h"
@@ -78,6 +79,8 @@ void GLWidget::setupRenderer(){
     mouseTracker = new MouseTracker(ray, renderer);
 
     setCameraDefaultPosition();
+
+    selectionBox = NULL;
 }
 
 void GLWidget::setupFocusPolicy(){
@@ -88,6 +91,11 @@ void GLWidget::setCameraDefaultPosition(){
     CameraFPS* camera = (CameraFPS*)renderer->getScene()->getActiveCamera();
     camera->moveTo(1.85, 1.5, -1.93);
     camera->rotateTo(-225, -151, 0);
+
+    scene->rotateTo(0,0,0);
+
+    Cross* cross = renderer->getScene()->getCross();
+    cross->moveTo(0,0,0);
 }
 
 void GLWidget::startMainLoop(){
@@ -200,6 +208,15 @@ void GLWidget::mousePressEvent(QMouseEvent *event){
                          renderer->getWindowWidth(),
                          renderer->getWindowHeight());
 
+        if(cross->getPickedCone() == AxisType::NONE){
+            ObjectFactory& objectFactory = ObjectFactory::getInstance();
+            float x = renderer->xPixelToGLCoord(event->x());
+            float y = renderer->yPixelToGLCoord(event->y());
+            this->selectionBox = objectFactory.createSelectionBox("Box", vec2(x,y));
+            this->selectionBox->updateEndPosition(vec2(x,y));
+            scene->addRenderObjectFront(selectionBox);
+        }
+
         leftMousePressPosition = event->pos();
         isLeftMousePressed = true;
         if(!isLeftMouseDrag){
@@ -234,6 +251,27 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *event){
     Cross* cross = renderer->getScene()->getCross();
 
     if(isLeftMousePressed) {
+        if(selectionBox != NULL){
+            SceneTree* sceneTree = EditorWindow::getInstance().getUI()->sceneTree;
+            std::vector<RenderObject*> scannedObjects =
+                    selectionBox->scanBox(cross, ray,
+                                          renderer->getWindowWidth(),
+                                          renderer->getWindowHeight());
+            if(!(event->modifiers() & Qt::ControlModifier ||
+                    event->modifiers() & Qt::ShiftModifier)){
+                sceneTree->deactivateAll();
+            }
+            for(unsigned int i = 0; i < scannedObjects.size(); i++){
+                sceneTree->activateObject(scannedObjects[i]);
+
+                if(i == 0)
+                    cross->moveTo(scannedObjects[i]);
+            }
+
+            scene->removeObject(selectionBox);
+            selectionBox = NULL;
+        }
+
         int dx = event->x() - leftMousePressPosition.x();
         int dy = event->y() - leftMousePressPosition.y();
         int dist = (dx*dx) + (dy*dy);
@@ -267,7 +305,8 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *event){
         if(closestBody == NULL) {
             sceneTree->deactivateAll();
         } else{
-            if(event->modifiers() & Qt::ControlModifier){
+            if(event->modifiers() & Qt::ControlModifier ||
+                    event->modifiers() & Qt::ShiftModifier){
                 sceneTree->activateObject(closestBody);
             }else{
                 sceneTree->deactivateAll();
@@ -368,11 +407,10 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event){
             }
         }
         else{
-            if(isFPSCamera){
-                camera->rotate(dx * camera->mouseSpeed, dy * camera->mouseSpeed, 0.0f);
-            }else{
-                scene->rotate(0, dx * camera->mouseSpeed, 0);
-            }
+            float x = renderer->xPixelToGLCoord(event->x());
+            float y = renderer->yPixelToGLCoord(event->y());
+            if(selectionBox != NULL)
+                selectionBox->updateEndPosition(vec2(x,y));
         }
 
         mouseDragPosition = event->pos();
@@ -380,6 +418,23 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event){
 
     // Cross
     if(isRightMouseDrag){
+        int dx = event->x() - rightMouseDragPosition.x();
+        int dy = event->y() - rightMouseDragPosition.y();
+
+        if(isFPSCamera){
+            camera->rotate(dx * camera->mouseSpeed, dy * camera->mouseSpeed, 0.0f);
+        }else{
+            vec3 rotatedPos = Quaternion::rotate(camera->getPosition(),
+                                                 vec3(0,1,0),
+                                                 dx * camera->mouseSpeed);
+
+            camera->moveTo(rotatedPos);
+            camera->setDirection(normalize(
+                                     -vec3(camera->getPosition().x,
+                                           camera->getPosition().y,
+                                           camera->getPosition().z)));
+        }
+        /*
         const vec3& xDir = cross->getXDirection();
         const vec3& yDir = cross->getYDirection();
         const vec3& zDir = cross->getZDirection();
@@ -444,7 +499,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event){
         else{
             cross->move((float)dXAxis * moveDist, 0, 0);
         }
-
+*/
         rightMouseDragPosition = event->pos();
     }
     if(isMiddleMouseDrag){
@@ -511,7 +566,7 @@ bool GLWidget::do_movement(){
 
     float speedBoost = 0.3f;
     if(keys[KEY_SPACE]){
-        //speedBoost = 3.0f;
+        speedBoost = 3.0f;
         SceneTree* sceneTree = EditorWindow::getInstance().getUI()->sceneTree;
         cross->activateGrab(sceneTree->getSelectedObjects());
     }else{
@@ -662,6 +717,10 @@ void GLWidget::backgroundColorPicker(){
         scene->setColor(gmColor);
     }
     delete ColorDialog;
+}
+
+void GLWidget::homeButtonClicked(){
+    setCameraDefaultPosition();
 }
 
 void GLWidget::moveObject(const SceneID& id, glm::vec3& pos){

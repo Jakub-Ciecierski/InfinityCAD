@@ -59,6 +59,8 @@ public:
     //  SETTERS
     //--------------------//
 
+    void addRenderObjectFront(RenderObject *object);
+
     /*
      * After the object is added to the scene, the Scene takes ownership
      * and deallocates its memory when needed.

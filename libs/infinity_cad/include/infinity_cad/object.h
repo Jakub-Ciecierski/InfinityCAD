@@ -10,7 +10,7 @@
 
 namespace ifc {
 
-    class Object {
+    class  Object {
     private:
         std::string name;
         SceneID id;

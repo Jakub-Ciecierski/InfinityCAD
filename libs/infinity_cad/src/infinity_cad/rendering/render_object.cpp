@@ -61,7 +61,7 @@ RenderObject::~RenderObject() {
 //-----------------------------------------------------------//
 
 void RenderObject::setSurfaceColor(const Color &color) {
-    glColor3f(color.R, color.G, color.B);
+    glColor4f(color.R, color.G, color.B, color.Alpha);
 }
 
 const vector<vec4>&RenderObject::getVertices() {

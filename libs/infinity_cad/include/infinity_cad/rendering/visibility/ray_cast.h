@@ -29,7 +29,8 @@ public:
 
     void update(float x, float y);
     void update(float x, float y,
-                         int width, int height);
+                int width, int height);
+
     void render(const glm::mat4& MVP) const;
 };
 

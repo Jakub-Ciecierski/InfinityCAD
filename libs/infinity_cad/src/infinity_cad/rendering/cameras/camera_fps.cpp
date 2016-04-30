@@ -27,6 +27,35 @@ CameraFPS::~CameraFPS() {
 
 }
 
+void CameraFPS::setDirection(const vec3& direction){
+    float radAngleY = asin(direction.y);
+
+    float zComponent = direction.z / cos(radAngleY);
+    float radAngleX = acos(zComponent);
+
+    float x = cos(radAngleY) * sin(radAngleX);
+    float y = sin(radAngleY);
+    float z = cos(radAngleX) * cos(radAngleY);
+
+    const int STATE_COUNT = 4;
+    int states[STATE_COUNT][2] = {{-1,1}, {1,-1}, {1,1}, {-1,-1}};
+    int i = 0;
+    while(!(ifc::equal(vec3(x,y,z), direction, 0.00001))){
+        i++;
+        radAngleX *= states[i][0];
+        radAngleY *= states[i][1];
+
+        x = cos(radAngleY) * sin(radAngleX);
+        y = sin(radAngleY);
+        z = cos(radAngleX) * cos(radAngleY);
+
+        if(i == STATE_COUNT) return;
+    }
+
+    this->rotationAngles.x = radiansToDegree(radAngleX);
+    this->rotationAngles.y = radiansToDegree(radAngleY);
+}
+
 void CameraFPS::moveForward() {
     moveForward(1.0f);
 }

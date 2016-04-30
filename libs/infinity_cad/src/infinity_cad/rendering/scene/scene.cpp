@@ -104,6 +104,10 @@ void Scene::renderAllObjects3D() {
 //  SETTERS
 //--------------------//
 
+void Scene::addRenderObjectFront(RenderObject *object){
+    this->sceneObjects.insert(sceneObjects.begin(), object);
+}
+
 void Scene::addRenderObject(RenderObject *object) {
     this->sceneObjects.push_back(object);
 }
@@ -212,11 +216,16 @@ void Scene::renderScene() {
     glClearColor(sceneColor.R, sceneColor.G, sceneColor.B,
                  sceneColor.Alpha);
 
+    glEnable (GL_BLEND);
+    glBlendFunc (GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+
     if(rendering3DEnabled){
         renderAllObjects3D();
     }else{
         renderAllObjects();
     }
+
+    glDisable(GL_BLEND);
 }
 
 void Scene::update() {

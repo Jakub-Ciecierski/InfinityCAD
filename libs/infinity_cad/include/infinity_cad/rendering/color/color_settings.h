@@ -29,4 +29,7 @@ extern Color COLOR_GRABED;
 
 extern Color COLOR_BLACK;
 
+extern Color COLOR_SELECTION_BOX_BORDER;
+extern Color COLOR_SELECTION_BOX_FILL;
+
 #endif //MG1_COLOR_SETTINGS_H

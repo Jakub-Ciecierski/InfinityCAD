@@ -80,7 +80,7 @@ public:
     void activateGrab(const std::vector<RenderObject*>& renderObjects);
     void deactivateGrab();
     RenderObject * getClosestObject(const RayCast& ray,
-                                    int width, int height);
+                                    int width, int height) const;
     void scanAndMoveToClosestObject(const RayCast& ray, int width, int height);
 
     void pickCones(const RayCast& ray, int width, int height);

@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Editor</string>
+   <string>InfinityCAD</string>
   </property>
   <property name="toolTip">
    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -151,6 +151,23 @@
          <property name="icon">
           <iconset resource="resources/icons.qrc">
            <normaloff>:/cameraButton/icons/camera.ico</normaloff>:/cameraButton/icons/camera.ico</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>25</width>
+           <height>25</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="homePushButton">
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset resource="resources/icons.qrc">
+           <normaloff>:/cameraButton/icons/home.svg</normaloff>:/cameraButton/icons/home.svg</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -317,7 +334,7 @@
                  <x>0</x>
                  <y>0</y>
                  <width>252</width>
-                 <height>593</height>
+                 <height>565</height>
                 </rect>
                </property>
                <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -931,6 +948,7 @@
     <slot>setCUDA(bool)</slot>
     <slot>setFPSCamera(bool)</slot>
     <slot>backgroundColorPicker()</slot>
+    <slot>homeButtonClicked()</slot>
    </slots>
   </customwidget>
   <customwidget>
@@ -1067,6 +1085,22 @@
     <hint type="sourcelabel">
      <x>-1</x>
      <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>451</x>
+     <y>414</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>homePushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>glRendererWidget</receiver>
+   <slot>homeButtonClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>291</x>
+     <y>43</y>
     </hint>
     <hint type="destinationlabel">
      <x>451</x>

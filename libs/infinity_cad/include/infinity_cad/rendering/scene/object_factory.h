@@ -17,6 +17,7 @@
 #include <infinity_cad/rendering/render_object.h>
 #include <infinity_cad/rendering/projections/projection.h>
 #include <infinity_cad/rendering/render_objects/curves/bspline_interp.h>
+#include <infinity_cad/rendering/render_objects/selection_box.h>
 #include "infinity_cad/rendering/scene/scene_id_factory.h"
 #include "scene.h"
 
@@ -73,6 +74,9 @@ public:
     BSpline* createBSpline(std::string name);
 
     BSplineInterp* createBSplineInterp(std::string name);
+
+    SelectionBox* createSelectionBox(std::string name,
+                                     const glm::vec2& startPos);
 
 };
 

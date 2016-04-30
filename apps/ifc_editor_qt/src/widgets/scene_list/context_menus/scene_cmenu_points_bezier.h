@@ -8,13 +8,8 @@ class SceneCMenuPointsBezier : public SceneContextMenu
 {
 private:
     void init();
-    void initHandlers();
 
     Item* bezierRoot;
-
-    std::string SCENE_MENU_REMOVE_NAME;
-
-    SceneCMHandler SCENE_MENU_REMOVE_HANDLER;
 
 public:
     SceneCMenuPointsBezier();

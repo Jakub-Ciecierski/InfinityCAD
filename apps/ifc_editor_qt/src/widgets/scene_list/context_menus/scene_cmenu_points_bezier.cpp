@@ -10,16 +10,5 @@ SceneCMenuPointsBezier::SceneCMenuPointsBezier()
 }
 
 void SceneCMenuPointsBezier::init(){
-    initHandlers();
-
     this->addHandlerAndAction(SCENE_MENU_REMOVE_HANDLER);
-}
-
-void SceneCMenuPointsBezier::initHandlers(){
-    SCENE_MENU_REMOVE_NAME = "Disconnect";
-    SCENE_MENU_REMOVE_HANDLER = SceneCMHandler([](Item* objectItem){
-            ObjectManager& objManager = ObjectManager::getInstance();
-            objManager.removeChildItem(objectItem);
-    });
-
 }

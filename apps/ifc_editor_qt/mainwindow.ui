@@ -449,6 +449,9 @@ QMenu::separator {
        </item>
        <item>
         <widget class="QCheckBox" name="showPointsCheckbox">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Show Points&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
          <property name="text">
           <string/>
          </property>
@@ -531,7 +534,7 @@ QMenu::separator {
            </sizepolicy>
           </property>
           <property name="toolTip">
-           <string>Show Points</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
          <widget class="QSplitter" name="sceneProperitesSplitter">

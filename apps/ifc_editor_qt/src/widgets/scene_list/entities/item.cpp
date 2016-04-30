@@ -33,9 +33,9 @@ Item::~Item(){
             delete currChild;
         }
     }
-
-    for(unsigned int i = 0;i < clones.size(); i++){
-        Item* currClone = clones[i];
+    std::vector<Item*> tmpClones = clones;
+    for(unsigned int i = 0;i < tmpClones.size(); i++){
+        Item* currClone = tmpClones[i];
         if(currClone != NULL) {
             //delete currClone;
             ObjectManager& objManager = ObjectManager::getInstance();

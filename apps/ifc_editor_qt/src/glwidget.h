@@ -96,6 +96,8 @@ public slots:
 
     void homeButtonClicked();
 
+    void crossActiveCheckBox(bool value);
+
     void moveObject(const SceneID& id, glm::vec3& pos);
 
 signals:

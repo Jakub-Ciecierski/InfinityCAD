@@ -19,10 +19,15 @@ SceneTree::SceneTree(QWidget* parent) :
 }
 
 SceneTree::~SceneTree(){
-    for(unsigned int i = 0; i < topRootItems.size(); i++){
-        delete topRootItems[i];
-    }
     allItems.clear();
+
+    std::vector<RootItem*> tmpTopRootItems = topRootItems;
+    for(unsigned int i = 0; i < tmpTopRootItems.size(); i++){
+        delete tmpTopRootItems[i];
+        topRootItems.erase(remove(topRootItems.begin(),
+                                  topRootItems.end(), tmpTopRootItems[i]),
+                       topRootItems.end());
+    }
 }
 
 //-----------------------------//

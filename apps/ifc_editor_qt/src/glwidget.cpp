@@ -723,6 +723,11 @@ void GLWidget::homeButtonClicked(){
     setCameraDefaultPosition();
 }
 
+void GLWidget::crossActiveCheckBox(bool value){
+    Cross* cross = renderer->getScene()->getCross();
+    cross->setGrabActive(value);
+}
+
 void GLWidget::moveObject(const SceneID& id, glm::vec3& pos){
     RenderObject * body = scene->getRenderBody(id);
 

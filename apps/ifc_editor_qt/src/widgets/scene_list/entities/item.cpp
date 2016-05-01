@@ -23,14 +23,14 @@ Item::Item(RenderObject * object, const Type& type){
 }
 
 Item::~Item(){
-    for(unsigned int i = 0;i < children.size(); i++){
-        Item* currChild = children[i];
-        /*
-        if(currChild != NULL && !currChild->isClone()) {
-            delete currChild;
-        }*/
+    std::vector<Item*> tmpChildren = children;
+    for(unsigned int i = 0;i < tmpChildren.size(); i++){
+        Item* currChild = tmpChildren[i];
+        children.erase(remove(children.begin(), children.end(), currChild),
+                       children.end());
+
         if(currChild != NULL) {
-            delete currChild;
+             delete currChild;
         }
     }
     std::vector<Item*> tmpClones = clones;
@@ -44,6 +44,11 @@ Item::~Item(){
     }
     if(isClone()){
         clonedFrom->removeClone(this);
+    }
+    if(parent != NULL){
+        parent->children.erase(remove(parent->children.begin(),
+                                      parent->children.end(), this),
+                               parent->children.end());
     }
     if(treeItem != NULL){
         delete treeItem;

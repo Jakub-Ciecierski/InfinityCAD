@@ -30,6 +30,7 @@ int main(int argc, char *argv[])
     ui->cudaCheckBox->toggle();
     ui->showPointsCheckbox->toggle();
     ui->cameraTypeCheckbox->toggle();
+    ui->crossActiveCheckBox->toggle();
 
     w.show();
 

@@ -21,6 +21,8 @@ enum AxisType{
 
 class Cross : public RenderObject {
 private:
+    bool grabActive;
+
     glm::vec3 xDirection;
     glm::vec3 yDirection;
     glm::vec3 zDirection;
@@ -75,6 +77,8 @@ public:
 
 
     ~Cross();
+
+    void setGrabActive(bool value);
 
     void activateGrab();
     void activateGrab(const std::vector<RenderObject*>& renderObjects);

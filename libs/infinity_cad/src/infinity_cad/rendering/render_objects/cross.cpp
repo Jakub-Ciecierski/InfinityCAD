@@ -30,6 +30,8 @@ Cross::Cross(SceneID id, const std::vector<RenderObject *>* sceneObjects) :
 
     grabable = false;
     initCones();
+
+    setGrabActive(true);
 }
 
 Cross::Cross(SceneID id, std::string name,
@@ -50,6 +52,8 @@ Cross::Cross(SceneID id, std::string name,
 
     grabable = false;
     initCones();
+
+    setGrabActive(true);
 }
 
 Cross::~Cross() {
@@ -109,10 +113,11 @@ void Cross::initCones(){
 void Cross::translate(float x, float y, float z) {
     RigidObject::translate(x, y, z);
 
-    for(auto &item: grabedMap){
-        RenderObject * body = item.first;
-
-        body->move(x, y, z);
+    if(grabActive) {
+        for (auto &item: grabedMap) {
+            RenderObject *body = item.first;
+            body->move(x, y, z);
+        }
     }
 
     xCone->move(x, y, z);
@@ -185,6 +190,9 @@ void Cross::initEdges() {
 //  PUBLIC
 //-----------------------//
 
+void Cross::setGrabActive(bool value){
+    this->grabActive = value;
+}
 
 void Cross::activateGrab() {
     if(isGrabActive) return;

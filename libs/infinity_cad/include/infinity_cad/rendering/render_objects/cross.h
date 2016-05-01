@@ -79,6 +79,7 @@ public:
     ~Cross();
 
     void setGrabActive(bool value);
+    bool isGrabAttracting();
 
     void activateGrab();
     void activateGrab(const std::vector<RenderObject*>& renderObjects);

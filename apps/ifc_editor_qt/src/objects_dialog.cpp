@@ -6,6 +6,7 @@ ObjectsDialog::ObjectsDialog(QWidget *parent) :
         QDialog(parent),
         ui(new Ui::ObjectsDialog){
     ui->setupUi(this);
+    this->setWindowFlags(Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);
 }
 
 ObjectsDialog::~ObjectsDialog(){
@@ -35,6 +36,37 @@ void ObjectsDialog::bsplineButtonClick(){
 void ObjectsDialog::bsplineInterpButtonClick(){
     addObject(RB_BSPLINE_INTERPOLATING_TYPE);
 }
+
+//--------------------------//
+//  PROTECTED
+//--------------------------//
+
+void ObjectsDialog::mousePressEvent(QMouseEvent* event)
+{
+    if(event->button() == Qt::LeftButton)
+    {
+        mMoving = true;
+        mLastMousePosition = event->pos();
+    }
+}
+
+void ObjectsDialog::mouseMoveEvent(QMouseEvent* event)
+{
+    if( event->buttons().testFlag(Qt::LeftButton) && mMoving)
+    {
+        this->move(event->globalX()-mLastMousePosition.x(),
+                   event->globalY()-mLastMousePosition.y());
+    }
+}
+
+void ObjectsDialog::mouseReleaseEvent(QMouseEvent* event)
+{
+    if(event->button() == Qt::LeftButton)
+    {
+        mMoving = false;
+    }
+}
+
 
 //--------------------------//
 //  PRIVATE

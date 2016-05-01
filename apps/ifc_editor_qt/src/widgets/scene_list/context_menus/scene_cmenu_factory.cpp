@@ -107,5 +107,8 @@ SceneContextMenu* SceneCMenuFactory::getProperMenu(
         return this->bsplineMenu;
     }
 
-    return this->getDefaultMenu();
+    if(totalCount == 1)
+        return this->getDefaultMenu();
+
+    return NULL;
 }

@@ -129,7 +129,12 @@ void ObjectManager::addObject(const Type& type, string name){
         bSplineInterpBinding->createBSplineInterp(name);
     }
     if(body != NULL){
-        body->moveTo(scene->getCross());
+        Cross* cross = scene->getCross();
+        body->moveTo(cross);
+        if(cross->isGrabAttracting()){
+            sceneTree->deactivateAll();
+            sceneTree->activateObject(body);
+        }
     }
 }
 

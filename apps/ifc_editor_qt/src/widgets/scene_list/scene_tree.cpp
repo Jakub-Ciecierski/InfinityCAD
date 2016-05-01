@@ -350,7 +350,7 @@ void SceneTree::ShowContextMenu(const QPoint& pos){
     SceneContextMenu* menu = factory.getProperMenu(selectedItems,
                                               getItemByTreePointer,
                                               getRootItemPointer);
-
+    if(menu == NULL) return;
     QAction* action = menu->show(globalPos);
     menu->handle(action, items);
 }
@@ -383,6 +383,12 @@ void SceneTree::myitemSelectionChanged(){
             child->treeItem->setSelected(true);
             objManager.setActive(child->object->getID());
         }*/
+    }
+    if(selectedItems.size() > 0){
+        Item* item = getItemByTree(selectedItems[selectedItems.size()-1]);
+        if(item != NULL)
+            if(!canAddChildren(item->type))
+                objManager.moveCross(item);
     }
 }
 

@@ -329,15 +329,21 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *event){
 }
 
 void GLWidget::mouseMoveEvent(QMouseEvent *event){
-    int dx = event->x() - mouseDragPosition.x();
-    int dy = event->y() - mouseDragPosition.y();
-
     CameraFPS* camera = (CameraFPS*)renderer->getScene()->getActiveCamera();
     Cross* cross = renderer->getScene()->getCross();
 
     if(isLeftMouseDrag){
         AxisType axis = cross->getPickedCone();
         if(axis != NONE){
+
+            float moveDist = 0.002 * 2;
+            int dx = event->x() - mouseDragPosition.x();
+            int dy = event->y() - mouseDragPosition.y();
+
+            if(event->modifiers() & Qt::ControlModifier){
+                moveDist *= 3;
+            }
+
             SceneTree* sceneTree = EditorWindow::getInstance().getUI()->sceneTree;
             cross->activateGrab(sceneTree->getSelectedObjects());
 
@@ -358,10 +364,6 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event){
 
             float xRightAngle = ifc::dot(xDir, camRight);
             float zRightAngle = ifc::dot(zDir, camRight);
-
-            float moveDist = 0.002 * 5;
-            int dx = event->x() - mouseDragPosition.x();
-            int dy = event->y() - mouseDragPosition.y();
 
             int dXAxis = -dy;
             int dYAxis = -dy;

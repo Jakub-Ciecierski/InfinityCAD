@@ -21,7 +21,6 @@ EditorWindow::EditorWindow(QWidget *parent) :
     setupSplitters();
 
     objectsDialog = new ObjectsDialog();
-    objectsDialog->setWindowFlags(Qt::WindowStaysOnTopHint);
 }
 
 EditorWindow::~EditorWindow()

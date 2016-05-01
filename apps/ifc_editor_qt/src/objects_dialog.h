@@ -25,10 +25,20 @@ public slots:
     void bsplineButtonClick();
     void bsplineInterpButtonClick();
 
+protected:
+    void mouseMoveEvent(QMouseEvent* event);
+    void mousePressEvent(QMouseEvent* event);
+    void mouseReleaseEvent(QMouseEvent* event);
+
 private:
     Ui::ObjectsDialog* ui;
 
+    QPoint mLastMousePosition;
+    bool mMoving;
+
     void addObject(const Type& type);
 };
+
+
 
 #endif // OBJECT_WINDOW_H

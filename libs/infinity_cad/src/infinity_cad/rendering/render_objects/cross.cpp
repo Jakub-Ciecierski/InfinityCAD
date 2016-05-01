@@ -194,6 +194,10 @@ void Cross::setGrabActive(bool value){
     this->grabActive = value;
 }
 
+bool Cross::isGrabAttracting(){
+    return this->grabActive;
+}
+
 void Cross::activateGrab() {
     if(isGrabActive) return;
     isGrabActive = true;

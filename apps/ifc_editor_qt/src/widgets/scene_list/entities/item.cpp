@@ -137,6 +137,18 @@ std::vector<Item*> Item::getOriginalChildrenItems(){
     return items;
 }
 
+std::vector<Item*> Item::getConnectedSurfaces(){
+    std::vector<Item*> items;
+    for(unsigned int i = 0; i < clones.size(); i++){
+        Item* clone = clones[i];
+        Item* parentClone = clone->parent;
+        if(parentClone != NULL && isSurface(parentClone->type)){
+            items.push_back(parentClone);
+        }
+    }
+    return items;
+}
+
 ItemID Item::getID(QTreeWidget* treeWidget){
     ItemID id = createID(this, treeWidget);
     return id;
@@ -166,7 +178,6 @@ void Item::createID(Item* item, QTreeWidget* treeWidget,
         createID(parent, treeWidget, id_values);
     }
 }
-
 
 bool Item::isClone(){
     return (clonedFrom != NULL);

@@ -244,14 +244,22 @@ void ObjectManager::moveDownItem(Item* objectItem){
 
 void ObjectManager::deleteObject(Item* item){
     if(item->treeItem == NULL) return;
-/*
-    string text = "Delete " + item->displayName + " ?";
-    string title = "Delete";
-    if(!EditorWindow::getInstance().showQuestionBox(title, text)) return;
-*/
+
+    if(item->type == RB_POINT_TYPE){
+        std::vector<Item*> surfaces = item->getConnectedSurfaces();
+        if(surfaces.size() > 0){
+            string text = "Can't delete point connected to a Surface";
+            string title = "Warning";
+            EditorWindow::getInstance().showInfoBox(title, text);
+            return;
+        }
+    }
 
     if(isSurface(item->type)){
         std::vector<Item*> originalPoints = item->getOriginalChildrenItems();
+
+        SceneID id = this->sceneTree->deleteObject(item);
+        this->scene->removeObject(id);
 
         string text = "Delete all the points as well ?";
         string title = "Delete";
@@ -260,10 +268,10 @@ void ObjectManager::deleteObject(Item* item){
                 deleteObject(originalPoints[i]);
             }
         }
+    }else{
+        SceneID id = this->sceneTree->deleteObject(item);
+        this->scene->removeObject(id);
     }
-
-    SceneID id = this->sceneTree->deleteObject(item);
-    this->scene->removeObject(id);
 }
 
 void ObjectManager::changeName(Item* item){

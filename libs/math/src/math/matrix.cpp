@@ -4,7 +4,7 @@
 
 #include <stdexcept>
 #include <math/matrix.h>
-
+/*
 template <class T>
 Matrix<T>::Matrix(unsigned int n, unsigned int m) : n(n), m(m)
 {
@@ -13,6 +13,21 @@ Matrix<T>::Matrix(unsigned int n, unsigned int m) : n(n), m(m)
 
     for(unsigned int i = 0; i < n; i++){
         entries[i].resize(m);
+    }
+}
+
+template <class T>
+Matrix<T>::Matrix(unsigned int n, unsigned int m, T val){
+    entries.resize(n);
+
+    for(unsigned int i = 0; i < n; i++){
+        entries[i].resize(m);
+    }
+
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j < m; j++){
+            entries[i][j] = val;
+        }
     }
 }
 
@@ -26,6 +41,29 @@ Matrix<T>::Matrix(const Matrix& matrix) : n(matrix.n), m(matrix.m)
 //-----------------------------------------------------------//
 //  PUBLIC METHODS
 //-----------------------------------------------------------//
+
+template <class T>
+const std::vector<T>& Matrix<T>::getColumn(int i) const{
+    if(i < 0 || i >= m)
+        throw std::invalid_argument("Array out of Bound. Matrix::setEntry");
+
+    std::vector<T> column(n);
+    for(int j = 0; j < n; j++){
+        column[j] = entries[i][j];
+    }
+    return column;
+}
+
+template <class T>
+void Matrix<T>::setColumn(int i, const std::vector<T>& vec){
+    if(i < 0 || i >= m)
+        throw std::invalid_argument("Array out of Bound. Matrix::setEntry");
+
+    std::vector<T> column(n);
+    for(int j = 0; j < n; j++){
+        entries[i][j] = vec[j];
+    }
+}
 
 template <class T>
 void Matrix<T>::setEntry(unsigned int i, unsigned int j, const T& value){
@@ -91,7 +129,7 @@ std::ostream& operator<<(std::ostream& os, const Matrix<T>& matrix){
     }
     return os;
 }
-
+*/
 //-----------------------------------------------------------//
 //  EXPLICIT INSTANTIATING
 //-----------------------------------------------------------//

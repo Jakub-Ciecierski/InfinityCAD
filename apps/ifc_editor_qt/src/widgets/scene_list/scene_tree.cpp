@@ -54,6 +54,7 @@ void SceneTree::setupRootItems(){
     topRootItems.push_back(new RootItem(RB_BEZIER_TYPE, "Bezier Curves"));
     topRootItems.push_back(new RootItem(RB_BSPLINE_TYPE, "B-Splines"));
     topRootItems.push_back(new RootItem(RB_BSPLINE_INTERPOLATING_TYPE, "B-Splines Interpolating"));
+    topRootItems.push_back(new RootItem(RB_SURFACE_C0_RECT_TYPE, "Surface C0 Rectangle"));
 }
 
 void SceneTree::setupContextMenu(){
@@ -355,12 +356,6 @@ void SceneTree::ShowContextMenu(const QPoint& pos){
     menu->handle(action, items);
 }
 
-/*
-void SceneTree::myitemActivated(QTreeWidgetItem* treeItem, int column){
-    Item* item = getItemByTree(treeItem);
-    if(item == NULL) return;
-}
-*/
 void SceneTree::myitemSelectionChanged(){
     QList<QTreeWidgetItem *> selectedItems = this->selectedItems();
     ObjectManager& objManager = ObjectManager::getInstance();
@@ -377,17 +372,11 @@ void SceneTree::myitemSelectionChanged(){
         Item* item = getItemByTree(selectedItems[i]);
         if(item == NULL) continue;
         objManager.setActive(item->object->getID());
-        /*
-        for(unsigned int i = 0; i < item->children.size(); i++){
-            Item* child = item->children[i];
-            child->treeItem->setSelected(true);
-            objManager.setActive(child->object->getID());
-        }*/
     }
     if(selectedItems.size() > 0){
         Item* item = getItemByTree(selectedItems[selectedItems.size()-1]);
         if(item != NULL)
-            if(!canAddChildren(item->type))
+            if(!canAddChildren(item->type) || !isSurface(item->type))
                 objManager.moveCross(item);
     }
 }

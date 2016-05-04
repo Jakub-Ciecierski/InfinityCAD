@@ -128,6 +128,14 @@ void Item::erase(std::vector<Item*>& allItems){
     }
 }
 
+std::vector<Item*> Item::getOriginalChildrenItems(){
+    std::vector<Item*> items;
+    for(unsigned int i = 0; i < children.size(); i++){
+        Item* child = children[i];
+        items.push_back(child->clonedFrom);
+    }
+    return items;
+}
 
 ItemID Item::getID(QTreeWidget* treeWidget){
     ItemID id = createID(this, treeWidget);

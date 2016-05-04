@@ -85,7 +85,12 @@ int ifc::yGLToPixelCoord(float y, int height) {
     float vY = 2.0 / (float) height;
     int pY = (y + 1.0f) / vY;
 
-
-
     return height - pY;
+}
+
+float ifc::getMultplicationValue(const vec4& v1, const mat4& m, const vec4& v2){
+    vec4 res = v1 * m * v2;
+    float val = res.x + res.y + res.z + res.w;
+
+    return val;
 }

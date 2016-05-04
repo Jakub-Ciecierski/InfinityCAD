@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>172</width>
-    <height>220</height>
+    <width>176</width>
+    <height>247</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -39,8 +39,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>170</width>
-        <height>218</height>
+        <width>174</width>
+        <height>245</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -304,6 +304,28 @@
          <property name="frameShadow">
           <enum>QFrame::Raised</enum>
          </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <item>
+           <widget class="QPushButton" name="surfaceC0RectButton">
+            <property name="text">
+             <string>SurfaceC0 Rect</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_3">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
         </widget>
        </item>
        <item>
@@ -409,6 +431,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>surfaceC0RectButton</sender>
+   <signal>clicked()</signal>
+   <receiver>ObjectsDialog</receiver>
+   <slot>surfaceC0RectButtonClick()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>59</x>
+     <y>189</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>87</x>
+     <y>123</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>pointButtonClick()</slot>
@@ -416,5 +454,6 @@
   <slot>bezierC0ButtonClick()</slot>
   <slot>bsplineButtonClick()</slot>
   <slot>bsplineInterpButtonClick()</slot>
+  <slot>surfaceC0RectButtonClick()</slot>
  </slots>
 </ui>

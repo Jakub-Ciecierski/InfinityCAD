@@ -3,11 +3,10 @@
 
 #include <infinity_cad/rendering/scene/object_factory.h>
 #include <infinity_cad/rendering/color/color_settings.h>
-
+#include <dialogs/surface_c0_rect_dialog.h>
 #include <ui_mainwindow.h>
 
 using namespace std;
-using namespace Ui;
 using namespace ifc;
 
 //--------------------------//
@@ -16,7 +15,7 @@ using namespace ifc;
 
 ObjectManager::ObjectManager(){
     EditorWindow& m = EditorWindow::getInstance();
-    MainWindow* ui = m.getUI();
+    Ui::MainWindow* ui = m.getUI();
 
     this->glWidget = ui->glRendererWidget;
     this->scene = ui->glRendererWidget->getRenderer()->getScene();
@@ -80,6 +79,36 @@ RenderObject * ObjectManager::addBezierCurve(string name){
     return p;
 }
 
+RenderObject* ObjectManager::addSurfaceC0Rect(string name){
+    ObjectFactory& objectFactory = ObjectFactory::getInstance();
+    SurfaceC0RectDialog dialog;
+    int result = dialog.exec();
+
+    int n,m;
+    float width, height;
+    if(result = QDialog::Accepted){
+        SurfaceC0RectData data = dialog.getData();
+        n = data.n;
+        m = data.m;
+        width = data.width;
+        height = data.height;
+    }else{
+        return NULL;
+    }
+
+    SurfaceRectC0* surface = objectFactory.createSurfaceRectC0(name, n, m,
+                                                               width, height);
+    this->scene->addRenderObject(surface);
+    Item* surfaceItem = sceneTree->addObject(surface, RB_SURFACE_C0_RECT_TYPE);
+
+    const std::vector<ifc::Point*>& points = surface->getAllPoints();
+    for(unsigned int i = 0; i < points.size(); i++){
+        this->scene->addRenderObject(points[i]);
+        Item* pointItem = this->sceneTree->addObject(points[i], RB_POINT_TYPE);
+        sceneTree->addChildItem(surfaceItem, pointItem);
+    }
+}
+
 string ObjectManager::getDefaultName(const Type& type){
     static int id_count = 0;
     string defaultName = type.type + "_" + to_string(id_count++);
@@ -127,6 +156,8 @@ void ObjectManager::addObject(const Type& type, string name){
         bSplineBinding->createBSpline(name);
     }else if(type == RB_BSPLINE_INTERPOLATING_TYPE){
         bSplineInterpBinding->createBSplineInterp(name);
+    }else if(type == RB_SURFACE_C0_RECT_TYPE){
+        addSurfaceC0Rect(name);
     }
     if(body != NULL){
         Cross* cross = scene->getCross();
@@ -213,13 +244,25 @@ void ObjectManager::moveDownItem(Item* objectItem){
 
 void ObjectManager::deleteObject(Item* item){
     if(item->treeItem == NULL) return;
-
+/*
     string text = "Delete " + item->displayName + " ?";
     string title = "Delete";
     if(!EditorWindow::getInstance().showQuestionBox(title, text)) return;
+*/
+
+    if(isSurface(item->type)){
+        std::vector<Item*> originalPoints = item->getOriginalChildrenItems();
+
+        string text = "Delete all the points as well ?";
+        string title = "Delete";
+        if(EditorWindow::getInstance().showQuestionBox(title, text)){
+            for(unsigned int i = 0;i < originalPoints.size();i++){
+                deleteObject(originalPoints[i]);
+            }
+        }
+    }
 
     SceneID id = this->sceneTree->deleteObject(item);
-
     this->scene->removeObject(id);
 }
 

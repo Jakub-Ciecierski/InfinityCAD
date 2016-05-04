@@ -2,11 +2,13 @@
 // Created by jakub on 4/19/16.
 //
 
+#include <glm/gtc/matrix_transform.hpp>
 #include <gtest/gtest.h>
 #include <vector>
 #include <infinity_cad/math/math.h>
 
 using namespace std;
+using namespace glm;
 
 TEST(solveTridiagonalSystem, solvesCorrectly) {
     vector<float> a = {0, -1, -1, -1};
@@ -21,4 +23,10 @@ TEST(solveTridiagonalSystem, solvesCorrectly) {
     for(unsigned int i = 0; i < d.size(); i++){
         EXPECT_EQ(exptectedValue[i], d[i]);
     }
+}
+
+TEST(GLM, mat_vec_multiplication) {
+    mat4 m(1.0f);
+    vec4 v(2.0f, 3.0f, 4.0f, 5.0f);
+    vec4 u(1.0f, 2.0f, 3.0f, 4.0f);
 }

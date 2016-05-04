@@ -29,6 +29,10 @@ namespace ifc {
     float yPixelToGLCoord(int p, int height);
     int xGLToPixelCoord(float x, int width);
     int yGLToPixelCoord(float y, int height);
+
+    float getMultplicationValue(const glm::vec4& v1,
+                                const glm::mat4& m,
+                                const glm::vec4& v2);
 }
 
 #endif //IC_MATH_H

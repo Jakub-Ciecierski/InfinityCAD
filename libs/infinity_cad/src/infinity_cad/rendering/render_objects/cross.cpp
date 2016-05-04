@@ -280,9 +280,8 @@ void Cross::deactivateGrab() {
 }
 
 RenderObject * Cross::getClosestObject(const RayCast& ray,
-                                       int width, int height) const{
-    int distTol = 20;
-
+                                       int width, int height,
+                                       int distTol) const{
     float x = ray.currentX;
     float y = ray.currentY;
 

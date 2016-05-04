@@ -36,6 +36,8 @@ struct Item{
 
     void erase(std::vector<Item*>& allItems);
 
+    std::vector<Item*> getOriginalChildrenItems();
+
     ItemID getID(QTreeWidget* treeWidget);
     ItemID createID(Item* item, QTreeWidget* treeWidget);
     void createID(Item* item, QTreeWidget* treeWidget,

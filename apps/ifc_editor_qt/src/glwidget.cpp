@@ -201,7 +201,9 @@ void GLWidget::keyReleaseEvent(QKeyEvent *event){
 //-----------------------------------------------------------//
 
 void GLWidget::mousePressEvent(QMouseEvent *event){
-    if(event->buttons() & Qt::LeftButton){
+    if(event->buttons() & Qt::LeftButton &&
+            !(event->buttons() & Qt::RightButton) &&
+            !(event->button() & Qt::MiddleButton)){
         Cross* cross = renderer->getScene()->getCross();
         mouseTracker->update(event->x(), event->y());
         cross->pickCones(*ray,
@@ -267,9 +269,6 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *event){
                 if(i == 0)
                     cross->moveTo(scannedObjects[i]);
             }
-
-            scene->removeObject(selectionBox);
-            selectionBox = NULL;
         }
 
         int dx = event->x() - leftMousePressPosition.x();
@@ -316,16 +315,15 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *event){
         }
     }
 
-    if(isRightMouseStill){
-        std::cout << "Right click still" << std::endl;
-    }
-
     isLeftMouseDrag = false;
     isRightMouseDrag = false;
     isMiddleMouseDrag = false;
 
     cross->unPickCones();
     cross->deactivateGrab();
+
+    scene->removeObject(selectionBox);
+    selectionBox = NULL;
 }
 
 void GLWidget::mouseMoveEvent(QMouseEvent *event){

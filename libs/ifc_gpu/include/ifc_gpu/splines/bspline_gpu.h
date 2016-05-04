@@ -7,7 +7,6 @@
 
 #include <ifc_gpu/common.h>
 
-
 namespace ifc_gpu{
 
     __device__

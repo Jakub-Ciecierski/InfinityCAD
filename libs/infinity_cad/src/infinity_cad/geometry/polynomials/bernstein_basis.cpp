@@ -62,7 +62,7 @@ vec4 cubicBernstein(const vec3& p0, const vec3& p1,
     float t3 = t*t*t;
 
     float B0 = 1 - 3*t + 3*t2 - t3;
-    float B1 = 3*t - 6*t2 + t3;
+    float B1 = 3*t - 6*t2 + 3*t3;
     float B2 = 3*t2 - 3*t3;
     float B3 = t3;
 */
@@ -80,4 +80,16 @@ vec4 cubicBernstein(const vec3& p0, const vec3& p1,
               t*t*t*p3.z;
 
     return vec4(x,y,z,1);
+}
+
+vec4 cubicBernsteinVector(float t){
+    float t2 = t*t;
+    float t3 = t*t*t;
+
+    float B0 = 1 - 3*t + 3*t2 - t3;
+    float B1 = 3*t - 6*t2 + 3*t3;
+    float B2 = 3*t2 - 3*t3;
+    float B3 = t3;
+
+    return vec4(B0, B1, B2, B3);
 }

@@ -37,6 +37,10 @@ void ObjectsDialog::bsplineInterpButtonClick(){
     addObject(RB_BSPLINE_INTERPOLATING_TYPE);
 }
 
+void ObjectsDialog::surfaceC0RectButtonClick(){
+    addObject(RB_SURFACE_C0_RECT_TYPE);
+}
+
 //--------------------------//
 //  PROTECTED
 //--------------------------//

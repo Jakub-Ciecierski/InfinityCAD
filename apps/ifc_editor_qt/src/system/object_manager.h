@@ -23,6 +23,7 @@ private:
     RenderObject * addTorus(std::string name);
     RenderObject * addPoint(std::string name);
     RenderObject * addBezierCurve(std::string name);
+    RenderObject* addSurfaceC0Rect(std::string name);
 
     std::string getDefaultName(const Type& type);
 

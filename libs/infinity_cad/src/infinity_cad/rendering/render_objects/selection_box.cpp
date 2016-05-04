@@ -74,7 +74,8 @@ std::vector<RenderObject*> SelectionBox::scanBox(const Cross* cross,
 
             RenderObject * closestBody = cross->getClosestObject(*ray,
                                                                  windowWidth,
-                                                                 windowHeight);
+                                                                 windowHeight,
+                                                                 10);
             if(closestBody != NULL){
                 if (!(std::find(objects.begin(), objects.end(), closestBody)
                     != objects.end())) {

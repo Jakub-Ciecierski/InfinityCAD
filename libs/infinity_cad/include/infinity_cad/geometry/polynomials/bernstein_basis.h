@@ -18,5 +18,6 @@ glm::vec4 cubicBernstein(const glm::vec3& p1, const glm::vec3& p2,
                          const glm::vec3& p3, const glm::vec3& p4,
                          float t);
 
+glm::vec4 cubicBernsteinVector(float t);
 
 #endif //IC_BERNSTEIN_H

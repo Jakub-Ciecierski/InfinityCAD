@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>176</width>
-    <height>247</height>
+    <width>254</width>
+    <height>241</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -39,8 +39,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>174</width>
-        <height>245</height>
+        <width>285</width>
+        <height>226</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -313,6 +313,13 @@
            </widget>
           </item>
           <item>
+           <widget class="QPushButton" name="surfaceC0CylinderButton">
+            <property name="text">
+             <string>SurfaceC0 Cylind</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <spacer name="horizontalSpacer_3">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
@@ -447,6 +454,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>surfaceC0CylinderButton</sender>
+   <signal>clicked()</signal>
+   <receiver>ObjectsDialog</receiver>
+   <slot>surfaceC0CylindButtonClick()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>199</x>
+     <y>189</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>126</x>
+     <y>120</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>pointButtonClick()</slot>
@@ -455,5 +478,6 @@
   <slot>bsplineButtonClick()</slot>
   <slot>bsplineInterpButtonClick()</slot>
   <slot>surfaceC0RectButtonClick()</slot>
+  <slot>surfaceC0CylindButtonClick()</slot>
  </slots>
 </ui>

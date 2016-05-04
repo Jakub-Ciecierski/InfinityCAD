@@ -1,17 +1,18 @@
-#include "surface_c0_rect_dialog.h"
-#include "ui_surface_c0_rect_dialog.h"
+#include "surface_c0_dialog.h"
+#include "ui_surface_c0_dialog.h"
 
-SurfaceC0RectDialog::SurfaceC0RectDialog(QWidget *parent) :
+SurfaceC0Dialog::SurfaceC0Dialog(const Type& type, QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::SurfaceC0RectDialog)
+    ui(new Ui::SurfaceC0Dialog)
 {
     ui->setupUi(this);
     this->setWindowFlags(Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);
+    this->type = type;
 
     initDefaultDataValue();
 }
 
-SurfaceC0RectDialog::~SurfaceC0RectDialog()
+SurfaceC0Dialog::~SurfaceC0Dialog()
 {
     delete ui;
 }
@@ -20,15 +21,19 @@ SurfaceC0RectDialog::~SurfaceC0RectDialog()
 //  PRIVATE
 //--------------------------//
 
-void SurfaceC0RectDialog::initDefaultDataValue(){
+void SurfaceC0Dialog::initDefaultDataValue(){
     QLineEdit* nEdit = ui->nLineEdit;
     QLineEdit* mEdit = ui->mLineEdit;
     QLineEdit* widthEdit = ui->widthLineEdit;
     QLineEdit* heightEdit = ui->heightLineEdit;
+    QLabel* widthLabel = ui->widthLabel;
+
+    QPushButton* cancelButton = ui->cancelButton;
+    QPushButton* okButton = ui->okButton;
 
     QDoubleValidator* floatValidator =
             new QDoubleValidator(-1000.0, 1000.0, 2, NULL);
-    QIntValidator* intValidator = new QIntValidator(100, 100, NULL);
+    QIntValidator* intValidator = new QIntValidator(1, 1000, NULL);
 
     nEdit->setValidator(intValidator);
     mEdit->setValidator(intValidator);
@@ -39,6 +44,20 @@ void SurfaceC0RectDialog::initDefaultDataValue(){
     mEdit->setText("3");
     widthEdit->setText("0.5");
     heightEdit->setText("0.5");
+
+    if(type == RB_SURFACE_C0_CYLIND_TYPE){
+        widthLabel->setText("Radius");
+        widthEdit->setText("0.1");
+    }else{
+        widthLabel->setText("Width");
+    }
+
+    okButton->setDefault(true);
+    okButton->setAutoDefault(false);
+
+    cancelButton->setDefault(false);
+    cancelButton->setAutoDefault(false);
+
 }
 
 //--------------------------//
@@ -46,21 +65,25 @@ void SurfaceC0RectDialog::initDefaultDataValue(){
 //--------------------------//
 
 
-const SurfaceC0RectData& SurfaceC0RectDialog::getData(){
+const SurfaceC0Data& SurfaceC0Dialog::getData(){
     return this->data;
+}
+
+bool SurfaceC0Dialog::getResult(){
+    return this->result;
 }
 
 //--------------------------//
 //  PUBLIC SLOTS
 //--------------------------//
 
-void SurfaceC0RectDialog::cancelButtonClicked(){
-    setResult(true);
+void SurfaceC0Dialog::cancelButtonClicked(){
+    result = false;
     close();
 }
 
-void SurfaceC0RectDialog::okButtonClicked(){
-    setResult(true);
+void SurfaceC0Dialog::okButtonClicked(){
+    result = true;
 
     QLineEdit* nEdit = ui->nLineEdit;
     QLineEdit* mEdit = ui->mLineEdit;
@@ -72,7 +95,11 @@ void SurfaceC0RectDialog::okButtonClicked(){
     float width = widthEdit->text().toFloat();
     float height = heightEdit->text().toFloat();
 
-    this->data = SurfaceC0RectData(n, m, width, height);
+    this->data = SurfaceC0Data(n, m, width, height);
+
+    if(type == RB_SURFACE_C0_CYLIND_TYPE){
+        data.radius = data.width;
+    }
 
     close();
 }

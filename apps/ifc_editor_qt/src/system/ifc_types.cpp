@@ -12,7 +12,8 @@ const string RB_BSPLINE_INTERPOLATING_NAME = "B-Spline Interpolating";
 const string RB_POINT_BEZIER_NAME = "Point Bezier";
 const string RB_POINT_CLONE_NAME = "Point Clone";
 
-const std::string RB_SURFACE_CO_RECT_NAME = "Surface C0";
+const std::string RB_SURFACE_CO_RECT_NAME = "Surface C0 Rectangle";
+const std::string RB_SURFACE_CO_CYLIND_NAME = "Surface C0 Cylinder";
 
 const string OBJ_ROOT_NAME = "Objects";
 const string OBJ_CAMERA_NAME = "Camera";
@@ -27,6 +28,7 @@ const Type RB_POINT_BEZIER_TYPE(RB_POINT_BEZIER_NAME);
 const Type RB_POINT_CLONE_TYPE(RB_POINT_CLONE_NAME);
 
 const Type RB_SURFACE_C0_RECT_TYPE(RB_SURFACE_CO_RECT_NAME);
+const Type RB_SURFACE_C0_CYLIND_TYPE(RB_SURFACE_CO_CYLIND_NAME);
 
 const Type OBJ_ROOT_TYPE(OBJ_ROOT_NAME);
 const Type OBJ_CAMERA_TYPE(OBJ_CAMERA_NAME);
@@ -57,7 +59,8 @@ Type typeFromString(std::string typeStr){
 }
 
 bool isSurface(const Type& type){
-    return (type == RB_SURFACE_C0_RECT_TYPE);
+    return (type == RB_SURFACE_C0_RECT_TYPE ||
+            type == RB_SURFACE_C0_CYLIND_TYPE);
 }
 
 bool canAddChildren(const Type& type){

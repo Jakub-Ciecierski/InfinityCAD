@@ -39,6 +39,7 @@ extern const std::string RB_POINT_BEZIER_NAME;
 extern const std::string RB_POINT_CLONE_NAME;
 
 extern const std::string RB_SURFACE_CO_RECT_NAME;
+extern const std::string RB_SURFACE_CO_CYLIND_NAME;
 
 extern const Type RB_ROOT_TYPE;
 extern const Type RB_TORUS_TYPE;
@@ -49,7 +50,8 @@ extern const Type RB_BSPLINE_INTERPOLATING_TYPE;
 extern const Type RB_POINT_BEZIER_TYPE;
 extern const Type RB_POINT_CLONE_TYPE;
 
-extern  const Type RB_SURFACE_C0_RECT_TYPE;
+extern const Type RB_SURFACE_C0_RECT_TYPE;
+extern const Type RB_SURFACE_C0_CYLIND_TYPE;
 
 extern const Type OBJ_ROOT_TYPE;
 extern const Type OBJ_CAMERA_TYPE;

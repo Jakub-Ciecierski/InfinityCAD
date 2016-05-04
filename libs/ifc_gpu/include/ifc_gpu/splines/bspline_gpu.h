@@ -32,6 +32,7 @@ namespace ifc_gpu{
                         glm::vec4* outCurve, int outSize,
                         float tstart, float dt, int degree,
                         const glm::mat4* MVP);
+
 }
 
 #endif //IC_BSPLINE_GPU_H

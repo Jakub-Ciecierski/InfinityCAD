@@ -8,14 +8,22 @@
 #include <ifc_gpu/common.h>
 
 namespace ifc_gpu{
+
+    __device__
+    float getMultplicationValueGPU(const glm::vec4& v1,
+                                const glm::mat4& m,
+                                const glm::vec4& v2);
+
+    __device__
+    glm::vec4 cubicBernsteinVectorGPU(float t);
+
     __global__
     void computeBezierSurfaceKernel(glm::mat4* d_xComponents,
                                     glm::mat4* d_yComponents,
                                     glm::mat4* d_zComponents,
                                     int patchCount,
-                                    float u_min, float u_max,
-                                    float v_min, float v_max,
-                                    float du, float dv,
+                                    glm::vec2* uvPatchParameters,
+                                    int paramCount,
                                     glm::vec4* d_surfacePixels, int pixelCount,
                                     glm::mat4* d_MVP);
 
@@ -24,20 +32,18 @@ namespace ifc_gpu{
                                   glm::mat4* d_yComponents,
                                   glm::mat4* d_zComponents,
                                   int patchCount,
-                                  float u_min, float u_max,
-                                  float v_min, float v_max,
-                                  float du, float dv,
+                                  glm::vec2* uvPatchParameters,
+                                  int paramCount,
                                   glm::vec4* d_surfacePixels, int pixelCount,
                                   glm::mat4* d_MVP);
 
     __host__
-    void computeBezierSurface(const glm::mat4* xComponents,
-                              const glm::mat4* yComponents,
-                              const glm::mat4* zComponents,
+    void computeBezierSurface(glm::mat4* xComponents,
+                              glm::mat4* yComponents,
+                              glm::mat4* zComponents,
                               int patchCount,
-                              float u_min, float u_max,
-                              float v_min, float v_max,
-                              float du, float dv,
+                              glm::vec2* uvPatchParameters,
+                              int paramCount,
                               glm::vec4* surfacePixels, int pixelCount,
                               const glm::mat4* VP);
 }

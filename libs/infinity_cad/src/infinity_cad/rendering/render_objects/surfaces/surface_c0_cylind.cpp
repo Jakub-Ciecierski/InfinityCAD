@@ -1,12 +1,13 @@
 //
-// Created by jakub on 5/2/16.
+// Created by jakub on 5/4/16.
 //
 
-#include <infinity_cad/rendering/render_objects/surfaces/surface_rect_c0.h>
+#include <infinity_cad/rendering/render_objects/surfaces/surface_c0_cylind.h>
 #include <infinity_cad/rendering/scene/object_factory.h>
 #include <infinity_cad/settings/settings.h>
 #include <infinity_cad/geometry/polynomials/bernstein_basis.h>
 #include <infinity_cad/math/math.h>
+#include <algorithm>
 #include <ifc_gpu/surfaces/bezier_surface_gpu.h>
 
 using namespace glm;
@@ -16,16 +17,16 @@ using namespace std;
 //  CONSTRUCTORS
 //-----------------------//
 
-SurfaceRectC0::SurfaceRectC0(SceneID id, std::string name,
-                             int n, int m, float width, float height) :
-        Surface(id, name, n, m), width(width), height(height),
+SurfaceC0Cylind::SurfaceC0Cylind(SceneID id, std::string name,
+                             int n, int m, float radius, float height) :
+        Surface(id, name, n, m), radius(radius), height(height),
         patches(n,m, NULL){
     this->build();
 
     surfacePixels = (vec4 *) malloc(MAX_PIXEL_COUNT * sizeof(vec4));
 }
 
-SurfaceRectC0::~SurfaceRectC0(){
+SurfaceC0Cylind::~SurfaceC0Cylind(){
     for(int i = 0; i < n;i++){
         for(int j = 0; j < m; j++){
             delete patches[i][j];
@@ -38,19 +39,69 @@ SurfaceRectC0::~SurfaceRectC0(){
 //  PRIVATE
 //-----------------------//
 
-BicubicBezierPatch* SurfaceRectC0::createPatch(int n, int m,
-                                               float patchWidth,
+Matrix<ifc::Point*> SurfaceC0Cylind::getMatrixFormOfAllPatches(){
+    int numberOfPointsInRow = CUBIC_COUNT*n - (n-1) - 1;
+    int numberOfPointsInColumns = CUBIC_COUNT*m - (m-1);
+
+    vector<vector<ifc::Point*>> points(numberOfPointsInColumns);
+
+    for(int i = 0; i < n; i++){
+        int currentRow = 0;
+        for(int j = 0; j < m; j++){
+            BicubicBezierPatch* patch = patches[i][j];
+            const Matrix<ifc::Point*>& controlPoints = patch->getPoints();
+
+            int k = 0;
+            if(j > 0) k = 1;
+            for(; k < CUBIC_COUNT; k++){
+                vector<ifc::Point*> row = controlPoints[k];
+                for(int l = 0; l < CUBIC_COUNT; l++){
+                    ifc::Point* point = row[l];
+
+                    if(!(std::find(points[currentRow].begin(),
+                                 points[currentRow].end(), point )
+                       != points[currentRow].end())){
+                        points[currentRow].push_back(point);
+                    }
+                }
+                currentRow++;
+            }
+        }
+    }
+    Matrix<ifc::Point*> pointsMatrix(points,
+                                     numberOfPointsInColumns,
+                                     numberOfPointsInRow);
+    return pointsMatrix;
+}
+
+void SurfaceC0Cylind::shapeTheCylidner(const Matrix<ifc::Point*>&rowWisePoints){
+    for(unsigned int i = 0; i < rowWisePoints.rowCount(); i++){
+        const vector<ifc::Point*>& row = rowWisePoints[i];
+        unsigned int size = row.size();
+        float da = (2*M_PI) / (float)size;
+        float a = 0;
+        float x,z;
+        for(unsigned int j = 0; j < size; j++){
+            x = sin(a) * radius;
+            z = cos(a) * radius;
+
+            row[j]->moveTo(x, row[j]->getPosition().y, z);
+
+            a += da;
+        }
+    }
+}
+
+BicubicBezierPatch* SurfaceC0Cylind::createPatch(int n, int m,
                                                float patchHeight,
                                                const vec3& origin){
-    float dX = patchWidth / (float)(CUBIC_COUNT - 1);
     float dY = patchHeight / (float)(CUBIC_COUNT - 1);
 
     ObjectFactory& objectFactory = ObjectFactory::getInstance();
     Matrix<ifc::Point*> points = initC0Points(n,m);
 
     float x,y,z;
-    z = 0;
-    x = n*patchWidth;
+    x = z = 0;
 
     for(int i = 0; i < CUBIC_COUNT; i++){ // column
         y = m*patchHeight;
@@ -67,20 +118,25 @@ BicubicBezierPatch* SurfaceRectC0::createPatch(int n, int m,
             points[j][i]->move(x, y, z);
             y += dY;
         }
-        x += dX;
     }
     BicubicBezierPatch* patch = new BicubicBezierPatch(points);
 
     return patch;
 }
 
-Matrix<ifc::Point*> SurfaceRectC0::initC0Points(int n, int m){
+Matrix<ifc::Point*> SurfaceC0Cylind::initC0Points(int n, int m){
     Matrix<ifc::Point*> points(CUBIC_COUNT, CUBIC_COUNT, NULL);
 
     if (n > 0){
         BicubicBezierPatch* patch = patches[n-1][m];
         const Matrix<ifc::Point*>& prevPoints = patch->getPoints();
         points.setColumn(0, prevPoints.getColumn(3));
+
+        if(n == this->n - 1){
+            BicubicBezierPatch* patch = patches[0][m];
+            const Matrix<ifc::Point*>& prevPoints = patch->getPoints();
+            points.setColumn(3, prevPoints.getColumn(0));
+        }
     }
     if (m > 0){
         BicubicBezierPatch* patch = patches[n][m-1];
@@ -91,17 +147,17 @@ Matrix<ifc::Point*> SurfaceRectC0::initC0Points(int n, int m){
     return points;
 }
 
-std::string SurfaceRectC0::createPointName(int patchN, int patchM,
+std::string SurfaceC0Cylind::createPointName(int patchN, int patchM,
                                            int pointI, int pointJ){
     return this->getName() + "("+ to_string(patchN) + "," + to_string(patchM) +
-            ")"
-    + "_point"
-    + "("+ to_string(pointI) + "," + to_string(pointJ) + ")";
+           ")"
+           + "_point"
+           + "("+ to_string(pointI) + "," + to_string(pointJ) + ")";
 
 
 }
 
-void SurfaceRectC0::drawCPU(const glm::mat4& VP, const Color& color,
+void SurfaceC0Cylind::drawCPU(const glm::mat4& VP, const Color& color,
                             float u_min, float u_max,
                             float v_min, float v_max,
                             float du, float dv) {
@@ -115,11 +171,40 @@ void SurfaceRectC0::drawCPU(const glm::mat4& VP, const Color& color,
     }
     glEnd();
 }
-
-void SurfaceRectC0::drawGPU(const glm::mat4& VP, const Color& color,
+/*
+void SurfaceC0Cylind::drawGPU(const glm::mat4& VP, const Color& color,
                             float u_min, float u_max,
                             float v_min, float v_max,
                             float du, float dv){
+    int patchCount = n*m;
+    int pixelCount = (u_max / du) * (v_max / dv) * (patchCount );
+
+    mat4* xComponents = new mat4[patchCount];
+    mat4* yComponents = new mat4[patchCount];
+    mat4* zComponents = new mat4[patchCount];
+
+    if(pixelCount > MAX_PIXEL_COUNT){
+        delete surfacePixels;
+        MAX_PIXEL_COUNT = pixelCount;
+        surfacePixels = (vec4*) malloc(MAX_PIXEL_COUNT * sizeof(vec4));
+    }
+
+    int id = 0;
+    for(int i = 0; i < n;i++){
+        for(int j = 0; j < m; j++){
+            xComponents[id] = patches[i][j]->getX();
+            yComponents[id] = patches[i][j]->getY();
+            zComponents[id] = patches[i][j]->getZ();
+            id++;
+        }
+    }
+}
+*/
+
+void SurfaceC0Cylind::drawGPU(const glm::mat4& VP, const Color& color,
+                              float u_min, float u_max,
+                              float v_min, float v_max,
+                              float du, float dv){
     float du_tmp = du;
     float dv_tmp = dv;
 
@@ -130,7 +215,7 @@ void SurfaceRectC0::drawGPU(const glm::mat4& VP, const Color& color,
     float netDv = 1.0f / (float)(vDivisionCount - 1);
 
     int patchPixelCount = ((u_max / netDu) * (v_max / dv) +
-                           ((v_max / netDv) * (u_max / du))) * 2;
+            ((v_max / netDv) * (u_max / du))) * 2;
 
     vector<vec2> parameters(patchPixelCount);
     int i = 0;
@@ -209,7 +294,7 @@ void SurfaceRectC0::drawGPU(const glm::mat4& VP, const Color& color,
     glEnd();
 }
 
-void SurfaceRectC0::drawPatch(const BicubicBezierPatch* patch,
+void SurfaceC0Cylind::drawPatch(const BicubicBezierPatch* patch,
                               const glm::mat4& VP,
                               float u_min, float u_max,
                               float v_min, float v_max,
@@ -268,7 +353,7 @@ void SurfaceRectC0::drawPatch(const BicubicBezierPatch* patch,
 //  PROTECTED
 //-----------------------//
 
-void SurfaceRectC0::draw(const glm::mat4& VP, const Color& color) {
+void SurfaceC0Cylind::draw(const glm::mat4& VP, const Color& color) {
     float u_min = 0;
     float u_max = 1;
     float v_min = 0;
@@ -278,29 +363,33 @@ void SurfaceRectC0::draw(const glm::mat4& VP, const Color& color) {
 
     if(ifc::RUN_CUDA){
         drawGPU(VP, color, u_min, u_max, v_min, v_max, du, dv);
+
+        //drawCPU(VP, color, u_min, u_max, v_min, v_max, du, dv);
     }else{
         drawCPU(VP, color, u_min, u_max, v_min, v_max, du, dv);
     }
 }
 
-void SurfaceRectC0::build() {
+void SurfaceC0Cylind::build() {
     vec3 startPos(0,0,0);
 
-    float patchWidth = width/(float)n;
     float patchHeight = height/(float)m;
 
     for(int i = 0; i < n;i++){
         for(int j = 0; j < m; j++){
-            patches[i][j] = createPatch(i,j, patchWidth, patchHeight, startPos);
+            patches[i][j] = createPatch(i, j, patchHeight, startPos);
         }
     }
+
+    Matrix<ifc::Point*> rowWisePoints = getMatrixFormOfAllPatches();
+    shapeTheCylidner(rowWisePoints);
 }
 
 //-----------------------//
-//  PUBLIC 
+//  PUBLIC
 //-----------------------//
 
-void SurfaceRectC0::update(){
+void SurfaceC0Cylind::update(){
     for(int i = 0; i < n;i++){
         for(int j = 0; j < m; j++){
             BicubicBezierPatch* patch  = patches[i][j];
@@ -309,9 +398,8 @@ void SurfaceRectC0::update(){
             }
         }
     }
-
 }
 
-const std::vector<ifc::Point*>& SurfaceRectC0::getAllPoints(){
+const std::vector<ifc::Point*>& SurfaceC0Cylind::getAllPoints(){
     return this->allPoints;
 }

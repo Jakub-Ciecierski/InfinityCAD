@@ -14,7 +14,7 @@ class BicubicBezierPatch {
 private:
     const int CUBIC_COUNT = 4;
 
-    Matrix<ifc::Point*> points;
+    Matrix<ifc::Point*> controlPoints;
     glm::mat4 x;
     glm::mat4 y;
     glm::mat4 z;

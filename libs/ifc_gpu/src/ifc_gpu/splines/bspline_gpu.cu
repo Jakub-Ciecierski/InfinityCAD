@@ -2,6 +2,7 @@
 // Created by jakub on 4/17/16.
 //
 
+#include <iostream>
 #include "ifc_gpu/splines/bspline_gpu.h"
 
 using namespace glm;

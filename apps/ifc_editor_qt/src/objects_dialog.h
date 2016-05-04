@@ -26,6 +26,7 @@ public slots:
     void bsplineInterpButtonClick();
 
     void surfaceC0RectButtonClick();
+    void surfaceC0CylindButtonClick();
 
 protected:
     void mouseMoveEvent(QMouseEvent* event);

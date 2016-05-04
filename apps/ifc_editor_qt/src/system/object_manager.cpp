@@ -3,7 +3,7 @@
 
 #include <infinity_cad/rendering/scene/object_factory.h>
 #include <infinity_cad/rendering/color/color_settings.h>
-#include <dialogs/surface_c0_rect_dialog.h>
+#include <dialogs/surface_c0_dialog.h>
 #include <ui_mainwindow.h>
 
 using namespace std;
@@ -81,13 +81,15 @@ RenderObject * ObjectManager::addBezierCurve(string name){
 
 RenderObject* ObjectManager::addSurfaceC0Rect(string name){
     ObjectFactory& objectFactory = ObjectFactory::getInstance();
-    SurfaceC0RectDialog dialog;
-    int result = dialog.exec();
+    SurfaceC0Dialog dialog;
+
+    dialog.exec();
+    bool result = dialog.getResult();
 
     int n,m;
     float width, height;
-    if(result = QDialog::Accepted){
-        SurfaceC0RectData data = dialog.getData();
+    if(result){
+        SurfaceC0Data data = dialog.getData();
         n = data.n;
         m = data.m;
         width = data.width;
@@ -100,6 +102,38 @@ RenderObject* ObjectManager::addSurfaceC0Rect(string name){
                                                                width, height);
     this->scene->addRenderObject(surface);
     Item* surfaceItem = sceneTree->addObject(surface, RB_SURFACE_C0_RECT_TYPE);
+
+    const std::vector<ifc::Point*>& points = surface->getAllPoints();
+    for(unsigned int i = 0; i < points.size(); i++){
+        this->scene->addRenderObject(points[i]);
+        Item* pointItem = this->sceneTree->addObject(points[i], RB_POINT_TYPE);
+        sceneTree->addChildItem(surfaceItem, pointItem);
+    }
+}
+
+RenderObject* ObjectManager::addSurfaceC0Cylind(string name){
+    ObjectFactory& objectFactory = ObjectFactory::getInstance();
+    SurfaceC0Dialog dialog(RB_SURFACE_C0_CYLIND_TYPE);
+
+    dialog.exec();
+    bool result = dialog.getResult();
+
+    int n,m;
+    float radius, height;
+    if(result){
+        SurfaceC0Data data = dialog.getData();
+        n = data.n;
+        m = data.m;
+        radius = data.radius;
+        height = data.height;
+    }else{
+        return NULL;
+    }
+
+    SurfaceC0Cylind* surface = objectFactory.createSurfaceC0Cylind(name, n, m,
+                                                                   radius, height);
+    this->scene->addRenderObject(surface);
+    Item* surfaceItem = sceneTree->addObject(surface, RB_SURFACE_C0_CYLIND_TYPE);
 
     const std::vector<ifc::Point*>& points = surface->getAllPoints();
     for(unsigned int i = 0; i < points.size(); i++){
@@ -158,6 +192,8 @@ void ObjectManager::addObject(const Type& type, string name){
         bSplineInterpBinding->createBSplineInterp(name);
     }else if(type == RB_SURFACE_C0_RECT_TYPE){
         addSurfaceC0Rect(name);
+    }else if(type == RB_SURFACE_C0_CYLIND_TYPE){
+        addSurfaceC0Cylind(name);
     }
     if(body != NULL){
         Cross* cross = scene->getCross();

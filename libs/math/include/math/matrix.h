@@ -34,6 +34,9 @@ public:
     Matrix(unsigned int n, unsigned int m);
     Matrix(unsigned int n, unsigned int m, T val);
 
+    Matrix(std::vector<std::vector<T>> entries,
+           unsigned int n, unsigned int m);
+
     Matrix(const Matrix& matrix);
 
     //-----------------------------------------------------------//
@@ -94,6 +97,12 @@ Matrix<T>::Matrix(unsigned int n, unsigned int m, T val) : n(n), m(m){
             entries[i][j] = val;
         }
     }
+}
+
+template <class T>
+Matrix<T>::Matrix(std::vector<std::vector<T>> entries,
+                  unsigned int n, unsigned int m) :
+        entries(entries), n(n), m(m){
 }
 
 template <class T>

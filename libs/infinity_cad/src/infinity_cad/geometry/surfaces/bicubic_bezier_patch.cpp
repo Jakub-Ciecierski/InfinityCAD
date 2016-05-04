@@ -14,7 +14,7 @@ using namespace glm;
 //-----------------------//
 
 BicubicBezierPatch::BicubicBezierPatch(Matrix<ifc::Point*> points) :
-        points(points){
+        controlPoints(points){
     update();
 }
 
@@ -39,7 +39,7 @@ const mat4& BicubicBezierPatch::getZ() const{
 }
 
 const Matrix<ifc::Point*>& BicubicBezierPatch::getPoints(){
-    return points;
+    return controlPoints;
 }
 /*
 ifc::Point** BicubicBezierPatch::getColumn(int i){
@@ -63,7 +63,7 @@ ifc::Point** BicubicBezierPatch::getRow(int i){
 void BicubicBezierPatch::update(){
     for(int i = 0; i < CUBIC_COUNT; i ++){
         for(int j = 0; j < CUBIC_COUNT; j ++){
-            const vec3& pos = points[i][j]->getPosition();
+            const vec3& pos = controlPoints[i][j]->getPosition();
             x[i][j] = pos.x;
             y[i][j] = pos.y;
             z[i][j] = pos.z;

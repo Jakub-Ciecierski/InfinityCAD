@@ -23,6 +23,11 @@ protected:
     virtual void initEdges() override;
 
 public:
+    const static int U_DIVISION_COUNT_DEFAULT = 4;
+    const static int V_DIVISION_COUNT_DEFAULT = 4;
+
+    int uDivisionCount;
+    int vDivisionCount;
 
     /*
      * Creates a Surface made of nxm Bezier Patches connected with C0.

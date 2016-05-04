@@ -32,6 +32,8 @@ int main(int argc, char *argv[])
     ui->cameraTypeCheckbox->toggle();
     ui->crossActiveCheckBox->toggle();
 
+
+
     w.show();
 
     return a.exec();

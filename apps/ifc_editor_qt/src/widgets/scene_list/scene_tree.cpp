@@ -54,7 +54,8 @@ void SceneTree::setupRootItems(){
     topRootItems.push_back(new RootItem(RB_BEZIER_TYPE, "Bezier Curves"));
     topRootItems.push_back(new RootItem(RB_BSPLINE_TYPE, "B-Splines"));
     topRootItems.push_back(new RootItem(RB_BSPLINE_INTERPOLATING_TYPE, "B-Splines Interpolating"));
-    topRootItems.push_back(new RootItem(RB_SURFACE_C0_RECT_TYPE, "Surface C0 Rectangle"));
+    topRootItems.push_back(new RootItem(RB_SURFACE_C0_RECT_TYPE, "Surfaces C0 Rectangle"));
+    topRootItems.push_back(new RootItem(RB_SURFACE_C0_CYLIND_TYPE, "Surfaces C0 Cylinder"));
 }
 
 void SceneTree::setupContextMenu(){
@@ -376,7 +377,7 @@ void SceneTree::myitemSelectionChanged(){
     if(selectedItems.size() > 0){
         Item* item = getItemByTree(selectedItems[selectedItems.size()-1]);
         if(item != NULL)
-            if(!canAddChildren(item->type) || !isSurface(item->type))
+            if(!canAddChildren(item->type) && !isSurface(item->type))
                 objManager.moveCross(item);
     }
 }

@@ -180,3 +180,14 @@ SurfaceRectC0* ObjectFactory::createSurfaceRectC0(std::string name,
 
     return surface;
 }
+
+SurfaceC0Cylind* ObjectFactory::createSurfaceC0Cylind(std::string name,
+                                                  int n, int m,
+                                                  float radius, float height){
+    SceneID id = sceneIDFactory.createNextAvailableID();
+
+    SurfaceC0Cylind* surface = new SurfaceC0Cylind(id, name, n, m,
+                                                   radius, height);
+
+    return surface;
+}

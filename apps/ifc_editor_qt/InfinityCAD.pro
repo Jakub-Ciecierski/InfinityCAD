@@ -62,7 +62,8 @@ SOURCES += src/glwidget.cpp \
     src/widgets/scene_list/context_menus/scm_bspline.cpp \
     src/system/system_binding/bspline_interp_binding.cpp \
     src/objects_dialog.cpp \
-    src/dialogs/surface_c0_rect_dialog.cpp
+    src/dialogs/surface_settings_dialog.cpp \
+    src/dialogs/surface_c0_dialog.cpp
 
 HEADERS  += build/ui/ui_mainwindow.h \
     src/context_menus/context_menu.h \
@@ -91,7 +92,8 @@ HEADERS  += build/ui/ui_mainwindow.h \
     src/widgets/scene_list/context_menus/scm_bspline.h \
     src/system/system_binding/bspline_interp_binding.h \
     src/objects_dialog.h \
-    src/dialogs/surface_c0_rect_dialog.h
+    src/dialogs/surface_settings_dialog.h \
+    src/dialogs/surface_c0_dialog.h
 
 ##############################
 
@@ -108,7 +110,8 @@ UI_DIR = build/ui
 
 FORMS    += mainwindow.ui \
     objects_dialog.ui \
-    src/dialogs/surface_c0_rect_dialog.ui
+    src/dialogs/surface_settings_dialog.ui \
+    src/dialogs/surface_c0_dialog.ui
 
 RESOURCES += resources/icons.qrc \
     qdarkstyle/style.qrc

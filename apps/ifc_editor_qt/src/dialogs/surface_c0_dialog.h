@@ -2,43 +2,55 @@
 #define SURFACE_C0_RECT_DIALOG_H
 
 #include <QDialog>
+#include <system/ifc_types.h>
 
-struct SurfaceC0RectData{
+struct SurfaceC0Data{
     int n;
     int m;
+
+    float radius;
 
     float width;
     float height;
 
-    SurfaceC0RectData(){
+    SurfaceC0Data(){
         this->n = 0;
         this->m = 0;
+
+        this->radius = 0;
+
         this->width = 0;
         this->height = 0;
     }
 
-    SurfaceC0RectData(int n, int m,
+    SurfaceC0Data(int n, int m,
                       float width, float height){
         this->n = n;
         this->m = m;
+
+        this->radius = 0;
+
         this->width = width;
         this->height = height;
     }
 };
 
 namespace Ui {
-class SurfaceC0RectDialog;
+class SurfaceC0Dialog;
 }
 
-class SurfaceC0RectDialog : public QDialog
+class SurfaceC0Dialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit SurfaceC0RectDialog(QWidget *parent = 0);
-    ~SurfaceC0RectDialog();
+    explicit SurfaceC0Dialog(const Type& type = RB_SURFACE_C0_RECT_TYPE,
+                             QWidget *parent = 0);
+    ~SurfaceC0Dialog();
 
-    const SurfaceC0RectData& getData();
+    const SurfaceC0Data& getData();
+
+    bool getResult();
 
 public slots:
 
@@ -46,9 +58,13 @@ public slots:
     void okButtonClicked();
 
 private:
-    SurfaceC0RectData data;
+    bool result;
 
-    Ui::SurfaceC0RectDialog *ui;
+    Type type;
+
+    SurfaceC0Data data;
+
+    Ui::SurfaceC0Dialog *ui;
 
     void initDefaultDataValue();
 };

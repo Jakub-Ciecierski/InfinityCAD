@@ -19,6 +19,7 @@
 #include <infinity_cad/rendering/render_objects/curves/bspline_interp.h>
 #include <infinity_cad/rendering/render_objects/selection_box.h>
 #include <infinity_cad/rendering/render_objects/surfaces/surface_rect_c0.h>
+#include <infinity_cad/rendering/render_objects/surfaces/surface_c0_cylind.h>
 #include "infinity_cad/rendering/scene/scene_id_factory.h"
 #include "scene.h"
 
@@ -82,6 +83,10 @@ public:
     SurfaceRectC0* createSurfaceRectC0(std::string name,
                                        int n, int m,
                                        float width, float height);
+
+    SurfaceC0Cylind* createSurfaceC0Cylind(std::string name,
+                                           int n, int m,
+                                           float radius, float height);
 };
 
 

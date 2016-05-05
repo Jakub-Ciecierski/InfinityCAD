@@ -98,8 +98,8 @@ RenderObject* ObjectManager::addSurfaceC0Rect(string name){
         return NULL;
     }
 
-    SurfaceRectC0* surface = objectFactory.createSurfaceRectC0(name, n, m,
-                                                               width, height);
+    SurfaceC0Rect * surface = objectFactory.createSurfaceRectC0(name, n, m,
+                                                                width, height);
     this->scene->addRenderObject(surface);
     Item* surfaceItem = sceneTree->addObject(surface, RB_SURFACE_C0_RECT_TYPE);
 
@@ -109,6 +109,8 @@ RenderObject* ObjectManager::addSurfaceC0Rect(string name){
         Item* pointItem = this->sceneTree->addObject(points[i], RB_POINT_TYPE);
         sceneTree->addChildItem(surfaceItem, pointItem);
     }
+
+    return surface;
 }
 
 RenderObject* ObjectManager::addSurfaceC0Cylind(string name){
@@ -141,6 +143,8 @@ RenderObject* ObjectManager::addSurfaceC0Cylind(string name){
         Item* pointItem = this->sceneTree->addObject(points[i], RB_POINT_TYPE);
         sceneTree->addChildItem(surfaceItem, pointItem);
     }
+
+    return surface;
 }
 
 string ObjectManager::getDefaultName(const Type& type){
@@ -226,7 +230,6 @@ void ObjectManager::addChildItem(Item* parentItem,
         sceneTree->addChildItem(parentItem, childItem);
         spline->addPoint(point);
     }
-
 
     return;
 }

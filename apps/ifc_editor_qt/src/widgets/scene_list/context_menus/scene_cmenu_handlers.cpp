@@ -2,6 +2,7 @@
 #include <system/object_manager.h>
 #include <infinity_cad/rendering/render_objects/curves/spline.h>
 #include <infinity_cad/rendering/render_objects/curves/bspline.h>
+#include <infinity_cad/rendering/render_objects/surfaces/surface.h>
 
 SceneCMHandler SCENE_MENU_MOVE_CROSS_HANDLER(
         "Move Cross",
@@ -39,6 +40,13 @@ SceneCMHandler SCENE_MENU_POLYGON_HANDLER(
     spline->setDrawBezierPolygon(!value);
 });
 
+SceneCMHandler SCENE_MENU_POLYGON_SURFACE_HANDLER(
+        "Show/Hide Polygon",
+        [](Item* item){
+    Surface* surface = static_cast<Surface*>(item->object);
+    bool value = surface->isDrawPolygon();
+    surface->setDrawPolygon(!value);
+});
 
 SceneCMHandler SCENE_MENU_MOVEUP_HANDLER(
         "Move up",

@@ -376,9 +376,16 @@ void SceneTree::myitemSelectionChanged(){
     }
     if(selectedItems.size() > 0){
         Item* item = getItemByTree(selectedItems[selectedItems.size()-1]);
-        if(item != NULL)
-            if(!canAddChildren(item->type) && !isSurface(item->type))
+        if(item != NULL){
+            if(!canAddChildren(item->type) && !isSurface(item->type)){
                 objManager.moveCross(item);
+            }else{
+                if(item->children.size() > 0){
+                    Item* childItem = item->children[0];
+                    objManager.moveCross(childItem);
+                }
+            }
+        }
     }
 }
 

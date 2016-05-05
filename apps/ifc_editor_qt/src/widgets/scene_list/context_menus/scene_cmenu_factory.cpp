@@ -15,6 +15,8 @@ SceneCMenuFactory::SceneCMenuFactory() {
     bezierMenu = new SceneCMenuBezier();
 
     bsplineMenu = new SCMBSpline();
+
+    surfaceMenu = new SCMSurfaceC0();
 }
 
 SceneCMenuFactory::~SceneCMenuFactory() {
@@ -29,6 +31,8 @@ SceneCMenuFactory::~SceneCMenuFactory() {
     delete bezierMenu;
 
     delete bsplineMenu;
+
+    delete surfaceMenu;
 }
 
 SceneCMenuFactory& SceneCMenuFactory::getInstance(){
@@ -86,6 +90,13 @@ SceneContextMenu* SceneCMenuFactory::getProperMenu(
                                             RB_BSPLINE_TYPE,
                                             getItemByTree);
 
+    int surfaceCount = getSelectedTypeCount(selectedItems,
+                                            RB_SURFACE_C0_CYLIND_TYPE,
+                                            getItemByTree);
+    surfaceCount += getSelectedTypeCount(selectedItems,
+                                            RB_SURFACE_C0_RECT_TYPE,
+                                            getItemByTree);
+
     if(pointCount == totalCount){
         Item* bezierRoot = getRootItem(RB_BEZIER_TYPE);
         if(bezierRoot == NULL)
@@ -105,10 +116,14 @@ SceneContextMenu* SceneCMenuFactory::getProperMenu(
         }
     }else if(bsplineCount == totalCount){
         return this->bsplineMenu;
+    }else if(surfaceCount == totalCount){
+        if(totalCount == 1)
+            return surfaceMenu;
     }
 
-    if(totalCount == 1)
+    if(totalCount == 1){
         return this->getDefaultMenu();
+    }
 
     return NULL;
 }

@@ -28,6 +28,7 @@ protected:
 
 public slots:
     void showObjectsDialog();
+    void netDensityAction();
 
 private:
     explicit EditorWindow(QWidget *parent = 0);

@@ -171,12 +171,12 @@ SelectionBox* ObjectFactory::createSelectionBox(std::string name,
     return selectionBox;
 }
 
-SurfaceRectC0* ObjectFactory::createSurfaceRectC0(std::string name,
-                                                  int n, int m,
-                                                  float width, float height){
+SurfaceC0Rect * ObjectFactory::createSurfaceRectC0(std::string name,
+                                                   int n, int m,
+                                                   float width, float height){
     SceneID id = sceneIDFactory.createNextAvailableID();
 
-    SurfaceRectC0* surface = new SurfaceRectC0(id, name, n, m, width, height);
+    SurfaceC0Rect * surface = new SurfaceC0Rect(id, name, n, m, width, height);
 
     return surface;
 }

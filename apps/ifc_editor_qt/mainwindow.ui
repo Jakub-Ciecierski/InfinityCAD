@@ -96,7 +96,7 @@
           <string/>
          </property>
          <property name="icon">
-          <iconset>
+          <iconset resource="resources/icons.qrc">
            <normaloff>:/cameraButton/icons/nvidia2.ico</normaloff>:/cameraButton/icons/nvidia2.ico</iconset>
          </property>
          <property name="iconSize">
@@ -129,7 +129,7 @@
           <string/>
          </property>
          <property name="icon">
-          <iconset>
+          <iconset resource="resources/icons.qrc">
            <normaloff>:/cameraButton/icons/3d.ico</normaloff>:/cameraButton/icons/3d.ico</iconset>
          </property>
          <property name="iconSize">
@@ -149,7 +149,7 @@
           <string/>
          </property>
          <property name="icon">
-          <iconset>
+          <iconset resource="resources/icons.qrc">
            <normaloff>:/cameraButton/icons/camera.ico</normaloff>:/cameraButton/icons/camera.ico</iconset>
          </property>
          <property name="iconSize">
@@ -166,7 +166,7 @@
           <string/>
          </property>
          <property name="icon">
-          <iconset>
+          <iconset resource="resources/icons.qrc">
            <normaloff>:/cameraButton/icons/home.svg</normaloff>:/cameraButton/icons/home.svg</iconset>
          </property>
          <property name="iconSize">
@@ -193,7 +193,7 @@
           <string/>
          </property>
          <property name="icon">
-          <iconset>
+          <iconset resource="resources/icons.qrc">
            <normaloff>:/cameraButton/icons/points_white.png</normaloff>:/cameraButton/icons/points_white.png</iconset>
          </property>
          <property name="iconSize">
@@ -220,7 +220,7 @@
           <string/>
          </property>
          <property name="icon">
-          <iconset>
+          <iconset resource="resources/icons.qrc">
            <normaloff>:/cameraButton/icons/magnet.svg</normaloff>:/cameraButton/icons/magnet.svg</iconset>
          </property>
          <property name="iconSize">
@@ -253,7 +253,7 @@
           <string/>
          </property>
          <property name="icon">
-          <iconset>
+          <iconset resource="resources/icons.qrc">
            <normaloff>:/cameraButton/icons/geometry_white.png</normaloff>:/cameraButton/icons/geometry_white.png</iconset>
          </property>
          <property name="iconSize">
@@ -1000,7 +1000,9 @@
    </slots>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="resources/icons.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>showPointsCheckbox</sender>
@@ -1162,8 +1164,25 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionNet_Density</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>netDensityAction()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>580</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>showObjectsDialog()</slot>
+  <slot>netDensityAction()</slot>
  </slots>
 </ui>

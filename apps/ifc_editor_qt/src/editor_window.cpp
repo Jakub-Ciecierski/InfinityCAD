@@ -1,6 +1,7 @@
 #include "editor_window.h"
 #include "ui_mainwindow.h"
 #include <widgets/scene_list/context_menus/scene_cmenu_factory.h>
+#include <dialogs/surface_settings_dialog.h>
 #include <iostream>
 
 #include <QApplication>
@@ -92,6 +93,10 @@ void EditorWindow::showObjectsDialog(){
     }
 }
 
+void EditorWindow::netDensityAction(){
+    SurfaceSettingsDialog surfaceSettings;
+    surfaceSettings.exec();
+}
 
 //-------------------------//
 //  PRIVATE METHODS

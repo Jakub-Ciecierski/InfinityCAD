@@ -4,6 +4,8 @@
 #include <objects_dialog.h>
 #include "ui_mainwindow.h"
 
+#include <infinity_cad/rendering/render_objects/surfaces/surface.h>
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
@@ -32,7 +34,9 @@ int main(int argc, char *argv[])
     ui->cameraTypeCheckbox->toggle();
     ui->crossActiveCheckBox->toggle();
 
-
+    // TODO move
+    Surface::uDivisionCount = Surface::U_DIVISION_COUNT_DEFAULT;
+    Surface::vDivisionCount = Surface::V_DIVISION_COUNT_DEFAULT;
 
     w.show();
 

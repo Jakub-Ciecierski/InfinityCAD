@@ -6,21 +6,12 @@
 #define IC_SURFACE_C0_CYLIND_H
 
 
-#include "surface_rect_c0.h"
+#include "surface_c0_rect.h"
 
 class SurfaceC0Cylind : public Surface{
 private:
-    const int CUBIC_COUNT = 4;
-
     float radius;
     float height;
-
-    Matrix<BicubicBezierPatch*> patches;
-
-    int MAX_PIXEL_COUNT = 100000;
-    glm::vec4* surfacePixels;
-
-    std::vector<ifc::Point*> allPoints;
 
     Matrix<ifc::Point*> getMatrixFormOfAllPatches();
 
@@ -33,28 +24,8 @@ private:
                                     float patchHeight,
                                     const glm::vec3& origin);
     Matrix<ifc::Point*> initC0Points(int n, int m);
-    std::string createPointName(int patchN, int patchM,
-                                int pointI, int pointJ);
-
-    void drawCPU(const glm::mat4& VP, const Color& color,
-                 float u_min, float u_max,
-                 float v_min, float v_max,
-                 float du, float dv);
-
-    void drawGPU(const glm::mat4& VP, const Color& color,
-                 float u_min, float u_max,
-                 float v_min, float v_max,
-                 float du, float dv);
-
-    void drawPatch(const BicubicBezierPatch* patch,
-                   const glm::mat4& VP,
-                   float u_min, float u_max,
-                   float v_min, float v_max,
-                   float du, float dv);
 protected:
-    virtual void draw(const glm::mat4& VP, const Color& color) override;
     virtual void build() override;
-
 
 public:
     SurfaceC0Cylind(SceneID id, std::string name,
@@ -62,11 +33,6 @@ public:
                     float radius, float height);
 
     ~SurfaceC0Cylind();
-
-    virtual void update() override;
-
-    const std::vector<ifc::Point*>& getAllPoints();
-
 };
 
 

@@ -63,7 +63,8 @@ SOURCES += src/glwidget.cpp \
     src/system/system_binding/bspline_interp_binding.cpp \
     src/objects_dialog.cpp \
     src/dialogs/surface_settings_dialog.cpp \
-    src/dialogs/surface_c0_dialog.cpp
+    src/dialogs/surface_c0_dialog.cpp \
+    src/widgets/scene_list/context_menus/scm_surfacec0.cpp
 
 HEADERS  += build/ui/ui_mainwindow.h \
     src/context_menus/context_menu.h \
@@ -93,7 +94,8 @@ HEADERS  += build/ui/ui_mainwindow.h \
     src/system/system_binding/bspline_interp_binding.h \
     src/objects_dialog.h \
     src/dialogs/surface_settings_dialog.h \
-    src/dialogs/surface_c0_dialog.h
+    src/dialogs/surface_c0_dialog.h \
+    src/widgets/scene_list/context_menus/scm_surfacec0.h
 
 ##############################
 

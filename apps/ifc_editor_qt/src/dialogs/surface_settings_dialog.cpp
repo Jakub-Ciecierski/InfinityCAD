@@ -7,6 +7,10 @@ SurfaceSettingsDialog::SurfaceSettingsDialog(QWidget *parent) :
     ui(new Ui::SurfaceSettingsDialog)
 {
     ui->setupUi(this);
+
+    this->setWindowFlags(Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);
+
+    initDialog();
 }
 
 SurfaceSettingsDialog::~SurfaceSettingsDialog()
@@ -23,16 +27,43 @@ void SurfaceSettingsDialog::initDialog(){
     uEdit->setValidator(intValidator);
     vEdit->setValidator(intValidator);
 
-    //Surface::del
+    std::string uStr;
+    std::string vStr;
 
+    uStr = std::to_string(Surface::uDivisionCount);
+    vStr = std::to_string(Surface::vDivisionCount);
+
+    QString uQStr = QString::fromStdString(uStr);
+    QString vQStr = QString::fromStdString(vStr);
+
+    uEdit->setText(uQStr);
+    vEdit->setText(vQStr);
+
+    QPushButton* cancelButton = ui->cancelButton;
+    QPushButton* okButton = ui->okButton;
+
+    okButton->setDefault(true);
+    okButton->setAutoDefault(false);
+
+    cancelButton->setDefault(false);
+    cancelButton->setAutoDefault(false);
 }
 
 void SurfaceSettingsDialog::cancelButtonClicked(){
-    setResult(true);
+    setResult(false);
     close();
 }
 
 void SurfaceSettingsDialog::okButtonClicked(){
+    QLineEdit* uEdit = ui->uDivisionCountLineEdit;
+    QLineEdit* vEdit = ui->vDivisionCountLineEdit;
+
+    int u = uEdit->text().toInt();
+    int v = vEdit->text().toInt();
+
+    Surface::uDivisionCount = u;
+    Surface::vDivisionCount = v;
+
     setResult(true);
     close();
 }

@@ -420,3 +420,25 @@ void ObjectManager::TEST_BSPLINE_INTERP(){
     }
 
 }
+
+void ObjectManager::TEST_SURFACE(){
+    int n = 1;
+    int m = 1;
+    std::string name = "TEST_SURFACE";
+    float width = 0.5;
+    float height = 0.5;
+
+    ObjectFactory& objectFactory = ObjectFactory::getInstance();
+    SurfaceC0Rect * surface = objectFactory.createSurfaceRectC0(name, n, m,
+                                                                width, height);
+    this->scene->addRenderObject(surface);
+    Item* surfaceItem = sceneTree->addObject(surface, RB_SURFACE_C0_RECT_TYPE);
+
+    const std::vector<ifc::Point*>& points = surface->getAllPoints();
+    for(unsigned int i = 0; i < points.size(); i++){
+        this->scene->addRenderObject(points[i]);
+        Item* pointItem = this->sceneTree->addObject(points[i], RB_POINT_TYPE);
+        sceneTree->addChildItem(surfaceItem, pointItem);
+    }
+
+}

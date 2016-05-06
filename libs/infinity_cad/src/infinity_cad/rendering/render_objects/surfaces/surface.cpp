@@ -28,6 +28,8 @@ Surface::Surface(SceneID id, std::string name,
     setDrawPolygon(false);
 
     surfacePixels = (vec4 *) malloc(MAX_PIXEL_COUNT * sizeof(vec4));
+
+    surfacePixelsTMP = NULL;
 }
 
 Surface::~Surface(){
@@ -92,40 +94,92 @@ void Surface::drawGPU(const glm::mat4& VP, const Color& color,
                            ((v_max / netDv) * (u_max / du))) * 2;
 
     vector<vec2> parameters(patchPixelCount);
+    vector<vector<int>> edges(patchPixelCount);
+
     int i = 0;
+    int edgeID = 0;
+    int edgeIndex = 0;
 
     du = netDu;
     float u,v;
-    for(u = u_min; u <= u_max; u+=du){
-        for(v = v_min; v <= v_max; v+=dv){
+
+    u = u_min;
+    while(u <= u_max){
+        v = v_min;
+        while(v < v_max){
             vec2 vec(u,v);
-            parameters.push_back(vec);
-            /*
             if(i > patchPixelCount){
                 parameters.push_back(vec);
             }else{
                 parameters[i] = vec;
             }
-            i++;*/
+            vector<int> edge = {edgeID, edgeID + 1};
+            if(edgeIndex > patchPixelCount){
+                edges.push_back(edge);
+            }else{
+                edges[edgeIndex++] = edge;
+            }
+
+
+            i++;
+            edgeID++;
+            v+=dv;
+
+            if(v > v_max){
+                v = v_max;
+                vec2 vec(u,v);
+                if(i > patchPixelCount){
+                    parameters.push_back(vec);
+                }else{
+                    parameters[i] = vec;
+                }
+                i++;
+            }
         }
+        edgeID++;
+        u+=du;
     }
+
     du = du_tmp;
     dv = netDv;
-
-    for(v = v_min; v <= v_max; v+=dv){
-        for(u = u_min; u <= u_max; u+=du){
+    v = v_min;
+    while(v <= v_max){
+        u = u_min;
+        while(u < u_max){
             vec2 vec(u,v);
-            parameters.push_back(vec);
-            /*
             if(i > patchPixelCount){
                 parameters.push_back(vec);
             }else{
                 parameters[i] = vec;
             }
-            i++;*/
+            vector<int> edge = {edgeID, edgeID + 1};
+            if(edgeIndex > patchPixelCount){
+                edges.push_back(edge);
+            }else{
+                edges[edgeIndex++] = edge;
+            }
+
+            i++;
+            edgeID++;
+            u+=du;
+
+            if(u > u_max){
+                u = u_max;
+                vec2 vec(u,v);
+                if(i > patchPixelCount){
+                    parameters.push_back(vec);
+                }else{
+                    parameters[i] = vec;
+                }
+                i++;
+            }
         }
+        edgeID++;
+        v+=dv;
     }
-    patchPixelCount = parameters.size();
+
+    patchPixelCount = i;
+    int edgesCount = edgeIndex;
 
     // ---------
 
@@ -136,9 +190,6 @@ void Surface::drawGPU(const glm::mat4& VP, const Color& color,
     vector<mat4> yComponents(patchCount);
     vector<mat4> zComponents(patchCount);
 
-    if(allPixelCount > MAX_PIXEL_COUNT){
-        MAX_PIXEL_COUNT = allPixelCount;
-    }
     MAX_PIXEL_COUNT = allPixelCount;
     delete surfacePixels;
     surfacePixels = (vec4*) malloc(MAX_PIXEL_COUNT * sizeof(vec4));
@@ -157,10 +208,13 @@ void Surface::drawGPU(const glm::mat4& VP, const Color& color,
                                   yComponents.data(),
                                   zComponents.data(),
                                   patchCount, parameters.data(),
-                                  parameters.size(), surfacePixels,
+                                  patchPixelCount, surfacePixels,
                                   allPixelCount, &VP);
 
+
+
     setSurfaceColor(color);
+    /*
     glBegin(GL_POINTS);
     for (int i = 0; i < MAX_PIXEL_COUNT; i++) {
         const vec4& point = surfacePixels[i];
@@ -168,8 +222,62 @@ void Surface::drawGPU(const glm::mat4& VP, const Color& color,
 
         glVertex2f(point.x, point.y);
 
+    }*/
+
+
+    glLineWidth((GLfloat)lineWidth);
+    glBegin(GL_LINES);
+    for(int patchIndex = 0; patchIndex < patchCount; patchIndex++){
+        for(unsigned int i = 0; i < edgesCount; i++){
+            int p1 = edges[i][0];
+            int p2 = edges[i][1];
+
+            int globalIndex1 = patchIndex*patchPixelCount + p1;
+            int globalIndex2 = patchIndex*patchPixelCount + p2;
+
+            const vec4& point1 = surfacePixels[globalIndex1];
+            const vec4& point2 = surfacePixels[globalIndex2];
+            if(point1.w < 0 || point2.w < 0) continue;
+
+            glVertex2f(point1.x, point1.y);
+            glVertex2f(point2.x, point2.y);
+        }
     }
     glEnd();
+
+
+/*
+
+    setSurfaceColor(color);
+    glLineWidth((GLfloat)lineWidth);
+    glBegin(GL_LINES);
+    for(int patchIndex = 0; patchIndex < patchCount; patchIndex++){
+        if(surfacePixels != NULL){
+            delete surfacePixels;
+            surfacePixels = (vec4*) malloc(patchPixelCount * sizeof(vec4));
+        }
+
+        ifc_gpu::computeBezierSurface(&xComponents[patchIndex],
+                                      &yComponents[patchIndex],
+                                      &zComponents[patchIndex],
+                                      1, parameters.data(), parameters.size(),
+                                      surfacePixels, patchPixelCount, &VP);
+
+        for(unsigned int i = 0; i < edges.size(); i++){
+            int p1 = edges[i][0];
+            int p2 = edges[i][1];
+
+            const vec4& point1 = surfacePixels[p1];
+            const vec4& point2 = surfacePixels[p2];
+            if(point1.w < 0 || point2.w < 0) continue;
+
+            glVertex2f(point1.x, point1.y);
+            glVertex2f(point2.x, point2.y);
+        }
+    }
+
+    glEnd();*/
+
 }
 
 void Surface::drawPatch(const BicubicBezierPatch* patch,
@@ -386,8 +494,11 @@ void Surface::draw(const glm::mat4& VP, const Color& color) {
     int screenLength = 3 * (screenWidth+screenHeight);
     float maxDist = getMaximumPolygonLength();
 
-    du = 1.0f / ((float)screenLength * maxDist);
-    dv = 1.0f / ((float)screenLength * maxDist);
+    //du = 1.0f / ((float)screenLength * maxDist);
+    //dv = 1.0f / ((float)screenLength * maxDist);
+
+    du = 0.06;
+    dv = 0.06;
 
     if(ifc::RUN_CUDA){
         drawGPU(VP, color, u_min, u_max, v_min, v_max, du, dv);

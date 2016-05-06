@@ -54,6 +54,7 @@ public:
     void TEST_BSPLINE();
     void TEST_PERFORMANCE();
     void TEST_BSPLINE_INTERP();
+    void TEST_SURFACE();
 };
 
 #endif // OBJECTMANAGER_H

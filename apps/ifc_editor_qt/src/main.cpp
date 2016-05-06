@@ -27,6 +27,7 @@ int main(int argc, char *argv[])
     ObjectManager& objManager = ObjectManager::getInstance();
     //objManager.TEST_PERFORMANCE();
     //objManager.TEST_BSPLINE_INTERP();
+    objManager.TEST_SURFACE();
 
     Ui::MainWindow* ui = w.getUI();
     ui->cudaCheckBox->toggle();

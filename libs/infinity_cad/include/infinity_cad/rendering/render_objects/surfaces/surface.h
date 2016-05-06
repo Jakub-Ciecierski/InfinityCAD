@@ -22,6 +22,7 @@ protected:
 
     int MAX_PIXEL_COUNT = 100000;
     glm::vec4* surfacePixels;
+    glm::vec4** surfacePixelsTMP;
 
     std::vector<ifc::Point*> allPoints;
 
@@ -54,7 +55,7 @@ protected:
                             float v_min, float v_max,
                             float du, float dv);
 
-    void drawPolygon(const glm::mat4& VP, int segments = 5);
+    void drawPolygon(const glm::mat4& VP, int segments = 1);
 
     void draw(const glm::mat4& VP, const Color& color);
 

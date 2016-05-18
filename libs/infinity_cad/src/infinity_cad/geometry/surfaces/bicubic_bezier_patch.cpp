@@ -18,6 +18,18 @@ BicubicBezierPatch::BicubicBezierPatch(Matrix<ifc::Point*> points) :
     update();
 }
 
+BicubicBezierPatch::BicubicBezierPatch(Matrix<glm::vec4> points) :
+        controlPoints(0,0){
+    for(int i = 0; i < CUBIC_COUNT; i ++){
+        for(int j = 0; j < CUBIC_COUNT; j ++){
+            const vec4& pos = points[i][j];
+            x[i][j] = pos.x;
+            y[i][j] = pos.y;
+            z[i][j] = pos.z;
+        }
+    }
+}
+
 BicubicBezierPatch::~BicubicBezierPatch(){
 
 }
@@ -41,24 +53,6 @@ const mat4& BicubicBezierPatch::getZ() const{
 const Matrix<ifc::Point*>& BicubicBezierPatch::getPoints(){
     return controlPoints;
 }
-/*
-ifc::Point** BicubicBezierPatch::getColumn(int i){
-    if(i < 0 || i > CUBIC_COUNT)
-        throw std::invalid_argument("BicubicBezierPatch::getColumn() - Index "
-                                            "out of bound");
-    return points[i];
-}
-ifc::Point** BicubicBezierPatch::getRow(int i){
-    if(i < 0 || i > CUBIC_COUNT)
-        throw std::invalid_argument("BicubicBezierPatch::getRow() - Index "
-                                            "out of bound");
-    ifc::Point** row = new ifc::Point*[CUBIC_COUNT];
-    for(int j = 0; j < CUBIC_COUNT; j++){
-        row[j] = points[j][i];
-    }
-
-    return row;
-}*/
 
 void BicubicBezierPatch::update(){
     for(int i = 0; i < CUBIC_COUNT; i ++){

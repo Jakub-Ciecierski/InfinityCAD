@@ -45,6 +45,14 @@ void ObjectsDialog::surfaceC0CylindButtonClick(){
     addObject(RB_SURFACE_C0_CYLIND_TYPE);
 }
 
+void ObjectsDialog::surfaceC2RectButtonClick(){
+    addObject(RB_SURFACE_C2_RECT_TYPE);
+}
+
+void ObjectsDialog::surfaceC2CylindButtonClick(){
+    addObject(RB_SURFACE_C2_CYLIND_TYPE);
+}
+
 //--------------------------//
 //  PROTECTED
 //--------------------------//

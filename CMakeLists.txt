@@ -97,7 +97,7 @@ file(GLOB_RECURSE FILES
         ${LIBS_PATH}/googletest/include/*.h
 )
 
-set(SPAM )
+set(SPAM libs/infinity_cad/include/infinity_cad/rendering/render_objects/surfaces/surface_c2_cylind.cpp libs/infinity_cad/include/infinity_cad/rendering/render_objects/surfaces/surface_c2_cylind.h)
 
 set(CMAKE_PREFIX_PATH $ENV{HOME}/ide/qt/5.5/gcc_64/)
 

@@ -56,6 +56,8 @@ void SceneTree::setupRootItems(){
     topRootItems.push_back(new RootItem(RB_BSPLINE_INTERPOLATING_TYPE, "B-Splines Interpolating"));
     topRootItems.push_back(new RootItem(RB_SURFACE_C0_RECT_TYPE, "Surfaces C0 Rectangle"));
     topRootItems.push_back(new RootItem(RB_SURFACE_C0_CYLIND_TYPE, "Surfaces C0 Cylinder"));
+    topRootItems.push_back(new RootItem(RB_SURFACE_C2_RECT_TYPE, "Surfaces C2 Rectangle"));
+    topRootItems.push_back(new RootItem(RB_SURFACE_C2_CYLIND_TYPE, "Surfaces C2 Cylinder"));
 }
 
 void SceneTree::setupContextMenu(){

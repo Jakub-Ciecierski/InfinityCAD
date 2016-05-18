@@ -28,8 +28,6 @@ Surface::Surface(SceneID id, std::string name,
     setDrawPolygon(false);
 
     surfacePixels = (vec4 *) malloc(MAX_PIXEL_COUNT * sizeof(vec4));
-
-    surfacePixelsTMP = NULL;
 }
 
 Surface::~Surface(){
@@ -55,8 +53,6 @@ std::string Surface::createPointName(int patchN, int patchM,
            ")"
            + "_point"
            + "("+ to_string(pointI) + "," + to_string(pointJ) + ")";
-
-
 }
 
 void Surface::drawCPU(const glm::mat4& VP, const Color& color,
@@ -82,10 +78,12 @@ void Surface::drawGPU(const glm::mat4& VP, const Color& color,
     float dv_tmp = dv;
 
     int uDivisionCount_tmp = uDivisionCount;
-    if(uDivisionCount_tmp == 1) uDivisionCount_tmp++;
+    if(uDivisionCount_tmp < 3)
+        uDivisionCount_tmp = 3;
 
     int vDivisionCount_tmp = vDivisionCount;
-    if(vDivisionCount_tmp == 1) vDivisionCount_tmp++;
+    if(vDivisionCount_tmp < 3)
+        vDivisionCount_tmp = 3;
 
     float netDu = 1.0f / (float)(uDivisionCount_tmp - 1);
     float netDv = 1.0f / (float)(vDivisionCount_tmp - 1);
@@ -212,19 +210,7 @@ void Surface::drawGPU(const glm::mat4& VP, const Color& color,
                                   allPixelCount, &VP);
 
 
-
     setSurfaceColor(color);
-    /*
-    glBegin(GL_POINTS);
-    for (int i = 0; i < MAX_PIXEL_COUNT; i++) {
-        const vec4& point = surfacePixels[i];
-        if(point.w < 0) continue;
-
-        glVertex2f(point.x, point.y);
-
-    }*/
-
-
     glLineWidth((GLfloat)lineWidth);
     glBegin(GL_LINES);
     for(int patchIndex = 0; patchIndex < patchCount; patchIndex++){
@@ -244,39 +230,6 @@ void Surface::drawGPU(const glm::mat4& VP, const Color& color,
         }
     }
     glEnd();
-
-
-/*
-
-    setSurfaceColor(color);
-    glLineWidth((GLfloat)lineWidth);
-    glBegin(GL_LINES);
-    for(int patchIndex = 0; patchIndex < patchCount; patchIndex++){
-        if(surfacePixels != NULL){
-            delete surfacePixels;
-            surfacePixels = (vec4*) malloc(patchPixelCount * sizeof(vec4));
-        }
-
-        ifc_gpu::computeBezierSurface(&xComponents[patchIndex],
-                                      &yComponents[patchIndex],
-                                      &zComponents[patchIndex],
-                                      1, parameters.data(), parameters.size(),
-                                      surfacePixels, patchPixelCount, &VP);
-
-        for(unsigned int i = 0; i < edges.size(); i++){
-            int p1 = edges[i][0];
-            int p2 = edges[i][1];
-
-            const vec4& point1 = surfacePixels[p1];
-            const vec4& point2 = surfacePixels[p2];
-            if(point1.w < 0 || point2.w < 0) continue;
-
-            glVertex2f(point1.x, point1.y);
-            glVertex2f(point2.x, point2.y);
-        }
-    }
-
-    glEnd();*/
 
 }
 
@@ -435,8 +388,6 @@ void Surface::drawPolygon(const glm::mat4& VP, int segments){
             }
         }
     }
-
-    glBegin(GL_LINES);
 }
 
 float Surface::getMaximumPolygonLength() {
@@ -492,7 +443,7 @@ void Surface::draw(const glm::mat4& VP, const Color& color) {
     float dv;
 
     int screenLength = 3 * (screenWidth+screenHeight);
-    float maxDist = getMaximumPolygonLength();
+    //float maxDist = getMaximumPolygonLength();
 
     //du = 1.0f / ((float)screenLength * maxDist);
     //dv = 1.0f / ((float)screenLength * maxDist);
@@ -533,7 +484,6 @@ void Surface::update(){
             }
         }
     }
-
 }
 
 const std::vector<ifc::Point*>& Surface::getAllPoints(){

@@ -171,7 +171,7 @@ SelectionBox* ObjectFactory::createSelectionBox(std::string name,
     return selectionBox;
 }
 
-SurfaceC0Rect * ObjectFactory::createSurfaceRectC0(std::string name,
+SurfaceC0Rect * ObjectFactory::createSurfaceC0Rect(std::string name,
                                                    int n, int m,
                                                    float width, float height){
     SceneID id = sceneIDFactory.createNextAvailableID();
@@ -187,6 +187,31 @@ SurfaceC0Cylind* ObjectFactory::createSurfaceC0Cylind(std::string name,
     SceneID id = sceneIDFactory.createNextAvailableID();
 
     SurfaceC0Cylind* surface = new SurfaceC0Cylind(id, name, n, m,
+                                                   radius, height);
+
+    return surface;
+}
+
+
+SurfaceC2Rect* ObjectFactory::createSurfaceC2Rect(std::string name,
+                                                      int n, int m,
+                                                  float width,
+                                                  float height){
+    SceneID id = sceneIDFactory.createNextAvailableID();
+
+    SurfaceC2Rect* surface = new SurfaceC2Rect(id, name, n, m,
+                                               width, height);
+
+    return surface;
+}
+
+SurfaceC2Cylind* ObjectFactory::createSurfaceC2Cylind(std::string name,
+                                                      int n, int m,
+                                                      float radius,
+                                                      float height){
+    SceneID id = sceneIDFactory.createNextAvailableID();
+
+    SurfaceC2Cylind* surface = new SurfaceC2Cylind(id, name, n, m,
                                                    radius, height);
 
     return surface;

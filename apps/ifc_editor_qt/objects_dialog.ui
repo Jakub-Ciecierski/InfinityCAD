@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>254</width>
-    <height>241</height>
+    <width>408</width>
+    <height>284</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -39,8 +39,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>285</width>
-        <height>226</height>
+        <width>406</width>
+        <height>282</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -308,14 +308,28 @@
           <item>
            <widget class="QPushButton" name="surfaceC0RectButton">
             <property name="text">
-             <string>SurfaceC0 Rect</string>
+             <string>C0 Rect</string>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QPushButton" name="surfaceC0CylinderButton">
             <property name="text">
-             <string>SurfaceC0 Cylind</string>
+             <string>C0 Cylind</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="surfaceC2RectButton">
+            <property name="text">
+             <string>C2 Rect</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="surfaceC2CylinderButton">
+            <property name="text">
+             <string>C2 Cylind</string>
             </property>
            </widget>
           </item>
@@ -470,6 +484,38 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>surfaceC2RectButton</sender>
+   <signal>clicked()</signal>
+   <receiver>ObjectsDialog</receiver>
+   <slot>surfaceC2RectButtonClick()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>322</x>
+     <y>204</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>203</x>
+     <y>141</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>surfaceC2CylinderButton</sender>
+   <signal>clicked()</signal>
+   <receiver>ObjectsDialog</receiver>
+   <slot>surfaceC2CylindButtonClick()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>320</x>
+     <y>191</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>203</x>
+     <y>141</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>pointButtonClick()</slot>
@@ -479,5 +525,7 @@
   <slot>bsplineInterpButtonClick()</slot>
   <slot>surfaceC0RectButtonClick()</slot>
   <slot>surfaceC0CylindButtonClick()</slot>
+  <slot>surfaceC2RectButtonClick()</slot>
+  <slot>surfaceC2CylindButtonClick()</slot>
  </slots>
 </ui>

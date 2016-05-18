@@ -40,7 +40,7 @@ public:
     void moveLeft(float speedBoost);
     void moveRight(float speedBoost);
     void moveUp(float speedBoost);
-    void moveDown(float speedBoost );
+    void moveDown(float speedBoost);
 
     virtual const glm::vec3& getDirection() override;
     const glm::vec3& getUp();

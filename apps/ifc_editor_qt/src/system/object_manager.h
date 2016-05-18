@@ -27,6 +27,9 @@ private:
     RenderObject* addSurfaceC0Rect(std::string name);
     RenderObject* addSurfaceC0Cylind(std::string name);
 
+    RenderObject* addSurfaceC2Rect(std::string name);
+    RenderObject* addSurfaceC2Cylind(std::string name);
+
     std::string getDefaultName(const Type& type);
 
 public:

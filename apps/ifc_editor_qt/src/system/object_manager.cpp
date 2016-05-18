@@ -98,7 +98,7 @@ RenderObject* ObjectManager::addSurfaceC0Rect(string name){
         return NULL;
     }
 
-    SurfaceC0Rect * surface = objectFactory.createSurfaceRectC0(name, n, m,
+    SurfaceC0Rect * surface = objectFactory.createSurfaceC0Rect(name, n, m,
                                                                 width, height);
     this->scene->addRenderObject(surface);
     Item* surfaceItem = sceneTree->addObject(surface, RB_SURFACE_C0_RECT_TYPE);
@@ -136,6 +136,75 @@ RenderObject* ObjectManager::addSurfaceC0Cylind(string name){
                                                                    radius, height);
     this->scene->addRenderObject(surface);
     Item* surfaceItem = sceneTree->addObject(surface, RB_SURFACE_C0_CYLIND_TYPE);
+
+    const std::vector<ifc::Point*>& points = surface->getAllPoints();
+    for(unsigned int i = 0; i < points.size(); i++){
+        this->scene->addRenderObject(points[i]);
+        Item* pointItem = this->sceneTree->addObject(points[i], RB_POINT_TYPE);
+        sceneTree->addChildItem(surfaceItem, pointItem);
+    }
+
+    return surface;
+}
+
+
+RenderObject* ObjectManager::addSurfaceC2Rect(string name){
+    ObjectFactory& objectFactory = ObjectFactory::getInstance();
+    SurfaceC0Dialog dialog(RB_SURFACE_C2_RECT_TYPE);
+
+    dialog.exec();
+    bool result = dialog.getResult();
+
+    int n,m;
+    float width, height;
+    if(result){
+        SurfaceC0Data data = dialog.getData();
+        n = data.n;
+        m = data.m;
+        width = data.width;
+        height = data.height;
+    }else{
+        return NULL;
+    }
+
+    SurfaceC2Rect* surface = objectFactory.createSurfaceC2Rect(name, n, m,
+                                                                width, height);
+    this->scene->addRenderObject(surface);
+    Item* surfaceItem = sceneTree->addObject(surface, RB_SURFACE_C2_RECT_TYPE);
+
+    const std::vector<ifc::Point*>& points = surface->getAllPoints();
+    for(unsigned int i = 0; i < points.size(); i++){
+        this->scene->addRenderObject(points[i]);
+        Item* pointItem = this->sceneTree->addObject(points[i], RB_POINT_TYPE);
+        sceneTree->addChildItem(surfaceItem, pointItem);
+    }
+
+    return surface;
+}
+
+RenderObject* ObjectManager::addSurfaceC2Cylind(string name){
+    ObjectFactory& objectFactory = ObjectFactory::getInstance();
+    SurfaceC0Dialog dialog(RB_SURFACE_C2_CYLIND_TYPE);
+
+    dialog.exec();
+    bool result = dialog.getResult();
+
+    int n,m;
+    float radius, height;
+    if(result){
+        SurfaceC0Data data = dialog.getData();
+        n = data.n;
+        m = data.m;
+        radius = data.radius;
+        height = data.height;
+    }else{
+        return NULL;
+    }
+
+    SurfaceC2Cylind* surface = objectFactory.createSurfaceC2Cylind(name, n, m,
+                                                             radius, height);
+    this->scene->addRenderObject(surface);
+    Item* surfaceItem = sceneTree->addObject(surface, RB_SURFACE_C2_CYLIND_TYPE);
 
     const std::vector<ifc::Point*>& points = surface->getAllPoints();
     for(unsigned int i = 0; i < points.size(); i++){
@@ -198,6 +267,10 @@ void ObjectManager::addObject(const Type& type, string name){
         addSurfaceC0Rect(name);
     }else if(type == RB_SURFACE_C0_CYLIND_TYPE){
         addSurfaceC0Cylind(name);
+    }else if(type == RB_SURFACE_C2_RECT_TYPE){
+        addSurfaceC2Rect(name);
+    }else if(type == RB_SURFACE_C2_CYLIND_TYPE){
+        addSurfaceC2Cylind(name);
     }
     if(body != NULL){
         Cross* cross = scene->getCross();
@@ -429,7 +502,7 @@ void ObjectManager::TEST_SURFACE(){
     float height = 0.5;
 
     ObjectFactory& objectFactory = ObjectFactory::getInstance();
-    SurfaceC0Rect * surface = objectFactory.createSurfaceRectC0(name, n, m,
+    SurfaceC0Rect * surface = objectFactory.createSurfaceC0Rect(name, n, m,
                                                                 width, height);
     this->scene->addRenderObject(surface);
     Item* surfaceItem = sceneTree->addObject(surface, RB_SURFACE_C0_RECT_TYPE);

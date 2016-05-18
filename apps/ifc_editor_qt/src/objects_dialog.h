@@ -28,6 +28,9 @@ public slots:
     void surfaceC0RectButtonClick();
     void surfaceC0CylindButtonClick();
 
+    void surfaceC2RectButtonClick();
+    void surfaceC2CylindButtonClick();
+
 protected:
     void mouseMoveEvent(QMouseEvent* event);
     void mousePressEvent(QMouseEvent* event);

@@ -21,6 +21,7 @@ private:
 
 public:
     BicubicBezierPatch(Matrix<ifc::Point*> points);
+    BicubicBezierPatch(Matrix<glm::vec4> points);
     ~BicubicBezierPatch();
 
     const glm::mat4& getX() const;
@@ -28,12 +29,6 @@ public:
     const glm::mat4& getZ() const;
 
     const Matrix<ifc::Point*>& getPoints();
-
-    ifc::Point** getColumn(int i);
-    /*
-     * Memory for the row is allocated
-     */
-    ifc::Point** getRow(int i);
 
     void update();
 };

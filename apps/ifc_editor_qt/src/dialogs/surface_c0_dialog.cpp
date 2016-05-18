@@ -1,5 +1,6 @@
 #include "surface_c0_dialog.h"
 #include "ui_surface_c0_dialog.h"
+#include <editor_window.h>
 
 SurfaceC0Dialog::SurfaceC0Dialog(const Type& type, QWidget *parent) :
     QDialog(parent),
@@ -45,7 +46,8 @@ void SurfaceC0Dialog::initDefaultDataValue(){
     widthEdit->setText("0.5");
     heightEdit->setText("0.5");
 
-    if(type == RB_SURFACE_C0_CYLIND_TYPE){
+    if(type == RB_SURFACE_C0_CYLIND_TYPE ||
+            type == RB_SURFACE_C2_CYLIND_TYPE){
         widthLabel->setText("Radius");
         widthEdit->setText("0.1");
     }else{
@@ -97,9 +99,18 @@ void SurfaceC0Dialog::okButtonClicked(){
 
     this->data = SurfaceC0Data(n, m, width, height);
 
-    if(type == RB_SURFACE_C0_CYLIND_TYPE){
+    if(type == RB_SURFACE_C0_CYLIND_TYPE ||
+            type == RB_SURFACE_C2_CYLIND_TYPE){
         data.radius = data.width;
     }
 
+    if(type == RB_SURFACE_C2_CYLIND_TYPE){
+        if(data.m < 3){
+            EditorWindow& window = EditorWindow::getInstance();
+            std::string msg = "Column count \'m\' must be atleast 3. Setting m to 3";
+            window.showInfoBox("Warning", msg);
+            data.m = 3;
+        }
+    }
     close();
 }

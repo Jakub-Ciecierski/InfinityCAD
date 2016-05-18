@@ -96,6 +96,12 @@ SceneContextMenu* SceneCMenuFactory::getProperMenu(
     surfaceCount += getSelectedTypeCount(selectedItems,
                                             RB_SURFACE_C0_RECT_TYPE,
                                             getItemByTree);
+    surfaceCount += getSelectedTypeCount(selectedItems,
+                                            RB_SURFACE_C2_RECT_TYPE,
+                                            getItemByTree);
+    surfaceCount += getSelectedTypeCount(selectedItems,
+                                            RB_SURFACE_C2_CYLIND_TYPE,
+                                            getItemByTree);
 
     if(pointCount == totalCount){
         Item* bezierRoot = getRootItem(RB_BEZIER_TYPE);

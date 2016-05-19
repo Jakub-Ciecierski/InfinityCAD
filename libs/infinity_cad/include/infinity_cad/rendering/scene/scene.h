@@ -5,7 +5,6 @@
 #ifndef MG1_SCENE_H
 #define MG1_SCENE_H
 
-
 #include <infinity_cad/rendering/render_objects/cross.h>
 #include <infinity_cad/rendering/cameras/camera.h>
 #include "infinity_cad/rendering/scene/scene_id_factory.h"
@@ -102,6 +101,8 @@ public:
     SceneID getNextAvailableID();
 
     Cross* getCross();
+
+    std::vector<RenderObject*> getObjects(const ObjectType& type);
 
     void renderScene();
 

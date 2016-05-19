@@ -25,6 +25,8 @@ BSpline::BSpline(SceneID id, std::string name) :
     setDrawBezierPolygon(false);
 
     curvePoints = (vec4 *) malloc(MAX_PIXEL_COUNT * sizeof(vec4));
+
+    objectType = OBJ_TYPE_CURVE_BSPLINE;
 }
 
 BSpline::~BSpline(){

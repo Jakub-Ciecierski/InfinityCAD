@@ -30,6 +30,9 @@ public slots:
     void showObjectsDialog();
     void netDensityAction();
 
+    void saveSystem();
+    void loadSystem();
+
 private:
     explicit EditorWindow(QWidget *parent = 0);
 

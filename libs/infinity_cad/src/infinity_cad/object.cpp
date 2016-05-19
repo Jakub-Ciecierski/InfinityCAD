@@ -14,11 +14,15 @@ using namespace std;
 Object::Object(SceneID id){
     this->id = id;
     this->name = "Object";
+
+    objectType = OBJ_TYPE_UNKNOWN;
 }
 
 Object::Object(SceneID id, std::string name){
     this->id = id;
     this->name = name;
+
+    objectType = OBJ_TYPE_UNKNOWN;
 }
 
 Object::~Object(){
@@ -39,4 +43,8 @@ std::string Object::getName(){
 
 const SceneID& Object::getID(){
     return this->id;
+}
+
+const ObjectType& Object::getType(){
+    return this->objectType;
 }

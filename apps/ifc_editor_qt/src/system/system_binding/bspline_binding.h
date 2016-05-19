@@ -12,7 +12,7 @@ private:
 public:
     BSplineBinding(Scene* scene, SceneTree* sceneTree);
 
-    RenderObject * createBSpline(std::string name);
+    Item * createBSpline(std::string name);
 };
 
 #endif // BSPLINEBINDING_H

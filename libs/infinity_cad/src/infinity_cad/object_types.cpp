@@ -1,0 +1,37 @@
+//
+// Created by jakub on 5/18/16.
+//
+
+#include "infinity_cad/object_types.h"
+
+using namespace std;
+
+const std::string OBJ_NAME_UNKNOWN = "UNKNOWN";
+
+const std::string OBJ_NAME_POINT = "POINT";
+
+const std::string OBJ_NAME_CURVE_BEZIER = "BEZIERCURVE";
+const std::string OBJ_NAME_CURVE_BSPLINE = "BSPLINECURVE";
+const std::string OBJ_NAME_CURVE_INTERP = "INTERP";
+
+const std::string OBJ_NAME_SURFACE_BEZIER = "BEZIERSURF";
+const std::string OBJ_NAME_SURFACE_BSPLINE = "BSPLINESURF";
+const std::string OBJ_NAME_SURFACE_BEZIER_RECT = "BEZIERSURF_RECT";
+const std::string OBJ_NAME_SURFACE_BEZIER_CYLIND = "BEZIERSURF_CYLIND";
+const std::string OBJ_NAME_SURFACE_BSPLINE_RECT = "BSPLINESURF_RECT";
+const std::string OBJ_NAME_SURFACE_BSPLINE_CYLIND = "BSPLINESURF_CYLIND";
+
+// ----------------------------------------------------
+
+const ObjectType OBJ_TYPE_UNKNOWN(OBJ_NAME_UNKNOWN);
+
+const ObjectType OBJ_TYPE_POINT(OBJ_NAME_POINT);
+
+const ObjectType OBJ_TYPE_CURVE_BEZIER(OBJ_NAME_CURVE_BEZIER);
+const ObjectType OBJ_TYPE_CURVE_BSPLINE(OBJ_NAME_CURVE_BSPLINE);
+const ObjectType OBJ_TYPE_CURVE_INTERP(OBJ_NAME_CURVE_INTERP);
+
+const ObjectType OBJ_TYPE_SURFACE_BEZIER_RECT(OBJ_NAME_SURFACE_BEZIER_RECT);
+const ObjectType OBJ_TYPE_SURFACE_BEZIER_CYLIND(OBJ_NAME_SURFACE_BEZIER_CYLIND);
+const ObjectType OBJ_TYPE_SURFACE_BSPLINE_RECT(OBJ_NAME_SURFACE_BSPLINE_RECT);
+const ObjectType OBJ_TYPE_SURFACE_BSPLINE_CYLIND(OBJ_NAME_SURFACE_BSPLINE_CYLIND);

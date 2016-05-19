@@ -7,7 +7,7 @@ BSplineInterpBinding::BSplineInterpBinding(Scene* scene, SceneTree* sceneTree){
     this->sceneTree = sceneTree;
 }
 
- RenderObject* BSplineInterpBinding::createBSplineInterp(std::string name){
+Item* BSplineInterpBinding::createBSplineInterp(std::string name){
      ObjectManager& objManager = ObjectManager::getInstance();
      ObjectFactory& objectFactory = ObjectFactory::getInstance();
      RenderObject * t = objectFactory.createBSplineInterp(name);
@@ -22,5 +22,5 @@ BSplineInterpBinding::BSplineInterpBinding(Scene* scene, SceneTree* sceneTree){
          objManager.addChildItem(bezierItem, selectedPointItems[i]);
      }
 
-     return t;
+     return bezierItem;
  }

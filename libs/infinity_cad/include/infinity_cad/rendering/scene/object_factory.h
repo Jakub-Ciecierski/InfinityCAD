@@ -86,17 +86,28 @@ public:
                                         int n, int m,
                                         float width, float height);
 
+    SurfaceC0Rect * createSurfaceC0Rect(std::string name,
+                                        Matrix<ifc::Point*> points);
+
     SurfaceC0Cylind* createSurfaceC0Cylind(std::string name,
                                            int n, int m,
                                            float radius, float height);
+    SurfaceC0Cylind* createSurfaceC0Cylind(std::string name,
+                                           Matrix<ifc::Point*> points);
 
     SurfaceC2Rect* createSurfaceC2Rect(std::string name,
                                        int n, int m,
                                        float width, float height);
 
+    SurfaceC2Rect* createSurfaceC2Rect(std::string name,
+                                       Matrix<ifc::Point*> points);
+
     SurfaceC2Cylind* createSurfaceC2Cylind(std::string name,
                                          int n, int m,
                                          float radius, float height);
+
+    SurfaceC2Cylind* createSurfaceC2Cylind(std::string name,
+                                           Matrix<ifc::Point*> points);
 };
 
 

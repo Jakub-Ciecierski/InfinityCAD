@@ -12,7 +12,7 @@ private:
 public:
     BSplineInterpBinding(Scene* scene, SceneTree* sceneTree);
 
-    RenderObject* createBSplineInterp(std::string name);
+    Item* createBSplineInterp(std::string name);
 };
 
 #endif // BSPLINE_INTERP_BINDING_H

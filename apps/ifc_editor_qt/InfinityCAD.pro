@@ -64,7 +64,9 @@ SOURCES += src/glwidget.cpp \
     src/objects_dialog.cpp \
     src/dialogs/surface_settings_dialog.cpp \
     src/dialogs/surface_c0_dialog.cpp \
-    src/widgets/scene_list/context_menus/scm_surfacec0.cpp
+    src/widgets/scene_list/context_menus/scm_surfacec0.cpp \
+    src/system/serialization/serialization_scene.cpp \
+    src/system/serialization/deserialization_scene.cpp
 
 HEADERS  += build/ui/ui_mainwindow.h \
     src/context_menus/context_menu.h \
@@ -95,7 +97,9 @@ HEADERS  += build/ui/ui_mainwindow.h \
     src/objects_dialog.h \
     src/dialogs/surface_settings_dialog.h \
     src/dialogs/surface_c0_dialog.h \
-    src/widgets/scene_list/context_menus/scm_surfacec0.h
+    src/widgets/scene_list/context_menus/scm_surfacec0.h \
+    src/system/serialization/serialization_scene.h \
+    src/system/serialization/deserialization_scene.h
 
 ##############################
 
@@ -160,6 +164,14 @@ else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../dependencies/lib/
 else:unix: LIBS += -L$$PWD/../../dependencies/lib/math/ -lmath
 INCLUDEPATH += $$PWD/../../dependencies/include/math
 DEPENDPATH += $$PWD/../../dependencies/include/math
+
+# Strings
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../dependencies/lib/strings/release/ -lstrings
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../dependencies/lib/strings/debug/ -lstrings
+else:unix: LIBS += -L$$PWD/../../dependencies/lib/strings/ -lstrings
+INCLUDEPATH += $$PWD/../../dependencies/include/strings
+DEPENDPATH += $$PWD/../../dependencies/include/strings
+LIBS += -Wl,-rpath $$PWD/../../dependencies/lib/strings/
 
 # Uncomment
 #LIBS += -L /opt/cuda/lib64

@@ -2,11 +2,12 @@
 #define OBJECTMANAGER_H
 
 #include "glwidget.h"
-
+#include <infinity_cad/rendering/render_objects/primitivies/point.h>
 #include "widgets/scene_list/scene_tree.h"
 #include <system/system_binding/bspline_binding.h>
 #include <system/system_binding/bspline_interp_binding.h>
 #include <string>
+#include <math/matrix.h>
 
 class ObjectManager
 {
@@ -20,16 +21,6 @@ private:
     Scene* scene;
     SceneTree* sceneTree;
 
-    RenderObject * addTorus(std::string name);
-    RenderObject * addPoint(std::string name);
-    RenderObject * addBezierCurve(std::string name);
-
-    RenderObject* addSurfaceC0Rect(std::string name);
-    RenderObject* addSurfaceC0Cylind(std::string name);
-
-    RenderObject* addSurfaceC2Rect(std::string name);
-    RenderObject* addSurfaceC2Cylind(std::string name);
-
     std::string getDefaultName(const Type& type);
 
 public:
@@ -37,8 +28,32 @@ public:
 
     static ObjectManager& getInstance();
 
-    void addObject(const Type& type);
-    void addObject(const Type& type, std::string name);
+    Item* addObject(const Type& type);
+    Item* addObject(const Type& type, std::string name);
+
+    Item * addTorus(std::string name);
+    Item * addPoint(std::string name);
+    Item * addBezierCurve(std::string name);
+
+    Item* addSurfaceC0Rect(std::string name);
+    Item* addSurfaceC0Rect(std::string name,
+                           Matrix<ifc::Point*> pointsMatrix,
+                           std::vector<Item*> pointItems);
+
+    Item* addSurfaceC0Cylind(std::string name);
+    Item* addSurfaceC0Cylind(std::string name,
+                             Matrix<ifc::Point*> pointsMatrix,
+                             std::vector<Item*> pointItems);
+
+    Item* addSurfaceC2Rect(std::string name);
+    Item* addSurfaceC2Rect(std::string name,
+                           Matrix<ifc::Point*> points,
+                           std::vector<Item*> pointItems);
+
+    Item* addSurfaceC2Cylind(std::string name);
+    Item* addSurfaceC2Cylind(std::string name,
+                             Matrix<ifc::Point*> pointsMatrix,
+                             std::vector<Item*> pointItems);
 
     // TODO split
     void addChildItem(Item* bezier, Item* objectName);
@@ -53,6 +68,11 @@ public:
 
     void setActive(SceneID id);
     void setDeactive(SceneID id);
+
+    void saveSystem(std::string filepath);
+    void loadSystem(std::string filepath);
+
+    SceneTree* getSceneTree();
 
     void TEST_BSPLINE();
     void TEST_PERFORMANCE();

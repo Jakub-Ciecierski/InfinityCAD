@@ -16,6 +16,8 @@ using namespace glm;
 BSplineInterp::BSplineInterp(SceneID sceneID, std::string name) :
     Spline(sceneID, name){
     curvePoints = (vec4*)malloc(sizeof(vec4) * MAX_PIXEL_COUNT);
+
+    objectType = OBJ_TYPE_CURVE_INTERP;
 }
 
 BSplineInterp::~BSplineInterp(){

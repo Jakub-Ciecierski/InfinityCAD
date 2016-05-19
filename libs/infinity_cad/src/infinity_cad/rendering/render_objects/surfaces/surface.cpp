@@ -490,10 +490,22 @@ const std::vector<ifc::Point*>& Surface::getAllPoints(){
     return this->allPoints;
 }
 
+const Matrix<ifc::Point*>& Surface::getMatrixPoints(){
+    return this->allPointsMatrix;
+}
+
 void Surface::setDrawPolygon(bool v){
     this->doDrawPolygon = v;
 }
 
 bool Surface::isDrawPolygon(){
     return this->doDrawPolygon;
+}
+
+int Surface::getRowPatchCount(){
+    return n;
+}
+
+int Surface::getColumnPatchCount(){
+    return m;
 }

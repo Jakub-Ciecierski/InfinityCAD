@@ -53,6 +53,8 @@ public:
     virtual void setDrawBezierPolygon(bool value);
     bool isDrawBezierPolygon();
 
+    const std::vector<ifc::Point*>& getControlPoints();
+
     virtual void render(const glm::mat4 &VP) override;
     virtual void render(const glm::mat4 &VP, const Color &color) override;
 

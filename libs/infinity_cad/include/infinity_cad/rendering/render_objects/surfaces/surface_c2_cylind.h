@@ -24,6 +24,8 @@ public:
     SurfaceC2Cylind(SceneID id, std::string name,
                   int n, int m,
                   float radius, float height);
+    SurfaceC2Cylind(SceneID id, std::string name,
+                    Matrix<ifc::Point*> points);
 
     ~SurfaceC2Cylind();
 

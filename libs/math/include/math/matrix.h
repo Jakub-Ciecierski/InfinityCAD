@@ -31,6 +31,7 @@ private:
     //-----------------------------------------------------------//
 
 public:
+    Matrix();
     Matrix(unsigned int n, unsigned int m);
     Matrix(unsigned int n, unsigned int m, T val);
 
@@ -72,6 +73,12 @@ public:
     template <typename TT>
     friend std::ostream& operator<<(std::ostream& os, const Matrix<TT>& matrix);
 };
+
+template <class T>
+Matrix<T>::Matrix(){
+    n = 0;
+    m = 0;
+}
 
 template <class T>
 Matrix<T>::Matrix(unsigned int n, unsigned int m) : n(n), m(m)

@@ -26,6 +26,8 @@ namespace str_util
      * Creates a correct string defining a PATH
      */
     std::string makePath(const std::vector<std::string>& toPath);
+
+    std::string replaceChar(std::string str, char ch1, char ch2);
 }
 
 

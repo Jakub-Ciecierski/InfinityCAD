@@ -167,7 +167,7 @@ const vec3&RigidObject::getRotations() const {
     return this->rotationAngles;
 }
 
-const vec3&RigidObject::getPosition() const {
+const vec3& RigidObject::getPosition() const {
     return this->position;
 }
 

@@ -7,6 +7,7 @@
 
 #include <string>
 #include <infinity_cad/rendering/scene/scene_id.h>
+#include "infinity_cad/object_types.h"
 
 namespace ifc {
 
@@ -14,6 +15,9 @@ namespace ifc {
     private:
         std::string name;
         SceneID id;
+
+    protected:
+        ObjectType objectType;
 
     public:
 
@@ -26,6 +30,8 @@ namespace ifc {
 
         std::string getName();
         const SceneID &getID();
+
+        const ObjectType& getType();
 
     };
 }

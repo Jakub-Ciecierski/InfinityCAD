@@ -94,6 +94,10 @@ int Spline::getPointIndex(ifc::Point* point){
     return -1;
 }
 
+const std::vector<ifc::Point*>& Spline::getControlPoints(){
+    return points;
+}
+
 void Spline::setDrawBezierPolygon(bool value){
     this->doDrawBezierPolygon = value;
 }

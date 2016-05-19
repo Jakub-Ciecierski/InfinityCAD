@@ -24,6 +24,8 @@ public:
     SurfaceC2Rect(SceneID id, std::string name,
                   int n, int m,
                   float width, float height);
+    SurfaceC2Rect(SceneID id, std::string name,
+                  Matrix<ifc::Point*> points);
 
     ~SurfaceC2Rect();
 

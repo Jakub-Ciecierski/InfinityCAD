@@ -14,6 +14,10 @@ private:
     float width;
     float height;
 
+    void buildPatchesFromMatrix(const Matrix<ifc::Point*>& points);
+
+    Matrix<ifc::Point*> getMatrixFormOfAllPatches();
+
     /*
      * Creates a single patch with index [i,j] and of width and height
      */
@@ -30,6 +34,8 @@ public:
     SurfaceC0Rect(SceneID id, std::string name,
                   int n, int m,
                   float width, float height);
+    SurfaceC0Rect(SceneID id, std::string name,
+                  Matrix<ifc::Point*> points);
 
     ~SurfaceC0Rect();
 };

@@ -855,6 +855,8 @@
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionSave"/>
+    <addaction name="actionLoad"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
@@ -966,6 +968,16 @@
   <action name="actionNet_Density">
    <property name="text">
     <string>Net Density</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="text">
+    <string>Save</string>
+   </property>
+  </action>
+  <action name="actionLoad">
+   <property name="text">
+    <string>Load</string>
    </property>
   </action>
  </widget>
@@ -1180,9 +1192,43 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionSave</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>saveSystem()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>580</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionLoad</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>loadSystem()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>580</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>showObjectsDialog()</slot>
   <slot>netDensityAction()</slot>
+  <slot>saveSystem()</slot>
+  <slot>loadSystem()</slot>
  </slots>
 </ui>

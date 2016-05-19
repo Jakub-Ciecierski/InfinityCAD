@@ -6,6 +6,9 @@
 #include <dialogs/surface_c0_dialog.h>
 #include <ui_mainwindow.h>
 
+#include <system/serialization/serialization_scene.h>
+#include <system/serialization/deserialization_scene.h>
+
 using namespace std;
 using namespace ifc;
 
@@ -25,17 +28,17 @@ ObjectManager::ObjectManager(){
     bSplineInterpBinding = new BSplineInterpBinding(scene, sceneTree);
 }
 
-RenderObject * ObjectManager::addTorus(string name){
+Item * ObjectManager::addTorus(string name){
     ObjectFactory& objectFactory = ObjectFactory::getInstance();
     RenderObject * t = objectFactory.createTorus(name);
 
     this->scene->addRenderObject(t);
-    sceneTree->addObject(t, RB_TORUS_TYPE);
+    Item* item = sceneTree->addObject(t, RB_TORUS_TYPE);
 
-    return t;
+    return item;
 }
 
-RenderObject * ObjectManager::addPoint(string name){
+Item * ObjectManager::addPoint(string name){
     ObjectFactory& objectFactory = ObjectFactory::getInstance();
     RenderObject * p = objectFactory.createPoint(name);
 
@@ -59,10 +62,10 @@ RenderObject * ObjectManager::addPoint(string name){
     for(unsigned int i = 0; i < selectedBezierItems.size(); i++){
         addChildItem(selectedBezierItems[i], pointItem);
     }
-    return p;
+    return pointItem;
 }
 
-RenderObject * ObjectManager::addBezierCurve(string name){
+Item * ObjectManager::addBezierCurve(string name){
     ObjectFactory& objectFactory = ObjectFactory::getInstance();
     RenderObject * p = objectFactory.createBezier(name);
 
@@ -76,10 +79,10 @@ RenderObject * ObjectManager::addBezierCurve(string name){
         addChildItem(bezierItem, selectedPointItems[i]);
     }
 
-    return p;
+    return bezierItem;
 }
 
-RenderObject* ObjectManager::addSurfaceC0Rect(string name){
+Item* ObjectManager::addSurfaceC0Rect(string name){
     ObjectFactory& objectFactory = ObjectFactory::getInstance();
     SurfaceC0Dialog dialog;
 
@@ -110,10 +113,28 @@ RenderObject* ObjectManager::addSurfaceC0Rect(string name){
         sceneTree->addChildItem(surfaceItem, pointItem);
     }
 
-    return surface;
+    return surfaceItem;
 }
 
-RenderObject* ObjectManager::addSurfaceC0Cylind(string name){
+Item* ObjectManager::addSurfaceC0Rect(string name,
+                                      Matrix<ifc::Point*> pointsMatrix,
+                                      vector<Item*> pointItems){
+    ObjectFactory& objectFactory = ObjectFactory::getInstance();
+
+
+    SurfaceC0Rect * surface = objectFactory.createSurfaceC0Rect(name,
+                                                                pointsMatrix);
+    this->scene->addRenderObject(surface);
+    Item* surfaceItem = sceneTree->addObject(surface, RB_SURFACE_C0_RECT_TYPE);
+
+    for(unsigned int i = 0; i < pointItems.size(); i++){
+        sceneTree->addChildItem(surfaceItem, pointItems[i]);
+    }
+
+    return surfaceItem;
+}
+
+Item* ObjectManager::addSurfaceC0Cylind(string name){
     ObjectFactory& objectFactory = ObjectFactory::getInstance();
     SurfaceC0Dialog dialog(RB_SURFACE_C0_CYLIND_TYPE);
 
@@ -144,11 +165,27 @@ RenderObject* ObjectManager::addSurfaceC0Cylind(string name){
         sceneTree->addChildItem(surfaceItem, pointItem);
     }
 
-    return surface;
+    return surfaceItem;
 }
 
+Item* ObjectManager::addSurfaceC0Cylind(string name,
+                                        Matrix<ifc::Point*> pointsMatrix,
+                                        vector<Item*> pointItems){
+    ObjectFactory& objectFactory = ObjectFactory::getInstance();
 
-RenderObject* ObjectManager::addSurfaceC2Rect(string name){
+    SurfaceC0Cylind* surface = objectFactory.createSurfaceC0Cylind(name, pointsMatrix);
+
+    this->scene->addRenderObject(surface);
+    Item* surfaceItem = sceneTree->addObject(surface, RB_SURFACE_C0_CYLIND_TYPE);
+
+    for(unsigned int i = 0; i < pointItems.size(); i++){
+        sceneTree->addChildItem(surfaceItem, pointItems[i]);
+    }
+
+    return surfaceItem;
+}
+
+Item* ObjectManager::addSurfaceC2Rect(string name){
     ObjectFactory& objectFactory = ObjectFactory::getInstance();
     SurfaceC0Dialog dialog(RB_SURFACE_C2_RECT_TYPE);
 
@@ -179,10 +216,27 @@ RenderObject* ObjectManager::addSurfaceC2Rect(string name){
         sceneTree->addChildItem(surfaceItem, pointItem);
     }
 
-    return surface;
+    return surfaceItem;
 }
 
-RenderObject* ObjectManager::addSurfaceC2Cylind(string name){
+Item* ObjectManager::addSurfaceC2Rect(string name,
+                                      Matrix<ifc::Point*> pointsMatrix,
+                                      vector<Item*> pointItems){
+    ObjectFactory& objectFactory = ObjectFactory::getInstance();
+
+    SurfaceC2Rect* surface = objectFactory.createSurfaceC2Rect(name, pointsMatrix);
+
+    this->scene->addRenderObject(surface);
+    Item* surfaceItem = sceneTree->addObject(surface, RB_SURFACE_C2_RECT_TYPE);
+
+    for(unsigned int i = 0; i < pointItems.size(); i++){
+        sceneTree->addChildItem(surfaceItem, pointItems[i]);
+    }
+
+    return surfaceItem;
+}
+
+Item* ObjectManager::addSurfaceC2Cylind(string name){
     ObjectFactory& objectFactory = ObjectFactory::getInstance();
     SurfaceC0Dialog dialog(RB_SURFACE_C2_CYLIND_TYPE);
 
@@ -213,8 +267,26 @@ RenderObject* ObjectManager::addSurfaceC2Cylind(string name){
         sceneTree->addChildItem(surfaceItem, pointItem);
     }
 
-    return surface;
+    return surfaceItem;
 }
+
+Item* ObjectManager::addSurfaceC2Cylind(string name,
+                                        Matrix<ifc::Point*> pointsMatrix,
+                                        vector<Item*> pointItems){
+    ObjectFactory& objectFactory = ObjectFactory::getInstance();
+
+    SurfaceC2Cylind* surface = objectFactory.createSurfaceC2Cylind(name,
+                                                                   pointsMatrix);
+    this->scene->addRenderObject(surface);
+    Item* surfaceItem = sceneTree->addObject(surface, RB_SURFACE_C2_CYLIND_TYPE);
+
+    for(unsigned int i = 0; i < pointItems.size(); i++){
+        sceneTree->addChildItem(surfaceItem, pointItems[i]);
+    }
+
+    return surfaceItem;
+}
+
 
 string ObjectManager::getDefaultName(const Type& type){
     static int id_count = 0;
@@ -238,48 +310,50 @@ ObjectManager& ObjectManager::getInstance(){
     return objectManager;
 }
 
-void ObjectManager::addObject(const Type& type){
+Item* ObjectManager::addObject(const Type& type){
     string defaultName = getDefaultName(type);
 
-    addObject(type, defaultName);
+    return addObject(type, defaultName);
 }
 
-void ObjectManager::addObject(const Type& type, string name){
+Item* ObjectManager::addObject(const Type& type, string name){
     if(sceneTree->objectExists(name)) {
         string title = "Name";
         string text = "Name: " + name + " already exists. Try other name";
         EditorWindow::getInstance().showInfoBox(title, text);
-        return;
+        return NULL;
     }
 
-    RenderObject * body = NULL;
+    Item* item = NULL;
     if(type == RB_TORUS_TYPE){
-        body = addTorus(name);
+        item = addTorus(name);
     }else if(type == RB_POINT_TYPE){
-        body = addPoint(name);
+        item = addPoint(name);
     }else if(type == RB_BEZIER_TYPE){
-        addBezierCurve(name);
+        item = addBezierCurve(name);
     }else if(type == RB_BSPLINE_TYPE){
-        bSplineBinding->createBSpline(name);
+        item = bSplineBinding->createBSpline(name);
     }else if(type == RB_BSPLINE_INTERPOLATING_TYPE){
-        bSplineInterpBinding->createBSplineInterp(name);
+        item = bSplineInterpBinding->createBSplineInterp(name);
     }else if(type == RB_SURFACE_C0_RECT_TYPE){
-        addSurfaceC0Rect(name);
+        item = addSurfaceC0Rect(name);
     }else if(type == RB_SURFACE_C0_CYLIND_TYPE){
-        addSurfaceC0Cylind(name);
+        item = addSurfaceC0Cylind(name);
     }else if(type == RB_SURFACE_C2_RECT_TYPE){
-        addSurfaceC2Rect(name);
+        item = addSurfaceC2Rect(name);
     }else if(type == RB_SURFACE_C2_CYLIND_TYPE){
-        addSurfaceC2Cylind(name);
+        item = addSurfaceC2Cylind(name);
     }
-    if(body != NULL){
+    if(item != NULL){
         Cross* cross = scene->getCross();
-        body->moveTo(cross);
+        item->object->moveTo(cross);
         if(cross->isGrabAttracting()){
             sceneTree->deactivateAll();
-            sceneTree->activateObject(body);
+            sceneTree->activateObject(item->object);
         }
     }
+
+    return item;
 }
 
 void ObjectManager::addChildItem(Item* parentItem,
@@ -426,6 +500,22 @@ void ObjectManager::setDeactive(SceneID id){
     RenderObject * body = scene->getRenderBody(id);
     if(body != NULL)
         body->setColor(COLOR_OBJECT_DEFAULT);
+}
+
+void ObjectManager::saveSystem(std::string filepath){
+    SerializationScene serializer(this->scene);
+
+    serializer.save(filepath);
+}
+
+void ObjectManager::loadSystem(std::string filepath){
+    DeserializationScene deserializer;
+
+    deserializer.load(filepath);
+}
+
+SceneTree* ObjectManager::getSceneTree(){
+    return this->sceneTree;
 }
 
 //--------------------------//

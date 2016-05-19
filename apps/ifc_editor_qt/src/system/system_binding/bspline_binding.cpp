@@ -7,7 +7,7 @@ BSplineBinding::BSplineBinding(Scene* scene, SceneTree* sceneTree) {
     this->sceneTree = sceneTree;
 }
 
-RenderObject * BSplineBinding::createBSpline(std::string name){
+Item * BSplineBinding::createBSpline(std::string name){
     ObjectManager& objManager = ObjectManager::getInstance();
     ObjectFactory& objectFactory = ObjectFactory::getInstance();
     RenderObject * t = objectFactory.createBSpline(name);
@@ -22,6 +22,6 @@ RenderObject * BSplineBinding::createBSpline(std::string name){
         objManager.addChildItem(bezierItem, selectedPointItems[i]);
     }
 
-    return t;
+    return bezierItem;
 }
 

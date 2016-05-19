@@ -24,6 +24,9 @@ private:
                                     float patchHeight,
                                     const glm::vec3& origin);
     Matrix<ifc::Point*> initC0Points(int n, int m);
+
+    void buildPatchesFromMatrix(const Matrix<ifc::Point*>& points);
+
 protected:
     virtual void build() override;
 
@@ -31,6 +34,8 @@ public:
     SurfaceC0Cylind(SceneID id, std::string name,
                     int n, int m,
                     float radius, float height);
+    SurfaceC0Cylind(SceneID id, std::string name,
+                    Matrix<ifc::Point*> points);
 
     ~SurfaceC0Cylind();
 };

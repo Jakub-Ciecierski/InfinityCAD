@@ -24,6 +24,8 @@ BezierSplineC2::BezierSplineC2(SceneID id, std::string name) :
     grabable = false;
     setDrawBezierPolygon(false);
     dt = -1;
+
+    objectType = OBJ_TYPE_CURVE_BSPLINE;
 }
 
 BezierSplineC2::BezierSplineC2(SceneID id, std::string name,
@@ -39,6 +41,8 @@ BezierSplineC2::BezierSplineC2(SceneID id, std::string name,
     buildCurve();
 
     dt = -1;
+
+    objectType = OBJ_TYPE_CURVE_BSPLINE;
 }
 
 BezierSplineC2::~BezierSplineC2(){

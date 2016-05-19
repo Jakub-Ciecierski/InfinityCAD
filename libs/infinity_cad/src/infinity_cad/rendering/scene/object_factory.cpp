@@ -181,6 +181,15 @@ SurfaceC0Rect * ObjectFactory::createSurfaceC0Rect(std::string name,
     return surface;
 }
 
+SurfaceC0Rect * ObjectFactory::createSurfaceC0Rect(std::string name,
+                                                   Matrix<ifc::Point*> points){
+    SceneID id = sceneIDFactory.createNextAvailableID();
+
+    SurfaceC0Rect * surface = new SurfaceC0Rect(id, name, points);
+
+    return surface;
+}
+
 SurfaceC0Cylind* ObjectFactory::createSurfaceC0Cylind(std::string name,
                                                   int n, int m,
                                                   float radius, float height){
@@ -192,6 +201,14 @@ SurfaceC0Cylind* ObjectFactory::createSurfaceC0Cylind(std::string name,
     return surface;
 }
 
+SurfaceC0Cylind* ObjectFactory::createSurfaceC0Cylind(std::string name,
+                                                      Matrix<ifc::Point*> points){
+    SceneID id = sceneIDFactory.createNextAvailableID();
+
+    SurfaceC0Cylind* surface = new SurfaceC0Cylind(id, name, points);
+
+    return surface;
+}
 
 SurfaceC2Rect* ObjectFactory::createSurfaceC2Rect(std::string name,
                                                       int n, int m,
@@ -205,6 +222,15 @@ SurfaceC2Rect* ObjectFactory::createSurfaceC2Rect(std::string name,
     return surface;
 }
 
+SurfaceC2Rect* ObjectFactory::createSurfaceC2Rect(std::string name,
+                                                  Matrix<ifc::Point*> points){
+    SceneID id = sceneIDFactory.createNextAvailableID();
+
+    SurfaceC2Rect* surface = new SurfaceC2Rect(id, name, points);
+
+    return surface;
+}
+
 SurfaceC2Cylind* ObjectFactory::createSurfaceC2Cylind(std::string name,
                                                       int n, int m,
                                                       float radius,
@@ -213,6 +239,15 @@ SurfaceC2Cylind* ObjectFactory::createSurfaceC2Cylind(std::string name,
 
     SurfaceC2Cylind* surface = new SurfaceC2Cylind(id, name, n, m,
                                                    radius, height);
+
+    return surface;
+}
+
+SurfaceC2Cylind* ObjectFactory::createSurfaceC2Cylind(std::string name,
+                                                      Matrix<ifc::Point*> points){
+    SceneID id = sceneIDFactory.createNextAvailableID();
+
+    SurfaceC2Cylind* surface = new SurfaceC2Cylind(id, name, points);
 
     return surface;
 }

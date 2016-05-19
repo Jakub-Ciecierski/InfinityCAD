@@ -18,6 +18,30 @@ SurfaceC2Rect::SurfaceC2Rect(SceneID id, std::string name,
         Surface(id, name, n, m), width(width), height(height){
     build();
     update();
+
+    objectType = OBJ_TYPE_SURFACE_BSPLINE_RECT;
+}
+
+SurfaceC2Rect::SurfaceC2Rect(SceneID id, std::string name,
+                             Matrix<ifc::Point*> points) :
+        Surface(id, name, 0, 0){
+
+    n = points.rowCount() - 3;
+    m = points.columnCount() - 3;
+
+    patches = Matrix<BicubicBezierPatch*>(n, m, NULL);
+    deboorPoints = new Matrix<ifc::Point*>(points);
+
+    for(int i = 0; i < points.rowCount(); i++){
+        for(int j = 0; j < points.columnCount(); j++){
+            allPoints.push_back((*deboorPoints)[i][j]);
+            components.push_back((*deboorPoints)[i][j]);
+        }
+    }
+
+    update();
+
+    objectType = OBJ_TYPE_SURFACE_BSPLINE_RECT;
 }
 
 SurfaceC2Rect::~SurfaceC2Rect(){
@@ -56,6 +80,9 @@ void SurfaceC2Rect::build(){
         }
         y += dy;
     }
+
+    // for serialization
+    allPointsMatrix = *deboorPoints;
 }
 
 //-----------------------//

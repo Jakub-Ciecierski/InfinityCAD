@@ -4,6 +4,7 @@
 
 #include <infinity_cad/rendering/render_objects/surfaces/surface_c2_cylind.h>
 #include <infinity_cad/rendering/scene/object_factory.h>
+#include <algorithm>
 
 using namespace glm;
 using namespace std;
@@ -18,6 +19,36 @@ SurfaceC2Cylind::SurfaceC2Cylind(SceneID id, std::string name,
         Surface(id, name, n, m), radius(radius), height(height){
     build();
     update();
+
+    objectType = OBJ_TYPE_SURFACE_BSPLINE_CYLIND;
+}
+
+SurfaceC2Cylind::SurfaceC2Cylind(SceneID id, std::string name,
+                                 Matrix<ifc::Point*> points) :
+        Surface(id, name, 0, 0){
+    n = points.rowCount() - 3;
+    m = points.columnCount() - 3;
+
+    patches = Matrix<BicubicBezierPatch*>(n, m, NULL);
+    deboorPoints = new Matrix<ifc::Point*>(points);
+
+    for(int i = 0; i < points.rowCount(); i++){
+        for(int j = 0; j < points.columnCount(); j++){
+            if(!(std::find(allPoints.begin(), allPoints.end(),
+                         (*deboorPoints)[i][j]) != allPoints.end())){
+                allPoints.push_back((*deboorPoints)[i][j]);
+            }
+            if(!(std::find(components.begin(), components.end(),
+                           (*deboorPoints)[i][j]) != components.end())){
+                components.push_back((*deboorPoints)[i][j]);
+            }
+        }
+    }
+    allPointsMatrix = *deboorPoints;
+
+    update();
+
+    objectType = OBJ_TYPE_SURFACE_BSPLINE_CYLIND;
 }
 
 SurfaceC2Cylind::~SurfaceC2Cylind(){
@@ -65,6 +96,9 @@ void SurfaceC2Cylind::build(){
     deboorPoints->setColumn(columnCount-1, thirdColumn);
     deboorPoints->setColumn(columnCount-2, secondColumn);
     deboorPoints->setColumn(columnCount-3, fistColumn);
+
+    // for serialization
+    allPointsMatrix = *deboorPoints;
 }
 
 //-----------------------//

@@ -208,6 +208,17 @@ Cross* Scene::getCross(){
     return this->cross;
 }
 
+std::vector<RenderObject*> Scene::getObjects(const ObjectType& type){
+    std::vector<RenderObject*> renderObjects;
+    for(unsigned int i = 0; i < sceneObjects.size(); i++){
+        if(type == sceneObjects[i]->getType()){
+            renderObjects.push_back(sceneObjects[i]);
+        }
+    }
+
+    return renderObjects;
+}
+
 //--------------------//
 //  PUBLIC
 //--------------------//

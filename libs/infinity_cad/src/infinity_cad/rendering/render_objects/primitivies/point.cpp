@@ -22,6 +22,8 @@ Point::Point(SceneID id) :
     initEdges();
 
     drawingMode = GL_TRIANGLE_FAN;
+
+    objectType = OBJ_TYPE_POINT;
 }
 Point::Point(SceneID id, std::string name) :
         RenderObject(id, name){
@@ -32,6 +34,8 @@ Point::Point(SceneID id, std::string name) :
     initEdges();
 
     drawingMode = GL_TRIANGLE_FAN;
+
+    objectType = OBJ_TYPE_POINT;
 }
 
 

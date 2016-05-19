@@ -3,6 +3,7 @@
 #include <widgets/scene_list/context_menus/scene_cmenu_factory.h>
 #include <dialogs/surface_settings_dialog.h>
 #include <iostream>
+#include <system/object_manager.h>
 
 #include <QApplication>
 #include <QMessageBox>
@@ -96,6 +97,25 @@ void EditorWindow::showObjectsDialog(){
 void EditorWindow::netDensityAction(){
     SurfaceSettingsDialog surfaceSettings;
     surfaceSettings.exec();
+}
+
+void EditorWindow::saveSystem(){
+    string filepath = showInputBox("Save", "Input File name");
+
+    ObjectManager& objectManager = ObjectManager::getInstance();
+
+    objectManager.saveSystem(filepath);
+}
+
+void EditorWindow::loadSystem(){
+    ObjectManager& objectManager = ObjectManager::getInstance();
+
+    string filepath = showInputBox("Save", "Input File name");
+
+    //std:string filepath = "jakub.mg";
+    //std:string filepath = "curves.mg";
+
+    objectManager.loadSystem(filepath);
 }
 
 //-------------------------//

@@ -24,6 +24,7 @@ protected:
     glm::vec4* surfacePixels;
 
     std::vector<ifc::Point*> allPoints;
+    Matrix<ifc::Point*> allPointsMatrix;
 
     bool doDrawPolygon;
 
@@ -81,10 +82,14 @@ public:
     virtual void update() override;
 
     const std::vector<ifc::Point*>& getAllPoints();
+    const Matrix<ifc::Point*>& getMatrixPoints();
 
     void setDrawPolygon(bool v);
     bool isDrawPolygon();
+
+    int getRowPatchCount();
+    int getColumnPatchCount();
 };
 
-
 #endif //IC_SURFACE_C0_H
+

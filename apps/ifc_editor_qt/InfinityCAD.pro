@@ -123,7 +123,6 @@ RESOURCES += resources/icons.qrc \
     qdarkstyle/style.qrc
 #############################################################################
 
-
 # InfinityCAD
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../dependencies/lib/ifc/release/ -lifc
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../dependencies/lib/ifc/debug/ -lifc
@@ -170,11 +169,9 @@ DEPENDPATH += $$PWD/../../dependencies/include/strings
 LIBS += -Wl,-rpath $$PWD/../../dependencies/lib/strings/
 
 # Uncomment
-
-# CUDA
-LIBS += -L /opt/cuda/lib64
+#LIBS += -L /opt/cuda/lib64
 #LIBS += -Wl,-rpath /opt/cuda/lib64
-#LIBS += -L /usr/local/cuda-7.0/lib64
+LIBS += -L /usr/local/cuda-7.0/lib64
 LIBS += -lcudart -lcuda -lcudadevrt
 
 # EXTERNALS

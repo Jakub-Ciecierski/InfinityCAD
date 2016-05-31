@@ -249,3 +249,10 @@ void Scene::update() {
         sceneObjects[i]->update();
     }
 }
+
+void Scene::UPDATE_TEST(){
+    for(unsigned int i = 0; i < sceneObjects.size(); i++){
+        sceneObjects[i]->update();
+        std::cout << &sceneObjects[i] << std::endl;
+    }
+}

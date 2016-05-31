@@ -107,6 +107,8 @@ public:
     void renderScene();
 
     void update();
+
+    void UPDATE_TEST();
 };
 
 

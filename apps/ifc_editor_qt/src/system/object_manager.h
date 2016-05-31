@@ -74,6 +74,8 @@ public:
 
     SceneTree* getSceneTree();
 
+    void colapsSelectedPoints();
+
     void TEST_BSPLINE();
     void TEST_PERFORMANCE();
     void TEST_BSPLINE_INTERP();

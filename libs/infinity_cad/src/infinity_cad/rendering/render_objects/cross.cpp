@@ -264,8 +264,6 @@ void Cross::activateGrab(const std::vector<RenderObject*>& renderObjects) {
             components[i]->setSelected(true);
         }
     }
-
-
 }
 
 void Cross::deactivateGrab() {

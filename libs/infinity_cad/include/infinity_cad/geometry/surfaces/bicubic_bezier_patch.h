@@ -28,7 +28,7 @@ public:
     const glm::mat4& getY() const;
     const glm::mat4& getZ() const;
 
-    const Matrix<ifc::Point*>& getPoints();
+    Matrix<ifc::Point*>& getPoints();
 
     void update();
 };

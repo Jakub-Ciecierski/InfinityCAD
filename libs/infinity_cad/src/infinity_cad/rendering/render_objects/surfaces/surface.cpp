@@ -509,3 +509,33 @@ int Surface::getRowPatchCount(){
 int Surface::getColumnPatchCount(){
     return m;
 }
+
+bool Surface::replacePoint(ifc::Point *src, ifc::Point *dest) {
+    for(unsigned int i = 0; i < allPoints.size(); i++){
+        if(allPoints[i] == src){
+            allPoints[i] = dest;
+        }
+    }
+    for(unsigned int i = 0; i < components.size(); i++){
+        if(components[i] == src){
+            components[i] = dest;
+        }
+    }
+
+    for(int i = 0; i < n;i++){
+        for(int j = 0; j < m; j++){
+            BicubicBezierPatch* patch  = (patches)[i][j];
+            Matrix<ifc::Point*>& patchPoints = patch->getPoints();
+            for(int x = 0; x < 4; x++){
+                for(int y = 0; y < 4; y++){
+                    if(patchPoints[x][y] == src){
+                        patchPoints[x][y] = dest;
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+
+    return false;
+}

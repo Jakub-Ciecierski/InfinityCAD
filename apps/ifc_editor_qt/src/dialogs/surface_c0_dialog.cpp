@@ -41,8 +41,8 @@ void SurfaceC0Dialog::initDefaultDataValue(){
     widthEdit->setValidator(floatValidator);
     heightEdit->setValidator(floatValidator);
 
-    nEdit->setText("3");
-    mEdit->setText("3");
+    nEdit->setText("1");
+    mEdit->setText("1");
     widthEdit->setText("0.5");
     heightEdit->setText("0.5");
 

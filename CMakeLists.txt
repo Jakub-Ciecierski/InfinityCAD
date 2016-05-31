@@ -97,7 +97,7 @@ file(GLOB_RECURSE FILES
         ${LIBS_PATH}/googletest/include/*.h
 )
 
-set(SPAM libs/infinity_cad/include/infinity_cad/object_types.cpp libs/infinity_cad/include/infinity_cad/object_types.h)
+set(SPAM )
 
 set(CMAKE_PREFIX_PATH $ENV{HOME}/ide/qt/5.5/gcc_64/)
 

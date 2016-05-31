@@ -50,7 +50,7 @@ const mat4& BicubicBezierPatch::getZ() const{
     return z;
 }
 
-const Matrix<ifc::Point*>& BicubicBezierPatch::getPoints(){
+Matrix<ifc::Point*>& BicubicBezierPatch::getPoints(){
     return controlPoints;
 }
 

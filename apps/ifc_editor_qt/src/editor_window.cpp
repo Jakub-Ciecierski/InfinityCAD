@@ -118,6 +118,12 @@ void EditorWindow::loadSystem(){
     objectManager.loadSystem(filepath);
 }
 
+void EditorWindow::colapsButtomPressed(){
+    ObjectManager& objectManager = ObjectManager::getInstance();
+
+    objectManager.colapsSelectedPoints();
+}
+
 //-------------------------//
 //  PRIVATE METHODS
 //-------------------------//

@@ -33,6 +33,8 @@ public slots:
     void saveSystem();
     void loadSystem();
 
+    void colapsButtomPressed();
+
 private:
     explicit EditorWindow(QWidget *parent = 0);
 

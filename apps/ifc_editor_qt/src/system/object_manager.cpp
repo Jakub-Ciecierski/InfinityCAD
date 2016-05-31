@@ -518,6 +518,76 @@ SceneTree* ObjectManager::getSceneTree(){
     return this->sceneTree;
 }
 
+void ObjectManager::colapsSelectedPoints(){
+    EditorWindow& window = EditorWindow::getInstance();
+    const vector<Item*>& items = sceneTree->getSelectedItems(RB_POINT_NAME);
+    if(items.size() != 2){
+        window.showInfoBox("Colaps", "Please select 2 points");
+        return;
+    }
+
+    Item* pointItem1 = items[0];
+    Item* pointItem2 = items[1];
+
+    glm::vec3 avgPosition = (pointItem1->object->getPosition() +
+            pointItem2->object->getPosition());
+    avgPosition *= 0.5f;
+
+    Item* newPoint = addPoint(pointItem1->object->getName() + "_tmp");
+    newPoint->object->moveTo(avgPosition);
+
+    vector<Item*>& clones1 = pointItem1->clones;
+    vector<Item*>& clones2 = pointItem2->clones;
+
+    Item* surfacePointClone1 = NULL;
+    Item* surfacePointClone2 = NULL;
+
+    Item* surfaceItem1 = NULL;
+    Item* surfaceItem2 = NULL;
+    for(unsigned int i = 0; i < clones1.size(); i++){
+        Item* clone = clones1[i];
+        if(isSurface(clone->parent->type)){
+            surfaceItem1 = clone->parent;
+            surfacePointClone1 = clone;
+            break;
+        }
+    }
+    for(unsigned int i = 0; i < clones2.size(); i++){
+        Item* clone = clones2[i];
+        if(isSurface(clone->parent->type)){
+            surfaceItem2 = clone->parent;
+            surfacePointClone2 = clone;
+            break;
+        }
+    }
+    if(surfaceItem1 == NULL && surfaceItem2 == NULL){
+        window.showInfoBox("Colaps", "Points must belong to a surface");
+        return;
+    }
+    Surface* surface1 = static_cast<Surface*>(surfaceItem1->object);
+    Surface* surface2 = static_cast<Surface*>(surfaceItem2->object);
+
+    bool ret1 = surface1->replacePoint(static_cast<Point*>(pointItem1->object),
+                                       static_cast<Point*>(newPoint->object));
+    bool ret2 = surface2->replacePoint(static_cast<Point*>(pointItem2->object),
+                                       static_cast<Point*>(newPoint->object));
+    if(!ret1 || !ret2){
+        window.showInfoBox("Colaps", "Points not found");
+        return;
+    }
+
+    SceneID id1 = sceneTree->deleteObject(pointItem1);
+    sceneTree->deleteObject(surfacePointClone1);
+    this->scene->removeObject(id1);
+
+    SceneID id2 = sceneTree->deleteObject(pointItem2);
+    sceneTree->deleteObject(surfacePointClone2);
+    this->scene->removeObject(id2);
+
+    sceneTree->addChildItem(surfaceItem1, newPoint);
+    sceneTree->addChildItem(surfaceItem2, newPoint);
+}
+
 //--------------------------//
 //  DEBUG
 //--------------------------//

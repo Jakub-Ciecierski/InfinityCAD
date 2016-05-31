@@ -57,7 +57,15 @@ Matrix<ifc::Point*>& BicubicBezierPatch::getPoints(){
 void BicubicBezierPatch::update(){
     for(int i = 0; i < CUBIC_COUNT; i ++){
         for(int j = 0; j < CUBIC_COUNT; j ++){
-            const vec3& pos = controlPoints[i][j]->getPosition();
+            ifc::Point* point = controlPoints[i][j];
+            if(point == NULL){
+                if(j > 1){
+                    point = controlPoints[i][j-1];
+                }else{
+                    continue;
+                }
+            }
+            const vec3& pos = point->getPosition();
             x[i][j] = pos.x;
             y[i][j] = pos.y;
             z[i][j] = pos.z;

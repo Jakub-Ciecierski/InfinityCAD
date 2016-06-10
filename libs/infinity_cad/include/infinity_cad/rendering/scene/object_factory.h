@@ -103,8 +103,9 @@ public:
                                        Matrix<ifc::Point*> points);
 
     SurfaceC2Cylind* createSurfaceC2Cylind(std::string name,
-                                         int n, int m,
-                                         float radius, float height);
+                                           int n, int m,
+                                           float radius, float height,
+                                           SurfaceAxis surfaceAxis);
 
     SurfaceC2Cylind* createSurfaceC2Cylind(std::string name,
                                            Matrix<ifc::Point*> points);

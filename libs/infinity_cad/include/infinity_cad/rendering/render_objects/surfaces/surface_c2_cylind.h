@@ -22,8 +22,9 @@ protected:
 public:
 
     SurfaceC2Cylind(SceneID id, std::string name,
-                  int n, int m,
-                  float radius, float height);
+                    int n, int m,
+                    float radius, float height,
+                    SurfaceAxis surfaceAxis = SurfaceAxis::HORIZONTAL);
     SurfaceC2Cylind(SceneID id, std::string name,
                     Matrix<ifc::Point*> points);
 

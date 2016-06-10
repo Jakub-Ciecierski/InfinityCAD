@@ -234,11 +234,13 @@ SurfaceC2Rect* ObjectFactory::createSurfaceC2Rect(std::string name,
 SurfaceC2Cylind* ObjectFactory::createSurfaceC2Cylind(std::string name,
                                                       int n, int m,
                                                       float radius,
-                                                      float height){
+                                                      float height,
+                                                      SurfaceAxis surfaceAxis){
     SceneID id = sceneIDFactory.createNextAvailableID();
 
     SurfaceC2Cylind* surface = new SurfaceC2Cylind(id, name, n, m,
-                                                   radius, height);
+                                                   radius, height,
+                                                   surfaceAxis);
 
     return surface;
 }

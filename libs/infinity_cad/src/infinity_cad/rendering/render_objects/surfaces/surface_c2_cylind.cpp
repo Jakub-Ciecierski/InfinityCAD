@@ -14,9 +14,11 @@ using namespace std;
 //-----------------------//
 
 SurfaceC2Cylind::SurfaceC2Cylind(SceneID id, std::string name,
-                             int n, int m,
-                             float radius, float height) :
-        Surface(id, name, n, m), radius(radius), height(height){
+                                 int n, int m,
+                                 float radius, float height,
+                                 SurfaceAxis surfaceAxis) :
+        Surface(id, name, n, m, surfaceAxis),
+        radius(radius), height(height){
     build();
     update();
 
@@ -131,13 +133,19 @@ void SurfaceC2Cylind::build(){
             allPoints.push_back((*deboorPoints)[i][j]);
             components.push_back((*deboorPoints)[i][j]);
 
-            z = radius * cos(M_2PI * j / (columnCount-3));
+            if(surfaceAxis == SurfaceAxis::HORIZONTAL)
+                z = radius * cos(M_2PI * j / (columnCount-3));
+            if(surfaceAxis == SurfaceAxis::VERTICAL)
+                y = radius * cos(M_2PI * j / (columnCount-3));
             x = radius * sin(M_2PI * j / (columnCount-3));
 
             (*deboorPoints)[i][j]->moveTo(origin);
             (*deboorPoints)[i][j]->move(x, y, z);
         }
-        y += dy;
+        if(surfaceAxis == SurfaceAxis::HORIZONTAL)
+            y += dy;
+        if(surfaceAxis == SurfaceAxis::VERTICAL)
+            z += dy;
     }
     vector<ifc::Point*> fistColumn = deboorPoints->getColumn(0);
     vector<ifc::Point*> secondColumn = deboorPoints->getColumn(1);

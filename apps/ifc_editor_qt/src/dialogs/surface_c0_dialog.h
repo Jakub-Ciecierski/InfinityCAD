@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <system/ifc_types.h>
+#include <infinity_cad/rendering/render_objects/surfaces/surface.h>
 
 struct SurfaceC0Data{
     int n;
@@ -12,6 +13,8 @@ struct SurfaceC0Data{
 
     float width;
     float height;
+
+    SurfaceAxis surfaceAxis;
 
     SurfaceC0Data(){
         this->n = 0;

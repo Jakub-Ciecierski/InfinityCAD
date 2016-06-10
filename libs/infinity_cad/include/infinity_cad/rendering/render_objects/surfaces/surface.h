@@ -9,6 +9,11 @@
 #include <infinity_cad/rendering/render_object.h>
 #include <infinity_cad/geometry/surfaces/bicubic_bezier_patch.h>
 
+enum SurfaceAxis{
+    VERTICAL, HORIZONTAL
+};
+
+
 class Surface : public RenderObject{
 private:
 
@@ -30,6 +35,8 @@ protected:
 
     int n;
     int m;
+
+    SurfaceAxis surfaceAxis;
 
     virtual void build() = 0;
 
@@ -72,7 +79,8 @@ public:
      * Creates a Surface made of nxm Bezier Patches connected with C0.
      */
     Surface(SceneID id, std::string name,
-            int n, int m);
+            int n, int m,
+            SurfaceAxis surfaceAxis = SurfaceAxis::HORIZONTAL);
 
     ~Surface();
 

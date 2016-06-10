@@ -91,13 +91,19 @@ void SurfaceC0Dialog::okButtonClicked(){
     QLineEdit* mEdit = ui->mLineEdit;
     QLineEdit* widthEdit = ui->widthLineEdit;
     QLineEdit* heightEdit = ui->heightLineEdit;
+    QCheckBox* isVerticalCheckBox = ui->isVerticalCheckBox;
 
     int n = nEdit->text().toInt();
     int m = mEdit->text().toInt();
     float width = widthEdit->text().toFloat();
     float height = heightEdit->text().toFloat();
+    bool isVertical = isVerticalCheckBox->isChecked();
 
     this->data = SurfaceC0Data(n, m, width, height);
+    if(isVertical)
+        this->data.surfaceAxis = SurfaceAxis::VERTICAL;
+    else
+        this->data.surfaceAxis = SurfaceAxis::HORIZONTAL;
 
     if(type == RB_SURFACE_C0_CYLIND_TYPE ||
             type == RB_SURFACE_C2_CYLIND_TYPE){

@@ -21,8 +21,9 @@ int Surface::vDivisionCount = 4;
 //-----------------------//
 
 Surface::Surface(SceneID id, std::string name,
-                 int n, int m) :
-        RenderObject(id, name), n(n), m(m), patches(n, m, NULL) {
+                 int n, int m, SurfaceAxis surfaceAxis) :
+        RenderObject(id, name), n(n), m(m), patches(n, m, NULL),
+        surfaceAxis(surfaceAxis){
     grabable = false;
 
     setDrawPolygon(false);

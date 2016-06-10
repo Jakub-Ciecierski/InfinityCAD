@@ -334,12 +334,15 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event){
         AxisType axis = cross->getPickedCone();
         if(axis != NONE){
 
-            float moveDist = 0.002 * 2;
+            float moveDist = 0.0005 * 2;
             int dx = event->x() - mouseDragPosition.x();
             int dy = event->y() - mouseDragPosition.y();
 
+            if(event->modifiers() & Qt::ShiftModifier){
+                moveDist /= 3.0;
+            }
             if(event->modifiers() & Qt::ControlModifier){
-                moveDist *= 3;
+                moveDist *= 3.0;
             }
 
             SceneTree* sceneTree = EditorWindow::getInstance().getUI()->sceneTree;

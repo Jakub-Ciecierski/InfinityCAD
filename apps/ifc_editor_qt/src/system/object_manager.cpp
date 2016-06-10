@@ -245,18 +245,23 @@ Item* ObjectManager::addSurfaceC2Cylind(string name){
 
     int n,m;
     float radius, height;
+    SurfaceAxis surfaceAxis;
+
     if(result){
         SurfaceC0Data data = dialog.getData();
         n = data.n;
         m = data.m;
         radius = data.radius;
         height = data.height;
+        surfaceAxis = data.surfaceAxis;
     }else{
         return NULL;
     }
 
-    SurfaceC2Cylind* surface = objectFactory.createSurfaceC2Cylind(name, n, m,
-                                                             radius, height);
+    SurfaceC2Cylind* surface
+            = objectFactory.createSurfaceC2Cylind(name, n, m,
+                                                  radius, height,
+                                                  surfaceAxis);
     this->scene->addRenderObject(surface);
     Item* surfaceItem = sceneTree->addObject(surface, RB_SURFACE_C2_CYLIND_TYPE);
 

@@ -80,6 +80,8 @@ void RenderObject::transformPosition(const glm::mat4 &VP){
     transformedOrigins.y /= transformedOrigins.w;
     transformedOrigins.z /= transformedOrigins.w;
 
+    NDC_W = transformedOrigins.w;
+
     NDCPosition.x = transformedOrigins.x;
     NDCPosition.y = transformedOrigins.y;
     NDCPosition.z = transformedOrigins.z;

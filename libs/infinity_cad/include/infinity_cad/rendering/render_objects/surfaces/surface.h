@@ -94,7 +94,7 @@ public:
      * Replaces src with dest. Returns false if src was not found,
      * true other wise.
      */
-    bool replacePoint(ifc::Point* src, ifc::Point* dest);
+    virtual bool replacePoint(ifc::Point* src, ifc::Point* dest);
 };
 
 #endif //IC_SURFACE_C0_H

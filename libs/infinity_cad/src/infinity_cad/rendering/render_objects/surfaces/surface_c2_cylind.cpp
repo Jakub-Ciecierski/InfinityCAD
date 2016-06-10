@@ -26,25 +26,74 @@ SurfaceC2Cylind::SurfaceC2Cylind(SceneID id, std::string name,
 SurfaceC2Cylind::SurfaceC2Cylind(SceneID id, std::string name,
                                  Matrix<ifc::Point*> points) :
         Surface(id, name, 0, 0){
-    n = points.rowCount() - 3;
-    m = points.columnCount() - 3;
+    /*
+     // Works !
+    int rowCount = points.rowCount();
+    int columnCount = points.columnCount();
+
+    n = rowCount - 3;
+    m = columnCount;
+
+    int allPointsColumnCount = columnCount + 3;
 
     patches = Matrix<BicubicBezierPatch*>(n, m, NULL);
-    deboorPoints = new Matrix<ifc::Point*>(points);
 
-    for(int i = 0; i < points.rowCount(); i++){
-        for(int j = 0; j < points.columnCount(); j++){
-            if(!(std::find(allPoints.begin(), allPoints.end(),
-                         (*deboorPoints)[i][j]) != allPoints.end())){
-                allPoints.push_back((*deboorPoints)[i][j]);
-            }
-            if(!(std::find(components.begin(), components.end(),
-                           (*deboorPoints)[i][j]) != components.end())){
-                components.push_back((*deboorPoints)[i][j]);
-            }
+    deboorPoints = new Matrix<ifc::Point*>(rowCount,
+                                           allPointsColumnCount);
+
+    for(int i = 0; i < rowCount; i++) {
+        for (int j = 0; j < allPointsColumnCount - 3; j++) {
+            deboorPoints->setEntry(i, j, points[i][j]);
         }
     }
+    vector<ifc::Point*> fistColumn = deboorPoints->getColumn(0);
+    vector<ifc::Point*> secondColumn = deboorPoints->getColumn(1);
+    vector<ifc::Point*> thirdColumn = deboorPoints->getColumn(2);
+
+    deboorPoints->setColumn(allPointsColumnCount -1, thirdColumn);
+    deboorPoints->setColumn(allPointsColumnCount -2, secondColumn);
+    deboorPoints->setColumn(allPointsColumnCount -3, fistColumn);
+
     allPointsMatrix = *deboorPoints;
+
+    update();
+
+    objectType = OBJ_TYPE_SURFACE_BSPLINE_CYLIND;
+     */
+
+
+    int rowCount = points.rowCount();
+    int columnCount = points.columnCount();
+
+    n = rowCount;
+    m = columnCount - 3;
+
+    int allPointsRowCount = rowCount + 3;
+    int allPointsColumnCount = columnCount;
+
+    patches = Matrix<BicubicBezierPatch*>(n, m, NULL);
+
+    deboorPoints = new Matrix<ifc::Point*>(allPointsRowCount,
+                                           allPointsColumnCount);
+
+    for(int i = 0; i < allPointsRowCount - 3; i++) {
+        for (int j = 0; j < allPointsColumnCount; j++) {
+            deboorPoints->setEntry(i, j, points[i][j]);
+            allPoints.push_back((*deboorPoints)[i][j]);
+            components.push_back((*deboorPoints)[i][j]);
+        }
+    }
+    vector<ifc::Point*> fistColumn = (*deboorPoints)[0];
+    vector<ifc::Point*> secondColumn = (*deboorPoints)[1];
+    vector<ifc::Point*> thirdColumn = (*deboorPoints)[2];
+
+    (*deboorPoints)[allPointsRowCount-1] = thirdColumn;
+    (*deboorPoints)[allPointsRowCount-2] = secondColumn;
+    (*deboorPoints)[allPointsRowCount-3] = fistColumn;
+
+    allPointsMatrix = *deboorPoints;
+
+    allPointsMatrix.resize(allPointsRowCount - 3, allPointsColumnCount);
 
     update();
 
@@ -58,6 +107,7 @@ SurfaceC2Cylind::~SurfaceC2Cylind(){
 //-----------------------//
 //  PROTECTED
 //-----------------------//
+
 
 void SurfaceC2Cylind::build(){
     vec3 origin(0,0,0);
@@ -99,11 +149,41 @@ void SurfaceC2Cylind::build(){
 
     // for serialization
     allPointsMatrix = *deboorPoints;
+    allPointsMatrix.resize(deboorPoints->rowCount(),
+                           deboorPoints->columnCount() - 3);
 }
 
 //-----------------------//
 //  PUBLIC
 //-----------------------//
+
+bool SurfaceC2Cylind::replacePoint(ifc::Point *src, ifc::Point *dest) {
+    for(unsigned int i = 0; i < allPoints.size(); i++){
+        if(allPoints[i] == src){
+            allPoints[i] = dest;
+        }
+    }
+    for(unsigned int i = 0; i < components.size(); i++){
+        if(components[i] == src){
+            components[i] = dest;
+        }
+    }
+
+    int deboorRowCount = deboorPoints->rowCount();
+    int deboorColumnCount = deboorPoints->columnCount();
+
+    for(int i = 0; i < deboorRowCount;i++){
+        for(int j = 0; j < deboorColumnCount; j++){
+            ifc::Point* point = deboorPoints->getEntry(i,j);
+            if(point == src){
+                deboorPoints->setEntry(i, j, dest);
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
 
 void SurfaceC2Cylind::update(){
     const int DEGREE = 3;

@@ -29,6 +29,8 @@ public:
 
     ~SurfaceC2Cylind();
 
+    virtual bool replacePoint(ifc::Point* src, ifc::Point* dest) override;
+
     virtual void update() override;
 
 };

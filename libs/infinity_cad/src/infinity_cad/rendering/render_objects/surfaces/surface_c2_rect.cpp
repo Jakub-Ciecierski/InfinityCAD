@@ -89,6 +89,35 @@ void SurfaceC2Rect::build(){
 //  PUBLIC
 //-----------------------//
 
+
+bool SurfaceC2Rect::replacePoint(ifc::Point *src, ifc::Point *dest) {
+    for(unsigned int i = 0; i < allPoints.size(); i++){
+        if(allPoints[i] == src){
+            allPoints[i] = dest;
+        }
+    }
+    for(unsigned int i = 0; i < components.size(); i++){
+        if(components[i] == src){
+            components[i] = dest;
+        }
+    }
+
+    int deboorRowCount = deboorPoints->rowCount();
+    int deboorColumnCount = deboorPoints->columnCount();
+
+    for(int i = 0; i < deboorRowCount;i++){
+        for(int j = 0; j < deboorColumnCount; j++){
+            ifc::Point* point = deboorPoints->getEntry(i,j);
+            if(point == src){
+                deboorPoints->setEntry(i, j, dest);
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
 void SurfaceC2Rect::update(){
     const int DEGREE = 3;
     const int CUBIC_COUNT = 4;

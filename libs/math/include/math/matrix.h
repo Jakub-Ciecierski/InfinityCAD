@@ -44,6 +44,8 @@ public:
     //  PUBLIC METHODS
     //-----------------------------------------------------------//
 
+    void resize(unsigned int n, unsigned int m);
+
     std::vector<T> getColumn(unsigned int i) const;
     void setColumn(unsigned int i, const std::vector<T>& vec);
 
@@ -122,6 +124,30 @@ Matrix<T>::Matrix(const Matrix& matrix) : n(matrix.n), m(matrix.m)
 //-----------------------------------------------------------//
 //  PUBLIC METHODS
 //-----------------------------------------------------------//
+
+template <class T>
+void Matrix<T>::resize(unsigned int n, unsigned int m) {
+    int currentN = this->n;
+    int currentM = this->m;
+
+    this->n = n;
+    this->m = m;
+    std::vector<std::vector<T>> newEntries;
+
+    newEntries.resize(n);
+
+    for(unsigned int i = 0; i < n; i++){
+        newEntries[i].resize(m);
+    }
+    for(unsigned int i = 0; i < n; i++){
+        for(unsigned int j = 0; j < m; j++){
+            if(i < currentN && j < currentM)
+                newEntries[i][j] = entries[i][j];
+        }
+    }
+    entries = newEntries;
+}
+
 
 template <class T>
 std::vector<T> Matrix<T>::getColumn(unsigned int i) const{

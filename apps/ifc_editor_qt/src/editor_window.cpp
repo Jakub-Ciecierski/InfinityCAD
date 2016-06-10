@@ -9,6 +9,7 @@
 #include <QMessageBox>
 #include <QDebug>
 #include <QInputDialog>
+#include <QFileDialog>
 
 using namespace std;
 
@@ -110,12 +111,13 @@ void EditorWindow::saveSystem(){
 void EditorWindow::loadSystem(){
     ObjectManager& objectManager = ObjectManager::getInstance();
 
-    string filepath = showInputBox("Save", "Input File name");
+    //string filepath = showInputBox("Save", "Input File name");
 
+    QString filepathQ =  QFileDialog::getOpenFileName();
     //std:string filepath = "jakub.mg";
     //std:string filepath = "curves.mg";
 
-    objectManager.loadSystem(filepath);
+    objectManager.loadSystem(filepathQ.toStdString());
 }
 
 void EditorWindow::colapsButtomPressed(){

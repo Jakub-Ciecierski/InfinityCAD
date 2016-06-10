@@ -161,7 +161,7 @@ void DeserializationScene::loadObject(string type,
         if(surfaceType == CYLIND_SURFACE_STR){
             cylinderMode = data[3];
         }
-
+/*
         Matrix<ifc::Point*> pointsMatrix(n,m);
         vector<Item*> items;
         int pointCount = n*m;
@@ -184,7 +184,29 @@ void DeserializationScene::loadObject(string type,
             }
             pointsMatrix[i] = row;
         }
+*/
+        Matrix<ifc::Point*> pointsMatrix(m,n);
+        vector<Item*> items;
+        int pointCount = n*m;
 
+        std::getline(istream, line);
+        vector<string> pointIDs = str_util::splitString(line, " ");
+
+        int index = 0;
+        for(int i = 0; i < m; i++){
+            vector<ifc::Point*> row;
+            for(int j = 0; j < n; j++){
+
+                int id = atoi(pointIDs[index].c_str());
+                Item* item = pointItems[id];
+                items.push_back(item);
+
+                row.push_back(static_cast<ifc::Point*>(item->object));
+
+                index++;
+            }
+            pointsMatrix[i] = row;
+        }
         if(surfaceType == RECT_SURFACE_STR){
             objectManager.addSurfaceC2Rect(name, pointsMatrix, items);
         }else if(surfaceType == CYLIND_SURFACE_STR){
@@ -229,7 +251,9 @@ void DeserializationScene::loadObject(string type,
         if(surfaceType == RECT_SURFACE_STR){
             objectManager.addSurfaceC0Rect(name, pointsMatrix, items);
         }else if(surfaceType == CYLIND_SURFACE_STR){
-            objectManager.addSurfaceC0Cylind(name, pointsMatrix, items);
+            ;
+            // TODO CYLIND C0
+            //objectManager.addSurfaceC0Cylind(name, pointsMatrix, items);
         }
     }
 }

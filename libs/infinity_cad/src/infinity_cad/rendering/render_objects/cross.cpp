@@ -304,6 +304,7 @@ RenderObject * Cross::getClosestObject(const RayCast& ray,
 
             float bodyX = bodyProjectedPosition.x;
             float bodyY = bodyProjectedPosition.y;
+            if(child->NDC_W < 0) continue;
 
             int bodypX = (bodyX + 1.0f) / vX;
             int bodypY  = (bodyY + 1.0f) / vY;
@@ -324,6 +325,7 @@ RenderObject * Cross::getClosestObject(const RayCast& ray,
 
         float bodyX = bodyProjectedPosition.x;
         float bodyY = bodyProjectedPosition.y;
+        if(body->NDC_W < 0) continue;
 
         int bodypX = (bodyX + 1.0f) / vX;
         int bodypY  = (bodyY + 1.0f) / vY;

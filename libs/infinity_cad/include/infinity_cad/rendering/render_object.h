@@ -71,6 +71,9 @@ protected:
     virtual void drawLines(bool costumColor);
 
 public:
+    // TODO To check if point is behind camera
+    float NDC_W;
+
     //-----------------------------------------------------------//
     //  CONSTRUCTORS
     //-----------------------------------------------------------//

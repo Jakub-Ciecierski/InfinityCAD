@@ -44,7 +44,51 @@ SurfaceC0Cylind::~SurfaceC0Cylind(){
 //-----------------------//
 //  PRIVATE
 //-----------------------//
+
 void SurfaceC0Cylind::buildPatchesFromMatrix(const Matrix<ifc::Point*>& points){
+    Matrix<ifc::Point*> uniquePoints = points;
+    uniquePoints.resize(points.rowCount() + 1, points.columnCount());
+    uniquePoints[uniquePoints.rowCount() - 1] = uniquePoints[0];
+
+
+    n = (uniquePoints.rowCount() + 1) / (CUBIC_COUNT - 1);
+    m = (uniquePoints.columnCount() + 1) / (CUBIC_COUNT - 1);
+
+    patches = Matrix<BicubicBezierPatch*>(n, m, NULL);
+
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j < m; j++){
+            Matrix<ifc::Point*> patchPoints(CUBIC_COUNT, CUBIC_COUNT);
+            for(int k = 0; k < CUBIC_COUNT; k++){
+                vector<ifc::Point*> row = uniquePoints[i*CUBIC_COUNT-i + k];
+                for(int l = 0; l < CUBIC_COUNT; l++){
+                    int colIndex = j * CUBIC_COUNT-j + l;
+                    //if(colIndex >= row.size()) continue;
+                    //if(colIndex == row.size()-1) colIndex = 0;
+
+                    patchPoints[k][l] = row[colIndex];
+
+                    allPoints.push_back(row[colIndex]);
+                    components.push_back(row[colIndex]);
+
+                }
+            }
+            BicubicBezierPatch* patch = new BicubicBezierPatch(patchPoints);
+            patches[i][j] = patch;
+        }
+    }
+
+    Matrix<ifc::Point *> rowWisePoints = getMatrixFormOfAllPatches();
+
+    // for serialization
+    allPointsMatrix = rowWisePoints;
+}
+
+/*
+void SurfaceC0Cylind::buildPatchesFromMatrix(const Matrix<ifc::Point*>& points){
+    Matrix<ifc::Point*> uniquePoints = points;
+    uniquePoints.resize(points.rowCount() + 1, points.columnCount());
+    uniquePoints[uniquePoints.rowCount() - 1] = uniquePoints[0];
 
     n = (points.rowCount() + 1) / (CUBIC_COUNT - 1);
     m = (points.columnCount() + 1) / (CUBIC_COUNT - 1);
@@ -69,7 +113,7 @@ void SurfaceC0Cylind::buildPatchesFromMatrix(const Matrix<ifc::Point*>& points){
         }
     }
 }
-
+*/
 Matrix<ifc::Point*> SurfaceC0Cylind::getMatrixFormOfAllPatches(){
     int numberOfPointsInRow = CUBIC_COUNT*n - (n-1) - 1;
     int numberOfPointsInColumns = CUBIC_COUNT*m - (m-1);
@@ -183,17 +227,17 @@ Matrix<ifc::Point*> SurfaceC0Cylind::initC0Points(int n, int m){
 //-----------------------//
 
 void SurfaceC0Cylind::build() {
-    vec3 startPos(0,0,0);
+    vec3 startPos(0, 0, 0);
 
-    float patchHeight = height/(float)m;
+    float patchHeight = height / (float) m;
 
-    for(int i = 0; i < n;i++){
-        for(int j = 0; j < m; j++){
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
             patches[i][j] = createPatch(i, j, patchHeight, startPos);
         }
     }
 
-    Matrix<ifc::Point*> rowWisePoints = getMatrixFormOfAllPatches();
+    Matrix<ifc::Point *> rowWisePoints = getMatrixFormOfAllPatches();
     shapeTheCylidner(rowWisePoints);
 
     // for serialization

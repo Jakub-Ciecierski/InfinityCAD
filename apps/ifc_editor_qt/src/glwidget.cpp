@@ -15,6 +15,7 @@
 #include <infinity_cad/math/math.h>
 #include <infinity_cad/geometry/quaternion.h>
 #include <widgets/scene_list/scene_tree.h>
+#include <system/object_manager.h>
 
 #include "ui_mainwindow.h"
 
@@ -31,7 +32,8 @@ const int KEY_MINUS = 6;
 const int KEY_PLUS = 7;
 const int KEY_SHIFT = 8;
 const int KEY_SPACE = 9;
-const int KEYS_COUNT = 10;
+const int KEY_Z = 10;
+const int KEYS_COUNT = 11;
 
 GLWidget::GLWidget(QWidget* parent) :
     QGLWidget(parent)
@@ -153,6 +155,10 @@ void GLWidget::keyPressEvent(QKeyEvent *event){
     if(event->key() == Qt::Key_E){
         keys[KEY_E] = true;
     }
+    if(event->key() == Qt::Key_Z){
+        keys[KEY_Z] = true;
+    }
+
     if(event->key() == Qt::Key_Plus){
         keys[KEY_PLUS] = true;
     }else if(event->key() == Qt::Key_Minus){
@@ -182,6 +188,9 @@ void GLWidget::keyReleaseEvent(QKeyEvent *event){
     }
     if(event->key() == Qt::Key_E){
         keys[KEY_E] = false;
+    }
+    if(event->key() == Qt::Key_Z){
+        keys[KEY_Z] = false;
     }
     if(event->key() == Qt::Key_Plus){
         keys[KEY_PLUS] = false;
@@ -334,13 +343,10 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event){
         AxisType axis = cross->getPickedCone();
         if(axis != NONE){
 
-            float moveDist = 0.0005 * 2;
+            float moveDist = 0.0005 * 1;
             int dx = event->x() - mouseDragPosition.x();
             int dy = event->y() - mouseDragPosition.y();
 
-            if(event->modifiers() & Qt::ShiftModifier){
-                moveDist /= 3.0;
-            }
             if(event->modifiers() & Qt::ControlModifier){
                 moveDist *= 3.0;
             }
@@ -396,17 +402,24 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event){
                 dYAxis = -dYAxis;
             }
 
-            // Z
-            if(axis == AxisType::ZAxis){
-                cross->move(0, 0, (float)dZAxis * moveDist);
-            }
-            // Y
-            else if(axis == YAxis){
-                cross->move(0, (float)dYAxis * moveDist, 0);
-            }
-            // X
-            else if(axis == XAxis){
-                cross->move((float)dXAxis * moveDist, 0, 0);
+            if(event->modifiers() & Qt::ShiftModifier){
+                ObjectManager& objManager = ObjectManager::getInstance();
+                float sens = (float)dYAxis * moveDist;
+                objManager.colapsSelectedPoints_NoRemove(sens);
+            }else{
+
+                // Z
+                if(axis == AxisType::ZAxis){
+                    cross->move(0, 0, (float)dZAxis * moveDist);
+                }
+                // Y
+                else if(axis == YAxis){
+                    cross->move(0, (float)dYAxis * moveDist, 0);
+                }
+                // X
+                else if(axis == XAxis){
+                    cross->move((float)dXAxis * moveDist, 0, 0);
+                }
             }
         }
         else{

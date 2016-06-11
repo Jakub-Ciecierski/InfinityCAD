@@ -87,7 +87,9 @@ public:
     RenderObject * getClosestObject(const RayCast& ray,
                                     int width, int height,
                                     int distTol = 20) const;
-
+    std::vector<RenderObject*> getClosestObjectVector(const RayCast& ray,
+                                                      int width, int height,
+                                                      int distTol) const;
     void scanAndMoveToClosestObject(const RayCast& ray, int width, int height);
 
     void pickCones(const RayCast& ray, int width, int height);

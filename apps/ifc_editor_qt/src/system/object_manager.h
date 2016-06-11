@@ -74,6 +74,7 @@ public:
 
     SceneTree* getSceneTree();
 
+    void colapsSelectedPoints_NoRemove(float dist = 1.0f);
     void colapsSelectedPoints();
 
     void TEST_BSPLINE();

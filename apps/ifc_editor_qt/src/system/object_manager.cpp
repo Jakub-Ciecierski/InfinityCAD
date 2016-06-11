@@ -523,6 +523,20 @@ SceneTree* ObjectManager::getSceneTree(){
     return this->sceneTree;
 }
 
+void ObjectManager::colapsSelectedPoints_NoRemove(float dist){
+    const vector<Item*>& items = sceneTree->getSelectedItems(RB_POINT_NAME);
+    glm::vec3 avgPosition;
+    int n = items.size();
+    for(unsigned int i = 0; i < n; i++){
+        avgPosition += items[i]->object->getPosition();
+    }
+    avgPosition /= n;
+    for(unsigned int i = 0; i < n; i++){
+        const glm::vec3& pos = items[i]->object->getPosition();
+        items[i]->object->moveTo(pos + (avgPosition - pos) * dist);
+    }
+}
+
 void ObjectManager::colapsSelectedPoints(){
     EditorWindow& window = EditorWindow::getInstance();
     const vector<Item*>& items = sceneTree->getSelectedItems(RB_POINT_NAME);

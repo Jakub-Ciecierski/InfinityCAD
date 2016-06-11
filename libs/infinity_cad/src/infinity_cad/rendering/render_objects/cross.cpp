@@ -280,6 +280,7 @@ void Cross::deactivateGrab() {
 RenderObject * Cross::getClosestObject(const RayCast& ray,
                                        int width, int height,
                                        int distTol) const{
+    float error_tol = 0.10;
     float x = ray.currentX;
     float y = ray.currentY;
 
@@ -304,7 +305,7 @@ RenderObject * Cross::getClosestObject(const RayCast& ray,
 
             float bodyX = bodyProjectedPosition.x;
             float bodyY = bodyProjectedPosition.y;
-            if(child->NDC_W < 0) continue;
+            if(child->NDC_W < error_tol) continue;
 
             int bodypX = (bodyX + 1.0f) / vX;
             int bodypY  = (bodyY + 1.0f) / vY;
@@ -325,7 +326,7 @@ RenderObject * Cross::getClosestObject(const RayCast& ray,
 
         float bodyX = bodyProjectedPosition.x;
         float bodyY = bodyProjectedPosition.y;
-        if(body->NDC_W < 0) continue;
+        if(body->NDC_W < error_tol) continue;
 
         int bodypX = (bodyX + 1.0f) / vX;
         int bodypY  = (bodyY + 1.0f) / vY;
@@ -335,6 +336,7 @@ RenderObject * Cross::getClosestObject(const RayCast& ray,
         int dist = sqrt(dx*dx + dy*dy);
 
         if(dist < distTol){
+            std::cout << body->NDC_W << std::endl;
             return (body);
         }
 
@@ -361,6 +363,74 @@ RenderObject * Cross::getClosestObject(const RayCast& ray,
 
     }
     return NULL;
+}
+
+std::vector<RenderObject*> Cross::getClosestObjectVector(const RayCast& ray,
+                                                         int width, int height,
+                                                         int distTol) const{
+    std::vector<RenderObject*> closestObjects;
+    float error_tol = 0.10;
+    float x = ray.currentX;
+    float y = ray.currentY;
+
+    float vX = 2.0 / (float) width;
+    int rayX = (x + 1.0f) / vX;
+
+    float vY = 2.0 / (float) height;
+    int rayY = (y + 1.0f) / vY;
+
+    for(unsigned int i = 1; i < sceneObjects->size(); i++){
+
+
+        RenderObject * body = (*sceneObjects)[i];
+
+        // ---------------------
+        // TODO children
+        const std::vector<RenderObject *>& curr_children = body->getChildren();
+        for(unsigned int i = 0 ; i < curr_children.size(); i++){
+            RenderObject * child = curr_children[i];
+
+            const vec3& bodyProjectedPosition = child->getProjectedPosition();
+
+            float bodyX = bodyProjectedPosition.x;
+            float bodyY = bodyProjectedPosition.y;
+            if(child->NDC_W < error_tol) continue;
+
+            int bodypX = (bodyX + 1.0f) / vX;
+            int bodypY  = (bodyY + 1.0f) / vY;
+
+            int dx = rayX - bodypX;
+            int dy = rayY - bodypY;
+            int dist = sqrt(dx*dx + dy*dy);
+
+            if(dist < distTol){
+                closestObjects.push_back(child);
+                return closestObjects;
+            }
+        }
+        // ---------------------
+
+        if(!body->isGrabable()) continue;
+
+        const vec3& bodyProjectedPosition = body->getProjectedPosition();
+
+        float bodyX = bodyProjectedPosition.x;
+        float bodyY = bodyProjectedPosition.y;
+        if(body->NDC_W < error_tol) continue;
+
+        int bodypX = (bodyX + 1.0f) / vX;
+        int bodypY  = (bodyY + 1.0f) / vY;
+
+        int dx = rayX - bodypX;
+        int dy = rayY - bodypY;
+        int dist = sqrt(dx*dx + dy*dy);
+
+        if(dist < distTol){
+            std::cout << body->NDC_W << std::endl;
+            closestObjects.push_back(body);
+        }
+    }
+    return closestObjects;
 }
 
 void Cross::scanAndMoveToClosestObject(const RayCast& ray, int width, int height){
@@ -398,7 +468,7 @@ void Cross::scanAndMoveToClosestObject(const RayCast& ray, int width, int height
 }
 
 void Cross::pickCones(const RayCast& ray, int width, int height){
-    int distTol = 15;
+    int distTol = 30;
 
     float x = ray.currentX;
     float y = ray.currentY;

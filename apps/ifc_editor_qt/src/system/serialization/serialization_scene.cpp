@@ -98,7 +98,7 @@ void SerializationScene::saveSurfaces(stringstream& ss, const ObjectType& type,
         }else if(type == OBJ_TYPE_SURFACE_BEZIER_CYLIND||
                  type == OBJ_TYPE_SURFACE_BSPLINE_CYLIND){
             // Vertical cylinder mode is hardcoded !!!
-            ss << CYLIND_SURFACE_STR << " " << VERTICAL_CYLIND_SURFACE_STR;
+            ss << CYLIND_SURFACE_STR << " " << HORIZONTAL_CYLIND_SURFACE_STR;
         }
         ss << std::endl;
 

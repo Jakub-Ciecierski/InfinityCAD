@@ -123,7 +123,8 @@ void EditorWindow::loadSystem(){
 void EditorWindow::colapsButtomPressed(){
     ObjectManager& objectManager = ObjectManager::getInstance();
 
-    objectManager.colapsSelectedPoints();
+    objectManager.colapsSelectedPoints_NoRemove();
+    //objectManager.colapsSelectedPoints();
 }
 
 //-------------------------//

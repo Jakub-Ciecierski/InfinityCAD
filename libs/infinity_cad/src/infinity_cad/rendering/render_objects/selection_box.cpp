@@ -72,16 +72,20 @@ std::vector<RenderObject*> SelectionBox::scanBox(const Cross* cross,
             float yGL = ifc::yPixelToGLCoord(y, windowHeight);
             ray->update(xGL, yGL);
 
-            RenderObject * closestBody = cross->getClosestObject(*ray,
-                                                                 windowWidth,
-                                                                 windowHeight,
-                                                                 10);
-            if(closestBody != NULL){
-                if (!(std::find(objects.begin(), objects.end(), closestBody)
-                    != objects.end())) {
-                    objects.push_back(closestBody);
+            std::vector<RenderObject*> closestBodies
+                    = cross->getClosestObjectVector(*ray,
+                                                    windowWidth, windowHeight,
+                                                    10);
+            for(unsigned int i = 0; i < closestBodies.size(); i++){
+                RenderObject* closestBody = closestBodies[i];
+                if(closestBody != NULL){
+                    if (!(std::find(objects.begin(), objects.end(), closestBody)
+                          != objects.end())) {
+                        objects.push_back(closestBody);
+                    }
                 }
             }
+
         }
     }
     return objects;

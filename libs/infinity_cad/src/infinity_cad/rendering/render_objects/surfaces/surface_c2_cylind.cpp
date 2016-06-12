@@ -23,47 +23,13 @@ SurfaceC2Cylind::SurfaceC2Cylind(SceneID id, std::string name,
     update();
 
     objectType = OBJ_TYPE_SURFACE_BSPLINE_CYLIND;
+
+    matrixMajor = MatrixMajor::ROW;
 }
 
 SurfaceC2Cylind::SurfaceC2Cylind(SceneID id, std::string name,
                                  Matrix<ifc::Point*> points) :
         Surface(id, name, 0, 0){
-    /*
-     // Works !
-    int rowCount = points.rowCount();
-    int columnCount = points.columnCount();
-
-    n = rowCount - 3;
-    m = columnCount;
-
-    int allPointsColumnCount = columnCount + 3;
-
-    patches = Matrix<BicubicBezierPatch*>(n, m, NULL);
-
-    deboorPoints = new Matrix<ifc::Point*>(rowCount,
-                                           allPointsColumnCount);
-
-    for(int i = 0; i < rowCount; i++) {
-        for (int j = 0; j < allPointsColumnCount - 3; j++) {
-            deboorPoints->setEntry(i, j, points[i][j]);
-        }
-    }
-    vector<ifc::Point*> fistColumn = deboorPoints->getColumn(0);
-    vector<ifc::Point*> secondColumn = deboorPoints->getColumn(1);
-    vector<ifc::Point*> thirdColumn = deboorPoints->getColumn(2);
-
-    deboorPoints->setColumn(allPointsColumnCount -1, thirdColumn);
-    deboorPoints->setColumn(allPointsColumnCount -2, secondColumn);
-    deboorPoints->setColumn(allPointsColumnCount -3, fistColumn);
-
-    allPointsMatrix = *deboorPoints;
-
-    update();
-
-    objectType = OBJ_TYPE_SURFACE_BSPLINE_CYLIND;
-     */
-
-
     int rowCount = points.rowCount();
     int columnCount = points.columnCount();
 
@@ -81,8 +47,8 @@ SurfaceC2Cylind::SurfaceC2Cylind(SceneID id, std::string name,
     for(int i = 0; i < allPointsRowCount - 3; i++) {
         for (int j = 0; j < allPointsColumnCount; j++) {
             deboorPoints->setEntry(i, j, points[i][j]);
-            allPoints.push_back((*deboorPoints)[i][j]);
-            components.push_back((*deboorPoints)[i][j]);
+            allPoints.push_back(points[i][j]);
+            components.push_back(points[i][j]);
         }
     }
     vector<ifc::Point*> fistColumn = (*deboorPoints)[0];
@@ -96,10 +62,12 @@ SurfaceC2Cylind::SurfaceC2Cylind(SceneID id, std::string name,
     allPointsMatrix = *deboorPoints;
 
     allPointsMatrix.resize(allPointsRowCount - 3, allPointsColumnCount);
+    allPointsMatrix = points;
 
     update();
 
     objectType = OBJ_TYPE_SURFACE_BSPLINE_CYLIND;
+    matrixMajor = MatrixMajor::COLUMN;
 }
 
 SurfaceC2Cylind::~SurfaceC2Cylind(){
@@ -109,7 +77,6 @@ SurfaceC2Cylind::~SurfaceC2Cylind(){
 //-----------------------//
 //  PROTECTED
 //-----------------------//
-
 
 void SurfaceC2Cylind::build(){
     vec3 origin(0,0,0);
@@ -160,7 +127,57 @@ void SurfaceC2Cylind::build(){
     allPointsMatrix.resize(deboorPoints->rowCount(),
                            deboorPoints->columnCount() - 3);
 }
+/*
+void SurfaceC2Cylind::build(){
+    vec3 origin(0,0,0);
 
+    int rowCount = n + 3;
+    int columnCount = m + 3;
+    deboorPoints = new Matrix<ifc::Point*>(rowCount, columnCount);
+
+    float x,y,z;
+    x = y = z = 0;
+
+    float dy = height / (float)columnCount;
+
+    float M_2PI = M_PI*2;
+    ObjectFactory& objectFactory = ObjectFactory::getInstance();
+    for(int i = 0; i < rowCount; i++){
+        for(int j = 0; j < columnCount-3; j++){
+            (*deboorPoints)[i][j]
+                    = objectFactory.createPoint(createPointName(n,m,i,j));
+
+            allPoints.push_back((*deboorPoints)[i][j]);
+            components.push_back((*deboorPoints)[i][j]);
+
+            if(surfaceAxis == SurfaceAxis::HORIZONTAL)
+                z = radius * cos(M_2PI * j / (columnCount-3));
+            if(surfaceAxis == SurfaceAxis::VERTICAL)
+                y = radius * cos(M_2PI * j / (columnCount-3));
+            x = radius * sin(M_2PI * j / (columnCount-3));
+
+            (*deboorPoints)[i][j]->moveTo(origin);
+            (*deboorPoints)[i][j]->move(x, y, z);
+        }
+        if(surfaceAxis == SurfaceAxis::HORIZONTAL)
+            y += dy;
+        if(surfaceAxis == SurfaceAxis::VERTICAL)
+            z += dy;
+    }
+    vector<ifc::Point*> fistColumn = deboorPoints->getColumn(0);
+    vector<ifc::Point*> secondColumn = deboorPoints->getColumn(1);
+    vector<ifc::Point*> thirdColumn = deboorPoints->getColumn(2);
+
+    deboorPoints->setColumn(columnCount-1, thirdColumn);
+    deboorPoints->setColumn(columnCount-2, secondColumn);
+    deboorPoints->setColumn(columnCount-3, fistColumn);
+
+    // for serialization
+    allPointsMatrix = *deboorPoints;
+    allPointsMatrix.resize(deboorPoints->rowCount(),
+                           deboorPoints->columnCount() - 3);
+}
+*/
 //-----------------------//
 //  PUBLIC
 //-----------------------//

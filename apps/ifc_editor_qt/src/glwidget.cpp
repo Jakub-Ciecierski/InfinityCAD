@@ -33,7 +33,8 @@ const int KEY_PLUS = 7;
 const int KEY_SHIFT = 8;
 const int KEY_SPACE = 9;
 const int KEY_Z = 10;
-const int KEYS_COUNT = 11;
+const int KEY_CTRL = 11;
+const int KEYS_COUNT = 12;
 
 GLWidget::GLWidget(QWidget* parent) :
     QGLWidget(parent)
@@ -170,6 +171,10 @@ void GLWidget::keyPressEvent(QKeyEvent *event){
     if(event->key() == Qt::Key_Space){
         keys[KEY_SPACE] = true;
     }
+    if(event->key() == Qt::Key_Control){
+        keys[KEY_CTRL] = true;
+    }
+
 }
 
 void GLWidget::keyReleaseEvent(QKeyEvent *event){
@@ -202,6 +207,9 @@ void GLWidget::keyReleaseEvent(QKeyEvent *event){
     }
     if(event->key() == Qt::Key_Space){
         keys[KEY_SPACE] = false;
+    }
+    if(event->key() == Qt::Key_Control){
+        keys[KEY_CTRL] = false;
     }
 }
 
@@ -347,7 +355,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event){
             int dx = event->x() - mouseDragPosition.x();
             int dy = event->y() - mouseDragPosition.y();
 
-            if(event->modifiers() & Qt::ControlModifier){
+            if(keys[KEY_SPACE]){
                 moveDist *= 3.0;
             }
 
@@ -406,7 +414,24 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event){
                 ObjectManager& objManager = ObjectManager::getInstance();
                 float sens = (float)dYAxis * moveDist;
                 objManager.colapsSelectedPoints_NoRemove(sens);
-            }else{
+            }else if(event->modifiers() & Qt::ControlModifier){
+                ObjectManager& objManager = ObjectManager::getInstance();
+                float sens = (float)dYAxis * moveDist * 40;
+                vec3 axisVec;
+                if(axis == AxisType::ZAxis){
+                    axisVec = vec3(0.0, 0.0, 1.0f);
+                }
+                // Y
+                else if(axis == YAxis){
+                    axisVec = vec3(0.0, 1.0, 0.0f);
+                }
+                // X
+                else if(axis == XAxis){
+                    axisVec = vec3(1.0, 0.0, 0.0f);
+                }
+                objManager.rotateSelectedItems(sens, axisVec);
+            }
+            else{
 
                 // Z
                 if(axis == AxisType::ZAxis){
@@ -555,6 +580,8 @@ void GLWidget::focusOutEvent(QFocusEvent* event){
 
 void GLWidget::updateCrossView(){
     Cross* cross = renderer->getScene()->getCross();
+    SceneTree* sceneTree = EditorWindow::getInstance().getUI()->sceneTree;
+
     // -------------------------------------------
     const glm::vec3& pos = cross->getPosition();
     EditorWindow& m = EditorWindow::getInstance();
@@ -571,6 +598,8 @@ void GLWidget::updateCrossView(){
     ui->angleXInput->setText(QString::number(pX));
     ui->angleYInput->setText(QString::number(pY));
 
+    int count = sceneTree->getSelectedObjects().size();
+    ui->selectedItemsLineEdit->setText(QString::number(count));
     // -------------------------------------------
 }
 
@@ -594,8 +623,15 @@ bool GLWidget::do_movement(){
         changed = true;
     }
     if(keys[KEY_S]){
-        camera->moveBackward(speedBoost);
-        changed = true;
+        if(keys[KEY_CTRL]){
+            keys[KEY_CTRL] = false;
+            keys[KEY_S] = false;
+            EditorWindow& window = EditorWindow::getInstance();
+            window.saveSystem();
+        }else{
+            camera->moveBackward(speedBoost);
+            changed = true;
+        }
     }
     if(keys[KEY_A]){
         camera->moveLeft(speedBoost);

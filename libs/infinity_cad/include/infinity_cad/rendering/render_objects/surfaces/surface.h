@@ -13,6 +13,9 @@ enum SurfaceAxis{
     VERTICAL, HORIZONTAL
 };
 
+enum MatrixMajor{
+    COLUMN, ROW
+};
 
 class Surface : public RenderObject{
 private:
@@ -74,6 +77,8 @@ public:
 
     static int uDivisionCount;
     static int vDivisionCount;
+
+    MatrixMajor matrixMajor;
 
     /*
      * Creates a Surface made of nxm Bezier Patches connected with C0.

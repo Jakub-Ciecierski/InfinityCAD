@@ -77,6 +77,9 @@ public:
     void colapsSelectedPoints_NoRemove(float dist = 1.0f);
     void colapsSelectedPoints();
 
+    void rotateSelectedItems(float degree,
+                             glm::vec3 axis);
+
     void TEST_BSPLINE();
     void TEST_PERFORMANCE();
     void TEST_BSPLINE_INTERP();

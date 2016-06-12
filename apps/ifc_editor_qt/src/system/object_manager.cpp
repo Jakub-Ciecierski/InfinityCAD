@@ -9,6 +9,8 @@
 #include <system/serialization/serialization_scene.h>
 #include <system/serialization/deserialization_scene.h>
 
+#include <infinity_cad/geometry/quaternion.h>
+
 using namespace std;
 using namespace ifc;
 
@@ -521,6 +523,31 @@ void ObjectManager::loadSystem(std::string filepath){
 
 SceneTree* ObjectManager::getSceneTree(){
     return this->sceneTree;
+}
+
+void ObjectManager::rotateSelectedItems(float degree, glm::vec3 axis){
+    //if(degree <= 0.001) return;
+    const vector<Item*>& items = sceneTree->getSelectedItems(RB_POINT_NAME);
+    glm::vec3 avgPosition;
+    int n = items.size();
+
+    for(unsigned int i = 0; i < n; i++){
+        avgPosition += items[i]->object->getPosition();
+    }
+    avgPosition /= n;
+
+    avgPosition *= axis;
+    avgPosition = glm::normalize(avgPosition);
+
+    for(unsigned int i = 0; i < n; i++){
+        RenderObject* object = items[i]->object;
+        glm::vec3 pos = Quaternion::rotate(object->getPosition(),
+                                           avgPosition, degree);
+        if(isnan(pos.x) || isnan(pos.y) || isnan(pos.z)){
+            return;
+        }
+        object->moveTo(pos);
+    }
 }
 
 void ObjectManager::colapsSelectedPoints_NoRemove(float dist){

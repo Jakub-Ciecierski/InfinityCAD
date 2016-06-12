@@ -85,31 +85,58 @@ void SerializationScene::saveSurfaces(stringstream& ss, const ObjectType& type,
                                       const vector<RenderObject*>& surfaces){
     for(unsigned int i = 0; i < surfaces.size(); i++){
         Surface* surface = static_cast<Surface*>(surfaces[i]);
+        MatrixMajor matrixMajor = surface->matrixMajor;
+
         const Matrix<ifc::Point*>& points = surface->getMatrixPoints();
 
         ss << type.toString() << " " << surface->getName() << std::endl;
+        if(matrixMajor == MatrixMajor::ROW){
+            int n = points.rowCount();
+            int m = points.columnCount();
+            ss << n << " " << m << " ";
+            if(type == OBJ_TYPE_SURFACE_BEZIER_RECT ||
+                    type == OBJ_TYPE_SURFACE_BSPLINE_RECT){
+                ss << RECT_SURFACE_STR;
+            }else if(type == OBJ_TYPE_SURFACE_BEZIER_CYLIND||
+                     type == OBJ_TYPE_SURFACE_BSPLINE_CYLIND){
+                // Vertical cylinder mode is hardcoded !!!
+                ss << CYLIND_SURFACE_STR << " " << HORIZONTAL_CYLIND_SURFACE_STR;
+            }
+            ss << std::endl;
 
-        int n = points.rowCount();
-        int m = points.columnCount();
-        ss << n << " " << m << " ";
-        if(type == OBJ_TYPE_SURFACE_BEZIER_RECT ||
-                type == OBJ_TYPE_SURFACE_BSPLINE_RECT){
-            ss << RECT_SURFACE_STR;
-        }else if(type == OBJ_TYPE_SURFACE_BEZIER_CYLIND||
-                 type == OBJ_TYPE_SURFACE_BSPLINE_CYLIND){
-            // Vertical cylinder mode is hardcoded !!!
-            ss << CYLIND_SURFACE_STR << " " << HORIZONTAL_CYLIND_SURFACE_STR;
-        }
-        ss << std::endl;
-
-        for(int rowIndex = 0; rowIndex < m; rowIndex++){
-            const std::vector<ifc::Point*>& row = points.getColumn(rowIndex);
-            for(int columnIndex = 0; columnIndex < row.size(); columnIndex++){
-                int id = this->getPointIndex(points[columnIndex][rowIndex]);
-                if(id == NO_SOLUTION){
-                    throw new std::invalid_argument("Wrong point serialization");
+            for(int rowIndex = 0; rowIndex < m; rowIndex++){
+                const std::vector<ifc::Point*>& row = points.getColumn(rowIndex);
+                for(int columnIndex = 0; columnIndex < row.size(); columnIndex++){
+                    int id = this->getPointIndex(points[columnIndex][rowIndex]);
+                    if(id == NO_SOLUTION){
+                        throw new std::invalid_argument("Wrong point serialization");
+                    }
+                    ss << id << " ";
                 }
-                ss << id << " ";
+            }
+        }else{
+            int n = points.rowCount();
+            int m = points.columnCount();
+            ss << m << " " << n << " ";
+            if(type == OBJ_TYPE_SURFACE_BEZIER_RECT ||
+                    type == OBJ_TYPE_SURFACE_BSPLINE_RECT){
+                ss << RECT_SURFACE_STR;
+            }else if(type == OBJ_TYPE_SURFACE_BEZIER_CYLIND||
+                     type == OBJ_TYPE_SURFACE_BSPLINE_CYLIND){
+                // Vertical cylinder mode is hardcoded !!!
+                ss << CYLIND_SURFACE_STR << " " << HORIZONTAL_CYLIND_SURFACE_STR;
+            }
+            ss << std::endl;
+
+            for(int rowIndex = 0; rowIndex < n; rowIndex++){
+                const std::vector<ifc::Point*>& row = points[rowIndex];
+                for(int columnIndex = 0; columnIndex < row.size(); columnIndex++){
+                    int id = this->getPointIndex(points[rowIndex][columnIndex]);
+                    if(id == NO_SOLUTION){
+                        throw new std::invalid_argument("Wrong point serialization");
+                    }
+                    ss << id << " ";
+                }
             }
         }
         ss << std::endl;

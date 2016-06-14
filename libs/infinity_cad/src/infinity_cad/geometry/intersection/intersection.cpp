@@ -80,8 +80,8 @@ const TracePoint& Intersection::getLastPoint(){
 TracePoint Intersection::getInitialPoint(){
     int swarmSize = 250;
     double maxVelocity = 0.2f;
-    int maximumIterations = 6000;
-
+    //int maximumIterations = 6000;
+    int maximumIterations = 500;
     int threadCount = threading::getNumberOfCores();
     if (threadCount < 1) threadCount = 4;
 
@@ -90,14 +90,11 @@ TracePoint Intersection::getInitialPoint(){
                           surface1, surface2);
 
     PSO* pso = psoFactory.createPSO();
-
     pso->start();
 
     ParamPSOObject* psoObject = (ParamPSOObject*)pso->getBestPSOObject();
-
     glm::vec3 pos1 = surface1->compute(psoObject->param1.x,
                                        psoObject->param1.y);
-
     glm::vec3 pos2 = surface2->compute(psoObject->param2.x,
                                        psoObject->param2.y);
 
@@ -122,7 +119,7 @@ void Intersection::runTrace(){
     vec4 nextPoint;
 
     int i = 0;
-    const int MAX_ITER_DEBUG = 100;
+    const int MAX_ITER_DEBUG = 100000;
     do{
         nextPoint = findNextTraceNewton();
 
@@ -145,7 +142,6 @@ void Intersection::runTrace(){
 
 vec4 Intersection::findNextTraceNewton(){
     // Find new point
-    //vec4 oldPoint = tracePoints[tracePoints.size() - 1].params;
     const TracePoint& tracePoint = getLastPoint();
     vec4 oldPoint = tracePoint.params;
 
@@ -166,6 +162,10 @@ vec4 Intersection::findNextTraceNewton(){
 }
 
 vec4 Intersection::newtonStep(const glm::vec4& params){
+    const TracePoint& lastPoint = getLastPoint();
+    vec4 lastParam = lastPoint.params;
+    vec3 P0 = surface1->compute(lastParam.x, lastParam.y);
+
     vec4 result;
     mat4 J;
     vec4 F;
@@ -188,34 +188,7 @@ vec4 Intersection::newtonStep(const glm::vec4& params){
     //Nq = normalize(Nq);
 
     t = normalize(cross(Np, Nq));
-    //t = normalize(cross(Nq, Np));
-/*
-    F.x = P.x - Q.x;
-    F.y = P.y - Q.y;
-    F.z = P.z - Q.z;
-    F.w = ifc::dot(P-P, t) - distance;
 
-    // zeros left for clarity
-    J[0].x = Pu.x - 0;
-    J[0].y = Pu.y - 0;
-    J[0].z = Pu.z - 0;
-    J[0].w = ifc::dot(t, Pu);
-
-    J[1].x = Pv.x - 0;
-    J[1].y = Pv.y - 0;
-    J[1].z = Pv.z - 0;
-    J[1].w = ifc::dot(t, Pv);
-
-    J[2].x = 0 - Qu.x;
-    J[2].y = 0 - Qu.y;
-    J[2].z = 0 - Qu.z;
-    J[2].w = 0;
-
-    J[3].x = 0 - Qv.x;
-    J[3].y = 0 - Qv.y;
-    J[3].z = 0 - Qv.z;
-    J[3].w = 0;
-*/
     int r = 1;
     if(currentTraceStatus == TraceStatus::BACKWARDS)
         r = -1;
@@ -224,7 +197,8 @@ vec4 Intersection::newtonStep(const glm::vec4& params){
     F.x = r*(P.x - Q.x);
     F.y = r*(P.y - Q.y);
     F.z = r*(P.z - Q.z);
-    F.w = ifc::dot(P-P, t) - distance;
+    //F.w = ifc::dot(P-P, t) - distance;
+    F.w = ifc::dot(P-P0, t) - distance;
 
     // zeros left for clarity
     J[0].x = r*Pu.x - 0;
@@ -246,33 +220,7 @@ vec4 Intersection::newtonStep(const glm::vec4& params){
     J[3].y = r*(0 - Qv.y);
     J[3].z = r*(0 - Qv.z);
     J[3].w = 0;
- /*
-    F.x = Q.x - P.x;
-    F.y = Q.y - P.y;
-    F.z = Q.z - P.z;
-    F.w = ifc::dot(Q-Q, t) - distance;
 
-    // zeros left for clarity
-    J[0].x = 0 - Pu.x;
-    J[0].y = 0 - Pu.x;
-    J[0].z = 0 - Pu.x;
-    J[0].w = ifc::dot(t, Pu);
-
-    J[1].x = 0 - Pv.x;
-    J[1].y = 0 - Pv.x;
-    J[1].z = 0 - Pv.x;
-    J[1].w = ifc::dot(t, Pv);
-
-    J[2].x = Qu.x - 0;
-    J[2].y = Qu.y - 0;
-    J[2].z = Qu.z - 0;
-    J[2].w = 0;
-
-    J[3].x = Qv.x - 0;
-    J[3].y = Qv.y - 0;
-    J[3].z = Qv.z - 0;
-    J[3].w = 0;
-*/
     J = glm::inverse(J);
     result = params - J*F;
 

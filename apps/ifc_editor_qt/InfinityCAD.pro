@@ -14,7 +14,7 @@ PRE_TARGETDEPS += .buildfile
 
 QT       += core gui opengl widgets
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 
 CONFIG += c++11 silent
 QMAKE_CXXFLAGS += -std=c++11 -g
@@ -66,7 +66,11 @@ SOURCES += src/glwidget.cpp \
     src/dialogs/surface_c0_dialog.cpp \
     src/widgets/scene_list/context_menus/scm_surfacec0.cpp \
     src/system/serialization/serialization_scene.cpp \
-    src/system/serialization/deserialization_scene.cpp
+    src/system/serialization/deserialization_scene.cpp \
+    src/widgets/scene_list/context_menus/scm_surfaces.cpp \
+    src/plot/qcustomplot.cpp \
+    src/dialogs/intersectiondialog.cpp \
+    src/plot/plot_style.cpp
 
 HEADERS  += build/ui/ui_mainwindow.h \
     src/context_menus/context_menu.h \
@@ -99,7 +103,11 @@ HEADERS  += build/ui/ui_mainwindow.h \
     src/dialogs/surface_c0_dialog.h \
     src/widgets/scene_list/context_menus/scm_surfacec0.h \
     src/system/serialization/serialization_scene.h \
-    src/system/serialization/deserialization_scene.h
+    src/system/serialization/deserialization_scene.h \
+    src/widgets/scene_list/context_menus/scm_surfaces.h \
+    src/plot/qcustomplot.h \
+    src/dialogs/intersectiondialog.h \
+    src/plot/plot_style.h
 
 ##############################
 
@@ -117,7 +125,8 @@ UI_DIR = build/ui
 FORMS    += mainwindow.ui \
     objects_dialog.ui \
     src/dialogs/surface_settings_dialog.ui \
-    src/dialogs/surface_c0_dialog.ui
+    src/dialogs/surface_c0_dialog.ui \
+    src/dialogs/intersectiondialog.ui
 
 RESOURCES += resources/icons.qrc \
     qdarkstyle/style.qrc
@@ -167,6 +176,27 @@ else:unix: LIBS += -L$$PWD/../../dependencies/lib/strings/ -lstrings
 INCLUDEPATH += $$PWD/../../dependencies/include/strings
 DEPENDPATH += $$PWD/../../dependencies/include/strings
 LIBS += -Wl,-rpath $$PWD/../../dependencies/lib/strings/
+
+# Parallel
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../dependencies/lib/parallel/release/ -lparallel
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../dependencies/lib/parallel/debug/ -lparallel
+else:unix: LIBS += -L$$PWD/../../dependencies/lib/parallel/ -lparallel
+INCLUDEPATH += $$PWD/../../dependencies/include/parallel
+DEPENDPATH += $$PWD/../../dependencies/include/parallel
+
+# PSO
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../dependencies/lib/pso/release/ -lpso
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../dependencies/lib/pso/debug/ -lpso
+else:unix: LIBS += -L$$PWD/../../dependencies/lib/pso/ -lpso
+INCLUDEPATH += $$PWD/../../dependencies/include/pso
+DEPENDPATH += $$PWD/../../dependencies/include/pso
+
+# Time
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../dependencies/lib/time/release/ -ltime
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../dependencies/lib/time/debug/ -ltime
+else:unix: LIBS += -L$$PWD/../../dependencies/lib/time/ -ltime
+INCLUDEPATH += $$PWD/../../dependencies/include/time
+DEPENDPATH += $$PWD/../../dependencies/include/time
 
 # Uncomment
 #LIBS += -L /opt/cuda/lib64

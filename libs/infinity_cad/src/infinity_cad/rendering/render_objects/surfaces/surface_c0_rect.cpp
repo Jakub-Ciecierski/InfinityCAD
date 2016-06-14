@@ -64,6 +64,8 @@ void SurfaceC0Rect::buildPatchesFromMatrix(const Matrix<ifc::Point*>& points){
             patches[i][j] = patch;
         }
     }
+
+    allPointsMatrix = points;
 }
 
 Matrix<ifc::Point*> SurfaceC0Rect::getMatrixFormOfAllPatches(){

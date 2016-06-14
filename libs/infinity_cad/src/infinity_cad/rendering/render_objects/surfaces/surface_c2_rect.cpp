@@ -42,6 +42,8 @@ SurfaceC2Rect::SurfaceC2Rect(SceneID id, std::string name,
     update();
 
     objectType = OBJ_TYPE_SURFACE_BSPLINE_RECT;
+
+    allPointsMatrix = *deboorPoints;
 }
 
 SurfaceC2Rect::~SurfaceC2Rect(){

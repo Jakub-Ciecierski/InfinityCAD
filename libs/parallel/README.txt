@@ -1,0 +1,1 @@
+Parallel provides convenient interface for CPU parallel computations

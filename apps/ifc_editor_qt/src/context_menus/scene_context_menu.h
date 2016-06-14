@@ -14,6 +14,9 @@ private:
 
     std::map<std::string, SceneCMHandler> handlerMap;
 
+protected:
+    bool runForOneSelectedItem;
+
 public:
     SceneContextMenu();
 

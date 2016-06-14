@@ -10,9 +10,16 @@
 #include <system/serialization/deserialization_scene.h>
 
 #include <infinity_cad/geometry/quaternion.h>
+#include <infinity_cad/geometry/intersection/intersection.h>
+
+#include <plot/qcustomplot.h>
+#include "plot/plot_style.h"
+#include <dialogs/intersectiondialog.h>
+#include <ui_intersectiondialog.h>
 
 using namespace std;
 using namespace ifc;
+using namespace QCP;
 
 //--------------------------//
 //  PRIVATE
@@ -632,6 +639,63 @@ void ObjectManager::colapsSelectedPoints(){
 
     sceneTree->addChildItem(surfaceItem1, newPoint);
     sceneTree->addChildItem(surfaceItem2, newPoint);
+}
+
+void ObjectManager::runSurfaceIntersection(){
+    EditorWindow& window = EditorWindow::getInstance();
+
+    std::vector<RenderObject*> objects
+            = sceneTree->getSelectedObjects();
+    if(objects.size() != 2){
+        window.showInfoBox("Intersection", "Selected 2 surfaces");
+        return;
+    }
+    const ObjectType& type1 = objects[0]->getType();
+    const ObjectType& type2 = objects[1]->getType();
+    if(!type1.isSurface() || !type2.isSurface()){
+        window.showInfoBox("Intersection", "Selected 2 surfaces");
+        return;
+    }
+
+    Surface* surface1 = static_cast<Surface*>(objects[0]);
+    Surface* surface2 = static_cast<Surface*>(objects[1]);
+
+    std::string distanceStr = "0.001";
+    distanceStr = window.showInputBox("Distance",
+                                      "Input Distance Approximation",
+                                      distanceStr);
+    float distance = stof(distanceStr);
+    std::cout << "Distance: " << distance << std::endl;
+    Intersection intersection(surface1, surface2, this->scene, distance);
+    intersection.start();
+
+    const std::vector<TracePoint>& tracePoints = intersection.getTracePoints();
+
+    int size = tracePoints.size();
+    QVector<double> x1(size);
+    QVector<double> y1(size);
+
+    QVector<double> x2(size);
+    QVector<double> y2(size);
+    for(int i = 0; i < size; i++){
+        glm::vec4 params = tracePoints[i].params;
+        x1[i] = params.x;
+        y1[i] = params.y;
+
+        x2[i] = params.z;
+        y2[i] = params.w;
+    }
+
+    IntersectionDialog intersectionDialog;
+
+    Ui::IntersectionDialog* ui = intersectionDialog.getUI();
+    QCustomPlot* customPlot1 = ui->plot1;
+    QCustomPlot* customPlot2 = ui->plot2;
+
+    createPlot(customPlot1, x1, y1);
+    createPlot(customPlot2, x2, y2);
+
+    intersectionDialog.exec();
 }
 
 //--------------------------//

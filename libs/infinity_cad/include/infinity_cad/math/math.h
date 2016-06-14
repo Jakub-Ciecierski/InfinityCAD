@@ -14,7 +14,9 @@ namespace ifc {
 
     float dot(const glm::vec3 &v1, const glm::vec3 &v2);
 
+    float euclideanDistance(const glm::vec4& v1, const glm::vec4& v2);
     float euclideanDistance(const glm::vec3& v1, const glm::vec3& v2);
+    float euclideanDistance(const glm::vec2& v1, const glm::vec2& v2);
 
     float angleToRadians(float angle);
 
@@ -33,6 +35,9 @@ namespace ifc {
     float getMultplicationValue(const glm::vec4& v1,
                                 const glm::mat4& m,
                                 const glm::vec4& v2);
+
+    void printVec3(const glm::vec3& vec);
+    void printVec4(const glm::vec4& vec);
 }
 
 #endif //IC_MATH_H

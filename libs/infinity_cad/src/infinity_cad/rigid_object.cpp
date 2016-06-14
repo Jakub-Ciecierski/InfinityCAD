@@ -129,7 +129,10 @@ void RigidObject::moveTo(float x, float y, float z) {
 }
 
 void RigidObject::moveTo(const vec3& pos) {
-    translate(-position.x + pos.x, -position.y + pos.y, -position.z + pos.z);
+    float x = -position.x + pos.x;
+    float y = -position.y + pos.y;
+    float z = -position.z + pos.z;
+    translate(x, y, z);
 }
 
 void RigidObject::moveTo(const RigidObject * toBody) {

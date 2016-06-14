@@ -15,3 +15,6 @@ MAKE_EXTERNAL_RULE[1]=install
 
 MAKE_EXTERNAL[2]=../../ifc_gpu/make/
 MAKE_EXTERNAL_RULE[2]=install
+
+MAKE_EXTERNAL[3]=../../pso/make/
+MAKE_EXTERNAL_RULE[3]=install

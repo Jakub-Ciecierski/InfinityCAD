@@ -66,7 +66,8 @@ void EditorWindow::showInfoBox(string title, string text){
                           QMessageBox::Yes|QMessageBox::No);
 }
 
-string EditorWindow::showInputBox(string title, string text){
+string EditorWindow::showInputBox(string title, string text,
+                                  std::string initText){
     QInputDialog inputDialog;
     inputDialog.setOptions(QInputDialog::NoButtons);
 
@@ -74,7 +75,7 @@ string EditorWindow::showInputBox(string title, string text){
     QString reply =  inputDialog.getText(this ,QString::fromStdString(title),
                                         QString::fromStdString(text),
                                         QLineEdit::Normal,
-                                        QDir::home().dirName(), &ok);
+                                        QString::fromStdString(initText), &ok);
     if (ok && !reply.isEmpty())
     {
         return reply.toStdString();

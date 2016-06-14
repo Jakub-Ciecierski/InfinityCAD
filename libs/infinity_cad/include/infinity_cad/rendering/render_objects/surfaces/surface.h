@@ -80,6 +80,8 @@ public:
 
     MatrixMajor matrixMajor;
 
+    const glm::mat4* VPMatrix;
+
     /*
      * Creates a Surface made of nxm Bezier Patches connected with C0.
      */
@@ -88,6 +90,10 @@ public:
             SurfaceAxis surfaceAxis = SurfaceAxis::HORIZONTAL);
 
     ~Surface();
+
+    virtual glm::vec3 compute(float u, float v);
+    glm::vec3 computeDU(float u, float v);
+    glm::vec3 computeDV(float u, float v);
 
     virtual void render(const glm::mat4 &VP) override;
     virtual void render(const glm::mat4 &VP, const Color &color) override;

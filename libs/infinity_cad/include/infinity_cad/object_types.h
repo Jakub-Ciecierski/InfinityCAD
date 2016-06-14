@@ -47,6 +47,13 @@ public:
         }
     }
 
+    bool isSurface() const{
+        return (name == OBJ_NAME_SURFACE_BEZIER_CYLIND ||
+                name == OBJ_NAME_SURFACE_BEZIER_RECT ||
+                name == OBJ_NAME_SURFACE_BSPLINE_RECT ||
+                name == OBJ_NAME_SURFACE_BSPLINE_CYLIND);
+    }
+
     bool operator==(const ObjectType& t) const{
         return (t.name == this->name);
     }

@@ -2,6 +2,7 @@
 // Created by jakub on 4/16/16.
 //
 
+#include <iostream>
 #include "infinity_cad/math/math.h"
 
 using namespace glm;
@@ -12,6 +13,20 @@ float ifc::dot(const vec3& v1, const vec3& v2){
     return dotValue;
 }
 
+float ifc::euclideanDistance(const vec4& v1, const vec4& v2){
+    float distance = 0;
+
+    float dx = v1.x - v2.x;
+    float dy = v1.y - v2.y;
+    float dz = v1.z - v2.z;
+    float dw = v1.w - v2.w;
+    distance = dx*dx + dy*dy + dz*dz + dw*dw;
+
+    distance = sqrt(distance);
+
+    return distance;
+}
+
 float ifc::euclideanDistance(const vec3& v1, const vec3& v2){
     float distance = 0;
 
@@ -19,6 +34,18 @@ float ifc::euclideanDistance(const vec3& v1, const vec3& v2){
     float dy = v1.y - v2.y;
     float dz = v1.z - v2.z;
     distance = dx*dx + dy*dy + dz*dz;
+
+    distance = sqrt(distance);
+
+    return distance;
+}
+
+float ifc::euclideanDistance(const vec2& v1, const vec2& v2){
+    float distance = 0;
+
+    float dx = v1.x - v2.x;
+    float dy = v1.y - v2.y;
+    distance = dx*dx + dy*dy;
 
     distance = sqrt(distance);
 
@@ -93,4 +120,13 @@ float ifc::getMultplicationValue(const vec4& v1, const mat4& m, const vec4& v2){
     float val = res.x + res.y + res.z + res.w;
 
     return val;
+}
+
+void ifc::printVec3(const glm::vec3& vec){
+    std::cout << vec.x << ", " << vec.y << ", " << vec.z << std::endl;
+}
+
+void ifc::printVec4(const glm::vec4& vec){
+    std::cout
+    << vec.x << ", " << vec.y << ", " << vec.z << ", " << vec.w << std::endl;
 }

@@ -97,7 +97,7 @@ file(GLOB_RECURSE FILES
         ${LIBS_PATH}/googletest/include/*.h
 )
 
-set(SPAM )
+set(SPAM libs/infinity_cad/src/infinity_cad/geometry/intersection/intersection.cpp libs/infinity_cad/include/infinity_cad/geometry/intersection/intersection.h libs/infinity_cad/src/infinity_cad/geometry/intersection/pso/pso_factory.cpp libs/infinity_cad/include/infinity_cad/geometry/intersection/pso/pso_factory.h libs/infinity_cad/src/infinity_cad/geometry/intersection/pso/param_pso_object.cpp libs/infinity_cad/include/infinity_cad/geometry/intersection/pso/param_pso_object.h libs/infinity_cad/src/infinity_cad/geometry/intersection/pso/intersection_fitness.cpp libs/infinity_cad/include/infinity_cad/geometry/intersection/pso/intersection_fitness.h libs/infinity_cad/src/infinity_cad/geometry/intersection/pso/intersection_decoder.cpp libs/infinity_cad/include/infinity_cad/geometry/intersection/pso/intersection_decoder.h)
 
 set(CMAKE_PREFIX_PATH $ENV{HOME}/ide/qt/5.5/gcc_64/)
 

@@ -80,6 +80,8 @@ public:
     void rotateSelectedItems(float degree,
                              glm::vec3 axis);
 
+    void runSurfaceIntersection();
+
     void TEST_BSPLINE();
     void TEST_PERFORMANCE();
     void TEST_BSPLINE_INTERP();

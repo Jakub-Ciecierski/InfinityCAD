@@ -22,7 +22,8 @@ public:
 
     bool showQuestionBox(std::string title, std::string text);
     void showInfoBox(std::string title, std::string text);
-    std::string showInputBox(std::string title, std::string text);
+    std::string showInputBox(std::string title, std::string text,
+                             std::string initText = "sample");
 protected:
     void closeEvent (QCloseEvent *event);
 

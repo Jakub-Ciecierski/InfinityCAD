@@ -76,3 +76,11 @@ SceneCMHandler SCM_SWITCH_SPLINE_BASIS_HANDLER(
     BSpline* bSpline = static_cast<BSpline*>(item->object);
     bSpline->setDrawBezierBasis(!(bSpline->isDrawBezierBasis()));
 });
+
+SceneCMHandler SCM_INTERSECTION_SURFACE_HANDLER(
+        "Find Intersection",
+        [](Item* item){
+   ObjectManager& objManager = ObjectManager::getInstance();
+   objManager.runSurfaceIntersection();
+
+});

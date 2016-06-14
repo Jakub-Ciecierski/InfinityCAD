@@ -435,6 +435,8 @@ float Surface::getMaximumPolygonLength() {
 }
 
 void Surface::draw(const glm::mat4& VP, const Color& color) {
+    VPMatrix = &VP;
+
     float u_min = 0;
     float u_max = 1;
     float v_min = 0;
@@ -467,6 +469,74 @@ void Surface::draw(const glm::mat4& VP, const Color& color) {
 //  PUBLIC
 //-----------------------//
 
+glm::vec3 Surface::compute(float u, float v){
+    if(u < 0) u = 0;
+    if(v < 0) v = 0;
+    if(u >= 1.0) u = 0.999f;
+    if(v >= 1.0) v = 0.999f;
+
+    int j = floor(u * m);
+    int i = floor(v * n);
+
+    const BicubicBezierPatch* patch = patches[i][j];
+
+    vec4 Bu = cubicBernsteinVector(u);
+    vec4 Bv = cubicBernsteinVector(v);
+
+    float x = ifc::getMultplicationValue(Bu, patch->getX(), Bv);
+    float y = ifc::getMultplicationValue(Bu, patch->getY(), Bv);
+    float z = ifc::getMultplicationValue(Bu, patch->getZ(), Bv);
+
+    vec3 point(x, y, z);
+
+    return point;
+}
+
+glm::vec3 Surface::computeDU(float u, float v){
+    if(u < 0) u = 0;
+    if(v < 0) v = 0;
+    if(u >= 1.0) u = 0.999f;
+    if(v >= 1.0) v = 0.999f;
+
+    int j = floor(u * m);
+    int i = floor(v * n);
+
+    const BicubicBezierPatch* patch = patches[i][j];
+
+    vec4 Bu = cubicBernsteinDerivative(u);
+    vec4 Bv = cubicBernsteinVector(v);
+
+    float x = ifc::getMultplicationValue(Bu, patch->getX(), Bv);
+    float y = ifc::getMultplicationValue(Bu, patch->getY(), Bv);
+    float z = ifc::getMultplicationValue(Bu, patch->getZ(), Bv);
+
+    vec3 point(x, y, z);
+
+    return point;
+}
+
+glm::vec3 Surface::computeDV(float u, float v){
+    if(u < 0) u = 0;
+    if(v < 0) v = 0;
+    if(u >= 1.0) u = 0.999f;
+    if(v >= 1.0) v = 0.999f;
+
+    int j = floor(u * m);
+    int i = floor(v * n);
+
+    const BicubicBezierPatch* patch = patches[i][j];
+
+    vec4 Bu = cubicBernsteinVector(u);
+    vec4 Bv = cubicBernsteinDerivative(v);
+
+    float x = ifc::getMultplicationValue(Bu, patch->getX(), Bv);
+    float y = ifc::getMultplicationValue(Bu, patch->getY(), Bv);
+    float z = ifc::getMultplicationValue(Bu, patch->getZ(), Bv);
+
+    vec3 point(x, y, z);
+
+    return point;
+}
 
 void Surface::render(const glm::mat4 &VP) {
     draw(VP, color);
@@ -540,3 +610,4 @@ bool Surface::replacePoint(ifc::Point *src, ifc::Point *dest) {
 
     return false;
 }
+

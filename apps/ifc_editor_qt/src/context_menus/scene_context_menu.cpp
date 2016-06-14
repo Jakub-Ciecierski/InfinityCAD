@@ -3,7 +3,7 @@
 
 SceneContextMenu::SceneContextMenu()
 {
-
+    runForOneSelectedItem = false;
 }
 
 void SceneContextMenu::addAction(std::string name){
@@ -38,6 +38,8 @@ void SceneContextMenu::handle(const QAction* a,
         SceneCMHandler handler = handlerMap[actionString];
 
         handler.execute(item);
+
+        if(runForOneSelectedItem) return;
     }
 
 }

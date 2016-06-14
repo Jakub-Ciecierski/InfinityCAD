@@ -93,3 +93,14 @@ vec4 cubicBernsteinVector(float t){
 
     return vec4(B0, B1, B2, B3);
 }
+
+glm::vec4 cubicBernsteinDerivative(float t){
+    float t2 = t*t;
+
+    float B0 = -3 + 6*t - 3*t2;
+    float B1 = 3 - 12*t + 9*t2;
+    float B2 = 6*t - 9*t2;
+    float B3 = 3*t2;
+
+    return vec4(B0, B1, B2, B3);
+}

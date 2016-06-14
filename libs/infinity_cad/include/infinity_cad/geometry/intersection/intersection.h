@@ -55,6 +55,7 @@ public:
     ~Intersection();
 
     const std::vector<TracePoint>& getTracePoints();
+    std::vector<glm::vec3> getComputedPoints();
 
     void start();
 };

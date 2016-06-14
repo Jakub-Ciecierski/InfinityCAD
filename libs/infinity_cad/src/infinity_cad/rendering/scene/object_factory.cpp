@@ -253,3 +253,14 @@ SurfaceC2Cylind* ObjectFactory::createSurfaceC2Cylind(std::string name,
 
     return surface;
 }
+
+IntersectionCurve* ObjectFactory::createIntersectionCurve(
+        std::string name, std::vector<glm::vec3>& vertices,
+        Surface* surface1, Surface* surface2){
+    SceneID id = sceneIDFactory.createNextAvailableID();
+
+    IntersectionCurve* curve = new IntersectionCurve(id, name, vertices,
+                                                     surface1, surface2);
+
+    return curve;
+}

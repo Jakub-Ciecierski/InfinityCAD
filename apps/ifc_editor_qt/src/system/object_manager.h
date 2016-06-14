@@ -8,6 +8,7 @@
 #include <system/system_binding/bspline_interp_binding.h>
 #include <string>
 #include <math/matrix.h>
+#include <infinity_cad/rendering/scene/object_factory.h>
 
 class ObjectManager
 {
@@ -34,6 +35,10 @@ public:
     Item * addTorus(std::string name);
     Item * addPoint(std::string name);
     Item * addBezierCurve(std::string name);
+
+    Item* addIntersectionCurve(std::string name,
+                               std::vector<glm::vec3>& vertices,
+                               Surface* surface1, Surface* surface2);
 
     Item* addSurfaceC0Rect(std::string name);
     Item* addSurfaceC0Rect(std::string name,

@@ -91,6 +91,20 @@ Item * ObjectManager::addBezierCurve(string name){
     return bezierItem;
 }
 
+Item* ObjectManager::addIntersectionCurve(std::string name,
+                                          std::vector<glm::vec3>& vertices,
+                                          Surface* surface1, Surface* surface2){
+    ObjectFactory& objectFactory = ObjectFactory::getInstance();
+    RenderObject * p
+            = objectFactory.createIntersectionCurve(name, vertices,
+                                                    surface1, surface2);
+
+    this->scene->addRenderObject(p);
+    Item* bezierItem = sceneTree->addObject(p, RB_INTERSECTION_CURVE_TYPE);
+
+    return bezierItem;
+}
+
 Item* ObjectManager::addSurfaceC0Rect(string name){
     ObjectFactory& objectFactory = ObjectFactory::getInstance();
     SurfaceC0Dialog dialog;
@@ -670,7 +684,11 @@ void ObjectManager::runSurfaceIntersection(){
     intersection.start();
 
     const std::vector<TracePoint>& tracePoints = intersection.getTracePoints();
+    std::vector<glm::vec3> computedPoints = intersection.getComputedPoints();
+    std::string name = surface1->getName() + "_vs_" + surface2->getName();
+    this->addIntersectionCurve(name, computedPoints, surface1, surface2);
 
+    // Plots
     int size = tracePoints.size();
     QVector<double> x1(size);
     QVector<double> y1(size);

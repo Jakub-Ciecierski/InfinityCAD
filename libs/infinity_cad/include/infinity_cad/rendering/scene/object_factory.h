@@ -22,6 +22,7 @@
 #include <infinity_cad/rendering/render_objects/surfaces/surface_c0_cylind.h>
 #include <infinity_cad/rendering/render_objects/surfaces/surface_c2_rect.h>
 #include <infinity_cad/rendering/render_objects/surfaces/surface_c2_cylind.h>
+#include <infinity_cad/rendering/render_objects/curves/intersection_curve.h>
 #include "infinity_cad/rendering/scene/scene_id_factory.h"
 #include "scene.h"
 
@@ -109,6 +110,11 @@ public:
 
     SurfaceC2Cylind* createSurfaceC2Cylind(std::string name,
                                            Matrix<ifc::Point*> points);
+
+    IntersectionCurve* createIntersectionCurve(std::string name,
+                                               std::vector<glm::vec3>& vertices,
+                                               Surface* surface1,
+                                               Surface* surface2);
 };
 
 

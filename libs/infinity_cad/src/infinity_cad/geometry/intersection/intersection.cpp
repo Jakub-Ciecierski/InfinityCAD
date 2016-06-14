@@ -253,6 +253,19 @@ const std::vector<TracePoint>& Intersection::getTracePoints(){
     return this->tracePoints;
 }
 
+std::vector<glm::vec3> Intersection::getComputedPoints(){
+    int size = tracePointsQueue.size();
+    std::vector<glm::vec3> points(size);
+
+    for(int i = 0; i < size; i++){
+        TracePoint& tp = tracePointsQueue[i];
+        glm::vec3 point = surface1->compute(tp.params.x, tp.params.y);
+        points[i] = point;
+    }
+
+    return points;
+}
+
 void Intersection::start(){
     TracePoint initPoint = getInitialPoint();
 

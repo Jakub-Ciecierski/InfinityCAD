@@ -267,9 +267,15 @@ std::vector<glm::vec3> Intersection::getComputedPoints(){
 }
 
 void Intersection::start(){
+
     TracePoint initPoint = getInitialPoint();
-
     tracePointsQueue.push_back(initPoint);
-
     runTrace();
+
+
+    /*
+    vec3 v = surface1->compute(0.20, 0.40f);
+    point1_DEBUG->moveTo(v);
+    point2_DEBUG->moveTo(v);
+*/
 }

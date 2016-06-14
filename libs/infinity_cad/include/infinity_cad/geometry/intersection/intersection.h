@@ -5,7 +5,6 @@
 #ifndef IC_INTERSECTION_H
 #define IC_INTERSECTION_H
 
-
 #include <infinity_cad/rendering/render_objects/surfaces/surface.h>
 #include <infinity_cad/rendering/scene/scene.h>
 #include <deque>

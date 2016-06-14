@@ -11,7 +11,7 @@ IntersectionCurve::IntersectionCurve(SceneID id, std::string name,
                                      std::vector<glm::vec3>& vertices,
                                      Surface *surface1, Surface *surface2) :
         RenderObject(id, name), vertices_vec3(vertices),
-        surface1(surface1), surface2(surface1){
+        surface1(surface1), surface2(surface2){
     initVertices();
     initEdges();
 

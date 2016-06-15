@@ -4,6 +4,7 @@
 
 #include <infinity_cad/rendering/render_objects/surfaces/surface_c2_rect.h>
 #include <infinity_cad/rendering/scene/object_factory.h>
+#include <infinity_cad/geometry/polynomials/bspline_basis.h>
 
 using namespace glm;
 using namespace std;
@@ -91,6 +92,172 @@ void SurfaceC2Rect::build(){
 //  PUBLIC
 //-----------------------//
 
+/*
+ * Only works for nxn patches
+ */
+
+glm::vec3 SurfaceC2Rect::compute(float u, float v) {
+    std::vector<float> knotVectorU;
+    std::vector<float> knotVectorV;
+    const int DEGREE = 3;
+    int n = deboorPoints->rowCount();
+    int m = deboorPoints->columnCount();
+
+    int d = DEGREE;
+    int knotCountU = n + d + 1;
+    int knotCountV = m + d + 1;
+
+    //float du = 1.0f / (float)(knotCountU - 2*DEGREE - 1);
+    //float dv = 1.0f / (float)(knotCountV - 2*DEGREE - 1);
+    float du = 1.0f / (float)(knotCountU - 1);
+    float dv = 1.0f / (float)(knotCountV - 1);
+    float uknot = 0;
+    float vknot = 0;
+    for(int i = 0; i < knotCountU; i++){
+        knotVectorU.push_back(uknot);
+        //if(i > 2 && i < (knotCountU - 1 - 3)) uknot += du;
+        uknot += du;
+    }
+    for(int i = 0; i < knotCountV; i++){
+        knotVectorV.push_back(vknot );
+        //if(i > 2 && i < (knotCountV - 1 - 3)) vknot += dv;
+        vknot += dv;
+    }
+    //float umin = knotVectorU[4];
+    float umin = knotVectorU[3];
+    //float umax = knotVectorU[knotCountU - 1 - 4];
+    float umax = knotVectorU[knotCountU - 1 - 3];
+    float ru = umax - umin;
+    u = ru * u + umin;
+
+    //float vmin = knotVectorV[4];
+    float vmin = knotVectorV[3];
+    //float vmax = knotVectorV[knotCountU - 1 - 4];
+    float vmax = knotVectorV[knotCountU - 1 - 3];
+    float rv = vmax - vmin;
+    v = rv * v + vmin;
+
+    vec3 result = vec3(0.0f, 0.0f, 0.0f);
+    for(int i = 0; i < deboorPoints->rowCount(); i++){
+        for(int j = 0; j < deboorPoints->columnCount(); j++){
+            float bsU = bsplineRecurive(u, DEGREE, i, knotVectorU);
+            float bsV = bsplineRecurive(v, DEGREE, j, knotVectorV);
+            ifc::Point* point = (*deboorPoints)[i][j];
+            const vec3& pos = point->getPosition();
+            result += bsU * bsV * pos;
+        }
+    }
+    return result;
+}
+
+
+glm::vec3 SurfaceC2Rect::computeDu(float u, float v){
+    std::vector<float> knotVectorU;
+    std::vector<float> knotVectorV;
+    const int DEGREE = 3;
+    int n = deboorPoints->rowCount();
+    int m = deboorPoints->columnCount();
+
+    int d = DEGREE;
+    int knotCountU = n + d + 1;
+    int knotCountV = m + d + 1;
+
+    //float du = 1.0f / (float)(knotCountU - 2*DEGREE - 1);
+    //float dv = 1.0f / (float)(knotCountV - 2*DEGREE - 1);
+    float du = 1.0f / (float)(knotCountU - 1);
+    float dv = 1.0f / (float)(knotCountV - 1);
+    float uknot = 0;
+    float vknot = 0;
+    for(int i = 0; i < knotCountU; i++){
+        knotVectorU.push_back(uknot);
+        //if(i > 2 && i < (knotCountU - 1 - 3)) uknot += du;
+        uknot += du;
+    }
+    for(int i = 0; i < knotCountV; i++){
+        knotVectorV.push_back(vknot );
+        //if(i > 2 && i < (knotCountV - 1 - 3)) vknot += dv;
+        vknot += dv;
+    }
+    //float umin = knotVectorU[4];
+    float umin = knotVectorU[3];
+    //float umax = knotVectorU[knotCountU - 1 - 4];
+    float umax = knotVectorU[knotCountU - 1 - 3];
+    float ru = umax - umin;
+    u = ru * u + umin;
+
+    //float vmin = knotVectorV[4];
+    float vmin = knotVectorV[3];
+    //float vmax = knotVectorV[knotCountU - 1 - 4];
+    float vmax = knotVectorV[knotCountU - 1 - 3];
+    float rv = vmax - vmin;
+    v = rv * v + vmin;
+
+    vec3 result = vec3(0.0f, 0.0f, 0.0f);
+    for(int i = 0; i < deboorPoints->rowCount(); i++){
+        for(int j = 0; j < deboorPoints->columnCount(); j++){
+            float bsU = bsplineDerivativeRecurive(u, DEGREE, i, knotVectorU);
+            float bsV = bsplineRecurive(v, DEGREE, j, knotVectorV);
+            ifc::Point* point = (*deboorPoints)[i][j];
+            const vec3& pos = point->getPosition();
+            result += bsU * bsV * pos;
+        }
+    }
+    return result;
+}
+
+glm::vec3 SurfaceC2Rect::computeDv(float u, float v){
+    std::vector<float> knotVectorU;
+    std::vector<float> knotVectorV;
+    const int DEGREE = 3;
+    int n = deboorPoints->rowCount();
+    int m = deboorPoints->columnCount();
+
+    int d = DEGREE;
+    int knotCountU = n + d + 1;
+    int knotCountV = m + d + 1;
+
+    //float du = 1.0f / (float)(knotCountU - 2*DEGREE - 1);
+    //float dv = 1.0f / (float)(knotCountV - 2*DEGREE - 1);
+    float du = 1.0f / (float)(knotCountU - 1);
+    float dv = 1.0f / (float)(knotCountV - 1);
+    float uknot = 0;
+    float vknot = 0;
+    for(int i = 0; i < knotCountU; i++){
+        knotVectorU.push_back(uknot);
+        //if(i > 2 && i < (knotCountU - 1 - 3)) uknot += du;
+        uknot += du;
+    }
+    for(int i = 0; i < knotCountV; i++){
+        knotVectorV.push_back(vknot );
+        //if(i > 2 && i < (knotCountV - 1 - 3)) vknot += dv;
+        vknot += dv;
+    }
+    //float umin = knotVectorU[4];
+    float umin = knotVectorU[3];
+    //float umax = knotVectorU[knotCountU - 1 - 4];
+    float umax = knotVectorU[knotCountU - 1 - 3];
+    float ru = umax - umin;
+    u = ru * u + umin;
+
+    //float vmin = knotVectorV[4];
+    float vmin = knotVectorV[3];
+    //float vmax = knotVectorV[knotCountU - 1 - 4];
+    float vmax = knotVectorV[knotCountU - 1 - 3];
+    float rv = vmax - vmin;
+    v = rv * v + vmin;
+
+    vec3 result = vec3(0.0f, 0.0f, 0.0f);
+    for(int i = 0; i < deboorPoints->rowCount(); i++){
+        for(int j = 0; j < deboorPoints->columnCount(); j++){
+            float bsU = bsplineRecurive(u, DEGREE, i, knotVectorU);
+            float bsV = bsplineDerivativeRecurive(v, DEGREE, j, knotVectorV);
+            ifc::Point* point = (*deboorPoints)[i][j];
+            const vec3& pos = point->getPosition();
+            result += bsU * bsV * pos;
+        }
+    }
+    return result;
+}
 
 bool SurfaceC2Rect::replacePoint(ifc::Point *src, ifc::Point *dest) {
     for(unsigned int i = 0; i < allPoints.size(); i++){

@@ -17,8 +17,17 @@ enum MatrixMajor{
     COLUMN, ROW
 };
 
+enum TrimmingStatuses{
+    TRIM_NONE, TRIM_TOP, TRIM_BOTTOM
+};
+
 class Surface : public RenderObject{
 private:
+    TrimmingStatuses trimmingStatus;
+
+    std::vector<glm::vec2> trimmingParameters;
+    void trimParameters(std::vector<glm::vec2>& params);
+    glm::vec2 findTrimmingParameter(const glm::vec2& v);
 
 protected:
     int screenWidth = 1300;
@@ -92,11 +101,11 @@ public:
     ~Surface();
 
     virtual glm::vec3 compute(float u, float v);
-    glm::vec3 computeDu(float u, float v);
+    virtual glm::vec3 computeDu(float u, float v);
     glm::vec3 computeDuu(float u, float v);
     glm::vec3 computeDuv(float u, float v);
 
-    glm::vec3 computeDv(float u, float v);
+    virtual glm::vec3 computeDv(float u, float v);
     glm::vec3 computeDvv(float u, float v);
     glm::vec3 computeDvu(float u, float v);
 
@@ -113,6 +122,9 @@ public:
 
     int getRowPatchCount();
     int getColumnPatchCount();
+
+    void setTrimming(TrimmingStatuses status);
+    void setTrimming(TrimmingStatuses status, std::vector<glm::vec2>& params);
 
     /*
      * Replaces src with dest. Returns false if src was not found,

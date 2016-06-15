@@ -10,6 +10,10 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <vector>
 
+glm::vec3 computeBSplinePoint(const glm::vec3& deboorPoint,
+                              const std::vector<float>& knotVector,
+                              int i, float t, int n);
+
 glm::vec4 computeBSpline(const std::vector<glm::vec3>& deboorPoints,
                          const std::vector<float>& knotVector,
                          float t, int n);
@@ -20,5 +24,8 @@ glm::vec4 computeBSpline(const std::vector<ifc::Point*>& deboorPoints,
 
 float bsplineRecurive(float t, int n, int i,
                       const std::vector<float>& knotVector);
+
+float bsplineDerivativeRecurive(float t, int n, int i,
+                                const std::vector<float>& knotVector);
 
 #endif //IC_BSPLINE_BASIS_H

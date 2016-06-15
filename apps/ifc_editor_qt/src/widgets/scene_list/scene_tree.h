@@ -66,6 +66,9 @@ public slots:
     void ShowContextMenu(const QPoint& pos);
     void myitemSelectionChanged();
     void showPointsToogled(bool value);
+
+    void paramSliderMoved1(int v);
+    void paramSliderMoved2(int v);
 };
 
 #endif // SCENETREE_H

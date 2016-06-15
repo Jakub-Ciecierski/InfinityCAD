@@ -5,6 +5,7 @@
 #include "system/object_manager.h"
 #include "system/ifc_types.h"
 #include <widgets/scene_list/context_menus/scene_cmenu_factory.h>
+#include <ui_mainwindow.h>
 
 using namespace std;
 
@@ -401,6 +402,58 @@ void SceneTree::showPointsToogled(bool value){
             item->object->setShow(value);
         }
     }
+}
+
+void SceneTree::paramSliderMoved1(int v){
+    EditorWindow& w = EditorWindow::getInstance();
+    Ui::MainWindow* u = w.getUI();
+    int value1 = u->paramSlider1->value();
+    int value2 = u->paramSlider2->value();
+
+    float max = 999.0f;
+
+    float value1F = (float)value1 / max;
+    float value2F = (float)value2 / max;
+
+    std::vector<Item*> surfaces = getSelectedItems(RB_SURFACE_C2_RECT_TYPE);
+    std::vector<Item*> asd = getSelectedItems(RB_SURFACE_C0_RECT_TYPE);
+    surfaces.insert(surfaces.end(), asd.begin(), asd.end());
+    std::vector<Item*> points = getSelectedItems(RB_POINT_TYPE);
+
+    if(surfaces.size() != 1 || points.size() != 1) return;
+
+    Surface* surface = static_cast<Surface*>(surfaces[0]->object);
+    ifc::Point* point = static_cast<ifc::Point*>(points[0]->object);
+
+    glm::vec3 pos = surface->compute(value1F, value2F);
+
+    point->moveTo(pos);
+}
+
+void SceneTree::paramSliderMoved2(int v){
+    EditorWindow& w = EditorWindow::getInstance();
+    Ui::MainWindow* u = w.getUI();
+    int value1 = u->paramSlider1->value();
+    int value2 = u->paramSlider2->value();
+
+    float max = 999.0f;
+
+    float value1F = (float)value1 / max;
+    float value2F = (float)value2 / max;
+
+    std::vector<Item*> surfaces = getSelectedItems(RB_SURFACE_C2_RECT_TYPE);
+    std::vector<Item*> asd = getSelectedItems(RB_SURFACE_C0_RECT_TYPE);
+    surfaces.insert(surfaces.end(), asd.begin(), asd.end());
+    std::vector<Item*> points = getSelectedItems(RB_POINT_TYPE);
+
+    if(surfaces.size() != 1 || points.size() != 1) return;
+
+    Surface* surface = static_cast<Surface*>(surfaces[0]->object);
+    ifc::Point* point = static_cast<ifc::Point*>(points[0]->object);
+
+    glm::vec3 pos = surface->compute(value1F, value2F);
+
+    point->moveTo(pos);
 }
 
 #include "moc_scene_tree.cpp"

@@ -29,12 +29,32 @@ Surface::Surface(SceneID id, std::string name,
     setDrawPolygon(false);
 
     surfacePixels = (vec4 *) malloc(MAX_PIXEL_COUNT * sizeof(vec4));
+
+    this->trimmingStatus = TrimmingStatuses::TRIM_NONE;
 }
 
 Surface::~Surface(){
     delete surfacePixels;
 }
 
+//-----------------------//
+//  PRIVATE
+//-----------------------//
+
+void Surface::trimParameters(std::vector<glm::vec2>& params){
+    for(unsigned int i = 0; i < params.size(); i++){
+        vec2& v = params[i];
+    }
+}
+
+glm::vec2 Surface::findTrimmingParameter(const glm::vec2& v){
+    for(unsigned int i = 1; i < trimmingParameters.size(); i++){
+        vec2& tv1 = trimmingParameters[i-1];
+        vec2& tv2 = trimmingParameters[i];
+        if(v.x > tv1.x && v.x < tv2.x)
+            return tv2;
+    }
+}
 
 //-----------------------//
 //  PROTECTED
@@ -743,6 +763,15 @@ int Surface::getRowPatchCount(){
 
 int Surface::getColumnPatchCount(){
     return m;
+}
+
+void Surface::setTrimming(TrimmingStatuses status){
+    this->trimmingStatus = status;
+}
+void Surface::setTrimming(TrimmingStatuses status,
+                          std::vector<glm::vec2>& params){
+    this->trimmingStatus = status;
+    trimmingParameters = params;
 }
 
 bool Surface::replacePoint(ifc::Point *src, ifc::Point *dest) {

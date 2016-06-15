@@ -375,7 +375,7 @@
                  <x>0</x>
                  <y>0</y>
                  <width>252</width>
-                 <height>565</height>
+                 <height>594</height>
                 </rect>
                </property>
                <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -878,6 +878,26 @@
                     </widget>
                    </item>
                    <item>
+                    <widget class="QSlider" name="paramSlider1">
+                     <property name="maximum">
+                      <number>999</number>
+                     </property>
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QSlider" name="paramSlider2">
+                     <property name="maximum">
+                      <number>999</number>
+                     </property>
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
                     <spacer name="verticalSpacer">
                      <property name="orientation">
                       <enum>Qt::Vertical</enum>
@@ -897,6 +917,8 @@
                   <zorder>line_2</zorder>
                   <zorder>frame</zorder>
                   <zorder>verticalSpacer</zorder>
+                  <zorder>paramSlider1</zorder>
+                  <zorder>paramSlider2</zorder>
                  </widget>
                 </item>
                </layout>
@@ -1080,6 +1102,8 @@
    <header>widgets/scene_list/scene_tree.h</header>
    <slots>
     <slot>showPointsToogled(bool)</slot>
+    <slot>paramSliderMoved1(int)</slot>
+    <slot>paramSliderMoved2(int)</slot>
    </slots>
   </customwidget>
  </customwidgets>
@@ -1308,6 +1332,38 @@
     <hint type="destinationlabel">
      <x>580</x>
      <y>383</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>paramSlider1</sender>
+   <signal>sliderMoved(int)</signal>
+   <receiver>sceneTree</receiver>
+   <slot>paramSliderMoved1(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1023</x>
+     <y>638</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1023</x>
+     <y>112</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>paramSlider2</sender>
+   <signal>sliderMoved(int)</signal>
+   <receiver>sceneTree</receiver>
+   <slot>paramSliderMoved2(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1023</x>
+     <y>653</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1023</x>
+     <y>112</y>
     </hint>
    </hints>
   </connection>

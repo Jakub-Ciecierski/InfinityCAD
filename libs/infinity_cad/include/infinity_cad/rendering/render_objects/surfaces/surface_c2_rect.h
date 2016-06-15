@@ -29,6 +29,10 @@ public:
 
     ~SurfaceC2Rect();
 
+    virtual glm::vec3 compute(float u, float v) override;
+    virtual glm::vec3 computeDu(float u, float v) override;
+    virtual glm::vec3 computeDv(float u, float v) override;
+
     virtual bool replacePoint(ifc::Point* src, ifc::Point* dest) override;
 
     virtual void update() override;

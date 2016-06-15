@@ -139,7 +139,7 @@ bool ifc::isNan(const glm::vec4& v){
 float ifc::derivative(function<float(float, float, float, float)> f,
                       float x, float y, float z, float w,
                       DerivativeTypes derivativeType) {
-    float h = 0.0000001;
+    float h = 0.00001;
     float h2 = h * 2;
 
     float value = 0.0f;

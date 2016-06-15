@@ -44,7 +44,9 @@ private:
     glm::vec4 findNextTraceNewton();
     glm::vec4 newtonStep(const glm::vec4& params);
 
-    void checkNextPointStatus(const glm::vec4& point);
+    bool updateStatus(const glm::vec4& point);
+    bool checkNextPointStatus(const glm::vec4& point);
+
 public:
 
     Intersection(Surface* surface1,

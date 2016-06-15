@@ -78,6 +78,7 @@ int NBStarTopology::selectBestNeighbour(vector<int>* neighbours){
     for(unsigned int i = 0; i < neighboursCount; i++){
         int neighbourIndex = (*neighbours)[i];
 
+        // TODO check null
         double particleBestFitness
                 = ((*particles)[neighbourIndex])->getBestFitness();
 

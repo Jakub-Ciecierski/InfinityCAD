@@ -52,7 +52,7 @@ public:
 
 
     void addChildItem(QTreeWidgetItem* bezierTreeItem,
-                          QTreeWidgetItem* pointTreeItem);
+                      QTreeWidgetItem* pointTreeItem);
     void addChildItem(Item* bezierName, Item* pointName);
 
     std::vector<Item*> getSelectedItems(const Type& type);

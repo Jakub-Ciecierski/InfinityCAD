@@ -481,13 +481,11 @@ glm::vec3 Surface::compute(float u, float v){
     float minJ = (float)j / (float)m;
     float maxJ = (float)(j+1) / (float)m;
     float rJ = maxJ - minJ;
-    //u = rJ * u + minJ;
     u = (u - minJ) / rJ;
 
     float minI = (float)i / (float)n;
     float maxI = (float)(i+1) / (float)n;
     float rI = maxI - minI;
-    //v = rI * v + minI;
     v = (v - minI) / rI;
 
     const BicubicBezierPatch* patch = patches[i][j];
@@ -512,6 +510,16 @@ glm::vec3 Surface::computeDU(float u, float v){
 
     int j = floor(u * m);
     int i = floor(v * n);
+
+    float minJ = (float)j / (float)m;
+    float maxJ = (float)(j+1) / (float)m;
+    float rJ = maxJ - minJ;
+    u = (u - minJ) / rJ;
+
+    float minI = (float)i / (float)n;
+    float maxI = (float)(i+1) / (float)n;
+    float rI = maxI - minI;
+    v = (v - minI) / rI;
 
     const BicubicBezierPatch* patch = patches[i][j];
 
@@ -539,12 +547,12 @@ glm::vec3 Surface::computeDV(float u, float v){
     float minJ = (float)j / (float)m;
     float maxJ = (float)(j+1) / (float)m;
     float rJ = maxJ - minJ;
-    u = rJ * u + minJ;
+    u = (u - minJ) / rJ;
 
     float minI = (float)i / (float)n;
     float maxI = (float)(i+1) / (float)n;
     float rI = maxI - minI;
-    v = rI * v + minI;
+    v = (v - minI) / rI;
 
     const BicubicBezierPatch* patch = patches[i][j];
 

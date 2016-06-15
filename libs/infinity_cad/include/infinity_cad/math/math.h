@@ -8,6 +8,7 @@
 #include <math.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <vector>
+#include <functional>
 
 namespace ifc {
     const float PI_OVER_180 = M_PI/180;
@@ -38,6 +39,14 @@ namespace ifc {
 
     void printVec3(const glm::vec3& vec);
     void printVec4(const glm::vec4& vec);
+    bool isNan(const glm::vec4& v);
+
+    enum DerivativeTypes {
+        DY, DX, DZ, DW
+    };
+    float derivative(std::function<float(float, float, float, float)> f,
+                     float x, float y, float z, float w,
+                     DerivativeTypes derivativeType);
 }
 
 #endif //IC_MATH_H

@@ -104,3 +104,13 @@ glm::vec4 cubicBernsteinDerivative(float t){
 
     return vec4(B0, B1, B2, B3);
 }
+
+glm::vec4 cubicBernsteinSecondDerivative(float t){
+
+    float B0 = 6 - 6*t;
+    float B1 = -12 + 18*t;
+    float B2 = 6 - 18*t;
+    float B3 = 6*t;
+
+    return vec4(B0, B1, B2, B3);
+}

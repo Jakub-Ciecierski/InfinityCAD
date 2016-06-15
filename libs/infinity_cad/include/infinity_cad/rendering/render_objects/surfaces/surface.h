@@ -92,8 +92,13 @@ public:
     ~Surface();
 
     virtual glm::vec3 compute(float u, float v);
-    glm::vec3 computeDU(float u, float v);
-    glm::vec3 computeDV(float u, float v);
+    glm::vec3 computeDu(float u, float v);
+    glm::vec3 computeDuu(float u, float v);
+    glm::vec3 computeDuv(float u, float v);
+
+    glm::vec3 computeDv(float u, float v);
+    glm::vec3 computeDvv(float u, float v);
+    glm::vec3 computeDvu(float u, float v);
 
     virtual void render(const glm::mat4 &VP) override;
     virtual void render(const glm::mat4 &VP, const Color &color) override;

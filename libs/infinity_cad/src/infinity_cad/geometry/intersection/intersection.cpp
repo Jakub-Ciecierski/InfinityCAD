@@ -119,12 +119,12 @@ void Intersection::runTrace(){
     vec4 nextPoint;
 
     int i = 0;
-    const int MAX_ITER_DEBUG = 100000;
+    const int MAX_ITER_DEBUG = 10000;
     do{
         nextPoint = findNextTraceNewton();
 
-        ifc::printVec4(nextPoint);
-        std::cout << std::endl;
+        //ifc::printVec4(nextPoint);
+        //std::cout << std::endl;
 
         if(!ifc::isNan(nextPoint)){
             TracePoint p;
@@ -168,6 +168,10 @@ vec4 Intersection::findNextTraceNewton(){
 
 vec4 Intersection::newtonStep(const glm::vec4& params){
     const TracePoint& lastPoint = getLastPoint();
+    int r = 1;
+    if(currentTraceStatus == TraceStatus::BACKWARDS)
+        r = -1;
+
     vec4 lastParam = lastPoint.params;
     vec3 P0 = surface1->compute(lastParam.x, lastParam.y);
 
@@ -180,21 +184,36 @@ vec4 Intersection::newtonStep(const glm::vec4& params){
     vec3 t;
 
     vec3 P = surface1->compute(params.x, params.y);
-    vec3 Pu = surface1->computeDU(params.x, params.y);
-    vec3 Pv = surface1->computeDV(params.x, params.y);
+    vec3 Pu = surface1->computeDu(params.x, params.y);
+    vec3 Pv = surface1->computeDv(params.x, params.y);
+    vec3 Pvu = surface1->computeDvu(params.x, params.y);
+    vec3 Puv = surface1->computeDuv(params.x, params.y);
+    vec3 Puu = surface1->computeDuu(params.x, params.y);
+    vec3 Pvv = surface1->computeDvv(params.x, params.y);
 
     vec3 Q = surface2->compute(params.z, params.w);
-    vec3 Qu = surface2->computeDU(params.z, params.w);
-    vec3 Qv = surface2->computeDV(params.z, params.w);
+    vec3 Qu = surface2->computeDu(params.z, params.w);
+    vec3 Qv = surface2->computeDv(params.z, params.w);
+    vec3 Quu = surface2->computeDuu(params.z, params.w);
+    vec3 Qvv = surface2->computeDvv(params.z, params.w);
+    vec3 Qvu = surface2->computeDvu(params.z, params.w);
+    vec3 Quv = surface2->computeDuv(params.z, params.w);
 
     Np = cross(Pu, Pv);
     Nq = cross(Qu, Qv);
 
     t = normalize(cross(Np, Nq));
-    int r = 1;
-    if(currentTraceStatus == TraceStatus::BACKWARDS)
-        r = -1;
+
     t *= r;
+
+    vec3 tu = cross(cross(Qu, Qv), (cross(Puu, Pv) + cross(Pu,Pvu)));
+    vec3 tv = cross(cross(Qu, Qv), (cross(Puv, Pv) + cross(Pu,Pvv)));
+    vec3 ts = cross(cross(Pu, Pv), (cross(Quu, Qv) + cross(Qu,Qvu)));
+    vec3 tt = cross(cross(Pu, Pv), (cross(Quv, Qv) + cross(Qu,Qvv)));
+    tu *= r;
+    tv *= r;
+    ts *= r;
+    tt *= r;
 
     vec3 dP = P-P0;
 
@@ -205,12 +224,12 @@ vec4 Intersection::newtonStep(const glm::vec4& params){
             _r = -1;
 
         vec3 _P = surface1->compute(x, y);
-        vec3 _Pu = surface1->computeDU(x, y);
-        vec3 _Pv = surface1->computeDV(x, y);
+        vec3 _Pu = surface1->computeDu(x, y);
+        vec3 _Pv = surface1->computeDv(x, y);
 
         vec3 _Q = surface2->compute(z, w);
-        vec3 _Qu = surface2->computeDU(z, w);
-        vec3 _Qv = surface2->computeDV(z, w);
+        vec3 _Qu = surface2->computeDu(z, w);
+        vec3 _Qv = surface2->computeDv(z, w);
 
         vec3 _Np = cross(_Pu, _Pv);
         vec3 _Nq = cross(_Qu, _Qv);
@@ -234,7 +253,7 @@ vec4 Intersection::newtonStep(const glm::vec4& params){
                                 ifc::DerivativeTypes::DZ);
     auto F4dt = ifc::derivative(f4, params.x, params.y, params.z, params.w,
                                 ifc::DerivativeTypes::DW);
-    
+/*
     F.x = r*(P.x - Q.x);
     F.y = r*(P.y - Q.y);
     F.z = r*(P.z - Q.z);
@@ -261,6 +280,34 @@ vec4 Intersection::newtonStep(const glm::vec4& params){
     J[3].y = r*(0 - Qv.y);
     J[3].z = r*(0 - Qv.z);
     J[3].w = ifc::dot(t, dP);
+*/
+
+    F.x = r*(P.x - Q.x);
+    F.y = r*(P.y - Q.y);
+    F.z = r*(P.z - Q.z);
+    //F.w = ifc::dot(P-P, t) - distance;
+    F.w = ifc::dot(P-P0, t) - distance;
+
+    // zeros left for clarity
+    J[0].x = r*Pu.x - 0;
+    J[0].y = r*Pu.y - 0;
+    J[0].z = r*Pu.z - 0;
+    J[0].w = ifc::dot(tu, dP) + ifc::dot(t, Pu);
+
+    J[1].x = r*Pv.x - 0;
+    J[1].y = r*Pv.y - 0;
+    J[1].z = r*Pv.z - 0;
+    J[1].w = ifc::dot(tv, dP) + ifc::dot(t, Pv);
+
+    J[2].x = r*(0 - Qu.x);
+    J[2].y = r*(0 - Qu.y);
+    J[2].z = r*(0 - Qu.z);
+    J[2].w = ifc::dot(ts, dP);
+
+    J[3].x = r*(0 - Qv.x);
+    J[3].y = r*(0 - Qv.y);
+    J[3].z = r*(0 - Qv.z);
+    J[3].w = ifc::dot(tt, dP);
 
 /*
     F.x = r*(P.x - Q.x);

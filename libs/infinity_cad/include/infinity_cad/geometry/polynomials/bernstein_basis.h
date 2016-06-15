@@ -19,7 +19,7 @@ glm::vec4 cubicBernstein(const glm::vec3& p1, const glm::vec3& p2,
                          float t);
 
 glm::vec4 cubicBernsteinVector(float t);
-
 glm::vec4 cubicBernsteinDerivative(float t);
+glm::vec4 cubicBernsteinSecondDerivative(float t);
 
 #endif //IC_BERNSTEIN_H

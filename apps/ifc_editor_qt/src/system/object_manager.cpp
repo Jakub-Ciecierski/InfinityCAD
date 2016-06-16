@@ -35,6 +35,8 @@ ObjectManager::ObjectManager(){
 
     bSplineBinding = new BSplineBinding(scene, sceneTree);
     bSplineInterpBinding = new BSplineInterpBinding(scene, sceneTree);
+
+    waitingForIntersection = false;
 }
 
 Item * ObjectManager::addTorus(string name){
@@ -400,7 +402,7 @@ void ObjectManager::addChildItem(Item* parentItem,
 
     if(canAddChildren(parentItem->type)){
         Spline* spline = static_cast<Spline*>(parentItem->object);
-        Point* point = static_cast<Point*>(childItem->object);
+        ifc::Point* point = static_cast<ifc::Point*>(childItem->object);
 
         sceneTree->addChildItem(parentItem, childItem);
         spline->addPoint(point);
@@ -418,7 +420,7 @@ void ObjectManager::removeChildItem(Item* objectItem){
 
     if(canAddChildren(bezierItem->type)){
         Spline* spline = static_cast<Spline*>(bezierItem->object);
-        Point* point = static_cast<Point*>(objectItem->object);
+        ifc::Point* point = static_cast<ifc::Point*>(objectItem->object);
 
         sceneTree->deleteObject(objectItem);
         spline->removePoint(point);
@@ -434,7 +436,7 @@ void ObjectManager::moveUpItem(Item* objectItem){
 
     if(canAddChildren(bezierItem->type)){
         Spline* spline = static_cast<Spline*>(bezierItem->object);
-        Point* point = static_cast<Point*>(objectItem->object);
+        ifc::Point* point = static_cast<ifc::Point*>(objectItem->object);
 
         sceneTree->moveItemUpWithinParent(objectItem);
         spline->moveUp(point);
@@ -449,7 +451,7 @@ void ObjectManager::moveDownItem(Item* objectItem){
     }
     if(canAddChildren(bezierItem->type)){
         Spline* spline = static_cast<Spline*>(bezierItem->object);
-        Point* point = static_cast<Point*>(objectItem->object);
+        ifc::Point* point = static_cast<ifc::Point*>(objectItem->object);
 
         sceneTree->moveItemDownWithinParent(objectItem);
         spline->moveDown(point);
@@ -634,10 +636,10 @@ void ObjectManager::colapsSelectedPoints(){
     Surface* surface1 = static_cast<Surface*>(surfaceItem1->object);
     Surface* surface2 = static_cast<Surface*>(surfaceItem2->object);
 
-    bool ret1 = surface1->replacePoint(static_cast<Point*>(pointItem1->object),
-                                       static_cast<Point*>(newPoint->object));
-    bool ret2 = surface2->replacePoint(static_cast<Point*>(pointItem2->object),
-                                       static_cast<Point*>(newPoint->object));
+    bool ret1 = surface1->replacePoint(static_cast<ifc::Point*>(pointItem1->object),
+                                       static_cast<ifc::Point*>(newPoint->object));
+    bool ret2 = surface2->replacePoint(static_cast<ifc::Point*>(pointItem2->object),
+                                       static_cast<ifc::Point*>(newPoint->object));
     if(!ret1 || !ret2){
         window.showInfoBox("Colaps", "Points not found");
         return;
@@ -655,26 +657,96 @@ void ObjectManager::colapsSelectedPoints(){
     sceneTree->addChildItem(surfaceItem2, newPoint);
 }
 
-void ObjectManager::runSurfaceIntersection(){
+void ObjectManager::runSurfaceIntersectionWithClick(){
+    waitingForIntersection = true;
+
+    EditorWindow& window = EditorWindow::getInstance();
+    window.showInfoBox("Intersection", "Plaese select a starting point");
+}
+
+void ObjectManager::runSurfaceIntersection(glm::vec2 ndcPos){
     EditorWindow& window = EditorWindow::getInstance();
 
     std::vector<RenderObject*> objects
             = sceneTree->getSelectedObjects();
     if(objects.size() != 2){
-        window.showInfoBox("Intersection", "Selected 2 surfaces");
+        window.showInfoBox("Intersection", "Please Select 2 surfaces");
         return;
     }
     const ObjectType& type1 = objects[0]->getType();
     const ObjectType& type2 = objects[1]->getType();
     if(!type1.isSurface() || !type2.isSurface()){
-        window.showInfoBox("Intersection", "Selected 2 surfaces");
+        window.showInfoBox("Intersection", "Please Select 2 surfaces");
         return;
     }
 
     Surface* surface1 = static_cast<Surface*>(objects[0]);
     Surface* surface2 = static_cast<Surface*>(objects[1]);
 
-    std::string distanceStr = "0.001";
+    std::string distanceStr = "0.01";
+    distanceStr = window.showInputBox("Distance",
+                                      "Input Distance Approximation.",
+                                      distanceStr);
+    float distance = stof(distanceStr);
+    std::cout << "Distance: " << distance << std::endl;
+    Intersection intersection(surface1, surface2, this->scene, distance);
+    intersection.start(ndcPos, scene->getMVP(), this->scene);
+
+    // ------------
+
+    const std::vector<TracePoint>& tracePoints = intersection.getTracePoints();
+    std::vector<glm::vec3> computedPoints = intersection.getComputedPoints();
+    std::string name = surface1->getName() + "_vs_" + surface2->getName();
+    this->addIntersectionCurve(name, computedPoints, surface1, surface2);
+
+    // Plots
+    int size = tracePoints.size();
+    QVector<double> x1(size);
+    QVector<double> y1(size);
+
+    QVector<double> x2(size);
+    QVector<double> y2(size);
+    for(int i = 0; i < size; i++){
+        glm::vec4 params = tracePoints[i].params;
+        x1[i] = params.x;
+        y1[i] = params.y;
+
+        x2[i] = params.z;
+        y2[i] = params.w;
+    }
+
+    IntersectionDialog intersectionDialog;
+
+    Ui::IntersectionDialog* ui = intersectionDialog.getUI();
+    QCustomPlot* customPlot1 = ui->plot1;
+    QCustomPlot* customPlot2 = ui->plot2;
+
+    createPlot(customPlot1, x1, y1);
+    createPlot(customPlot2, x2, y2);
+
+    intersectionDialog.exec();
+}
+
+void ObjectManager::runSurfaceIntersection(){
+    EditorWindow& window = EditorWindow::getInstance();
+
+    std::vector<RenderObject*> objects
+            = sceneTree->getSelectedObjects();
+    if(objects.size() != 2){
+        window.showInfoBox("Intersection", "Please Selected 2 surfaces");
+        return;
+    }
+    const ObjectType& type1 = objects[0]->getType();
+    const ObjectType& type2 = objects[1]->getType();
+    if(!type1.isSurface() || !type2.isSurface()){
+        window.showInfoBox("Intersection", "Please Selected 2 surfaces");
+        return;
+    }
+
+    Surface* surface1 = static_cast<Surface*>(objects[0]);
+    Surface* surface2 = static_cast<Surface*>(objects[1]);
+
+    std::string distanceStr = "0.01";
     distanceStr = window.showInputBox("Distance",
                                       "Input Distance Approximation",
                                       distanceStr);
@@ -682,6 +754,8 @@ void ObjectManager::runSurfaceIntersection(){
     std::cout << "Distance: " << distance << std::endl;
     Intersection intersection(surface1, surface2, this->scene, distance);
     intersection.start();
+
+    // ------------
 
     const std::vector<TracePoint>& tracePoints = intersection.getTracePoints();
     std::vector<glm::vec3> computedPoints = intersection.getComputedPoints();

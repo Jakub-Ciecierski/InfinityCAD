@@ -30,6 +30,16 @@ public:
 
     ~SurfaceC2Cylind();
 
+    virtual glm::vec3 compute(float u, float v) override;
+
+    virtual glm::vec3 computeDu(float u, float v) override;
+    virtual glm::vec3 computeDuu(float u, float v) override;
+    virtual glm::vec3 computeDuv(float u, float v) override;
+
+    virtual glm::vec3 computeDv(float u, float v) override;
+    virtual glm::vec3 computeDvv(float u, float v) override;
+    virtual glm::vec3 computeDvu(float u, float v) override;
+
     virtual bool replacePoint(ifc::Point* src, ifc::Point* dest) override;
 
     virtual void update() override;

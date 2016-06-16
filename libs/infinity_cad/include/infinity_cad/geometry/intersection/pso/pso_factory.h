@@ -60,7 +60,7 @@ public:
     ~PSOFactory();
 
     pso::PSO* createPSO();
-
+    pso::PSO* createPSO(Point<double> startPos);
 };
 
 

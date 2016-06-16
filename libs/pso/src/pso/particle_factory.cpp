@@ -55,3 +55,29 @@ ParticleShPtr_ConstVectorShPtr ParticleFactory::createUnifromParticles() {
 
     return particlesShPtr;
 }
+
+ParticleShPtr_ConstVectorShPtr ParticleFactory::createUnifromParticles(Point<double> position) {
+
+    ParticleShPtr_Vector* particles = new ParticleShPtr_Vector(swarmSize);
+
+    for(unsigned int i = 0; i < swarmSize; i++){
+        Point<double> velocity(particleDimension);
+
+        for(unsigned int j = 0; j < particleDimension; j++){
+            velocity[j] = rnd::generateRandomNumber(velIntervalMin,
+                                                    velIntervalMax);
+        }
+
+        ParticleShPtr particle = std::make_shared<Particle>(
+                posIntervalMin, posIntervalMax,
+                velIntervalMin, velIntervalMax,
+                maxVelocity,
+                position, velocity
+        );
+        (*particles)[i] = (particle);
+    }
+
+    ParticleShPtr_ConstVectorShPtr particlesShPtr(particles);
+
+    return particlesShPtr;
+}

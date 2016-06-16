@@ -25,6 +25,7 @@ private:
     std::string getDefaultName(const Type& type);
 
 public:
+    bool waitingForIntersection;
     ~ObjectManager();
 
     static ObjectManager& getInstance();
@@ -85,6 +86,8 @@ public:
     void rotateSelectedItems(float degree,
                              glm::vec3 axis);
 
+    void runSurfaceIntersectionWithClick();
+    void runSurfaceIntersection(glm::vec2 ndcPos);
     void runSurfaceIntersection();
 
     void TEST_BSPLINE();

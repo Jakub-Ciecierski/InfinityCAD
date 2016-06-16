@@ -82,5 +82,11 @@ SceneCMHandler SCM_INTERSECTION_SURFACE_HANDLER(
         [](Item* item){
    ObjectManager& objManager = ObjectManager::getInstance();
    objManager.runSurfaceIntersection();
+});
 
+SceneCMHandler SCM_INTERSECTION_CLICK_SURFACE_HANDLER(
+        "Find Intersection with Click",
+        [](Item* item){
+   ObjectManager& objManager = ObjectManager::getInstance();
+   objManager.runSurfaceIntersectionWithClick();
 });

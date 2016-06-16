@@ -8,6 +8,7 @@
 #include <infinity_cad/rendering/render_objects/surfaces/surface.h>
 #include <infinity_cad/rendering/scene/scene.h>
 #include <deque>
+#include <math/point.h>
 
 struct TracePoint{
     glm::vec4 params;
@@ -37,8 +38,15 @@ private:
     TraceStatus currentTraceStatus;
 
     const TracePoint& getLastPoint();
-    void normalizeTracePoint(glm::vec4& v);
+
+    glm::vec2 getClosestParameters(Surface* surface,
+                                   glm::vec2& ndcPosition,
+                                   const glm::mat4& VP,
+                                   Scene* scene);
+    glm::vec2 getClosestParameters(Surface* surface,
+                                   glm::vec3& position);
     TracePoint getInitialPoint();
+    TracePoint getInitialPoint(Point<double> startPos);
 
     void runTrace();
     glm::vec4 findNextTraceNewton();
@@ -46,6 +54,7 @@ private:
 
     bool updateStatus(const glm::vec4& point);
     bool checkNextPointStatus(const glm::vec4& point);
+    void normalizeNumericalError(glm::vec4& point);
 
 public:
 
@@ -59,6 +68,7 @@ public:
     std::vector<glm::vec3> getComputedPoints();
 
     void start();
+    void start(glm::vec2& ndcPosition, const glm::mat4& VP, Scene* scene);
 };
 
 

@@ -37,6 +37,7 @@ namespace ifc {
                                 const glm::mat4& m,
                                 const glm::vec4& v2);
 
+    void printVec2(const glm::vec2& vec);
     void printVec3(const glm::vec3& vec);
     void printVec4(const glm::vec4& vec);
     bool isNan(const glm::vec4& v);

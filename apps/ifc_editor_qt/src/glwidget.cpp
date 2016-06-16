@@ -138,8 +138,7 @@ QColor GLWidget::GMColorToQColor(const Color& c){
 //  KEY EVENTS
 //------------------------------//
 
-void GLWidget::keyPressEvent(QKeyEvent *event){
-
+void GLWidget::keyPressEvent(QKeyEvent *event){    
     if(event->key() == Qt::Key_W){
         keys[KEY_W] = true;
     }if(event->key() == Qt::Key_S){
@@ -221,6 +220,18 @@ void GLWidget::mousePressEvent(QMouseEvent *event){
     if(event->buttons() & Qt::LeftButton &&
             !(event->buttons() & Qt::RightButton) &&
             !(event->button() & Qt::MiddleButton)){
+        ObjectManager& objectManager = ObjectManager::getInstance();
+
+        if(objectManager.waitingForIntersection){
+            objectManager.waitingForIntersection = false;
+            float x = renderer->xPixelToGLCoord(event->x());
+            float y = renderer->yPixelToGLCoord(event->y());
+
+            glm::vec2 ndcPos = glm::vec2(x,y);
+            objectManager.runSurfaceIntersection(ndcPos);
+            return;
+        }
+
         Cross* cross = renderer->getScene()->getCross();
         mouseTracker->update(event->x(), event->y());
         cross->pickCones(*ray,

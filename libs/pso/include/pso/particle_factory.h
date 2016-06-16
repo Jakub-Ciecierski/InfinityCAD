@@ -49,6 +49,7 @@ public:
     //-----------------------------------------------------------//
 
     ParticleShPtr_ConstVectorShPtr createUnifromParticles();
+    ParticleShPtr_ConstVectorShPtr createUnifromParticles(Point<double> position);
 };
 }
 

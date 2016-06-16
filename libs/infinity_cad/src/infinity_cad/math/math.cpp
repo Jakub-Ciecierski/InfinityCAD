@@ -123,6 +123,10 @@ float ifc::getMultplicationValue(const vec4& v1, const mat4& m, const vec4& v2){
     return val;
 }
 
+void ifc::printVec2(const glm::vec2& vec){
+    std::cout << vec.x << ", " << vec.y << std::endl;
+}
+
 void ifc::printVec3(const glm::vec3& vec){
     std::cout << vec.x << ", " << vec.y << ", " << vec.z << std::endl;
 }
@@ -139,7 +143,8 @@ bool ifc::isNan(const glm::vec4& v){
 float ifc::derivative(function<float(float, float, float, float)> f,
                       float x, float y, float z, float w,
                       DerivativeTypes derivativeType) {
-    float h = 0.00001;
+    //float h = 0.00001;
+    float h = 0.00000001;
     float h2 = h * 2;
 
     float value = 0.0f;

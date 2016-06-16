@@ -29,8 +29,8 @@ PSOFactory::PSOFactory(int swarmSize, double maxVelocity,
     posIntervalMin = 0.0f;
     posIntervalMax = 1.0f;
 
-    velIntervalMin = -2;
-    velIntervalMax = 2;
+    velIntervalMin = -0.5f;
+    velIntervalMax = 0.5f;
 
     learningFactor = 0.5 + log(2.0);
     particleVelocityWeight = 1.0 / (2.0 * log(2.0));
@@ -118,6 +118,38 @@ pso::PSO *PSOFactory::createPSO() {
 
     ParticleShPtr_ConstVectorShPtr particles =
             particleFactory.createUnifromParticles();
+
+    ParticleDecoder* particleDecoder = createParticleDecoder();
+    FitnessUpdater* fitnessUpdater
+            = createFitnessUpdater(particles, particleDecoder);
+
+    NeighbourhoodUpdater* neighbourhoodUpdater
+            = createNeighbourhoodUpdater(particles);
+
+
+    ParticleUpdater* particleUpdater
+            = createPaticleUpdater(particles, learningFactor,
+                                   particleVelocityWeight);
+
+    PSO * pso = new PSO(particles,
+                        fitnessUpdater,
+                        neighbourhoodUpdater,
+                        particleUpdater,
+                        maximumIterations, threadCount);
+
+    return pso;
+}
+
+pso::PSO *PSOFactory::createPSO(Point<double> startPos) {
+
+    ParticleFactory particleFactory
+            = createParticleFactory(swarmSize, particleDimension,
+                                    posIntervalMin, posIntervalMax,
+                                    velIntervalMin, velIntervalMax,
+                                    maxVelocity );
+
+    ParticleShPtr_ConstVectorShPtr particles =
+            particleFactory.createUnifromParticles(startPos);
 
     ParticleDecoder* particleDecoder = createParticleDecoder();
     FitnessUpdater* fitnessUpdater

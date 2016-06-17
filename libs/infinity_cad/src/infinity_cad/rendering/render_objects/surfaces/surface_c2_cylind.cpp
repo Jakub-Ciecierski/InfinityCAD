@@ -220,7 +220,7 @@ glm::vec3 SurfaceC2Cylind::compute(float u, float v) {
     //float vmin = knotVectorV[4];
     float vmin = knotVectorV[3];
     //float vmax = knotVectorV[knotCountU - 1 - 4];
-    float vmax = knotVectorV[knotCountU - 1 - 3];
+    float vmax = knotVectorV[knotCountV - 1 - 3];
     float rv = vmax - vmin;
     v = rv * v + vmin;
 
@@ -275,7 +275,7 @@ glm::vec3 SurfaceC2Cylind::computeDu(float u, float v){
     //float vmin = knotVectorV[4];
     float vmin = knotVectorV[3];
     //float vmax = knotVectorV[knotCountU - 1 - 4];
-    float vmax = knotVectorV[knotCountU - 1 - 3];
+    float vmax = knotVectorV[knotCountV - 1 - 3];
     float rv = vmax - vmin;
     v = rv * v + vmin;
 
@@ -329,7 +329,7 @@ glm::vec3 SurfaceC2Cylind::computeDuu(float u, float v){
     //float vmin = knotVectorV[4];
     float vmin = knotVectorV[3];
     //float vmax = knotVectorV[knotCountU - 1 - 4];
-    float vmax = knotVectorV[knotCountU - 1 - 3];
+    float vmax = knotVectorV[knotCountV - 1 - 3];
     float rv = vmax - vmin;
     v = rv * v + vmin;
 
@@ -384,7 +384,7 @@ glm::vec3 SurfaceC2Cylind::computeDuv(float u, float v){
     //float vmin = knotVectorV[4];
     float vmin = knotVectorV[3];
     //float vmax = knotVectorV[knotCountU - 1 - 4];
-    float vmax = knotVectorV[knotCountU - 1 - 3];
+    float vmax = knotVectorV[knotCountV - 1 - 3];
     float rv = vmax - vmin;
     v = rv * v + vmin;
 
@@ -438,7 +438,7 @@ glm::vec3 SurfaceC2Cylind::computeDv(float u, float v){
     //float vmin = knotVectorV[4];
     float vmin = knotVectorV[3];
     //float vmax = knotVectorV[knotCountU - 1 - 4];
-    float vmax = knotVectorV[knotCountU - 1 - 3];
+    float vmax = knotVectorV[knotCountV - 1 - 3];
     float rv = vmax - vmin;
     v = rv * v + vmin;
 
@@ -492,7 +492,7 @@ glm::vec3 SurfaceC2Cylind::computeDvv(float u, float v){
     //float vmin = knotVectorV[4];
     float vmin = knotVectorV[3];
     //float vmax = knotVectorV[knotCountU - 1 - 4];
-    float vmax = knotVectorV[knotCountU - 1 - 3];
+    float vmax = knotVectorV[knotCountV - 1 - 3];
     float rv = vmax - vmin;
     v = rv * v + vmin;
 
@@ -548,7 +548,7 @@ glm::vec3 SurfaceC2Cylind::computeDvu(float u, float v){
     //float vmin = knotVectorV[4];
     float vmin = knotVectorV[3];
     //float vmax = knotVectorV[knotCountU - 1 - 4];
-    float vmax = knotVectorV[knotCountU - 1 - 3];
+    float vmax = knotVectorV[knotCountV - 1 - 3];
     float rv = vmax - vmin;
     v = rv * v + vmin;
 

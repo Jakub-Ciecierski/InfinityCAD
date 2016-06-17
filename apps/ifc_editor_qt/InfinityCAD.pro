@@ -199,9 +199,9 @@ INCLUDEPATH += $$PWD/../../dependencies/include/time
 DEPENDPATH += $$PWD/../../dependencies/include/time
 
 # Uncomment
-#LIBS += -L /opt/cuda/lib64
+LIBS += -L /opt/cuda/lib64
 #LIBS += -Wl,-rpath /opt/cuda/lib64
-LIBS += -L /usr/local/cuda-7.0/lib64
+#LIBS += -L /usr/local/cuda-7.0/lib64
 LIBS += -lcudart -lcuda -lcudadevrt
 
 # EXTERNALS

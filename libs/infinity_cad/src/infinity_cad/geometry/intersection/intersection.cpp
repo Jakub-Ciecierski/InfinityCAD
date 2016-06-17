@@ -30,6 +30,10 @@ Intersection::Intersection(Surface *surface1, Surface *surface2,
     scene->addRenderObject(point2_DEBUG);
 
     currentTraceStatus = TraceStatus::FORWARDS;
+
+    distanceInitPointTolerance = 0.2f;
+
+    doErrorCorrection = false;
 }
 
 Intersection::~Intersection() {
@@ -161,9 +165,9 @@ glm::vec2 Intersection::getClosestParameters(Surface* surface,
 }
 
 TracePoint Intersection::getInitialPoint(){
-    int swarmSize = 350;
+    int swarmSize = 150;
     double maxVelocity = 0.2f;
-    int maximumIterations = 450;
+    int maximumIterations = 150;
     int threadCount = threading::getNumberOfCores();
     if (threadCount < 1) threadCount = 4;
 
@@ -195,9 +199,9 @@ TracePoint Intersection::getInitialPoint(){
 }
 
 TracePoint Intersection::getInitialPoint(Point<double> startPos){
-    int swarmSize = 250;
+    int swarmSize = 150;
     double maxVelocity = 0.05f;
-    int maximumIterations = 500;
+    int maximumIterations = 150;
     int threadCount = threading::getNumberOfCores();
     if (threadCount < 1) threadCount = 4;
 
@@ -234,7 +238,7 @@ void Intersection::runTrace(){
     vec4 nextPoint;
 
     int i = 0;
-    const int MAX_ITER_DEBUG = 10000 * 3;
+    const int MAX_ITER_DEBUG = 1000 * 3;
     do{
         nextPoint = findNextTraceNewton();
 
@@ -253,7 +257,7 @@ void Intersection::runTrace(){
 
         updateStatus(nextPoint);
         if(i++ > MAX_ITER_DEBUG) {
-            std::cout << "Max iterations reached" << std::endl;
+            //std::cout << "Max iterations reached" << std::endl;
             return;
         }
 
@@ -425,7 +429,7 @@ vec4 Intersection::newtonStep(const glm::vec4& params){
 */
     J = glm::inverse(J);
     result = params - J*F;
-    normalizeNumericalError(result);
+    //if(doErrorCorrection) normalizeNumericalError(result);
 
     return result;
 }
@@ -460,7 +464,7 @@ bool Intersection::checkNextPointStatus(const glm::vec4& point){
 }
 
 void Intersection::normalizeNumericalError(glm::vec4& point){
-    float err = 0.0003;
+    float err = 0.009;
     if(point.x > 1.0f && (point.x - err) <= 1.0f) point.x = 1.0f;
     if(point.y > 1.0f && (point.y - err) <= 1.0f) point.y = 1.0f;
     if(point.z > 1.0f && (point.z - err) <= 1.0f) point.z = 1.0f;
@@ -497,23 +501,30 @@ std::vector<glm::vec3> Intersection::getComputedPoints(){
     return points;
 }
 
-void Intersection::start(){
-
+bool Intersection::start(){
     TracePoint initPoint = getInitialPoint();
+    vec3 pointPos1 = surface1->compute(initPoint.params.x, initPoint.params.y);
+    vec3 pointPos2 = surface2->compute(initPoint.params.z, initPoint.params.w);
+    float dist = ifc::euclideanDistance(pointPos1, pointPos2);
+    if(dist > distanceInitPointTolerance) return false;
+
     tracePointsQueue.push_back(initPoint);
     runTrace();
+
+    return true;
 }
 
-void Intersection::start(glm::vec2& ndcPosition, const glm::mat4& VP,
+bool Intersection::start(glm::vec2& ndcPosition, const glm::mat4& VP,
                          Scene* scene){
+    doErrorCorrection = true;
     vec2 param1 = getClosestParameters(surface1, ndcPosition, VP, scene);
     vec3 pointPos1 = surface1->compute(param1.x, param1.y);
 
     vec2 param2 = getClosestParameters(surface2, pointPos1);
     vec3 pointPos2 = surface2->compute(param2.x, param2.y);
 
-    point1_DEBUG->moveTo(pointPos1);
-    point2_DEBUG->moveTo(pointPos2);
+    float dist = ifc::euclideanDistance(pointPos1, pointPos2);
+    if(dist > distanceInitPointTolerance) return false;
 
     vec4 params = vec4(param1.x, param1.y, param2.x, param2.y);
     Point<double> point(4);
@@ -526,4 +537,5 @@ void Intersection::start(glm::vec2& ndcPosition, const glm::mat4& VP,
     tracePointsQueue.push_back(initPoint);
     runTrace();
 
+    return true;
 }

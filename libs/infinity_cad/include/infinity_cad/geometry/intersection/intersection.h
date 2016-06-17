@@ -33,8 +33,11 @@ private:
     std::vector<TracePoint> tracePoints;
     std::deque<TracePoint> tracePointsQueue;
 
+    bool doErrorCorrection;
+
     float distance;
     float newtonConvergTolerance;
+    float distanceInitPointTolerance;
     TraceStatus currentTraceStatus;
 
     const TracePoint& getLastPoint();
@@ -67,8 +70,8 @@ public:
     const std::vector<TracePoint>& getTracePoints();
     std::vector<glm::vec3> getComputedPoints();
 
-    void start();
-    void start(glm::vec2& ndcPosition, const glm::mat4& VP, Scene* scene);
+    bool start();
+    bool start(glm::vec2& ndcPosition, const glm::mat4& VP, Scene* scene);
 };
 
 

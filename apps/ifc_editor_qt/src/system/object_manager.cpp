@@ -683,14 +683,18 @@ void ObjectManager::runSurfaceIntersection(glm::vec2 ndcPos){
     Surface* surface1 = static_cast<Surface*>(objects[0]);
     Surface* surface2 = static_cast<Surface*>(objects[1]);
 
-    std::string distanceStr = "0.01";
+    std::string distanceStr = "0.001";
     distanceStr = window.showInputBox("Distance",
                                       "Input Distance Approximation.",
                                       distanceStr);
     float distance = stof(distanceStr);
     std::cout << "Distance: " << distance << std::endl;
     Intersection intersection(surface1, surface2, this->scene, distance);
-    intersection.start(ndcPos, scene->getMVP(), this->scene);
+    bool result = intersection.start(ndcPos, scene->getMVP(), this->scene);
+    if(!result){
+        window.showInfoBox("Intersection", "No Intersection found");
+        return;
+    }
 
     // ------------
 
@@ -746,14 +750,18 @@ void ObjectManager::runSurfaceIntersection(){
     Surface* surface1 = static_cast<Surface*>(objects[0]);
     Surface* surface2 = static_cast<Surface*>(objects[1]);
 
-    std::string distanceStr = "0.01";
+    std::string distanceStr = "0.001";
     distanceStr = window.showInputBox("Distance",
                                       "Input Distance Approximation",
                                       distanceStr);
     float distance = stof(distanceStr);
     std::cout << "Distance: " << distance << std::endl;
     Intersection intersection(surface1, surface2, this->scene, distance);
-    intersection.start();
+    bool result = intersection.start();
+    if(!result){
+        window.showInfoBox("Intersection", "No Intersection found");
+        return;
+    }
 
     // ------------
 

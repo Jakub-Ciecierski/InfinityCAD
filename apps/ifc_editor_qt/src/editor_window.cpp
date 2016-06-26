@@ -128,6 +128,12 @@ void EditorWindow::colapsButtomPressed(){
     //objectManager.colapsSelectedPoints();
 }
 
+void EditorWindow::mergeButtonPresses(){
+    ObjectManager& objectManager = ObjectManager::getInstance();
+
+    objectManager.mergeSelectedPoints();
+}
+
 //-------------------------//
 //  PRIVATE METHODS
 //-------------------------//

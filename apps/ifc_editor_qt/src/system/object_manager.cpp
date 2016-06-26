@@ -587,7 +587,7 @@ void ObjectManager::colapsSelectedPoints_NoRemove(float dist){
     }
 }
 
-void ObjectManager::colapsSelectedPoints(){
+void ObjectManager::mergeSelectedPoints(){
     EditorWindow& window = EditorWindow::getInstance();
     const vector<Item*>& items = sceneTree->getSelectedItems(RB_POINT_NAME);
     if(items.size() != 2){
@@ -602,7 +602,7 @@ void ObjectManager::colapsSelectedPoints(){
             pointItem2->object->getPosition());
     avgPosition *= 0.5f;
 
-    Item* newPoint = addPoint(pointItem1->object->getName() + "_tmp");
+    Item* newPoint = addPoint(pointItem1->object->getName() + "_merge");
     newPoint->object->moveTo(avgPosition);
 
     vector<Item*>& clones1 = pointItem1->clones;
@@ -796,6 +796,30 @@ void ObjectManager::runSurfaceIntersection(){
     createPlot(customPlot2, x2, y2);
 
     intersectionDialog.exec();
+}
+
+void ObjectManager::runFillingPatch(){
+    EditorWindow& window = EditorWindow::getInstance();
+
+    std::vector<RenderObject*> objects
+            = sceneTree->getSelectedObjects();
+    if(objects.size() != 3){
+        window.showInfoBox("Filling", "Only 3 Surface filling is supported");
+        return;
+    }
+    const ObjectType& type1 = objects[0]->getType();
+    const ObjectType& type2 = objects[1]->getType();
+    const ObjectType& type3 = objects[2]->getType();
+    if(!type1.isSurface() || !type2.isSurface() || !type3.isSurface()){
+        window.showInfoBox("Filling", "Please select surfaces only");
+        return;
+    }
+
+    Surface* surface1 = static_cast<Surface*>(objects[0]);
+    Surface* surface2 = static_cast<Surface*>(objects[1]);
+    Surface* surface3 = static_cast<Surface*>(objects[2]);
+
+
 }
 
 //--------------------------//

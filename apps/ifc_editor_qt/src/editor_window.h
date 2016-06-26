@@ -35,6 +35,7 @@ public slots:
     void loadSystem();
 
     void colapsButtomPressed();
+    void mergeButtonPresses();
 
 private:
     explicit EditorWindow(QWidget *parent = 0);

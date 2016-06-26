@@ -18,6 +18,7 @@ SceneCMenuFactory::SceneCMenuFactory() {
 
     surfaceMenu = new SCMSurfaceC0();
     surfacesMenu = new SCMSurfaces();
+    surfacesFillMenu = new SCMSurfacesFill();
 }
 
 SceneCMenuFactory::~SceneCMenuFactory() {
@@ -35,6 +36,7 @@ SceneCMenuFactory::~SceneCMenuFactory() {
 
     delete surfaceMenu;
     delete surfacesMenu;
+    delete surfacesFillMenu;
 }
 
 SceneCMenuFactory& SceneCMenuFactory::getInstance(){
@@ -126,11 +128,12 @@ SceneContextMenu* SceneCMenuFactory::getProperMenu(
         return this->bsplineMenu;
     }else if(surfaceCount == totalCount){
 
-        if(totalCount == 1)
+        if(totalCount == 1){
             return surfaceMenu;
-
-        if(totalCount == 2){
+        }else if(totalCount == 2){
             return surfacesMenu;
+        }else if(totalCount == 3){
+            return surfacesFillMenu;
         }
     }
 

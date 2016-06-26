@@ -90,3 +90,10 @@ SceneCMHandler SCM_INTERSECTION_CLICK_SURFACE_HANDLER(
    ObjectManager& objManager = ObjectManager::getInstance();
    objManager.runSurfaceIntersectionWithClick();
 });
+
+SceneCMHandler SCM_FILLING_SURFACE_HANDLER(
+        "Fill the hole",
+        [](Item* item){
+    ObjectManager& objManager = ObjectManager::getInstance();
+    objManager.runFillingPatch();
+});

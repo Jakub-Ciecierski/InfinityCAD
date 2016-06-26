@@ -81,7 +81,7 @@ public:
     SceneTree* getSceneTree();
 
     void colapsSelectedPoints_NoRemove(float dist = 1.0f);
-    void colapsSelectedPoints();
+    void mergeSelectedPoints();
 
     void rotateSelectedItems(float degree,
                              glm::vec3 axis);
@@ -89,6 +89,8 @@ public:
     void runSurfaceIntersectionWithClick();
     void runSurfaceIntersection(glm::vec2 ndcPos);
     void runSurfaceIntersection();
+
+    void runFillingPatch();
 
     void TEST_BSPLINE();
     void TEST_PERFORMANCE();

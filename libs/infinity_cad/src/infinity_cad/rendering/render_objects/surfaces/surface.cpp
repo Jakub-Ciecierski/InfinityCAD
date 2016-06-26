@@ -81,7 +81,9 @@ void Surface::drawCPU(const glm::mat4& VP, const Color& color,
                             float v_min, float v_max,
                             float du, float dv) {
     setSurfaceColor(color);
-    glBegin(GL_POINTS);
+    glLineWidth(this->lineWidth);
+    //glBegin(GL_POINTS);
+    glBegin(GL_LINES);
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < m; j++) {
             BicubicBezierPatch* patch = (patches)[i][j];
@@ -259,6 +261,8 @@ void Surface::drawPatch(const BicubicBezierPatch* patch,
                               float u_min, float u_max,
                               float v_min, float v_max,
                               float du, float dv){
+    std::vector<vec4> points;
+
     float du_tmp = du;
     float dv_tmp = dv;
 
@@ -282,11 +286,14 @@ void Surface::drawPatch(const BicubicBezierPatch* patch,
 
             vec4 point(x, y, z, 1);
             point = VP * point;
-            if(point.w < 0) continue;
+            //if(point.w < 0) continue;
 
             point.x /= point.w;
             point.y /= point.w;
-            glVertex2f(point.x, point.y);
+
+            points.push_back(point);
+
+            //glVertex2f(point.x, point.y);
         }
     }
     du = du_tmp;
@@ -303,12 +310,23 @@ void Surface::drawPatch(const BicubicBezierPatch* patch,
 
             vec4 point(x, y, z, 1);
             point = VP * point;
-            if(point.w < 0) continue;
+            //if(point.w < 0) continue;
 
             point.x /= point.w;
             point.y /= point.w;
-            glVertex2f(point.x, point.y);
+
+            points.push_back(point);
+            //glVertex2f(point.x, point.y);
         }
+    }
+
+    for(unsigned int i = 1; i < points.size(); i++){
+        vec4& p1 = points[i-1];
+        vec4& p2 = points[i];
+        if(p1.w < 0 || p2.w < 0) continue;
+        glVertex2f(p1.x, p1.y);
+        glVertex2f(p2.x, p2.y);
+
     }
 }
 

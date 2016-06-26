@@ -70,7 +70,8 @@ SOURCES += src/glwidget.cpp \
     src/widgets/scene_list/context_menus/scm_surfaces.cpp \
     src/plot/qcustomplot.cpp \
     src/dialogs/intersectiondialog.cpp \
-    src/plot/plot_style.cpp
+    src/plot/plot_style.cpp \
+    src/widgets/scene_list/context_menus/scm_surfaces_fill.cpp
 
 HEADERS  += build/ui/ui_mainwindow.h \
     src/context_menus/context_menu.h \
@@ -107,7 +108,8 @@ HEADERS  += build/ui/ui_mainwindow.h \
     src/widgets/scene_list/context_menus/scm_surfaces.h \
     src/plot/qcustomplot.h \
     src/dialogs/intersectiondialog.h \
-    src/plot/plot_style.h
+    src/plot/plot_style.h \
+    src/widgets/scene_list/context_menus/scm_surfaces_fill.h
 
 ##############################
 
@@ -198,10 +200,11 @@ else:unix: LIBS += -L$$PWD/../../dependencies/lib/time/ -ltime
 INCLUDEPATH += $$PWD/../../dependencies/include/time
 DEPENDPATH += $$PWD/../../dependencies/include/time
 
+
 # Uncomment
-LIBS += -L /opt/cuda/lib64
+#LIBS += -L /opt/cuda/lib64
 #LIBS += -Wl,-rpath /opt/cuda/lib64
-#LIBS += -L /usr/local/cuda-7.0/lib64
+LIBS += -L /usr/local/cuda-7.0/lib64
 LIBS += -lcudart -lcuda -lcudadevrt
 
 # EXTERNALS

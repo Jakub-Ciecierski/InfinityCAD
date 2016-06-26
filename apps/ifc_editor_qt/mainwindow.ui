@@ -240,8 +240,43 @@
        </item>
        <item>
         <widget class="QPushButton" name="colapsButton">
+         <property name="maximumSize">
+          <size>
+           <width>45</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>8</pointsize>
+          </font>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Colapses selected points into center of gravity&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
          <property name="text">
           <string>Colaps</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="mergeButton">
+         <property name="maximumSize">
+          <size>
+           <width>45</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>8</pointsize>
+          </font>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Merges two instances of points into one instance&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="text">
+          <string>Merge</string>
          </property>
         </widget>
        </item>
@@ -1367,6 +1402,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>mergeButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>mergeButtonPresses()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>449</x>
+     <y>42</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>580</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>showObjectsDialog()</slot>
@@ -1374,5 +1425,6 @@
   <slot>saveSystem()</slot>
   <slot>loadSystem()</slot>
   <slot>colapsButtomPressed()</slot>
+  <slot>mergeButtonPresses()</slot>
  </slots>
 </ui>

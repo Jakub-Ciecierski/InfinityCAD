@@ -11,6 +11,7 @@
 
 #include <infinity_cad/geometry/quaternion.h>
 #include <infinity_cad/geometry/intersection/intersection.h>
+#include <infinity_cad/geometry/filling/surface_filling.h>
 
 #include <plot/qcustomplot.h>
 #include "plot/plot_style.h"
@@ -819,7 +820,13 @@ void ObjectManager::runFillingPatch(){
     Surface* surface2 = static_cast<Surface*>(objects[1]);
     Surface* surface3 = static_cast<Surface*>(objects[2]);
 
+    SurfaceFilling surfaceFilling(surface1, surface2, surface3, this->scene);
+    surfaceFilling.start();
 
+    FillingStatus fillingStatus = surfaceFilling.getStatus();
+    if(fillingStatus == FillingStatus::NO_HOLE){
+        window.showInfoBox("Filling", "No Proper Hole found");
+    }
 }
 
 //--------------------------//

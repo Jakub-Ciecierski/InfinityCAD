@@ -8,6 +8,7 @@
 #include <infinity_cad/geometry/polynomials/bernstein_basis.h>
 #include <infinity_cad/rendering/scene/object_factory.h>
 #include <infinity_cad/settings/settings.h>
+#include <infinity_cad/rendering/color/color_settings.h>
 
 using namespace std;
 using namespace ifc;
@@ -489,8 +490,8 @@ void Surface::draw(const glm::mat4& VP, const Color& color) {
     //du = 1.0f / ((float)screenLength * maxDist);
     //dv = 1.0f / ((float)screenLength * maxDist);
 
-    du = 0.06;
-    dv = 0.06;
+    du = 0.03;
+    dv = 0.03;
 
     if(ifc::RUN_CUDA){
         drawGPU(VP, color, u_min, u_max, v_min, v_max, du, dv);
@@ -801,6 +802,14 @@ bool Surface::replacePoint(ifc::Point *src, ifc::Point *dest) {
     for(unsigned int i = 0; i < components.size(); i++){
         if(components[i] == src){
             components[i] = dest;
+        }
+    }
+
+    for(unsigned int i = 0; i < allPointsMatrix.rowCount(); i++){
+        for(unsigned int j = 0; j < allPointsMatrix.columnCount(); j++){
+            if(allPointsMatrix[i][j] == src){
+                allPointsMatrix[i][j] = dest;
+            }
         }
     }
 

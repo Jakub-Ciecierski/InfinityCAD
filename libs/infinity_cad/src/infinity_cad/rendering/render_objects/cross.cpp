@@ -336,7 +336,6 @@ RenderObject * Cross::getClosestObject(const RayCast& ray,
         int dist = sqrt(dx*dx + dy*dy);
 
         if(dist < distTol){
-            std::cout << body->NDC_W << std::endl;
             return (body);
         }
 
@@ -426,7 +425,6 @@ std::vector<RenderObject*> Cross::getClosestObjectVector(const RayCast& ray,
         int dist = sqrt(dx*dx + dy*dy);
 
         if(dist < distTol){
-            std::cout << body->NDC_W << std::endl;
             closestObjects.push_back(body);
         }
     }

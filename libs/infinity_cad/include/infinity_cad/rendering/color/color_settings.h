@@ -14,6 +14,7 @@ extern Color COLOR_SCENE_DEFAULT;
 // Default color value of an object.
 //extern Color COLOR_OBJECT_DEFAULT(0.0, 1.0, 0.0, 1.0);
 extern Color COLOR_OBJECT_DEFAULT;
+extern Color COLOR_LINE_OBJECT_DEFAULT;
 extern Color COLOR_OBJECT_ACTIVE;
 
 extern Color COLOR_STEREOSCOPIC_LEFT_PROJ_DEFAULT;

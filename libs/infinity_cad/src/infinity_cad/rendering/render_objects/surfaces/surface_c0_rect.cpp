@@ -58,6 +58,9 @@ void SurfaceC0Rect::buildPatchesFromMatrix(const Matrix<ifc::Point*>& points){
                 vector<ifc::Point*> row = points[i*CUBIC_COUNT-i + k];
                 for(int l = 0; l < CUBIC_COUNT; l++){
                     patchPoints[k][l] = row[j * CUBIC_COUNT-j + l];
+
+                    allPoints.push_back(patchPoints[k][l]);
+                    components.push_back(patchPoints[k][l]);
                 }
             }
             BicubicBezierPatch* patch = new BicubicBezierPatch(patchPoints);

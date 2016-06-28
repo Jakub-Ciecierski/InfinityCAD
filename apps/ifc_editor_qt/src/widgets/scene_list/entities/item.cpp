@@ -71,7 +71,8 @@ void Item::addChild(Item* child){
     children.push_back(child);
 
     treeItem->addChild(child->treeItem);
-    treeItem->setExpanded(true);
+    //treeItem->setExpanded(true);
+    treeItem->setExpanded(false);
 }
 
 bool Item::removeChild(Item* child){

@@ -401,16 +401,36 @@ void SurfaceFilling::computeD(FillingData &fillingData){
     vec3 c0 = fillingData.P1_Tanget - fillingData.P0_BorderCurveMidPoint;
     vec3 c1 = fillingData.P2 - fillingData.P1_Tanget;
     vec3 c2 = fillingData.P3_Center - fillingData.P2;
+/*
+    auto B2 = [](float b0, float b1, float b2, float t){
+        float val = b0 - t * (2 * b0 - 2 * b1 - t * (b0 - 2 * b1 + b2));
+        return val;
+    };
+    auto solve_c = [c0, c1, c2, B2](float t){
+        float x = B2(c0.x, c1.x, c2.x, t);
+        float y = B2(c0.y, c1.y, c2.y, t);
+        float z = B2(c0.z, c1.z, c2.z, t);
+
+        return vec3(x,y,z);
+    };
+
+    auto solve_g = [fillingData, B2](float t){
+        vec3& g0 = fillingData.g0T
+        float x = B2(c0.x, c1.x, c2.x, t);
+        float y = B2(c0.y, c1.y, c2.y, t);
+        float z = B2(c0.z, c1.z, c2.z, t);
+
+        return vec3(x,y,z);
+    };*/
 
     auto solve_c = [c0, c1, c2](float t){
         vec3 v = quadraticBernstein3(c0, c1, c2, t);
         return v;
     };
-
     auto solve_g = [fillingData](float t){
-        vec3 v = quadraticBernstein3(fillingData.g0PointLeft,
-                                     fillingData.g1PointLeft,
-                                     fillingData.g2PointLeft, t);
+        vec3 v = quadraticBernstein3(fillingData.g0TangentLeft,
+                                     fillingData.g1TangentLeft,
+                                     fillingData.g2TangentLeft, t);
         return v;
     };
 
@@ -426,11 +446,6 @@ void SurfaceFilling::computeD(FillingData &fillingData){
     float h0 = (((b0.x*g0.y) - (b0.y*g0.x)) / ((c0.x*g0.y) - (g0.x*c0.y)));
     float k1 = (((c2.x*b3.y) - (b3.x*c2.y)) / ((c2.x*g2.y) - (g2.x*c2.y)));
     float h1 = (((b3.x*g2.y) - (b3.y*g2.x)) / ((c2.x*g2.y) - (g2.x*c2.y)));
-    //float k1 = (((c2.z*b3.y) - (b3.z*c2.y)) / ((c2.z*g2.y) - (g2.z*c2.y)));
-    //float h1 = (((b3.z*g2.y) - (b3.y*g2.z)) / ((c2.z*g2.y) - (g2.z*c2.y)));
-
-    vec3 RHS_B0 = solve_KH_RHS(k0, h0, g0, c0);
-    vec3 RHS_B3 = solve_KH_RHS(k1, h1, g2, c2);
 
     auto solveD = [k0, h0, k1, h1, solve_g, solve_c](float v){
 
@@ -454,9 +469,20 @@ void SurfaceFilling::computeD(FillingData &fillingData){
 
         return vec3(x,y,z);
     };
-
-    vector<vec3> D = {solveD(0.0f), solveD(0.333f),
-                      solveD(0.666f), solveD(1.0f)};
+    vec3 d0 = solveD(0.0f);
+    vec3 d1 = solveD(0.333f);
+    vec3 d2 = solveD(0.666f);
+    vec3 d3 = solveD(1.0f);
+/*
+    d0 *= 0.33f;
+    d1 *= 0.33f;
+    d2 *= 0.33f;
+    d3 *= 0.33f;
+*/
+    vector<vec3> D = {fillingData.P0_BorderCurveMidPoint + d0,
+                      fillingData.P1_Tanget + d1,
+                      fillingData.P2 + d2,
+                      fillingData.P3_Center + d3};
 
     fillingData.DLeft = D;
 }
@@ -482,9 +508,9 @@ void SurfaceFilling::computeDTop(FillingData &fillingDataBase){
     };
 
     auto solve_g = [fillingData](float t){
-        vec3 v = quadraticBernstein3(fillingData.g0PointLeft,
-                                     fillingData.g1PointLeft,
-                                     fillingData.g2PointLeft, t);
+        vec3 v = quadraticBernstein3(fillingData.g0TangentLeft,
+                                     fillingData.g1TangentLeft,
+                                     fillingData.g2TangentLeft, t);
         return v;
     };
 
@@ -500,11 +526,6 @@ void SurfaceFilling::computeDTop(FillingData &fillingDataBase){
     float h0 = (((b0.x*g0.y) - (b0.y*g0.x)) / ((c0.x*g0.y) - (g0.x*c0.y)));
     float k1 = (((c2.x*b3.y) - (b3.x*c2.y)) / ((c2.x*g2.y) - (g2.x*c2.y)));
     float h1 = (((b3.x*g2.y) - (b3.y*g2.x)) / ((c2.x*g2.y) - (g2.x*c2.y)));
-    //float k1 = (((c2.z*b3.y) - (b3.z*c2.y)) / ((c2.z*g2.y) - (g2.z*c2.y)));
-    //float h1 = (((b3.z*g2.y) - (b3.y*g2.z)) / ((c2.z*g2.y) - (g2.z*c2.y)));
-
-    vec3 RHS_B0 = solve_KH_RHS(k0, h0, g0, c0);
-    vec3 RHS_B3 = solve_KH_RHS(k1, h1, g2, c2);
 
     auto solveD = [k0, h0, k1, h1, solve_g, solve_c](float v){
 
@@ -529,8 +550,21 @@ void SurfaceFilling::computeDTop(FillingData &fillingDataBase){
         return vec3(x,y,z);
     };
 
-    vector<vec3> D = {solveD(0.0f), solveD(0.333f),
-                      solveD(0.666f), solveD(1.0f)};
+    vec3 d0 = solveD(0.0f);
+    vec3 d1 = solveD(0.333f);
+    vec3 d2 = solveD(0.666f);
+    vec3 d3 = solveD(1.0f);
+/*
+    d0 *= 0.33f;
+    d1 *= 0.33f;
+    d2 *= 0.33f;
+    d3 *= 0.33f;
+*/
+    //vector<vec3> D = {d0, d1, d2, d3};
+    vector<vec3> D = {fillingData.P0_BorderCurveMidPoint - d0,
+                      fillingData.P1_Tanget - d1,
+                      fillingData.P2 - d2,
+                      fillingData.P3_Center - d3};
 
     fillingDataBase.DTop = D;
 }
@@ -712,6 +746,40 @@ vector<vec3> SurfaceFilling::CalculateBezierControlPoints(vec3 p0, vec3 p1,
 
     cout << "Success" << endl;
     return pos;
+}
+
+void SurfaceFilling::constructGregoryPatches(){
+    constructGregoryPatch(fillingData[0]);
+    constructGregoryPatch(fillingData[1]);
+    constructGregoryPatch(fillingData[2]);
+}
+
+void SurfaceFilling::constructGregoryPatch(FillingData& fillingData){
+    vec3 P0 = fillingData.halfBezierPointsPointsBase[0];
+    vec3 e0_p = fillingData.halfBezierPointsPointsBase[1];
+    vec3 e1_m = fillingData.halfBezierPointsPointsBase[2];
+    vec3 P1 = fillingData.halfBezierPointsPointsBase[3];
+
+    vec3 e0_m = fillingData.halfBezierPointsPointsTop[1];
+    vec3 f0_m = fillingData.halfBezierPoint1Top;
+    vec3 f0_p = fillingData.halfBezierPoint1Base;
+    vec3 f1_m = fillingData.halfBezierPoint2Base;
+    vec3 f1_p = fillingData.DLeft[1];
+    vec3 e1_p = fillingData.P1_Tanget;
+
+    vec3 g3_p = fillingData.halfBezierPointsPointsTop[2];
+    vec3 f3_p = fillingData.halfBezierPoint2Top;
+    vec3 f3_m = fillingData.DTop[1];
+    vec3 f2_p = fillingData.DTop[2];
+    vec3 f2_m = fillingData.DLeft[2];
+    vec3 e2_m = fillingData.P2;
+
+    vec3 P3 = fillingData.halfBezierPointsPointsTop[3];
+    vec3 e3_m = fillingData.left->P1_Tanget;
+    vec3 e2_p = fillingData.left->P2;
+    vec3 P2 = fillingData.P3_Center;
+
+
 }
 
 vec2 SurfaceFilling::getUV(FillingData& fillingData){
@@ -953,7 +1021,8 @@ void SurfaceFilling::renderDebug(){
         scene->addRenderObject(P3);
         scene->addRenderObject(tangetLine);
 
-        if(j == 0 ){
+        //if(j == 0 ){
+        if(true){
             scene->addRenderObject(P00);
             scene->addRenderObject(P01);
             scene->addRenderObject(P02);
@@ -970,7 +1039,7 @@ void SurfaceFilling::renderDebug(){
             scene->addRenderObject(g0TopLine);
             scene->addRenderObject(g1TopLine);
             scene->addRenderObject(g2TopLine);
-            
+
             scene->addRenderObject(d1Line);
             scene->addRenderObject(d2Line);
             scene->addRenderObject(d1LineTop);
@@ -1022,6 +1091,7 @@ void SurfaceFilling::start(){
     computeGFieldVectors();
     computeHalfBorderCurvePoints();
 
+    constructGregoryPatches();
     if(renderMode == RenderMode::DEBUG) renderDebug();
 }
 

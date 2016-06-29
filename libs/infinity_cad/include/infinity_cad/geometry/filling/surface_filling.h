@@ -81,7 +81,7 @@ struct FillingData{
     // P3
     glm::vec3 P3_Center;
 
-    // Di + Pi create another 4 control points
+    // Di 2 control points. "Inside"
     std::vector<glm::vec3> DLeft;
     std::vector<glm::vec3> DTop;
 
@@ -89,6 +89,7 @@ struct FillingData{
     glm::vec3 halfBezierTanget1Base;
     glm::vec3 halfBezierTanget2Base;
 
+    // Inside
     glm::vec3 halfBezierPoint1Base;
     glm::vec3 halfBezierPoint2Base;
 
@@ -96,6 +97,7 @@ struct FillingData{
     glm::vec3 halfBezierTanget1Top;
     glm::vec3 halfBezierTanget2Top;
 
+    //Inside
     glm::vec3 halfBezierPoint1Top;
     glm::vec3 halfBezierPoint2Top;
 };
@@ -188,6 +190,9 @@ private:
                                                         glm::vec3 p2,
                                                         glm::vec3 p3,
                                                         float u, float v);
+
+    void constructGregoryPatches();
+    void constructGregoryPatch(FillingData& fillingData);
 
     glm::vec2 getUV(FillingData& fillingData);
 

@@ -318,6 +318,19 @@ Item* ObjectManager::addSurfaceC2Cylind(string name,
     return surfaceItem;
 }
 
+Item* ObjectManager::addSurfaceGregory(std::string name, Surface* surface1,
+                                       Surface* surface2, Surface* surface3){
+    ObjectFactory& objectFactory = ObjectFactory::getInstance();
+    SurfaceFilling* surface = objectFactory.createGregorySurface(name,
+                                                                 surface1,
+                                                                 surface2,
+                                                                 surface3);
+    this->scene->addRenderObject(surface);
+    Item* surfaceItem = sceneTree->addObject(surface, RB_SURFACE_GREGORY_TYPE);
+
+    return surfaceItem;
+}
+
 
 string ObjectManager::getDefaultName(const Type& type){
     static int id_count = 0;
@@ -819,14 +832,18 @@ void ObjectManager::runFillingPatch(){
     Surface* surface1 = static_cast<Surface*>(objects[0]);
     Surface* surface2 = static_cast<Surface*>(objects[1]);
     Surface* surface3 = static_cast<Surface*>(objects[2]);
+    std::string name = "Gregory__" + surface1->getName() + "_" +
+            surface2->getName() + "_" + surface3->getName();
+    addSurfaceGregory(name, surface1, surface2, surface3);
 
-    SurfaceFilling surfaceFilling(surface1, surface2, surface3, this->scene);
+/*
+    SurfaceFilling surfaceFilling(surface1, surface2, surface3);
     surfaceFilling.start();
 
     FillingStatus fillingStatus = surfaceFilling.getStatus();
     if(fillingStatus == FillingStatus::NO_HOLE){
         window.showInfoBox("Filling", "No Proper Hole found");
-    }
+    }*/
 }
 
 //--------------------------//

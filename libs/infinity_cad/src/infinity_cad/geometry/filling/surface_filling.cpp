@@ -10,11 +10,11 @@
 using namespace std;
 using namespace glm;
 
-SurfaceFilling::SurfaceFilling(Surface* surface1,
+SurfaceFilling::SurfaceFilling(SceneID id, std::string name,
+                               Surface* surface1,
                                Surface* surface2,
-                               Surface* surface3,
-                               Scene* scene) :
-        scene(scene),
+                               Surface* surface3) :
+        RenderObject(id, name),
         fillingStatus(FillingStatus::COMPUTING){
     fillingData[0].surface = surface1;
     fillingData[1].surface = surface2;
@@ -39,6 +39,11 @@ SurfaceFilling::SurfaceFilling(Surface* surface1,
     debugColors.CenterBezierColor = Color(1.0f, 1.0f, 1.0f);
 
     debugColors.HalfBezierControlPointColor = Color(1.0f, 1.0f, 1.0f);
+
+    doRenderDebug = false;
+
+    TANGET_MULTIPLIER = 0.5;
+    //TANGET_MULTIPLIER = 1.0;
 }
 
 SurfaceFilling::~SurfaceFilling() {
@@ -189,6 +194,7 @@ void SurfaceFilling::computeBorderCurveTangent(FillingData& fillingData){
 
     //tangent = normalize(tangent);
     tangent *= 0.33f;
+    tangent *= TANGET_MULTIPLIER;
 
     fillingData.borderCurveTanget = tangent;
 
@@ -261,7 +267,7 @@ void SurfaceFilling::computeGFieldVector(FillingData& fillingData){
         a0 = -a0;
     }
     //a0 = normalize(a0);
-    a0 *= 0.33f;
+    a0 *= 0.33f * TANGET_MULTIPLIER;
 
     b0 = a0;
 
@@ -272,9 +278,9 @@ void SurfaceFilling::computeGFieldVector(FillingData& fillingData){
     //b3 = -b3;
 
     //a3 = normalize(a3);
-    a3 *= 0.33f;
+    a3 *= 0.33f * TANGET_MULTIPLIER;
     //b3 = normalize(b3);
-    b3 *= 0.33f;
+    b3 *= 0.33f * TANGET_MULTIPLIER;
 
     g0 = (a0 + b0) / 2.0f;
     g2 = (a3 + b3) / 2.0f;
@@ -338,7 +344,7 @@ void SurfaceFilling::computeGFieldVectorTop(FillingData& fillingDataBase){
         a0 = -a0;
     }
     //a0 = normalize(a0);
-    a0 *= 0.33f;
+    a0 *= 0.33f * TANGET_MULTIPLIER;
     b0 = a0;
 
     a3 = fillingData.left->P3_Center - fillingData.left->P2;
@@ -348,9 +354,9 @@ void SurfaceFilling::computeGFieldVectorTop(FillingData& fillingDataBase){
     //b3 = -b3;
 
     //a3 = normalize(a3);
-    a3 *= 0.33f;
+    a3 *= 0.33f * TANGET_MULTIPLIER;
     //b3 = normalize(b3);
-    b3 *= 0.33f;
+    b3 *= 0.33f * TANGET_MULTIPLIER;
 
     g0 = (a0 + b0) / 2.0f;
     g2 = (a3 + b3) / 2.0f;
@@ -625,16 +631,19 @@ void SurfaceFilling::computeHalfBorderCurvePoints(FillingData& fillingData){
         tangent2 = -tangent2;
     }
 
-    tangent1 *= 0.33f;
-    tangent2 *= 0.33f;
+    tangent1 *= 0.33f * TANGET_MULTIPLIER;
+    tangent2 *= 0.33f * TANGET_MULTIPLIER;
 
     fillingData.halfBezierTanget1Base = tangent1;
     fillingData.halfBezierTanget2Base = tangent2;
 
     // TODO maybe not from control point!
-    fillingData.halfBezierPoint1Base = halfBezier[1] + tangent1;
-    fillingData.halfBezierPoint2Base = halfBezier[2] + tangent2;
-
+    //fillingData.halfBezierPoint1Base = halfBezier[1] + tangent1;
+    //fillingData.halfBezierPoint2Base = halfBezier[2] + tangent2;
+    fillingData.halfBezierPoint1Base = p1 + tangent1;
+    fillingData.halfBezierPoint2Base = p2 + tangent2;
+    fillingData.halfBezierPoint1BaseOrigin = p1;
+    fillingData.halfBezierPoint2BaseOrigin = p2;
     delete bezier;
 }
 
@@ -685,17 +694,20 @@ void SurfaceFilling::computeHalfBorderCurvePointsTop(
         tangent2 = -tangent2;
     }
 
-    tangent1 *= 0.33f;
-    tangent2 *= 0.33f;
+    tangent1 *= 0.33f * TANGET_MULTIPLIER;
+    tangent2 *= 0.33f * TANGET_MULTIPLIER;
 
     fillingDataBase.halfBezierPointsPointsTop = halfBezier;
     fillingDataBase.halfBezierTanget1Top = tangent1;
     fillingDataBase.halfBezierTanget2Top = tangent2;
 
     // TODO maybe not from control point!
-    fillingDataBase.halfBezierPoint1Top = halfBezier[1] + tangent1;
-    fillingDataBase.halfBezierPoint2Top = halfBezier[2] + tangent2;
-
+    //fillingDataBase.halfBezierPoint1Top = halfBezier[1] + tangent1;
+    //fillingDataBase.halfBezierPoint2Top = halfBezier[2] + tangent2;
+    fillingDataBase.halfBezierPoint1Top = p1 + tangent1;
+    fillingDataBase.halfBezierPoint2Top = p2 + tangent2;
+    fillingData.halfBezierPoint1TopOrigin = p1;
+    fillingData.halfBezierPoint2TopOrigin = p2;
     delete bezier;
 }
 
@@ -744,43 +756,9 @@ vector<vec3> SurfaceFilling::CalculateBezierControlPoints(vec3 p0, vec3 p1,
     pos[2].y /= det;
     pos[2].z /= det;
 
-    cout << "Success" << endl;
     return pos;
 }
 
-void SurfaceFilling::constructGregoryPatches(){
-    constructGregoryPatch(fillingData[0]);
-    constructGregoryPatch(fillingData[1]);
-    constructGregoryPatch(fillingData[2]);
-}
-
-void SurfaceFilling::constructGregoryPatch(FillingData& fillingData){
-    vec3 P0 = fillingData.halfBezierPointsPointsBase[0];
-    vec3 e0_p = fillingData.halfBezierPointsPointsBase[1];
-    vec3 e1_m = fillingData.halfBezierPointsPointsBase[2];
-    vec3 P1 = fillingData.halfBezierPointsPointsBase[3];
-
-    vec3 e0_m = fillingData.halfBezierPointsPointsTop[1];
-    vec3 f0_m = fillingData.halfBezierPoint1Top;
-    vec3 f0_p = fillingData.halfBezierPoint1Base;
-    vec3 f1_m = fillingData.halfBezierPoint2Base;
-    vec3 f1_p = fillingData.DLeft[1];
-    vec3 e1_p = fillingData.P1_Tanget;
-
-    vec3 g3_p = fillingData.halfBezierPointsPointsTop[2];
-    vec3 f3_p = fillingData.halfBezierPoint2Top;
-    vec3 f3_m = fillingData.DTop[1];
-    vec3 f2_p = fillingData.DTop[2];
-    vec3 f2_m = fillingData.DLeft[2];
-    vec3 e2_m = fillingData.P2;
-
-    vec3 P3 = fillingData.halfBezierPointsPointsTop[3];
-    vec3 e3_m = fillingData.left->P1_Tanget;
-    vec3 e2_p = fillingData.left->P2;
-    vec3 P2 = fillingData.P3_Center;
-
-
-}
 
 vec2 SurfaceFilling::getUV(FillingData& fillingData){
     const float HALF_P = 0.5f;
@@ -806,13 +784,531 @@ vec2 SurfaceFilling::getUV(FillingData& fillingData){
     return vec2(u,v);
 }
 
-void SurfaceFilling::renderDebug(){
-    ObjectFactory& objectFactory = ObjectFactory::getInstance();
+std::string SurfaceFilling::borderCurveParamToString(BorderCurveParam param){
+    if(param == BorderCurveParam::U) return "U";
+    if(param == BorderCurveParam::V) return "V";
+    if(param == BorderCurveParam::U0) return "U0";
+    if(param == BorderCurveParam::U1) return "U1";
+    if(param == BorderCurveParam::V0) return "V0";
+    if(param == BorderCurveParam::V1) return "V1";
+    return "Unknown";
+}
+
+
+void SurfaceFilling::renderPatches(const glm::mat4 &VP){
+    renderPatch(VP, fillingData[0]);
+    renderPatch(VP, fillingData[1]);
+    renderPatch(VP, fillingData[2]);
+}
+
+void SurfaceFilling::renderPatch(const glm::mat4 &VP, FillingData& fillingData){
+    vec3 P0 = fillingData.halfBezierPointsPointsBase[0];
+    vec3 e0_p = fillingData.halfBezierPointsPointsBase[1];
+    vec3 e1_m = fillingData.halfBezierPointsPointsBase[2];
+    vec3 P1 = fillingData.halfBezierPointsPointsBase[3];
+
+    if(fillingData.varBorderCurveParam == BorderCurveParam::V){
+        P0 = fillingData.halfBezierPointsPointsBase[3];
+        e0_p = fillingData.halfBezierPointsPointsBase[2];
+        e1_m = fillingData.halfBezierPointsPointsBase[1];
+        P1 = fillingData.halfBezierPointsPointsBase[0];
+    }
+
+    vec3 e0_m = fillingData.halfBezierPointsPointsTop[1];
+    vec3 f0_m = fillingData.halfBezierPoint1Top;
+    vec3 f0_p = fillingData.halfBezierPoint1Base;
+    vec3 f1_m = fillingData.halfBezierPoint2Base;
+    vec3 f1_p = fillingData.DLeft[1];
+    vec3 e1_p = fillingData.P1_Tanget;
+
+    vec3 e3_p = fillingData.halfBezierPointsPointsTop[2];
+    vec3 f3_p = fillingData.halfBezierPoint2Top;
+    vec3 f3_m = fillingData.DTop[1];
+    vec3 f2_p = fillingData.DTop[2];
+    vec3 f2_m = fillingData.DLeft[2];
+    vec3 e2_m = fillingData.P2;
+
+    vec3 P3 = fillingData.halfBezierPointsPointsTop[3];
+    vec3 e3_m = fillingData.left->P1_Tanget;
+    vec3 e2_p = fillingData.left->P2;
+    vec3 P2 = fillingData.P3_Center;
+
+    auto solveF0 = [f0_p, f0_m](float u, float v){
+        float denom = u + v;
+        if(denom == 0){
+            return (f0_p + f0_m) / 2.0f;
+        }
+        vec3 f = (f0_p * u + f0_m * v) / denom;
+        return f;
+    };
+    auto solveF1 = [f1_m, f1_p](float u, float v){
+        float denom = 1 - u + v;
+        if(denom == 0){
+            return (f1_m + f1_p) / 2.0f;
+        }
+        vec3 f = (f1_m * (1.0f - u) + f1_p * v) / denom;
+        return f;
+    };
+
+    auto solveF2 = [f2_p, f2_m](float u, float v){
+        float denom = 2 - u - v;
+        if(denom == 0){
+            return (f2_p + f2_m) / 2.0f;
+        }
+        vec3 f = (f2_p * (1.0f - u) + f2_m * (1.0f - v)) / denom;
+        return f;
+    };
+
+    auto solveF3 = [f3_m, f3_p](float u, float v){
+        float denom = 1 + u - v;
+        if(denom == 0){
+            return (f3_m + f3_p) / 2.0f;
+        }
+        vec3 f = (f3_m * u + f3_p * (1.0f - v)) / denom;
+        return f;
+    };
+
+    // DEBUG
+
+    ObjectFactory &objectFactory = ObjectFactory::getInstance();
+    Color color(1.0f, 1.0f, 1.0f);
+
+    ifc::Point* pointP0 = objectFactory.createPoint("p", e3_p);
+    ifc::Point* pointe0_p = objectFactory.createPoint("p", P0);
+    ifc::Point* pointe1_m = objectFactory.createPoint("p", P0);
+    ifc::Point* pointP1 = objectFactory.createPoint("p", P0);
+    pointP0->update();
+    pointe0_p->update();
+    pointe1_m->update();
+    pointP1->update();
+
+    pointP0->setColor(color);
+    pointe0_p->setColor(color);
+    pointe1_m->setColor(color);
+    pointP1->setColor(color);
+
+    pointP0->render(VP);
+    pointe0_p->render(VP);
+    pointe1_m->render(VP);
+    pointP1->render(VP);
+
+    //
+
+    mat4 Gx;
+    mat4 Gy;
+    mat4 Gz;
+    /*
+    Gx[0].x = P0.x;
+    Gx[0].y = e0_m.x;
+    Gx[0].z = e3_p.x;
+    Gx[0].w = P3.x;
+
+    Gx[1].x = e0_p.x;
+    Gx[1].y = 0.0f; // F0
+    Gx[1].z = 0.0f; // F3
+    Gx[1].w = e3_m.x;
+
+    Gx[2].x = e1_m.x;
+    Gx[2].y = 0.0f; // F1
+    Gx[2].z = 0.0f; // F2
+    Gx[2].w = e2_p.x;
+
+    Gx[3].x = P1.x ;
+    Gx[3].y = e1_p.x;
+    Gx[3].z = e2_m.x;
+    Gx[3].w = P2.x;
+
+    Gy[0].x = P0.y;
+    Gy[0].y = e0_m.y;
+    Gy[0].z = e3_p.y;
+    Gy[0].w = P3.y;
+
+    Gy[1].x = e0_p.y;
+    Gy[1].y = 0.0f; // F0
+    Gy[1].z = 0.0f; // F3
+    Gy[1].w = e3_m.y;
+
+    Gy[2].x = e1_m.y;
+    Gy[2].y = 0.0f; // F1
+    Gy[2].z = 0.0f; // F2
+    Gy[2].w = e2_p.y;
+
+    Gy[3].x = P1.y ;
+    Gy[3].y = e1_p.y;
+    Gy[3].z = e2_m.y;
+    Gy[3].w = P2.y;
+
+    Gz[0].x = P0.z;
+    Gz[0].y = e0_m.z;
+    Gz[0].z = e3_p.z;
+    Gz[0].w = P3.z;
+
+    Gz[1].x = e0_p.z;
+    Gz[1].y = 0.0f; // F0
+    Gz[1].z = 0.0f; // F3
+    Gz[1].w = e3_m.z;
+
+    Gz[2].x = e1_m.z;
+    Gz[2].y = 0.0f; // F1
+    Gz[2].z = 0.0f; // F2
+    Gz[2].w = e2_p.z;
+
+    Gz[3].x = P1.z;
+    Gz[3].y = e1_p.z;
+    Gz[3].z = e2_m.z;
+    Gz[3].w = P2.z;
+*/
+
+    Gx[0].x = P0.x;
+    Gx[0].y = e0_p.x;
+    Gx[0].z = e1_m.x;
+    Gx[0].w = P1.x;
+
+    Gx[1].x = e0_m.x;
+    Gx[1].y = 0.0f; // F0
+    Gx[1].z = 0.0f; // F1
+    Gx[1].w = e1_p.x;
+
+    Gx[2].x = e3_p.x;
+    Gx[2].y = 0.0f; // F3
+    Gx[2].z = 0.0f; // F2
+    Gx[2].w = e2_m.x;
+
+    Gx[3].x = P3.x;
+    Gx[3].y = e3_m.x;
+    Gx[3].z = e2_p.x;
+    Gx[3].w = P2.x;
+
+    Gy[0].x = P0.y;
+    Gy[0].y = e0_p.y;
+    Gy[0].z = e1_m.y;
+    Gy[0].w = P1.y;
+
+    Gy[1].x = e0_m.y;
+    Gy[1].y = 0.0f; // F0
+    Gy[1].z = 0.0f; // F1
+    Gy[1].w = e1_p.y;
+
+    Gy[2].x = e3_p.y;
+    Gy[2].y = 0.0f; // F3
+    Gy[2].z = 0.0f; // F2
+    Gy[2].w = e2_m.y;
+
+    Gy[3].x = P3.y;
+    Gy[3].y = e3_m.y;
+    Gy[3].z = e2_p.y;
+    Gy[3].w = P2.y;
+
+    Gz[0].x = P0.z;
+    Gz[0].y = e0_p.z;
+    Gz[0].z = e1_m.z;
+    Gz[0].w = P1.z;
+
+    Gz[1].x = e0_m.z;
+    Gz[1].y = 0.0f; // F0
+    Gz[1].z = 0.0f; // F1
+    Gz[1].w = e1_p.z;
+
+    Gz[2].x = e3_p.z;
+    Gz[2].y = 0.0f; // F3
+    Gz[2].z = 0.0f; // F2
+    Gz[2].w = e2_m.z;
+
+    Gz[3].x = P3.z;
+    Gz[3].y = e3_m.z;
+    Gz[3].z = e2_p.z;
+    Gz[3].w = P2.z;
+
+    float u_min = 0.0f;
+    float u_max = 1.0f;
+    float v_min = 0.0f;
+    float v_max = 1.0f;
+    float du = 0.008f;
+    float dv = 0.008f;
+
+    float du_tmp = du;
+    float dv_tmp = dv;
+
+    int uDivisionCount_tmp = Surface::uDivisionCount;
+    if(uDivisionCount_tmp == 1) uDivisionCount_tmp++;
+
+    int vDivisionCount_tmp = Surface::vDivisionCount;
+    if(vDivisionCount_tmp == 1) vDivisionCount_tmp++;
+
+    du = 1.0f / (float)(uDivisionCount_tmp - 1);
+
+    vector<vec4> points;
+    int index = 0;
+    vector<vector<int>> edges;
+
+    float u,v;
+    for(u = u_min; u <= u_max; u+=du){
+        for(v = v_min; v <= v_max; v+=dv){
+            vec4 Bu = cubicBernsteinVector(u);
+            vec4 Bv = cubicBernsteinVector(v);
+
+            vec3 F0 = solveF0(u, v);
+            vec3 F1 = solveF1(u, v);
+            vec3 F2 = solveF2(u, v);
+            vec3 F3 = solveF3(u, v);
+/*
+            Gx[1].y = F0.x;
+            Gx[1].z = F3.x;
+
+            Gy[1].y = F0.y;
+            Gy[1].z = F3.y;
+
+            Gz[1].y = F0.z;
+            Gz[1].z = F3.z;
+
+            Gx[2].y = F1.x;
+            Gx[2].z = F2.x;
+
+            Gy[2].y = F1.y;
+            Gy[2].z = F2.y;
+
+            Gz[2].y = F1.z;
+            Gz[2].z = F2.z;
+*/
+
+            Gx[1].y = F0.x;
+            Gx[1].z = F1.x;
+
+            Gy[1].y = F0.y;
+            Gy[1].z = F1.y;
+
+            Gz[1].y = F0.z;
+            Gz[1].z = F1.z;
+
+            Gx[2].y = F3.x;
+            Gx[2].z = F2.x;
+
+            Gy[2].y = F3.y;
+            Gy[2].z = F2.y;
+
+            Gz[2].y = F3.z;
+            Gz[2].z = F2.z;
+
+            float x = ifc::getMultplicationValue(Bu, Gx, Bv);
+            float y = ifc::getMultplicationValue(Bu, Gy, Bv);
+            float z = ifc::getMultplicationValue(Bu, Gz, Bv);
+
+            vec4 point(x, y, z, 1);
+            point = VP * point;
+
+            point.x /= point.w;
+            point.y /= point.w;
+
+            points.push_back(point);
+            vector<int> edge{index, index+1};
+            edges.push_back(edge);
+            index++;
+        }
+        v = v_max;
+        vec4 Bu = cubicBernsteinVector(u);
+        vec4 Bv = cubicBernsteinVector(v);
+
+        vec3 F0 = solveF0(u, v);
+        vec3 F1 = solveF1(u, v);
+        vec3 F2 = solveF2(u, v);
+        vec3 F3 = solveF3(u, v);
+/*
+        Gx[1].y = F0.x;
+        Gx[1].z = F3.x;
+
+        Gy[1].y = F0.y;
+        Gy[1].z = F3.y;
+
+        Gz[1].y = F0.z;
+        Gz[1].z = F3.z;
+
+        Gx[2].y = F1.x;
+        Gx[2].z = F2.x;
+
+        Gy[2].y = F1.y;
+        Gy[2].z = F2.y;
+
+        Gz[2].y = F1.z;
+        Gz[2].z = F2.z;
+*/
+
+        Gx[1].y = F0.x;
+        Gx[1].z = F1.x;
+
+        Gy[1].y = F0.y;
+        Gy[1].z = F1.y;
+
+        Gz[1].y = F0.z;
+        Gz[1].z = F1.z;
+
+        Gx[2].y = F3.x;
+        Gx[2].z = F2.x;
+
+        Gy[2].y = F3.y;
+        Gy[2].z = F2.y;
+
+        Gz[2].y = F3.z;
+        Gz[2].z = F2.z;
+
+        float x = ifc::getMultplicationValue(Bu, Gx, Bv);
+        float y = ifc::getMultplicationValue(Bu, Gy, Bv);
+        float z = ifc::getMultplicationValue(Bu, Gz, Bv);
+
+        vec4 point(x, y, z, 1);
+        point = VP * point;
+
+        point.x /= point.w;
+        point.y /= point.w;
+
+        points.push_back(point);
+        index++;
+    }
+    du = du_tmp;
+    dv = 1.0f / (float)(vDivisionCount_tmp - 1);
+
+    for(v = v_min; v <= v_max; v+=dv){
+        for(u = u_min; u <= u_max; u+=du){
+            vec4 Bu = cubicBernsteinVector(u);
+            vec4 Bv = cubicBernsteinVector(v);
+
+            vec3 F0 = solveF0(u, v);
+            vec3 F1 = solveF1(u, v);
+            vec3 F2 = solveF2(u, v);
+            vec3 F3 = solveF3(u, v);
+/*
+            Gx[1].y = F0.x;
+            Gx[1].z = F3.x;
+
+            Gy[1].y = F0.y;
+            Gy[1].z = F3.y;
+
+            Gz[1].y = F0.z;
+            Gz[1].z = F3.z;
+
+            Gx[2].y = F1.x;
+            Gx[2].z = F2.x;
+
+            Gy[2].y = F1.y;
+            Gy[2].z = F2.y;
+
+            Gz[2].y = F1.z;
+            Gz[2].z = F2.z;
+            */
+
+            Gx[1].y = F0.x;
+            Gx[1].z = F1.x;
+
+            Gy[1].y = F0.y;
+            Gy[1].z = F1.y;
+
+            Gz[1].y = F0.z;
+            Gz[1].z = F1.z;
+
+            Gx[2].y = F3.x;
+            Gx[2].z = F2.x;
+
+            Gy[2].y = F3.y;
+            Gy[2].z = F2.y;
+
+            Gz[2].y = F3.z;
+            Gz[2].z = F2.z;
+
+            float x = ifc::getMultplicationValue(Bu, Gx, Bv);
+            float y = ifc::getMultplicationValue(Bu, Gy, Bv);
+            float z = ifc::getMultplicationValue(Bu, Gz, Bv);
+
+            vec4 point(x, y, z, 1);
+            point = VP * point;
+
+            point.x /= point.w;
+            point.y /= point.w;
+
+            points.push_back(point);
+            vector<int> edge{index, index+1};
+            edges.push_back(edge);
+            index++;
+        }
+        u = u_max;
+        vec4 Bu = cubicBernsteinVector(u);
+        vec4 Bv = cubicBernsteinVector(v);
+
+        vec3 F0 = solveF0(u, v);
+        vec3 F1 = solveF1(u, v);
+        vec3 F2 = solveF2(u, v);
+        vec3 F3 = solveF3(u, v);
+/*
+        Gx[1].y = F0.x;
+        Gx[1].z = F3.x;
+
+        Gy[1].y = F0.y;
+        Gy[1].z = F3.y;
+
+        Gz[1].y = F0.z;
+        Gz[1].z = F3.z;
+
+        Gx[2].y = F1.x;
+        Gx[2].z = F2.x;
+
+        Gy[2].y = F1.y;
+        Gy[2].z = F2.y;
+
+        Gz[2].y = F1.z;
+        Gz[2].z = F2.z;
+*/
+
+        Gx[1].y = F0.x;
+        Gx[1].z = F1.x;
+
+        Gy[1].y = F0.y;
+        Gy[1].z = F1.y;
+
+        Gz[1].y = F0.z;
+        Gz[1].z = F1.z;
+
+        Gx[2].y = F3.x;
+        Gx[2].z = F2.x;
+
+        Gy[2].y = F3.y;
+        Gy[2].z = F2.y;
+
+        Gz[2].y = F3.z;
+        Gz[2].z = F2.z;
+
+        float x = ifc::getMultplicationValue(Bu, Gx, Bv);
+        float y = ifc::getMultplicationValue(Bu, Gy, Bv);
+        float z = ifc::getMultplicationValue(Bu, Gz, Bv);
+
+        vec4 point(x, y, z, 1);
+        point = VP * point;
+
+        point.x /= point.w;
+        point.y /= point.w;
+        points.push_back(point);
+        index++;
+    }
+
+    setSurfaceColor(color);
+    glLineWidth(this->lineWidth);
+    glBegin(GL_LINES);
+    for(unsigned int i = 1; i < edges.size(); i++){
+        int index1 = edges[i][0];
+        int index2 = edges[i][1];
+        vec4& p1 = points[index1];
+        vec4& p2 = points[index2];
+        if(p1.w < 0 || p2.w < 0) continue;
+        glVertex2f(p1.x, p1.y);
+        glVertex2f(p2.x, p2.y);
+    }
+    glEnd();
+}
+
+void SurfaceFilling::renderDebug(const glm::mat4 &VP) {
+    ObjectFactory &objectFactory = ObjectFactory::getInstance();
     commonPoints.point12->setColor(debugColors.CommonPointColor);
     commonPoints.point13->setColor(debugColors.CommonPointColor);
     commonPoints.point23->setColor(debugColors.CommonPointColor);
 
-    for(unsigned int j = 0; j < 3; j++) {
+    for (unsigned int j = 0; j < 3; j++) {
         std::cout << "Surface:     "
         << fillingData[j].surface->getName() << std::endl;
 
@@ -823,13 +1319,14 @@ void SurfaceFilling::renderDebug(){
         << borderCurveParamToString(fillingData[j].constBorderCurveParam)
         << std::endl;
         std::cout << " ------------ " << std::endl << std::endl;
+
         for (unsigned int i = 0; i < fillingData[j].borderPoints.size(); i++) {
             fillingData[j].borderPoints[i]->
                     setColor(debugColors.BorderControlPointsColor);
         }
 
         // P0 Middle Point
-        ifc::Point* P0 = objectFactory.createPoint(to_string(j));
+        ifc::Point *P0 = objectFactory.createPoint(to_string(j));
         P0->moveTo(fillingData[j].P0_BorderCurveMidPoint);
         P0->setColor(debugColors.BorderCurveMidPointColor);
 
@@ -838,20 +1335,20 @@ void SurfaceFilling::renderDebug(){
         vec3 v2 = fillingData[j].P1_Tanget;
         vec4 v1 = vec4(midPos.x, midPos.y, midPos.z, 1.0f);
         vec4 v2_4 = vec4(v2.x, v2.y, v2.z, 1.0f);
-        Line* tangetLine = objectFactory.createLine("line", v1, v2_4);
+        Line *tangetLine = objectFactory.createLine("line", v1, v2_4);
         tangetLine->setColor(debugColors.BorderCurveMidTangetColor);
 
-        ifc::Point* P1 = objectFactory.createPoint(to_string(j));
+        ifc::Point *P1 = objectFactory.createPoint(to_string(j));
         P1->moveTo(fillingData[j].P1_Tanget);
         P1->setColor(debugColors.P2Color);
 
         // P2
-        ifc::Point* P2 = objectFactory.createPoint(to_string(j));
+        ifc::Point *P2 = objectFactory.createPoint(to_string(j));
         P2->moveTo(fillingData[j].P2);
         P2->setColor(debugColors.P2Color);
 
         // P3
-        ifc::Point* P3 = objectFactory.createPoint(to_string(j));
+        ifc::Point *P3 = objectFactory.createPoint(to_string(j));
         P3->moveTo(fillingData[j].P3_Center);
         P3->setColor(debugColors.P3Color);
 
@@ -861,7 +1358,7 @@ void SurfaceFilling::renderDebug(){
         vec3 b3 = fillingData[j].b3PointLeft;
 
         vec4 vv2 = vec4(a0.x, a0.y, a0.z, 1.0f);
-        Line* a0Line = objectFactory.createLine("line", v1, vv2);
+        Line *a0Line = objectFactory.createLine("line", v1, vv2);
         a0Line->setColor(debugColors.a0TangentColor);
 
         vec3 center = fillingData[j].P3_Center;
@@ -869,14 +1366,14 @@ void SurfaceFilling::renderDebug(){
         vec4 a3_4 = vec4(a3.x, a3.y, a3.z, 1.0f);
         vec4 b3_4 = vec4(b3.x, b3.y, b3.z, 1.0f);
 
-        Line* a3Line = objectFactory.createLine("line", center4, a3_4);
+        Line *a3Line = objectFactory.createLine("line", center4, a3_4);
         a3Line->setColor(debugColors.a3TangentColor);
-        Line* b3Line = objectFactory.createLine("line", center4, b3_4);
+        Line *b3Line = objectFactory.createLine("line", center4, b3_4);
         b3Line->setColor(debugColors.b3TangentColor);
 
         // Bezier
-        vector<ifc::Point*> bezierPoints{P0, P1, P2, P3};
-        BezierSplineC0* bezierSpline = objectFactory.createBezier("bezier",
+        vector<ifc::Point *> bezierPoints{P0, P1, P2, P3};
+        BezierSplineC0 *bezierSpline = objectFactory.createBezier("bezier",
                                                                   bezierPoints);
         bezierSpline->setColor(debugColors.CenterBezierColor);
 
@@ -893,9 +1390,9 @@ void SurfaceFilling::renderDebug(){
         vec4 g14 = vec4(g1.x, g1.y, g1.z, 1.0f);
         vec4 g24 = vec4(g2.x, g2.y, g2.z, 1.0f);
 
-        Line* g0Line = objectFactory.createLine("line", C0, g04);
-        Line* g1Line = objectFactory.createLine("line", C05, g14);
-        Line* g2Line = objectFactory.createLine("line", C1, g24);
+        Line *g0Line = objectFactory.createLine("line", C0, g04);
+        Line *g1Line = objectFactory.createLine("line", C05, g14);
+        Line *g2Line = objectFactory.createLine("line", C1, g24);
         g0Line->setColor(debugColors.GGieldColor);
         g1Line->setColor(debugColors.GGieldColor);
         g2Line->setColor(debugColors.GGieldColor);
@@ -906,10 +1403,10 @@ void SurfaceFilling::renderDebug(){
         vec3 d2 = fillingData[j].DLeft[2];
         vec3 d3 = fillingData[j].DLeft[3];
 
-        Line* d0Line = objectFactory.createLine("line", P0->getPosition(), d0);
-        Line* d1Line = objectFactory.createLine("line", P1->getPosition(), d1);
-        Line* d2Line = objectFactory.createLine("line", P2->getPosition(), d2);
-        Line* d3Line = objectFactory.createLine("line", P3->getPosition(), d3);
+        Line *d0Line = objectFactory.createLine("line", P0->getPosition(), d0);
+        Line *d1Line = objectFactory.createLine("line", P1->getPosition(), d1);
+        Line *d2Line = objectFactory.createLine("line", P2->getPosition(), d2);
+        Line *d3Line = objectFactory.createLine("line", P3->getPosition(), d3);
         d0Line->setColor(debugColors.CenterBezierColor);
         d1Line->setColor(debugColors.CenterBezierColor);
         d2Line->setColor(debugColors.CenterBezierColor);
@@ -924,10 +1421,10 @@ void SurfaceFilling::renderDebug(){
         vec3 d1Top = fillingData[j].DTop[1];
         vec3 d2Top = fillingData[j].DTop[2];
 
-        Line* d1LineTop = objectFactory.createLine("line",
+        Line *d1LineTop = objectFactory.createLine("line",
                                                    fillingData[j].left->P1_Tanget,
                                                    d1Top);
-        Line* d2LineTop = objectFactory.createLine("line",
+        Line *d2LineTop = objectFactory.createLine("line",
                                                    fillingData[j].left->P2,
                                                    d2Top);
         d1LineTop->setColor(debugColors.CenterBezierColor);
@@ -956,18 +1453,18 @@ void SurfaceFilling::renderDebug(){
         vec3 g1Top = fillingData[j].g1PointTop;
         vec3 g2Top = fillingData[j].g2PointTop;
 
-        Line* g0TopLine = objectFactory.createLine("line", C0Top, g0Top);
-        Line* g1TopLine = objectFactory.createLine("line", C05Top, g1Top);
-        Line* g2TopLine = objectFactory.createLine("line", C1Top, g2Top);
+        Line *g0TopLine = objectFactory.createLine("line", C0Top, g0Top);
+        Line *g1TopLine = objectFactory.createLine("line", C05Top, g1Top);
+        Line *g2TopLine = objectFactory.createLine("line", C1Top, g2Top);
         g0TopLine->setColor(debugColors.GGieldColor);
         g1TopLine->setColor(debugColors.GGieldColor);
         g2TopLine->setColor(debugColors.GGieldColor);
 
         // Half Bezier border Points
-        ifc::Point* P00 = objectFactory.createPoint(to_string(j));
-        ifc::Point* P01 = objectFactory.createPoint(to_string(j));
-        ifc::Point* P02 = objectFactory.createPoint(to_string(j));
-        ifc::Point* P03 = objectFactory.createPoint(to_string(j));
+        ifc::Point *P00 = objectFactory.createPoint(to_string(j));
+        ifc::Point *P01 = objectFactory.createPoint(to_string(j));
+        ifc::Point *P02 = objectFactory.createPoint(to_string(j));
+        ifc::Point *P03 = objectFactory.createPoint(to_string(j));
 
         P00->moveTo(fillingData[j].halfBezierPointsPointsBase[0]);
         P00->setColor(debugColors.HalfBezierControlPointColor);
@@ -979,22 +1476,37 @@ void SurfaceFilling::renderDebug(){
         P03->setColor(debugColors.HalfBezierControlPointColor);
 
         // Inside Tangent Base
-        Line* halfBezierLine1
+        Line *halfBezierLine1
                 = objectFactory.createLine("line", P01->getPosition(),
                                            fillingData[j].halfBezierPoint1Base);
+          /*
+        Line *halfBezierLine1
+                = objectFactory.createLine("line",
+                                           fillingData[j].halfBezierPoint1BaseOrigin,
+                                           fillingData[j].halfBezierPoint1Base);
+        */
         halfBezierLine1->setLineWidth(4.0f);
         halfBezierLine1->setColor(debugColors.CenterBezierColor);
-        Line* halfBezierLine2
+
+        Line *halfBezierLine2
                 = objectFactory.createLine("line", P02->getPosition(),
                                            fillingData[j].halfBezierPoint2Base);
+
+        /*
+        Line *halfBezierLine2
+                = objectFactory.createLine("line",
+                                           fillingData[j]
+                                                   .halfBezierPoint2BaseOrigin,
+                                           fillingData[j].halfBezierPoint2Base);
+                                           */
         halfBezierLine2->setLineWidth(4.0f);
         halfBezierLine2->setColor(debugColors.CenterBezierColor);
 
 
-        ifc::Point* P00Top = objectFactory.createPoint(to_string(j));
-        ifc::Point* P01Top = objectFactory.createPoint(to_string(j));
-        ifc::Point* P02Top = objectFactory.createPoint(to_string(j));
-        ifc::Point* P03Top = objectFactory.createPoint(to_string(j));
+        ifc::Point *P00Top = objectFactory.createPoint(to_string(j));
+        ifc::Point *P01Top = objectFactory.createPoint(to_string(j));
+        ifc::Point *P02Top = objectFactory.createPoint(to_string(j));
+        ifc::Point *P03Top = objectFactory.createPoint(to_string(j));
 
         P00Top->moveTo(fillingData[j].halfBezierPointsPointsTop[0]);
         P00Top->setColor(debugColors.HalfBezierControlPointColor);
@@ -1004,82 +1516,147 @@ void SurfaceFilling::renderDebug(){
         P02Top->setColor(debugColors.HalfBezierControlPointColor);
         P03Top->moveTo(fillingData[j].halfBezierPointsPointsTop[3]);
         P03Top->setColor(debugColors.HalfBezierControlPointColor);
-        Line* halfBezierTopLine1
+
+        Line *halfBezierTopLine1
                 = objectFactory.createLine("line", P01Top->getPosition(),
                                            fillingData[j].halfBezierPoint1Top);
+
+        /*
+        Line *halfBezierTopLine1
+                = objectFactory.createLine("line",
+                                           fillingData[j]
+                                                   .halfBezierPoint1TopOrigin,
+                                           fillingData[j].halfBezierPoint1Top);
+                                           */
         halfBezierTopLine1->setLineWidth(4.0f);
         halfBezierTopLine1->setColor(debugColors.CenterBezierColor);
-        Line* halfBezierTopLine2
+
+        Line *halfBezierTopLine2
                 = objectFactory.createLine("line", P02Top->getPosition(),
                                            fillingData[j].halfBezierPoint2Top);
+
+        /*
+        Line *halfBezierTopLine2
+                = objectFactory.createLine("line",
+                                           fillingData[j]
+                                                   .halfBezierPoint2TopOrigin,
+                                           fillingData[j].halfBezierPoint2Top);
+        */
         halfBezierTopLine2->setLineWidth(4.0f);
         halfBezierTopLine2->setColor(debugColors.CenterBezierColor);
 
-        scene->addRenderObject(P0);
-        scene->addRenderObject(P1);
-        scene->addRenderObject(P2);
-        scene->addRenderObject(P3);
-        scene->addRenderObject(tangetLine);
 
-        //if(j == 0 ){
-        if(true){
-            scene->addRenderObject(P00);
-            scene->addRenderObject(P01);
-            scene->addRenderObject(P02);
-            scene->addRenderObject(P03);
+        //if (j == 0) {
+        if (true) {
+            P00->update();
+            P00->render(VP);
+            P01->update();
+            P01->render(VP);
+            P02->update();
+            P02->render(VP);
+            P03->update();
+            P03->render(VP);
 
-            scene->addRenderObject(a0Line);
-            scene->addRenderObject(a3Line);
-            scene->addRenderObject(b3Line);
+            a0Line->render(VP);
+            a3Line->render(VP);
+            b3Line->render(VP);
 
-            scene->addRenderObject(g0Line);
-            scene->addRenderObject(g1Line);
-            scene->addRenderObject(g2Line);
+            g0Line->render(VP);
+            g1Line->render(VP);
+            g2Line->render(VP);
 
-            scene->addRenderObject(g0TopLine);
-            scene->addRenderObject(g1TopLine);
-            scene->addRenderObject(g2TopLine);
+            g0TopLine->render(VP);
+            g1TopLine->render(VP);
+            g2TopLine->render(VP);
 
-            scene->addRenderObject(d1Line);
-            scene->addRenderObject(d2Line);
-            scene->addRenderObject(d1LineTop);
-            scene->addRenderObject(d2LineTop);
+            d1Line->render(VP);
+            (d2Line)->render(VP);
+            (d1LineTop)->render(VP);
+            (d2LineTop)->render(VP);
 
-            scene->addRenderObject(halfBezierLine1);
-            scene->addRenderObject(halfBezierLine2);
-            scene->addRenderObject(halfBezierTopLine1);
-            scene->addRenderObject(halfBezierTopLine2);
-
-
-            fillingData[j].left->surface->setColor(Color(1.0f, 0.0, 0.0));
-            fillingData[j].right->surface->setColor(Color(0.0f, 0.0, 1.0));
-
-
+            (halfBezierLine1)->render(VP);
+            (halfBezierLine2)->render(VP);
+            (halfBezierTopLine1)->render(VP);
+            (halfBezierTopLine2)->render(VP);
         }
+        P0->update();
+        P0->render(VP);
+        P1->update();
+        P1->render(VP);
+        P2->update();
+        P2->render(VP);
+        P3->update();
+        P3->render(VP);
+        tangetLine->render(VP);
 
-        scene->addRenderObject(bezierSpline);
+        (bezierSpline)->render(VP);
+
+        delete P00;
+        delete P01;
+        delete P02;
+        delete P03;
+
+        delete a0Line;
+        delete a3Line;
+        delete b3Line;
+
+        delete g0Line;
+        delete g1Line;
+        delete g2Line;
+
+        delete g0TopLine;
+        delete g1TopLine;
+        delete g2TopLine;
+
+        delete d1Line;
+        delete d2Line;
+        delete d1LineTop;
+        delete d2LineTop;
+
+        delete halfBezierLine1;
+        delete halfBezierLine2;
+        delete halfBezierTopLine1;
+        delete halfBezierTopLine2;
+
+        delete P0;
+        delete P1;
+        delete P2;
+        delete P3;
+        delete tangetLine;
+
+        delete bezierSpline;
     }
 }
 
-std::string SurfaceFilling::borderCurveParamToString(BorderCurveParam param){
-    if(param == BorderCurveParam::U) return "U";
-    if(param == BorderCurveParam::V) return "V";
-    if(param == BorderCurveParam::U0) return "U0";
-    if(param == BorderCurveParam::U1) return "U1";
-    if(param == BorderCurveParam::V0) return "V0";
-    if(param == BorderCurveParam::V1) return "V1";
-    return "Unknown";
+
+//-----------------------//
+//  PROTECTED
+//-----------------------//
+
+void SurfaceFilling::initVertices(){
+
 }
 
+void SurfaceFilling::initEdges(){
+
+}
 //-----------------------//
 //  PUBLIC
 //-----------------------//
 
-FillingStatus SurfaceFilling::getStatus(){
-    return this->fillingStatus;
+bool SurfaceFilling::isRenderDebug(){
+    return doRenderDebug;
 }
 
-void SurfaceFilling::start(){
+void SurfaceFilling::setRenderDebug(bool v){
+    doRenderDebug = v;
+}
+
+void SurfaceFilling::render(const glm::mat4 &VP){
+    render(VP, this->color);
+}
+
+void SurfaceFilling::render(const glm::mat4 &VP, const Color &color) {
     findCommonPoints();
     if(fillingStatus != FillingStatus::COMPUTING) return;
 
@@ -1091,8 +1668,16 @@ void SurfaceFilling::start(){
     computeGFieldVectors();
     computeHalfBorderCurvePoints();
 
-    constructGregoryPatches();
-    if(renderMode == RenderMode::DEBUG) renderDebug();
+    renderPatches(VP);
+    if(doRenderDebug) renderDebug(VP);
+}
+
+void SurfaceFilling::update() {
+
+}
+
+FillingStatus SurfaceFilling::getStatus(){
+    return this->fillingStatus;
 }
 
 

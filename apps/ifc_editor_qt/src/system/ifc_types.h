@@ -45,6 +45,7 @@ extern const std::string RB_SURFACE_CO_CYLIND_NAME;
 
 extern const std::string RB_SURFACE_C2_RECT_NAME;
 extern const std::string RB_SURFACE_C2_CYLIND_NAME;
+extern const std::string RB_SURFACE_GREGORY_NAME;
 
 extern const Type RB_ROOT_TYPE;
 extern const Type RB_TORUS_TYPE;
@@ -62,6 +63,7 @@ extern const Type RB_SURFACE_C0_CYLIND_TYPE;
 
 extern const Type RB_SURFACE_C2_RECT_TYPE;
 extern const Type RB_SURFACE_C2_CYLIND_TYPE;
+extern const Type RB_SURFACE_GREGORY_TYPE;
 
 extern const Type OBJ_ROOT_TYPE;
 extern const Type OBJ_CAMERA_TYPE;

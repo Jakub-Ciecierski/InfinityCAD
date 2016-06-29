@@ -97,3 +97,11 @@ SceneCMHandler SCM_FILLING_SURFACE_HANDLER(
     ObjectManager& objManager = ObjectManager::getInstance();
     objManager.runFillingPatch();
 });
+
+SceneCMHandler SCM_GREGORY_DEBUG_HANDLER(
+        "Render debug",
+        [](Item* item){
+    SurfaceFilling* surface = static_cast<SurfaceFilling*>(item->object);
+    bool isEnabled = surface->isRenderDebug();
+    surface->setRenderDebug(!isEnabled);
+});

@@ -275,6 +275,9 @@ void Surface::drawPatch(const BicubicBezierPatch* patch,
 
     du = 1.0f / (float)(uDivisionCount_tmp - 1);
 
+    int index = 0;
+    vector<vector<int>> edges;
+
     float u,v;
     for(u = u_min; u <= u_max; u+=du){
         for(v = v_min; v <= v_max; v+=dv){
@@ -287,15 +290,31 @@ void Surface::drawPatch(const BicubicBezierPatch* patch,
 
             vec4 point(x, y, z, 1);
             point = VP * point;
-            //if(point.w < 0) continue;
 
             point.x /= point.w;
             point.y /= point.w;
 
             points.push_back(point);
-
-            //glVertex2f(point.x, point.y);
+            vector<int> edge{index, index+1};
+            edges.push_back(edge);
+            index++;
         }
+        v = v_max;
+        vec4 Bu = cubicBernsteinVector(u);
+        vec4 Bv = cubicBernsteinVector(v);
+
+        float x = ifc::getMultplicationValue(Bu, patch->getX(), Bv);
+        float y = ifc::getMultplicationValue(Bu, patch->getY(), Bv);
+        float z = ifc::getMultplicationValue(Bu, patch->getZ(), Bv);
+
+        vec4 point(x, y, z, 1);
+        point = VP * point;
+
+        point.x /= point.w;
+        point.y /= point.w;
+
+        points.push_back(point);
+        index++;
     }
     du = du_tmp;
     dv = 1.0f / (float)(vDivisionCount_tmp - 1);
@@ -311,23 +330,38 @@ void Surface::drawPatch(const BicubicBezierPatch* patch,
 
             vec4 point(x, y, z, 1);
             point = VP * point;
-            //if(point.w < 0) continue;
-
             point.x /= point.w;
             point.y /= point.w;
 
             points.push_back(point);
-            //glVertex2f(point.x, point.y);
+            vector<int> edge{index, index+1};
+            edges.push_back(edge);
+            index++;
         }
-    }
+        u = u_max;
+        vec4 Bu = cubicBernsteinVector(u);
+        vec4 Bv = cubicBernsteinVector(v);
 
-    for(unsigned int i = 1; i < points.size(); i++){
-        vec4& p1 = points[i-1];
-        vec4& p2 = points[i];
+        float x = ifc::getMultplicationValue(Bu, patch->getX(), Bv);
+        float y = ifc::getMultplicationValue(Bu, patch->getY(), Bv);
+        float z = ifc::getMultplicationValue(Bu, patch->getZ(), Bv);
+
+        vec4 point(x, y, z, 1);
+        point = VP * point;
+        point.x /= point.w;
+        point.y /= point.w;
+
+        points.push_back(point);
+        index++;
+    }
+    for(unsigned int i = 1; i < edges.size(); i++){
+        int index1 = edges[i][0];
+        int index2 = edges[i][1];
+        vec4& p1 = points[index1];
+        vec4& p2 = points[index2];
         if(p1.w < 0 || p2.w < 0) continue;
         glVertex2f(p1.x, p1.y);
         glVertex2f(p2.x, p2.y);
-
     }
 }
 

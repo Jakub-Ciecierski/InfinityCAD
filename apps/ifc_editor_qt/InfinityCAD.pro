@@ -71,7 +71,8 @@ SOURCES += src/glwidget.cpp \
     src/plot/qcustomplot.cpp \
     src/dialogs/intersectiondialog.cpp \
     src/plot/plot_style.cpp \
-    src/widgets/scene_list/context_menus/scm_surfaces_fill.cpp
+    src/widgets/scene_list/context_menus/scm_surfaces_fill.cpp \
+    src/widgets/scene_list/context_menus/scm_gregory.cpp
 
 HEADERS  += build/ui/ui_mainwindow.h \
     src/context_menus/context_menu.h \
@@ -109,7 +110,8 @@ HEADERS  += build/ui/ui_mainwindow.h \
     src/plot/qcustomplot.h \
     src/dialogs/intersectiondialog.h \
     src/plot/plot_style.h \
-    src/widgets/scene_list/context_menus/scm_surfaces_fill.h
+    src/widgets/scene_list/context_menus/scm_surfaces_fill.h \
+    src/widgets/scene_list/context_menus/scm_gregory.h
 
 ##############################
 

@@ -60,6 +60,7 @@ void SceneTree::setupRootItems(){
     topRootItems.push_back(new RootItem(RB_SURFACE_C2_RECT_TYPE, "Surfaces C2 Rectangle"));
     topRootItems.push_back(new RootItem(RB_SURFACE_C2_CYLIND_TYPE, "Surfaces C2 Cylinder"));
     topRootItems.push_back(new RootItem(RB_INTERSECTION_CURVE_TYPE, "Intersection Curves"));
+    topRootItems.push_back(new RootItem(RB_SURFACE_GREGORY_TYPE, "Surfaces Gregory"));
 
 }
 

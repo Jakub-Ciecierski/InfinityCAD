@@ -20,6 +20,8 @@ const std::string RB_SURFACE_CO_CYLIND_NAME = "Surface C0 Cylinder";
 const std::string RB_SURFACE_C2_RECT_NAME = "Surface C2 Rectangle";
 const std::string RB_SURFACE_C2_CYLIND_NAME = "Surface C2 Cylinder";
 
+const std::string RB_SURFACE_GREGORY_NAME = "Gregory Surface";
+
 const string OBJ_ROOT_NAME = "Objects";
 const string OBJ_CAMERA_NAME = "Camera";
 
@@ -39,6 +41,7 @@ const Type RB_SURFACE_C0_CYLIND_TYPE(RB_SURFACE_CO_CYLIND_NAME);
 
 const Type RB_SURFACE_C2_RECT_TYPE(RB_SURFACE_C2_RECT_NAME);
 const Type RB_SURFACE_C2_CYLIND_TYPE(RB_SURFACE_C2_CYLIND_NAME);
+const Type RB_SURFACE_GREGORY_TYPE(RB_SURFACE_GREGORY_NAME);
 
 const Type OBJ_ROOT_TYPE(OBJ_ROOT_NAME);
 const Type OBJ_CAMERA_TYPE(OBJ_CAMERA_NAME);

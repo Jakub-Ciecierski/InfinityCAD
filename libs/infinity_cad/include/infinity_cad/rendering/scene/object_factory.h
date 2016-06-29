@@ -23,6 +23,7 @@
 #include <infinity_cad/rendering/render_objects/surfaces/surface_c2_rect.h>
 #include <infinity_cad/rendering/render_objects/surfaces/surface_c2_cylind.h>
 #include <infinity_cad/rendering/render_objects/curves/intersection_curve.h>
+#include <infinity_cad/geometry/filling/surface_filling.h>
 #include "infinity_cad/rendering/scene/scene_id_factory.h"
 #include "scene.h"
 
@@ -118,6 +119,10 @@ public:
                                                std::vector<glm::vec3>& vertices,
                                                Surface* surface1,
                                                Surface* surface2);
+
+    SurfaceFilling* createGregorySurface(std::string name,
+                                         Surface* surface1, Surface* surface2,
+                                         Surface* surface3);
 };
 
 

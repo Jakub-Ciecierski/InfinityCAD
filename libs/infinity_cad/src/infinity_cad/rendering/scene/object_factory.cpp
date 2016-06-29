@@ -281,3 +281,15 @@ IntersectionCurve* ObjectFactory::createIntersectionCurve(
 
     return curve;
 }
+
+SurfaceFilling* ObjectFactory::createGregorySurface(std::string name,
+                                                    Surface* surface1,
+                                                    Surface* surface2,
+                                                    Surface* surface3){
+    SceneID id = sceneIDFactory.createNextAvailableID();
+
+    SurfaceFilling* surface = new SurfaceFilling(id, name,
+                                                 surface1, surface2, surface3);
+
+    return surface;
+}

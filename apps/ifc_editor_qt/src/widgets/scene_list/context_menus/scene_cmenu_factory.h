@@ -12,6 +12,7 @@
 #include <widgets/scene_list/context_menus/scm_surfacec0.h>
 #include <widgets/scene_list/context_menus/scm_surfaces.h>
 #include <widgets/scene_list/context_menus/scm_surfaces_fill.h>
+#include <widgets/scene_list/context_menus/scm_gregory.h>
 #include <widgets/scene_list/entities/item.h>
 #include <functional>
 
@@ -34,6 +35,8 @@ private:
     SCMSurfaceC0* surfaceMenu;
     SCMSurfaces* surfacesMenu;
     SCMSurfacesFill* surfacesFillMenu;
+
+    SCMGregory* gregoryMenu;
 
 public:
     ~SceneCMenuFactory();

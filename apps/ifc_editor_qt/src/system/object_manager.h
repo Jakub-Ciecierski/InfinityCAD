@@ -61,6 +61,9 @@ public:
                              Matrix<ifc::Point*> pointsMatrix,
                              std::vector<Item*> pointItems);
 
+    Item* addSurfaceGregory(std::string name, Surface* surface1,
+                            Surface* surface2, Surface* surface3);
+
     // TODO split
     void addChildItem(Item* bezier, Item* objectName);
     void removeChildItem(Item* pointItem);

@@ -7,6 +7,8 @@
 
 #include <infinity_cad/rendering/render_objects/surfaces/surface.h>
 #include <infinity_cad/rendering/scene/scene.h>
+#include <infinity_cad/rendering/render_objects/primitivies/line.h>
+#include <infinity_cad/rendering/render_objects/curves/bezier_spline_c0.h>
 
 enum BorderCurveParam{
     U, V, U0, U1, V0, V1
@@ -92,6 +94,8 @@ struct FillingData{
     // Inside
     glm::vec3 halfBezierPoint1Base;
     glm::vec3 halfBezierPoint2Base;
+    glm::vec3 halfBezierPoint1BaseOrigin;
+    glm::vec3 halfBezierPoint2BaseOrigin;
 
     std::vector<glm::vec3> halfBezierPointsPointsTop;
     glm::vec3 halfBezierTanget1Top;
@@ -100,6 +104,58 @@ struct FillingData{
     //Inside
     glm::vec3 halfBezierPoint1Top;
     glm::vec3 halfBezierPoint2Top;
+    glm::vec3 halfBezierPoint1TopOrigin;
+    glm::vec3 halfBezierPoint2TopOrigin;
+
+};
+
+struct DebugObjects{
+    ifc::Point* P0;
+    ifc::Point* P1;
+    ifc::Point* P2;
+    ifc::Point* P3;
+
+    Line* tangetLine;
+
+
+    Line* a0Line;
+    Line* a3Line;
+    Line* b3Line;
+    BezierSplineC0* bezierSpline;
+
+    Line* g0Line;
+    Line* g1Line;
+    Line* g2Line;
+
+    Line* d0Line;
+    Line* d1Line;
+    Line* d2Line;
+    Line* d3Line;
+
+    Line* d1LineTop;
+    Line* d2LineTop;
+
+    Line* g0TopLine;
+    Line* g1TopLine;
+    Line* g2TopLine;
+
+    ifc::Point* P00;
+    ifc::Point* P01;
+    ifc::Point* P02;
+    ifc::Point* P03;
+
+    Line* halfBezierLine1;
+    Line* halfBezierLine2;
+
+    ifc::Point* P00Top;
+    ifc::Point* P01Top;
+    ifc::Point* P02Top;
+    ifc::Point* P03Top;
+
+    Line* halfBezierTopLine1;
+    Line* halfBezierTopLine2;
+
+
 };
 
 struct DebugColors{
@@ -126,11 +182,9 @@ struct DebugColors{
 /*
  * Assumes that Surfaces are C0 single patches
  */
-class SurfaceFilling {
+class SurfaceFilling : public RenderObject{
 private:
     FillingData fillingData[3];
-
-    Scene* scene;
 
     DebugColors debugColors;
     RenderMode renderMode;
@@ -191,24 +245,35 @@ private:
                                                         glm::vec3 p3,
                                                         float u, float v);
 
-    void constructGregoryPatches();
-    void constructGregoryPatch(FillingData& fillingData);
-
     glm::vec2 getUV(FillingData& fillingData);
-
-    void renderDebug();
-
     std::string borderCurveParamToString(BorderCurveParam param);
+
+    void renderPatches(const glm::mat4 &VP);
+    void renderPatch(const glm::mat4 &VP, FillingData& fillingData);
+
+    void renderDebug(const glm::mat4 &VP);
+protected:
+    virtual void initVertices() override;
+    virtual void initEdges() override;
+
+    bool doRenderDebug;
+    float TANGET_MULTIPLIER;
 public:
 
-    SurfaceFilling(Surface* surface1, Surface* surface2, Surface* surface3,
-                   Scene* scene);
+    SurfaceFilling(SceneID id, std::string name,
+                   Surface* surface1, Surface* surface2, Surface* surface3);
 
     ~SurfaceFilling();
 
-    FillingStatus getStatus();
+    bool isRenderDebug();
+    void setRenderDebug(bool v);
 
-    void start();
+    virtual void render(const glm::mat4 &VP) override;
+    virtual void render(const glm::mat4 &VP, const Color &color) override;
+
+    virtual void update() override;
+
+    FillingStatus getStatus();
 };
 
 

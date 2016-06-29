@@ -19,6 +19,8 @@ SceneCMenuFactory::SceneCMenuFactory() {
     surfaceMenu = new SCMSurfaceC0();
     surfacesMenu = new SCMSurfaces();
     surfacesFillMenu = new SCMSurfacesFill();
+
+    gregoryMenu = new SCMGregory();
 }
 
 SceneCMenuFactory::~SceneCMenuFactory() {
@@ -37,6 +39,8 @@ SceneCMenuFactory::~SceneCMenuFactory() {
     delete surfaceMenu;
     delete surfacesMenu;
     delete surfacesFillMenu;
+
+    delete gregoryMenu;
 }
 
 SceneCMenuFactory& SceneCMenuFactory::getInstance(){
@@ -107,6 +111,10 @@ SceneContextMenu* SceneCMenuFactory::getProperMenu(
                                             RB_SURFACE_C2_CYLIND_TYPE,
                                             getItemByTree);
 
+    int gregoryCount = getSelectedTypeCount(selectedItems,
+                                            RB_SURFACE_GREGORY_TYPE,
+                                            getItemByTree);
+
     if(pointCount == totalCount){
         Item* bezierRoot = getRootItem(RB_BEZIER_TYPE);
         if(bezierRoot == NULL)
@@ -134,6 +142,11 @@ SceneContextMenu* SceneCMenuFactory::getProperMenu(
             return surfacesMenu;
         }else if(totalCount == 3){
             return surfacesFillMenu;
+        }
+    }
+    else if(gregoryCount == totalCount){
+        if(totalCount == 1){
+            return gregoryMenu;
         }
     }
 

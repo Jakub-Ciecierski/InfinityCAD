@@ -81,8 +81,23 @@ struct FillingData{
     // P3
     glm::vec3 P3_Center;
 
-    // D + Pi create another 4 control points
+    // Di + Pi create another 4 control points
     std::vector<glm::vec3> DLeft;
+    std::vector<glm::vec3> DTop;
+
+    std::vector<glm::vec3> halfBezierPointsPointsBase;
+    glm::vec3 halfBezierTanget1Base;
+    glm::vec3 halfBezierTanget2Base;
+
+    glm::vec3 halfBezierPoint1Base;
+    glm::vec3 halfBezierPoint2Base;
+
+    std::vector<glm::vec3> halfBezierPointsPointsTop;
+    glm::vec3 halfBezierTanget1Top;
+    glm::vec3 halfBezierTanget2Top;
+
+    glm::vec3 halfBezierPoint1Top;
+    glm::vec3 halfBezierPoint2Top;
 };
 
 struct DebugColors{
@@ -102,6 +117,8 @@ struct DebugColors{
     Color P3Color;
 
     Color CenterBezierColor;
+
+    Color HalfBezierControlPointColor;
 };
 
 /*
@@ -158,6 +175,19 @@ private:
     void computeGFieldVector(FillingData &fillingData);
     void computeGFieldVectorTop(FillingData& fillingDataBase);
     void computeD(FillingData &fillingData);
+    void computeDTop(FillingData &fillingData);
+
+    /*
+     *
+     */
+    void computeHalfBorderCurvePoints();
+    void computeHalfBorderCurvePoints(FillingData& fillingData);
+    void computeHalfBorderCurvePointsTop(FillingData& fillingData);
+    std::vector<glm::vec3> CalculateBezierControlPoints(glm::vec3 p0,
+                                                        glm::vec3 p1,
+                                                        glm::vec3 p2,
+                                                        glm::vec3 p3,
+                                                        float u, float v);
 
     glm::vec2 getUV(FillingData& fillingData);
 

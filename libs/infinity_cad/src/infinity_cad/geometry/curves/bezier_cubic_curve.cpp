@@ -25,6 +25,21 @@ BezierCubicCurve::BezierCubicCurve(){
     points[3] = &p3;
 }
 
+BezierCubicCurve::BezierCubicCurve(ifc::Point* P0, ifc::Point* P1,
+                                   ifc::Point* P2, ifc::Point* P3){
+    p0 = P0;
+    p1 = P1;
+    p2 = P2;
+    p3 = P3;
+
+
+    points.resize(4);
+    points[0] = &p0;
+    points[1] = &p1;
+    points[2] = &p2;
+    points[3] = &p3;
+}
+
 //-----------------------//
 //  PUBLIC
 //-----------------------//

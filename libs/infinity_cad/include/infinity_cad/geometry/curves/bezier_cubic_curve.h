@@ -21,6 +21,8 @@ public:
     static const int MAX_POINT_COUNT_CUBIC = 4;
 
     BezierCubicCurve();
+    BezierCubicCurve(ifc::Point* P0, ifc::Point* P1,
+                     ifc::Point* P2, ifc::Point* P3);
 
     glm::vec4 compute(float t);
     void addPoint(ifc::Point* p);

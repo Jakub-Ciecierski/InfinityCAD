@@ -37,6 +37,8 @@ SurfaceFilling::SurfaceFilling(Surface* surface1,
     debugColors.P2Color = Color(0.8f, 0.0f, 0.0f);
 
     debugColors.CenterBezierColor = Color(1.0f, 1.0f, 1.0f);
+
+    debugColors.HalfBezierControlPointColor = Color(1.0f, 1.0f, 1.0f);
 }
 
 SurfaceFilling::~SurfaceFilling() {
@@ -185,7 +187,7 @@ void SurfaceFilling::computeBorderCurveTangent(FillingData& fillingData){
         tangent = -tangent;
     }
 
-    tangent = normalize(tangent);
+    //tangent = normalize(tangent);
     tangent *= 0.33f;
 
     fillingData.borderCurveTanget = tangent;
@@ -236,6 +238,10 @@ void SurfaceFilling::computeGFieldVectors(){
     computeD(fillingData[0]);
     computeD(fillingData[1]);
     computeD(fillingData[2]);
+
+    computeDTop(fillingData[0]);
+    computeDTop(fillingData[1]);
+    computeDTop(fillingData[2]);
 }
 
 void SurfaceFilling::computeGFieldVector(FillingData& fillingData){
@@ -254,8 +260,9 @@ void SurfaceFilling::computeGFieldVector(FillingData& fillingData){
        fillingData.constBorderCurveParam == BorderCurveParam::U1){
         a0 = -a0;
     }
-    a0 = normalize(a0);
+    //a0 = normalize(a0);
     a0 *= 0.33f;
+
     b0 = a0;
 
     a3 = fillingData.left->P3_Center - fillingData.left->P2;
@@ -264,9 +271,9 @@ void SurfaceFilling::computeGFieldVector(FillingData& fillingData){
     a3 = -a3;
     //b3 = -b3;
 
-    a3 = normalize(a3);
+    //a3 = normalize(a3);
     a3 *= 0.33f;
-    b3 = normalize(b3);
+    //b3 = normalize(b3);
     b3 *= 0.33f;
 
     g0 = (a0 + b0) / 2.0f;
@@ -304,7 +311,7 @@ void SurfaceFilling::computeGFieldVector(FillingData& fillingData){
     fillingData.a0PointLeft = fillingData.P0_BorderCurveMidPoint + a0;
     fillingData.b0PointLeft = fillingData.P0_BorderCurveMidPoint + b0;
     fillingData.a3PointLeft = fillingData.P3_Center + a3;
-    fillingData.b3PointLeft = fillingData.P3_Center - b3;
+    fillingData.b3PointLeft = fillingData.P3_Center + b3;
 
     delete P0;
     delete P1;
@@ -330,7 +337,7 @@ void SurfaceFilling::computeGFieldVectorTop(FillingData& fillingDataBase){
        fillingData.constBorderCurveParam == BorderCurveParam::U1){
         a0 = -a0;
     }
-    a0 = normalize(a0);
+    //a0 = normalize(a0);
     a0 *= 0.33f;
     b0 = a0;
 
@@ -340,18 +347,18 @@ void SurfaceFilling::computeGFieldVectorTop(FillingData& fillingDataBase){
     a3 = -a3;
     //b3 = -b3;
 
-    a3 = normalize(a3);
+    //a3 = normalize(a3);
     a3 *= 0.33f;
-    b3 = normalize(b3);
+    //b3 = normalize(b3);
     b3 *= 0.33f;
 
     g0 = (a0 + b0) / 2.0f;
     g2 = (a3 + b3) / 2.0f;
     g1 = (g0 + g2) / 2.0f;
 
-    //g0 = -g0;
-    //g1 = -g1;
-    //g2 = -g2;
+    g0 = -g0;
+    g1 = -g1;
+    g2 = -g2;
 
     ObjectFactory& objectFactory = ObjectFactory::getInstance();
     ifc::Point* P0
@@ -368,14 +375,14 @@ void SurfaceFilling::computeGFieldVectorTop(FillingData& fillingDataBase){
     vec3 C05 = bezierSpline->compute(0.5f);
     vec3 C1 = bezierSpline->compute(1.0f);
 
-    fillingData.g0PointTop = C0 + g0;
-    fillingData.g1PointTop = C05 + g1;
-    fillingData.g2PointTop = C1 + g2;
+    fillingDataBase.g0PointTop = C0 + g0;
+    fillingDataBase.g1PointTop = C05 + g1;
+    fillingDataBase.g2PointTop = C1 + g2;
 
-    fillingData.a0PointTop = fillingData.P0_BorderCurveMidPoint + a0;
-    fillingData.b0PointTop = fillingData.P0_BorderCurveMidPoint + b0;
-    fillingData.a3PointTop = fillingData.P3_Center + a3;
-    fillingData.b3PointTop = fillingData.P3_Center - b3;
+    fillingDataBase.a0PointTop = fillingData.P0_BorderCurveMidPoint + a0;
+    fillingDataBase.b0PointTop = fillingData.P0_BorderCurveMidPoint + b0;
+    fillingDataBase.a3PointTop = fillingData.P3_Center + a3;
+    fillingDataBase.b3PointTop = fillingData.P3_Center + b3;
 
     delete P0;
     delete P1;
@@ -384,9 +391,7 @@ void SurfaceFilling::computeGFieldVectorTop(FillingData& fillingDataBase){
     delete bezierSpline;
 }
 
-
 void SurfaceFilling::computeD(FillingData &fillingData){
-    cout << "--- FillingData ---" << endl << endl;
     vec3 b0 = fillingData.b0PointLeft;
     vec3 b3 = fillingData.b3PointLeft;
 
@@ -409,62 +414,23 @@ void SurfaceFilling::computeD(FillingData &fillingData){
         return v;
     };
 
-    auto solve_KH = [](vec3& b, vec3& g, vec3& c){
-        auto solve_KH_RHS = [](float k, float h, vec3& gg, vec3& cc){
-            float x = (k * gg.x) + (h * cc.x);
-            float y = (k * gg.y) + (h * cc.y);
-            float z = (k * gg.z) + (h * cc.z);
+    auto solve_KH_RHS = [](float k, float h, vec3& gg, vec3& cc){
+        float x = (k * gg.x) + (h * cc.x);
+        float y = (k * gg.y) + (h * cc.y);
+        float z = (k * gg.z) + (h * cc.z);
 
-            return vec3(x,y,z);
-        };
-
-        auto solve_k = [](float h, float b, float c, float g){
-            float k = (b - (h*c)) / g;
-            return k;
-        };
-
-        float err_tol = 0.00001f;
-        /*
-        vec3 h = vec3(
-                (b[0] * g[1] - b[1] * g[0]) / (c[0] * g[1] - c[1] * g[0]),
-                (b[0] * g[2] - b[2] * g[0]) / (c[0] * g[2] - c[2] * g[0]),
-                (b[1] * g[2] - b[2] * g[1]) / (c[1] * g[2] - c[2] * g[1])
-        );
-        */
-
-        vec3 h = vec3(
-                -(((b.y/g.y) - (b.x/g.x)) /((c.x/g.x) - (c.y / g.y))),
-                -(((b.z/g.z) - (b.x/g.x)) /((c.x/g.x) - (c.z / g.z))),
-                -(((b.y/g.y) - (b.z/g.z)) /((c.z/g.z) - (c.y / g.y)))
-        );
-        for(int i = 0; i < 3; i++){
-            for(int j = 0; j < 3; j++){
-                float k = solve_k(h[i], b[j], c[j], g[j]);
-                vec3 RHS = solve_KH_RHS(k, h[i], g, c);
-
-                cout << "RHS: ";
-                ifc::printVec3(RHS);
-                cout << "b: ";
-                ifc::printVec3(b);
-                cout << endl;
-
-                if(ifc::equal(RHS, b, err_tol)){
-                    cout << "^ Correct" << endl;
-                    return vec2(k, h[i]);
-                }
-            }
-        }
-        cout << "No Solution found" << endl;
-        return vec2(-9999, -9999);
+        return vec3(x,y,z);
     };
 
-    vec2 kh0 = solve_KH(b0, g0, c0);
-    vec2 kh1 = solve_KH(b3, g2, c2);
+    float k0 = (((c0.x*b0.y) - (b0.x*c0.y)) / ((c0.x*g0.y) - (g0.x*c0.y)));
+    float h0 = (((b0.x*g0.y) - (b0.y*g0.x)) / ((c0.x*g0.y) - (g0.x*c0.y)));
+    float k1 = (((c2.x*b3.y) - (b3.x*c2.y)) / ((c2.x*g2.y) - (g2.x*c2.y)));
+    float h1 = (((b3.x*g2.y) - (b3.y*g2.x)) / ((c2.x*g2.y) - (g2.x*c2.y)));
+    //float k1 = (((c2.z*b3.y) - (b3.z*c2.y)) / ((c2.z*g2.y) - (g2.z*c2.y)));
+    //float h1 = (((b3.z*g2.y) - (b3.y*g2.z)) / ((c2.z*g2.y) - (g2.z*c2.y)));
 
-    float k0 = kh0.x;
-    float h0 = kh0.y;
-    float k1 = kh1.x;
-    float h1 = kh1.y;
+    vec3 RHS_B0 = solve_KH_RHS(k0, h0, g0, c0);
+    vec3 RHS_B3 = solve_KH_RHS(k1, h1, g2, c2);
 
     auto solveD = [k0, h0, k1, h1, solve_g, solve_c](float v){
 
@@ -493,6 +459,259 @@ void SurfaceFilling::computeD(FillingData &fillingData){
                       solveD(0.666f), solveD(1.0f)};
 
     fillingData.DLeft = D;
+}
+
+void SurfaceFilling::computeDTop(FillingData &fillingDataBase){
+    FillingData& fillingData = *(fillingDataBase.left);
+
+    vec3 b0 = fillingData.b0PointLeft;
+    vec3 b3 = fillingData.b3PointLeft;
+
+    vec3 g0 = fillingData.g0PointLeft;
+    vec3 g2 = fillingData.g2PointLeft;
+
+
+    vec3 c0 = fillingData.P1_Tanget - fillingData.P0_BorderCurveMidPoint;
+    vec3 c1 = fillingData.P2 - fillingData.P1_Tanget;
+    vec3 c2 = fillingData.P3_Center - fillingData.P2;
+
+
+    auto solve_c = [c0, c1, c2](float t){
+        vec3 v = quadraticBernstein3(c0, c1, c2, t);
+        return v;
+    };
+
+    auto solve_g = [fillingData](float t){
+        vec3 v = quadraticBernstein3(fillingData.g0PointLeft,
+                                     fillingData.g1PointLeft,
+                                     fillingData.g2PointLeft, t);
+        return v;
+    };
+
+    auto solve_KH_RHS = [](float k, float h, vec3& gg, vec3& cc){
+        float x = (k * gg.x) + (h * cc.x);
+        float y = (k * gg.y) + (h * cc.y);
+        float z = (k * gg.z) + (h * cc.z);
+
+        return vec3(x,y,z);
+    };
+
+    float k0 = (((c0.x*b0.y) - (b0.x*c0.y)) / ((c0.x*g0.y) - (g0.x*c0.y)));
+    float h0 = (((b0.x*g0.y) - (b0.y*g0.x)) / ((c0.x*g0.y) - (g0.x*c0.y)));
+    float k1 = (((c2.x*b3.y) - (b3.x*c2.y)) / ((c2.x*g2.y) - (g2.x*c2.y)));
+    float h1 = (((b3.x*g2.y) - (b3.y*g2.x)) / ((c2.x*g2.y) - (g2.x*c2.y)));
+    //float k1 = (((c2.z*b3.y) - (b3.z*c2.y)) / ((c2.z*g2.y) - (g2.z*c2.y)));
+    //float h1 = (((b3.z*g2.y) - (b3.y*g2.z)) / ((c2.z*g2.y) - (g2.z*c2.y)));
+
+    vec3 RHS_B0 = solve_KH_RHS(k0, h0, g0, c0);
+    vec3 RHS_B3 = solve_KH_RHS(k1, h1, g2, c2);
+
+    auto solveD = [k0, h0, k1, h1, solve_g, solve_c](float v){
+
+        auto solveK = [k0, k1](float v){
+            float k = k0 * (1.0f - v) + k1*v;
+            return k;
+        };
+        auto solveH = [h0, h1](float v){
+            float h = h0 * (1.0f - v) + h1*v;
+            return h;
+        };
+
+        float k = solveK(v);
+        float h = solveH(v);
+        vec3 g = solve_g(v);
+        vec3 c = solve_c(v);
+
+        float x = (g.x * k) + (c.x * h);
+        float y = (g.y * k) + (c.y * h);
+        float z = (g.z * k) + (c.z * h);
+
+        return vec3(x,y,z);
+    };
+
+    vector<vec3> D = {solveD(0.0f), solveD(0.333f),
+                      solveD(0.666f), solveD(1.0f)};
+
+    fillingDataBase.DTop = D;
+}
+
+void SurfaceFilling::computeHalfBorderCurvePoints(){
+    computeHalfBorderCurvePoints(fillingData[0]);
+    computeHalfBorderCurvePoints(fillingData[1]);
+    computeHalfBorderCurvePoints(fillingData[2]);
+
+    computeHalfBorderCurvePointsTop(fillingData[0]);
+    computeHalfBorderCurvePointsTop(fillingData[1]);
+    computeHalfBorderCurvePointsTop(fillingData[2]);
+}
+
+void SurfaceFilling::computeHalfBorderCurvePoints(FillingData& fillingData){
+    ObjectFactory& objectFactory = ObjectFactory::getInstance();
+    BezierSplineC0* bezier
+            = objectFactory.createBezier("bezier", fillingData.borderPoints);
+
+    float start = 0.5f;
+    float end = 1.0f;
+    float p = 4.0f / 6.0f;
+    float k = 5.0f / 6.0f;
+
+    if(fillingData.constBorderCurveParam == BorderCurveParam::V1 ||
+       fillingData.constBorderCurveParam == BorderCurveParam::U1){
+        start = 0.0f;
+        p = 1.0f / 6.0f;
+        k = 2.0f / 6.0f;
+        end = 0.5f;
+    }
+
+    vec3 p0 = bezier->compute(start);
+    vec3 p1 = bezier->compute(p);
+    vec3 p2 = bezier->compute(k);
+    vec3 p3 = bezier->compute(end);
+
+    vector<vec3> halfBezier = CalculateBezierControlPoints(p0, p1, p2, p3,
+                                                           1.0f/3.0f,
+                                                           2.0f/3.0f);
+
+    fillingData.halfBezierPointsPointsBase = halfBezier;
+
+    vec2 uv = getUV(fillingData);
+    vec3 tangent1, tangent2;
+
+    if(fillingData.varBorderCurveParam == BorderCurveParam::U){
+        tangent1 = fillingData.surface->computeDv(p, uv.y);
+        tangent2 = fillingData.surface->computeDv(k, uv.y);
+    }
+    else if(fillingData.varBorderCurveParam == BorderCurveParam::V){
+        tangent1 = fillingData.surface->computeDu(uv.x, p);
+        tangent2 = fillingData.surface->computeDu(uv.x, k);
+    }
+    if(fillingData.constBorderCurveParam == BorderCurveParam::V0 ||
+       fillingData.constBorderCurveParam == BorderCurveParam::U0){
+        tangent1 = -tangent1;
+        tangent2 = -tangent2;
+    }
+
+    tangent1 *= 0.33f;
+    tangent2 *= 0.33f;
+
+    fillingData.halfBezierTanget1Base = tangent1;
+    fillingData.halfBezierTanget2Base = tangent2;
+
+    // TODO maybe not from control point!
+    fillingData.halfBezierPoint1Base = halfBezier[1] + tangent1;
+    fillingData.halfBezierPoint2Base = halfBezier[2] + tangent2;
+
+    delete bezier;
+}
+
+void SurfaceFilling::computeHalfBorderCurvePointsTop(
+        FillingData& fillingDataBase){
+    FillingData& fillingData = *(fillingDataBase.left);
+
+    ObjectFactory& objectFactory = ObjectFactory::getInstance();
+    BezierSplineC0* bezier
+            = objectFactory.createBezier("bezier", fillingData.borderPoints);
+
+    float start = 0.0f;
+    float p = 1.0f / 6.0f;
+    float k = 2.0f / 6.0f;
+    float end = 0.5f;
+
+    if(fillingData.constBorderCurveParam == BorderCurveParam::V1 ||
+       fillingData.constBorderCurveParam == BorderCurveParam::U1){
+        start = 0.5f;
+        end = 1.0f;
+        p = 4.0f / 6.0f;
+        k = 5.0f / 6.0f;
+    }
+
+    vec3 p0 = bezier->compute(start);
+    vec3 p1 = bezier->compute(p);
+    vec3 p2 = bezier->compute(k);
+    vec3 p3 = bezier->compute(end);
+
+    vector<vec3> halfBezier = CalculateBezierControlPoints(p0, p1, p2, p3,
+                                                           1.0f/3.0f,
+                                                           2.0f/3.0f);
+
+    vec2 uv = getUV(fillingData);
+    vec3 tangent1, tangent2;
+
+    if(fillingData.varBorderCurveParam == BorderCurveParam::U){
+        tangent1 = fillingData.surface->computeDv(p, uv.y);
+        tangent2 = fillingData.surface->computeDv(k, uv.y);
+    }
+    else if(fillingData.varBorderCurveParam == BorderCurveParam::V){
+        tangent1 = fillingData.surface->computeDu(uv.x, p);
+        tangent2 = fillingData.surface->computeDu(uv.x, k);
+    }
+    if(fillingData.constBorderCurveParam == BorderCurveParam::V0 ||
+       fillingData.constBorderCurveParam == BorderCurveParam::U0){
+        tangent1 = -tangent1;
+        tangent2 = -tangent2;
+    }
+
+    tangent1 *= 0.33f;
+    tangent2 *= 0.33f;
+
+    fillingDataBase.halfBezierPointsPointsTop = halfBezier;
+    fillingDataBase.halfBezierTanget1Top = tangent1;
+    fillingDataBase.halfBezierTanget2Top = tangent2;
+
+    // TODO maybe not from control point!
+    fillingDataBase.halfBezierPoint1Top = halfBezier[1] + tangent1;
+    fillingDataBase.halfBezierPoint2Top = halfBezier[2] + tangent2;
+
+    delete bezier;
+}
+
+vector<vec3> SurfaceFilling::CalculateBezierControlPoints(vec3 p0, vec3 p1,
+                                                          vec3 p2, vec3 p3,
+                                                          float u, float v) {
+    vector<vec3> pos(4);
+    float a = 0.0f, b = 0.0f, c = 0.0f, d = 0.0f, det = 0.0f;
+    vec3 q1, q2;
+
+    if ((u <= 0.0) || (u >= 1.0) || (v <= 0.0) || (v >= 1.0) || (u >= v)){
+        cout << "Failure" << endl;
+        return vector<vec3>();
+    }
+
+    a = 3 * (1 - u) * (1 - u) * u; b = 3 * (1 - u) * u * u;
+    c = 3 * (1 - v) * (1 - v) * v; d = 3 * (1 - v) * v * v;
+    det = a * d - b * c;
+    if (det == 0.0) {
+        cout << "Failure" << endl;
+        return vector<vec3>();
+    }
+
+    pos[0].x = p0.x; pos[0].y = p0.y; pos[0].z = p0.z;
+    pos[3].x = p3.x; pos[3].y = p3.y; pos[3].z = p3.z;
+
+    q1.x = p1.x - ((1 - u) * (1 - u) * (1 - u) * p0.x + u * u * u * p3.x);
+    q1.y = p1.y - ((1 - u) * (1 - u) * (1 - u) * p0.y + u * u * u * p3.y);
+    q1.z = p1.z - ((1 - u) * (1 - u) * (1 - u) * p0.z + u * u * u * p3.z);
+
+    q2.x = p2.x - ((1 - v) * (1 - v) * (1 - v) * p0.x + v * v * v * p3.x);
+    q2.y = p2.y - ((1 - v) * (1 - v) * (1 - v) * p0.y + v * v * v * p3.y);
+    q2.z = p2.z - ((1 - v) * (1 - v) * (1 - v) * p0.z + v * v * v * p3.z);
+
+    pos[1].x = d * q1.x - b * q2.x;
+    pos[1].y = d * q1.y - b * q2.y;
+    pos[1].z = d * q1.z - b * q2.z;
+    pos[1].x /= det;
+    pos[1].y /= det;
+    pos[1].z /= det;
+
+    pos[2].x = (-c) * q1.x + a * q2.x;
+    pos[2].y = (-c) * q1.y + a * q2.y;
+    pos[2].z = (-c) * q1.z + a * q2.z;
+    pos[2].x /= det;
+    pos[2].y /= det;
+    pos[2].z /= det;
+
+    cout << "Success" << endl;
+    return pos;
 }
 
 vec2 SurfaceFilling::getUV(FillingData& fillingData){
@@ -623,10 +842,30 @@ void SurfaceFilling::renderDebug(){
         Line* d1Line = objectFactory.createLine("line", P1->getPosition(), d1);
         Line* d2Line = objectFactory.createLine("line", P2->getPosition(), d2);
         Line* d3Line = objectFactory.createLine("line", P3->getPosition(), d3);
-        d0Line->setLineWidth(2.0f);
-        d1Line->setLineWidth(2.0f);
-        d2Line->setLineWidth(2.0f);
-        d3Line->setLineWidth(2.0f);
+        d0Line->setColor(debugColors.CenterBezierColor);
+        d1Line->setColor(debugColors.CenterBezierColor);
+        d2Line->setColor(debugColors.CenterBezierColor);
+        d3Line->setColor(debugColors.CenterBezierColor);
+
+        d0Line->setLineWidth(4.0f);
+        d1Line->setLineWidth(4.0f);
+        d2Line->setLineWidth(4.0f);
+        d3Line->setLineWidth(4.0f);
+
+        // Top Di
+        vec3 d1Top = fillingData[j].DTop[1];
+        vec3 d2Top = fillingData[j].DTop[2];
+
+        Line* d1LineTop = objectFactory.createLine("line",
+                                                   fillingData[j].left->P1_Tanget,
+                                                   d1Top);
+        Line* d2LineTop = objectFactory.createLine("line",
+                                                   fillingData[j].left->P2,
+                                                   d2Top);
+        d1LineTop->setColor(debugColors.CenterBezierColor);
+        d2LineTop->setColor(debugColors.CenterBezierColor);
+        d1LineTop->setLineWidth(4.0f);
+        d2LineTop->setLineWidth(4.0f);
 
         // Top g0, g1, g2
         vec3 C0Top = cubicBernstein3(
@@ -644,6 +883,7 @@ void SurfaceFilling::renderDebug(){
                 fillingData[j].left->P1_Tanget,
                 fillingData[j].left->P2,
                 fillingData[j].left->P3_Center, 1.0f);
+
         vec3 g0Top = fillingData[j].g0PointTop;
         vec3 g1Top = fillingData[j].g1PointTop;
         vec3 g2Top = fillingData[j].g2PointTop;
@@ -655,32 +895,97 @@ void SurfaceFilling::renderDebug(){
         g1TopLine->setColor(debugColors.GGieldColor);
         g2TopLine->setColor(debugColors.GGieldColor);
 
+        // Half Bezier border Points
+        ifc::Point* P00 = objectFactory.createPoint(to_string(j));
+        ifc::Point* P01 = objectFactory.createPoint(to_string(j));
+        ifc::Point* P02 = objectFactory.createPoint(to_string(j));
+        ifc::Point* P03 = objectFactory.createPoint(to_string(j));
+
+        P00->moveTo(fillingData[j].halfBezierPointsPointsBase[0]);
+        P00->setColor(debugColors.HalfBezierControlPointColor);
+        P01->moveTo(fillingData[j].halfBezierPointsPointsBase[1]);
+        P01->setColor(debugColors.HalfBezierControlPointColor);
+        P02->moveTo(fillingData[j].halfBezierPointsPointsBase[2]);
+        P02->setColor(debugColors.HalfBezierControlPointColor);
+        P03->moveTo(fillingData[j].halfBezierPointsPointsBase[3]);
+        P03->setColor(debugColors.HalfBezierControlPointColor);
+
+        // Inside Tangent Base
+        Line* halfBezierLine1
+                = objectFactory.createLine("line", P01->getPosition(),
+                                           fillingData[j].halfBezierPoint1Base);
+        halfBezierLine1->setLineWidth(4.0f);
+        halfBezierLine1->setColor(debugColors.CenterBezierColor);
+        Line* halfBezierLine2
+                = objectFactory.createLine("line", P02->getPosition(),
+                                           fillingData[j].halfBezierPoint2Base);
+        halfBezierLine2->setLineWidth(4.0f);
+        halfBezierLine2->setColor(debugColors.CenterBezierColor);
+
+
+        ifc::Point* P00Top = objectFactory.createPoint(to_string(j));
+        ifc::Point* P01Top = objectFactory.createPoint(to_string(j));
+        ifc::Point* P02Top = objectFactory.createPoint(to_string(j));
+        ifc::Point* P03Top = objectFactory.createPoint(to_string(j));
+
+        P00Top->moveTo(fillingData[j].halfBezierPointsPointsTop[0]);
+        P00Top->setColor(debugColors.HalfBezierControlPointColor);
+        P01Top->moveTo(fillingData[j].halfBezierPointsPointsTop[1]);
+        P01Top->setColor(debugColors.HalfBezierControlPointColor);
+        P02Top->moveTo(fillingData[j].halfBezierPointsPointsTop[2]);
+        P02Top->setColor(debugColors.HalfBezierControlPointColor);
+        P03Top->moveTo(fillingData[j].halfBezierPointsPointsTop[3]);
+        P03Top->setColor(debugColors.HalfBezierControlPointColor);
+        Line* halfBezierTopLine1
+                = objectFactory.createLine("line", P01Top->getPosition(),
+                                           fillingData[j].halfBezierPoint1Top);
+        halfBezierTopLine1->setLineWidth(4.0f);
+        halfBezierTopLine1->setColor(debugColors.CenterBezierColor);
+        Line* halfBezierTopLine2
+                = objectFactory.createLine("line", P02Top->getPosition(),
+                                           fillingData[j].halfBezierPoint2Top);
+        halfBezierTopLine2->setLineWidth(4.0f);
+        halfBezierTopLine2->setColor(debugColors.CenterBezierColor);
+
         scene->addRenderObject(P0);
         scene->addRenderObject(P1);
         scene->addRenderObject(P2);
         scene->addRenderObject(P3);
         scene->addRenderObject(tangetLine);
 
-        if(j == 0){
+        if(j == 0 ){
+            scene->addRenderObject(P00);
+            scene->addRenderObject(P01);
+            scene->addRenderObject(P02);
+            scene->addRenderObject(P03);
+
             scene->addRenderObject(a0Line);
             scene->addRenderObject(a3Line);
             scene->addRenderObject(b3Line);
-/*
+
             scene->addRenderObject(g0Line);
             scene->addRenderObject(g1Line);
             scene->addRenderObject(g2Line);
-*/
+
             scene->addRenderObject(g0TopLine);
             scene->addRenderObject(g1TopLine);
             scene->addRenderObject(g2TopLine);
-/*
-            scene->addRenderObject(d0Line);
+            
             scene->addRenderObject(d1Line);
             scene->addRenderObject(d2Line);
-            scene->addRenderObject(d3Line);
-*/
+            scene->addRenderObject(d1LineTop);
+            scene->addRenderObject(d2LineTop);
+
+            scene->addRenderObject(halfBezierLine1);
+            scene->addRenderObject(halfBezierLine2);
+            scene->addRenderObject(halfBezierTopLine1);
+            scene->addRenderObject(halfBezierTopLine2);
+
+
             fillingData[j].left->surface->setColor(Color(1.0f, 0.0, 0.0));
             fillingData[j].right->surface->setColor(Color(0.0f, 0.0, 1.0));
+
+
         }
 
         scene->addRenderObject(bezierSpline);
@@ -715,6 +1020,9 @@ void SurfaceFilling::start(){
     computeBorderCurveTangents();
     computeCenterPoints();
     computeGFieldVectors();
+    computeHalfBorderCurvePoints();
 
     if(renderMode == RenderMode::DEBUG) renderDebug();
 }
+
+

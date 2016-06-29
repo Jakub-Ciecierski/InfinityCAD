@@ -33,6 +33,19 @@ Line::Line(SceneID id , std::string name,
     grabable = false;
 }
 
+Line::Line(SceneID id , std::string name,
+           glm::vec3 v1, glm::vec3 v2) :
+        RenderObject(id, name){
+    this->v1 = vec4(v1.x, v1.y, v1.z, 1.0f);
+    this->v2 = vec4(v2.x, v2.y, v2.z, 1.0f);
+
+    initVertices();
+    initEdges();
+
+    setColor(COLOR_OBJECT_DEFAULT);
+
+    grabable = false;
+}
 
 Line::~Line(){
 

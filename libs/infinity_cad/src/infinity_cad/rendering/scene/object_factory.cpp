@@ -58,6 +58,14 @@ Point* ObjectFactory::createPoint(std::string name) {
     return point;
 }
 
+Point* ObjectFactory::createPoint(std::string name, glm::vec3& pos){
+    SceneID id = sceneIDFactory.createNextAvailableID();
+    Point* point = new Point(id, name);
+    point->moveTo(pos);
+
+    return point;
+}
+
 Torus *ObjectFactory::createTorus(std::string name) {
     SceneID id = sceneIDFactory.createNextAvailableID();
     Torus* torus = new Torus(id, name);
@@ -95,6 +103,15 @@ Cone* ObjectFactory::createCone(std::string name,
 
 Line* ObjectFactory::createLine(std::string name,
                                 glm::vec4 v1, glm::vec4 v2){
+    SceneID id = sceneIDFactory.createNextAvailableID();
+
+    Line* line = new Line(id, name, v1 ,v2);
+
+    return line;
+}
+
+Line* ObjectFactory::createLine(std::string name,
+                                glm::vec3 v1, glm::vec3 v2){
     SceneID id = sceneIDFactory.createNextAvailableID();
 
     Line* line = new Line(id, name, v1 ,v2);

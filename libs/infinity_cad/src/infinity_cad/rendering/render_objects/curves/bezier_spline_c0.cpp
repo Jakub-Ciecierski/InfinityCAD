@@ -196,3 +196,23 @@ void BezierSplineC0::initEdges(){
 //-----------------------//
 //  PUBLIC
 //-----------------------//
+
+glm::vec3 BezierSplineC0::compute(float t){
+    // ASSUMES IT HAS ONLY ONE CURVE
+    BezierCubicCurve& bezierCurveCubic = bezierCurves[0];
+
+    vec4 point4 = bezierCurveCubic.compute(t);
+
+    vec3 point3 = vec3(point4.x, point4.y, point4.z);
+
+    return point3;
+}
+
+glm::vec4 BezierSplineC0::computeVec4(float t){
+    // ASSUMES IT HAS ONLY ONE CURVE
+    BezierCubicCurve& bezierCurveCubic = bezierCurves[0];
+
+    vec4 point4 = bezierCurveCubic.compute(t);
+
+    return point4;
+}

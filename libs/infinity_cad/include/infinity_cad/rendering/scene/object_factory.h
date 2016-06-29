@@ -50,6 +50,7 @@ public:
     Camera* createCameraFPS(std::string name, Projection* projection);
 
     ifc::Point* createPoint(std::string name);
+    ifc::Point* createPoint(std::string name, glm::vec3& pos);
 
     Torus* createTorus(std::string name);
 
@@ -64,6 +65,8 @@ public:
 
     Line* createLine(std::string name,
                      glm::vec4 v1, glm::vec4 v2);
+    Line* createLine(std::string name,
+                     glm::vec3 v1, glm::vec3 v2);
 
     Cloud* createCloud(std::string name,
                        std::vector<glm::vec4>& points);

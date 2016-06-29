@@ -13,11 +13,15 @@ glm::vec4 linearBernstein(const glm::vec3&p0, const glm::vec3&p1,
 glm::vec4 quadraticBernstein(const glm::vec3&p0, const glm::vec3&p1,
                              const glm::vec3&p2,
                              float t);
+glm::vec3 quadraticBernstein3(const glm::vec3& p0, const glm::vec3& p1,
+                              const glm::vec3& p2, float t);
 
 glm::vec4 cubicBernstein(const glm::vec3& p1, const glm::vec3& p2,
                          const glm::vec3& p3, const glm::vec3& p4,
                          float t);
-
+glm::vec3 cubicBernstein3(const glm::vec3& p0, const glm::vec3& p1,
+                          const glm::vec3& p2, const glm::vec3& p3,
+                          float t);
 glm::vec4 cubicBernsteinVector(float t);
 glm::vec4 cubicBernsteinDerivative(float t);
 glm::vec4 cubicBernsteinSecondDerivative(float t);

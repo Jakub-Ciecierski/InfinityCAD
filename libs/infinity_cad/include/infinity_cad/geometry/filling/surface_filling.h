@@ -45,15 +45,32 @@ struct FillingData{
 
     glm::vec3 borderCurveTanget;
 
-    glm::vec3 a0Tanget;
-    glm::vec3 b0Tanget;
-    glm::vec3 a3Tanget;
-    glm::vec3 b3Tanget;
+    glm::vec3 a0TangetLeft;
+    glm::vec3 b0TangetLeft;
+    glm::vec3 a3TangetLeft;
+    glm::vec3 b3TangetLeft;
 
-    glm::vec3 a0Point;
-    glm::vec3 b0Point;
-    glm::vec3 a3Point;
-    glm::vec3 b3Point;
+    glm::vec3 a0PointLeft;
+    glm::vec3 b0PointLeft;
+    glm::vec3 a3PointLeft;
+    glm::vec3 b3PointLeft;
+
+    glm::vec3 a0PointTop;
+    glm::vec3 b0PointTop;
+    glm::vec3 a3PointTop;
+    glm::vec3 b3PointTop;
+
+    glm::vec3 g0TangentLeft;
+    glm::vec3 g1TangentLeft;
+    glm::vec3 g2TangentLeft;
+
+    glm::vec3 g0PointLeft;
+    glm::vec3 g1PointLeft;
+    glm::vec3 g2PointLeft;
+
+    glm::vec3 g0PointTop;
+    glm::vec3 g1PointTop;
+    glm::vec3 g2PointTop;
 
     // P0
     glm::vec3 P0_BorderCurveMidPoint;
@@ -63,6 +80,9 @@ struct FillingData{
     glm::vec3 P2;
     // P3
     glm::vec3 P3_Center;
+
+    // D + Pi create another 4 control points
+    std::vector<glm::vec3> DLeft;
 };
 
 struct DebugColors{
@@ -75,6 +95,8 @@ struct DebugColors{
     Color a0TangentColor;
     Color a3TangentColor;
     Color b3TangentColor;
+
+    Color GGieldColor;
 
     Color P2Color;
     Color P3Color;
@@ -134,6 +156,8 @@ private:
      */
     void computeGFieldVectors();
     void computeGFieldVector(FillingData &fillingData);
+    void computeGFieldVectorTop(FillingData& fillingDataBase);
+    void computeD(FillingData &fillingData);
 
     glm::vec2 getUV(FillingData& fillingData);
 
@@ -154,3 +178,4 @@ public:
 
 
 #endif //IC_SURFACE_FILLING_H
+

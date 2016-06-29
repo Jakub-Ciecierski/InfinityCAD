@@ -44,6 +44,8 @@ public:
 
     ~BezierSplineC0();
 
+    glm::vec3 compute(float t);
+    glm::vec4 computeVec4(float t);
 };
 
 

@@ -42,7 +42,7 @@ SurfaceFilling::SurfaceFilling(SceneID id, std::string name,
 
     doRenderDebug = false;
 
-    TANGET_MULTIPLIER = 0.5;
+    TANGET_MULTIPLIER = 0.50;
     //TANGET_MULTIPLIER = 1.0;
 }
 
@@ -594,7 +594,7 @@ void SurfaceFilling::computeHalfBorderCurvePoints(FillingData& fillingData){
     float end = 1.0f;
     float p = 4.0f / 6.0f;
     float k = 5.0f / 6.0f;
-
+/*
     if(fillingData.constBorderCurveParam == BorderCurveParam::V1 ||
        fillingData.constBorderCurveParam == BorderCurveParam::U1){
         start = 0.0f;
@@ -602,7 +602,22 @@ void SurfaceFilling::computeHalfBorderCurvePoints(FillingData& fillingData){
         k = 2.0f / 6.0f;
         end = 0.5f;
     }
-
+*/
+    if(fillingData.constBorderCurveParam == BorderCurveParam::V1){
+        start = 0.0f;
+        p = 1.0f / 6.0f;
+        k = 2.0f / 6.0f;
+        end = 0.5f;
+    }
+/*
+    if(fillingData.constBorderCurveParam == BorderCurveParam::U0  &&
+            fillingData.varBorderCurveParam == BorderCurveParam::V){
+        start = 0.0f;
+        p = 1.0f / 6.0f;
+        k = 2.0f / 6.0f;
+        end = 0.5f;
+    }
+*/
     vec3 p0 = bezier->compute(start);
     vec3 p1 = bezier->compute(p);
     vec3 p2 = bezier->compute(k);
@@ -659,7 +674,7 @@ void SurfaceFilling::computeHalfBorderCurvePointsTop(
     float p = 1.0f / 6.0f;
     float k = 2.0f / 6.0f;
     float end = 0.5f;
-
+/*
     if(fillingData.constBorderCurveParam == BorderCurveParam::V1 ||
        fillingData.constBorderCurveParam == BorderCurveParam::U1){
         start = 0.5f;
@@ -667,6 +682,22 @@ void SurfaceFilling::computeHalfBorderCurvePointsTop(
         p = 4.0f / 6.0f;
         k = 5.0f / 6.0f;
     }
+*/
+    if(fillingData.constBorderCurveParam == BorderCurveParam::V1){
+        start = 0.5f;
+        end = 1.0f;
+        p = 4.0f / 6.0f;
+        k = 5.0f / 6.0f;
+    }
+/*
+    if(fillingData.constBorderCurveParam == BorderCurveParam::U0  &&
+       fillingData.varBorderCurveParam == BorderCurveParam::V){
+        start = 0.5f;
+        end = 1.0f;
+        p = 4.0f / 6.0f;
+        k = 5.0f / 6.0f;
+    }
+*/
 
     vec3 p0 = bezier->compute(start);
     vec3 p1 = bezier->compute(p);
@@ -814,6 +845,14 @@ void SurfaceFilling::renderPatch(const glm::mat4 &VP, FillingData& fillingData){
         P1 = fillingData.halfBezierPointsPointsBase[0];
     }
 
+    if(fillingData.constBorderCurveParam == BorderCurveParam::V0 ||
+            fillingData.constBorderCurveParam == BorderCurveParam::U0){
+        P0 = fillingData.halfBezierPointsPointsBase[3];
+        e0_p = fillingData.halfBezierPointsPointsBase[2];
+        e1_m = fillingData.halfBezierPointsPointsBase[1];
+        P1 = fillingData.halfBezierPointsPointsBase[0];
+    }
+
     vec3 e0_m = fillingData.halfBezierPointsPointsTop[1];
     vec3 f0_m = fillingData.halfBezierPoint1Top;
     vec3 f0_p = fillingData.halfBezierPoint1Base;
@@ -829,9 +868,17 @@ void SurfaceFilling::renderPatch(const glm::mat4 &VP, FillingData& fillingData){
     vec3 e2_m = fillingData.P2;
 
     vec3 P3 = fillingData.halfBezierPointsPointsTop[3];
+
+
+    if(P3 == P0){
+        e0_m = fillingData.halfBezierPointsPointsTop[2];
+        e3_p = fillingData.halfBezierPointsPointsTop[1];
+        P3 = fillingData.halfBezierPointsPointsTop[0];
+    }
     vec3 e3_m = fillingData.left->P1_Tanget;
     vec3 e2_p = fillingData.left->P2;
     vec3 P2 = fillingData.P3_Center;
+
 
     auto solveF0 = [f0_p, f0_m](float u, float v){
         float denom = u + v;
@@ -869,14 +916,14 @@ void SurfaceFilling::renderPatch(const glm::mat4 &VP, FillingData& fillingData){
     };
 
     // DEBUG
-
+/*
     ObjectFactory &objectFactory = ObjectFactory::getInstance();
     Color color(1.0f, 1.0f, 1.0f);
 
-    ifc::Point* pointP0 = objectFactory.createPoint("p", e3_p);
-    ifc::Point* pointe0_p = objectFactory.createPoint("p", P0);
-    ifc::Point* pointe1_m = objectFactory.createPoint("p", P0);
-    ifc::Point* pointP1 = objectFactory.createPoint("p", P0);
+    ifc::Point* pointP0 = objectFactory.createPoint("p", P3);
+    ifc::Point* pointe0_p = objectFactory.createPoint("p", P3);
+    ifc::Point* pointe1_m = objectFactory.createPoint("p", P3);
+    ifc::Point* pointP1 = objectFactory.createPoint("p", P3);
     pointP0->update();
     pointe0_p->update();
     pointe1_m->update();
@@ -891,73 +938,12 @@ void SurfaceFilling::renderPatch(const glm::mat4 &VP, FillingData& fillingData){
     pointe0_p->render(VP);
     pointe1_m->render(VP);
     pointP1->render(VP);
-
+*/
     //
 
     mat4 Gx;
     mat4 Gy;
     mat4 Gz;
-    /*
-    Gx[0].x = P0.x;
-    Gx[0].y = e0_m.x;
-    Gx[0].z = e3_p.x;
-    Gx[0].w = P3.x;
-
-    Gx[1].x = e0_p.x;
-    Gx[1].y = 0.0f; // F0
-    Gx[1].z = 0.0f; // F3
-    Gx[1].w = e3_m.x;
-
-    Gx[2].x = e1_m.x;
-    Gx[2].y = 0.0f; // F1
-    Gx[2].z = 0.0f; // F2
-    Gx[2].w = e2_p.x;
-
-    Gx[3].x = P1.x ;
-    Gx[3].y = e1_p.x;
-    Gx[3].z = e2_m.x;
-    Gx[3].w = P2.x;
-
-    Gy[0].x = P0.y;
-    Gy[0].y = e0_m.y;
-    Gy[0].z = e3_p.y;
-    Gy[0].w = P3.y;
-
-    Gy[1].x = e0_p.y;
-    Gy[1].y = 0.0f; // F0
-    Gy[1].z = 0.0f; // F3
-    Gy[1].w = e3_m.y;
-
-    Gy[2].x = e1_m.y;
-    Gy[2].y = 0.0f; // F1
-    Gy[2].z = 0.0f; // F2
-    Gy[2].w = e2_p.y;
-
-    Gy[3].x = P1.y ;
-    Gy[3].y = e1_p.y;
-    Gy[3].z = e2_m.y;
-    Gy[3].w = P2.y;
-
-    Gz[0].x = P0.z;
-    Gz[0].y = e0_m.z;
-    Gz[0].z = e3_p.z;
-    Gz[0].w = P3.z;
-
-    Gz[1].x = e0_p.z;
-    Gz[1].y = 0.0f; // F0
-    Gz[1].z = 0.0f; // F3
-    Gz[1].w = e3_m.z;
-
-    Gz[2].x = e1_m.z;
-    Gz[2].y = 0.0f; // F1
-    Gz[2].z = 0.0f; // F2
-    Gz[2].w = e2_p.z;
-
-    Gz[3].x = P1.z;
-    Gz[3].y = e1_p.z;
-    Gz[3].z = e2_m.z;
-    Gz[3].w = P2.z;
-*/
 
     Gx[0].x = P0.x;
     Gx[0].y = e0_p.x;
@@ -1051,25 +1037,6 @@ void SurfaceFilling::renderPatch(const glm::mat4 &VP, FillingData& fillingData){
             vec3 F1 = solveF1(u, v);
             vec3 F2 = solveF2(u, v);
             vec3 F3 = solveF3(u, v);
-/*
-            Gx[1].y = F0.x;
-            Gx[1].z = F3.x;
-
-            Gy[1].y = F0.y;
-            Gy[1].z = F3.y;
-
-            Gz[1].y = F0.z;
-            Gz[1].z = F3.z;
-
-            Gx[2].y = F1.x;
-            Gx[2].z = F2.x;
-
-            Gy[2].y = F1.y;
-            Gy[2].z = F2.y;
-
-            Gz[2].y = F1.z;
-            Gz[2].z = F2.z;
-*/
 
             Gx[1].y = F0.x;
             Gx[1].z = F1.x;
@@ -1112,25 +1079,6 @@ void SurfaceFilling::renderPatch(const glm::mat4 &VP, FillingData& fillingData){
         vec3 F1 = solveF1(u, v);
         vec3 F2 = solveF2(u, v);
         vec3 F3 = solveF3(u, v);
-/*
-        Gx[1].y = F0.x;
-        Gx[1].z = F3.x;
-
-        Gy[1].y = F0.y;
-        Gy[1].z = F3.y;
-
-        Gz[1].y = F0.z;
-        Gz[1].z = F3.z;
-
-        Gx[2].y = F1.x;
-        Gx[2].z = F2.x;
-
-        Gy[2].y = F1.y;
-        Gy[2].z = F2.y;
-
-        Gz[2].y = F1.z;
-        Gz[2].z = F2.z;
-*/
 
         Gx[1].y = F0.x;
         Gx[1].z = F1.x;
@@ -1175,25 +1123,6 @@ void SurfaceFilling::renderPatch(const glm::mat4 &VP, FillingData& fillingData){
             vec3 F1 = solveF1(u, v);
             vec3 F2 = solveF2(u, v);
             vec3 F3 = solveF3(u, v);
-/*
-            Gx[1].y = F0.x;
-            Gx[1].z = F3.x;
-
-            Gy[1].y = F0.y;
-            Gy[1].z = F3.y;
-
-            Gz[1].y = F0.z;
-            Gz[1].z = F3.z;
-
-            Gx[2].y = F1.x;
-            Gx[2].z = F2.x;
-
-            Gy[2].y = F1.y;
-            Gy[2].z = F2.y;
-
-            Gz[2].y = F1.z;
-            Gz[2].z = F2.z;
-            */
 
             Gx[1].y = F0.x;
             Gx[1].z = F1.x;
@@ -1236,25 +1165,6 @@ void SurfaceFilling::renderPatch(const glm::mat4 &VP, FillingData& fillingData){
         vec3 F1 = solveF1(u, v);
         vec3 F2 = solveF2(u, v);
         vec3 F3 = solveF3(u, v);
-/*
-        Gx[1].y = F0.x;
-        Gx[1].z = F3.x;
-
-        Gy[1].y = F0.y;
-        Gy[1].z = F3.y;
-
-        Gz[1].y = F0.z;
-        Gz[1].z = F3.z;
-
-        Gx[2].y = F1.x;
-        Gx[2].z = F2.x;
-
-        Gy[2].y = F1.y;
-        Gy[2].z = F2.y;
-
-        Gz[2].y = F1.z;
-        Gz[2].z = F2.z;
-*/
 
         Gx[1].y = F0.x;
         Gx[1].z = F1.x;

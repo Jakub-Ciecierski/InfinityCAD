@@ -273,8 +273,6 @@ void Surface::drawPatch(const BicubicBezierPatch* patch,
     int vDivisionCount_tmp = vDivisionCount;
     if(vDivisionCount_tmp == 1) vDivisionCount_tmp++;
 
-    du = 1.0f / (float)(uDivisionCount_tmp - 1);
-
     int index = 0;
     vector<vector<int>> edges;
 
@@ -825,6 +823,26 @@ void Surface::setTrimming(TrimmingStatuses status,
                           std::vector<glm::vec2>& params){
     this->trimmingStatus = status;
     trimmingParameters = params;
+}
+
+PointIndex Surface::getIndex(ifc::Point* point){
+    int n = allPointsMatrix.rowCount();
+    int m = allPointsMatrix.columnCount();
+
+    // Assume one patch
+    PointIndex point_index {0, -1, -1};
+    
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j < m; j++){
+            if(allPointsMatrix[i][j] == point){
+                point_index.row_index = i;
+                point_index.column_index = j;
+                return point_index;
+            }
+        }
+    }
+
+    return point_index;
 }
 
 bool Surface::replacePoint(ifc::Point *src, ifc::Point *dest) {

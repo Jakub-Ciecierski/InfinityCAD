@@ -117,7 +117,7 @@ void EditorWindow::loadSystem(){
     QString filepathQ =  QFileDialog::getOpenFileName();
     //std:string filepath = "jakub.mg";
     //std:string filepath = "curves.mg";
-
+    std::cout << filepathQ.toStdString() << std::endl;
     objectManager.loadSystem(filepathQ.toStdString());
 }
 

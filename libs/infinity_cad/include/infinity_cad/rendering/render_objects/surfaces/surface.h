@@ -21,6 +21,18 @@ enum TrimmingStatuses{
     TRIM_NONE, TRIM_TOP, TRIM_BOTTOM
 };
 
+struct PointIndex{
+    int patch_index;
+    int column_index;
+    int row_index;
+
+    bool operator==(const PointIndex& rhs){
+        return (patch_index == rhs.patch_index &&
+                column_index == rhs.column_index&&
+                row_index == rhs.row_index);
+    }
+};
+
 class Surface : public RenderObject{
 private:
     TrimmingStatuses trimmingStatus;
@@ -125,6 +137,8 @@ public:
 
     void setTrimming(TrimmingStatuses status);
     void setTrimming(TrimmingStatuses status, std::vector<glm::vec2>& params);
+
+    PointIndex getIndex(ifc::Point* point);
 
     /*
      * Replaces src with dest. Returns false if src was not found,

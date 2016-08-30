@@ -10,22 +10,59 @@
 #include <infinity_cad/rendering/render_objects/primitivies/line.h>
 #include <infinity_cad/rendering/render_objects/curves/bezier_spline_c0.h>
 
-enum BorderCurveParam{
+enum BorderCurveParam {
     U, V, U0, U1, V0, V1
 };
 
+/**
+ * Computed based on combination of constant and variable of BorderCurveParam.
+ * */
+enum BorderCurveSide {
+    TOP, BOTTOM, LEFT, RIGHT
+};
+
 enum RenderMode{
-    DEBUG, NORMAL
+    RENDER_ALL,
+    RENDER_FIRST_PATCH,
+    RENDER_SECOND_PATCH,
+    RENDER_THIRD_PATCH
 };
 
 enum FillingStatus{
     COMPUTING, UNKNOWN_ERROR, COMPLETE, NO_HOLE
 };
 
+/**
+ * On which side
+ */
+enum HalfBezierWhichSide{
+    NO_SIDE, U_FIRST, U_SECOND, V_FIRST, V_SECOND
+};
+
+enum CommonPointPosition {
+    TOP_LEFT, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_RIGHT
+};
+
+/**
+ * Used to compute Half Bezier of the border curve
+ */
+struct HalfBorderCurveData {
+    float start;
+    float end;
+    float p;
+    float k;
+};
+
 struct CommonPoints{
     ifc::Point* point12;
     ifc::Point* point13;
     ifc::Point* point23;
+};
+
+struct CommonPointResult{
+    ifc::Point* point;
+    CommonPointPosition position1;
+    CommonPointPosition position2;
 };
 
 struct FillingData{
@@ -44,6 +81,11 @@ struct FillingData{
     // Is the curve drawn by u or v parameter
     BorderCurveParam varBorderCurveParam;
     BorderCurveParam constBorderCurveParam;
+
+    BorderCurveSide borderCurveSide;
+    // Which side of the border curve to compute half bezier curve
+    HalfBezierWhichSide half_bezier_which_side;
+    HalfBezierWhichSide half_bezier_which_side_top;
 
     glm::vec3 borderCurveTanget;
 
@@ -191,13 +233,35 @@ private:
     CommonPoints commonPoints;
     FillingStatus fillingStatus;
 
+    int counter;
+
+    const HalfBorderCurveData FIRST_HALF_BORDER_CURVE_DATA{
+            0.0f, 0.5f, 1.0f / 6.0f, 2.0f / 6.0f
+    };
+    const HalfBorderCurveData SECOND_HALF_BORDER_CURVE_DATA{
+            0.5f, 1.0f, 4.0f / 6.0f, 5.0f / 6.0f
+    };
+
+    const HalfBorderCurveData U_FIRST_DATA {
+            0.0f, 0.5f, 1.0f / 6.0f, 2.0f / 6.0f
+    };
+    const HalfBorderCurveData U_SECOND_DATA {
+            0.5f, 1.0f, 4.0f / 6.0f, 5.0f / 6.0f
+    };
+    const HalfBorderCurveData V_FIRST_DATA {
+            0.5f, 1.0f, 4.0f / 6.0f, 5.0f / 6.0f
+    };
+    const HalfBorderCurveData V_SECOND_DATA {
+            0.0f, 0.5f, 1.0f / 6.0f, 2.0f / 6.0f
+    };
+
     // ----------------
 
     /*
      * Finds Common control points among the surfaces
      */
     void findCommonPoints();
-    ifc::Point* findCommonPoint(Surface* surface1, Surface* surface2);
+    CommonPointResult findCommonPoint(Surface* surface1, Surface* surface2);
     void updateStatusCommonPoints(CommonPoints &commonPoints);
 
     /*
@@ -205,6 +269,7 @@ private:
      */
     void findBorderCurves();
     void findBorderCurve(FillingData &fillingData);
+    void computeBorderCurveSideType(FillingData &fillingData);
 
     /*
      * Computes P0
@@ -247,6 +312,27 @@ private:
 
     glm::vec2 getUV(FillingData& fillingData);
     std::string borderCurveParamToString(BorderCurveParam param);
+    std::string borderCurveSideToString(BorderCurveSide param);
+    std::string pointSurfaceTypeToString(ifc::PointSurfaceType param);
+    std::string pointIndexToString(PointIndex point_index);
+    std::string commonPointPositionToString(CommonPointPosition position);
+    std::string halfBezierWhichSideToString(HalfBezierWhichSide side);
+    CommonPointPosition determinePointPosition(PointIndex index);
+
+    /**
+     * Determines the parameters to properly compute point on the
+     * half bezier curve
+     */
+    HalfBezierWhichSide determineHalfBezierSide(
+            BorderCurveSide border_curve_side,
+            CommonPointPosition common_point_position);
+
+    HalfBezierWhichSide determineHalfBezierOpositeSide(
+            BorderCurveSide border_curve_side,
+            CommonPointPosition common_point_position);
+
+    const HalfBorderCurveData getHalfBezierCurveDataBasedOnSide(
+            HalfBezierWhichSide side);
 
     void renderPatches(const glm::mat4 &VP);
     void renderPatch(const glm::mat4 &VP, FillingData& fillingData);
@@ -267,6 +353,8 @@ public:
 
     bool isRenderDebug();
     void setRenderDebug(bool v);
+
+    void setRenderMode(RenderMode render_mode);
 
     virtual void render(const glm::mat4 &VP) override;
     virtual void render(const glm::mat4 &VP, const Color &color) override;

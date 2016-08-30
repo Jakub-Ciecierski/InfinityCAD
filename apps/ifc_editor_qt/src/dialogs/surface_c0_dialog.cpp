@@ -43,8 +43,8 @@ void SurfaceC0Dialog::initDefaultDataValue(){
 
     nEdit->setText("1");
     mEdit->setText("1");
-    widthEdit->setText("0.5");
-    heightEdit->setText("0.5");
+    widthEdit->setText("1.5");
+    heightEdit->setText("1.5");
 
     if(type == RB_SURFACE_C0_CYLIND_TYPE ||
             type == RB_SURFACE_C2_CYLIND_TYPE){

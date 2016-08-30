@@ -20,7 +20,7 @@ SurfaceFilling::SurfaceFilling(SceneID id, std::string name,
     fillingData[1].surface = surface2;
     fillingData[2].surface = surface3;
 
-    renderMode = RenderMode::DEBUG;
+    renderMode = RenderMode::RENDER_ALL;
 
     debugColors.CommonPointColor = Color(1.0, 0.0, 0.0);
     debugColors.BorderControlPointsColor = Color(0.5, 0.0, 0.0);
@@ -55,13 +55,24 @@ SurfaceFilling::~SurfaceFilling() {
 //-----------------------//
 
 void SurfaceFilling::findCommonPoints(){
-    // TODO, dynamic left/right
-    ifc::Point* point12 = findCommonPoint(fillingData[0].surface,
-                                          fillingData[1].surface);
-    ifc::Point* point13 = findCommonPoint(fillingData[0].surface,
-                                          fillingData[2].surface);
-    ifc::Point* point23 = findCommonPoint(fillingData[1].surface,
-                                          fillingData[2].surface);
+    counter = 0;
+    CommonPointResult result1 = findCommonPoint(fillingData[0].surface,
+                                                fillingData[1].surface);
+    ifc::Point* point12 = result1.point;
+
+    CommonPointResult result2 = findCommonPoint(fillingData[0].surface,
+                                                fillingData[2].surface);
+    ifc::Point* point13 = result2.point;
+
+    CommonPointResult result3 = findCommonPoint(fillingData[1].surface,
+                                                fillingData[2].surface);
+    ifc::Point* point23 = result3.point;
+
+    // --------------
+
+
+
+    // --------------
 
     fillingData[0].commonPoint1 = point12;
     fillingData[0].commonPoint2 = point13;
@@ -85,9 +96,9 @@ void SurfaceFilling::findCommonPoints(){
     updateStatusCommonPoints(commonPoints);
 }
 
-ifc::Point* SurfaceFilling::findCommonPoint(Surface* surface1,
-                                            Surface* surface2){
-    ifc::Point* commonPoint = NULL;
+CommonPointResult SurfaceFilling::findCommonPoint(Surface* surface1,
+                                                  Surface* surface2){
+    CommonPointResult result;
 
     const vector<ifc::Point*>& points1 = surface1->getAllPoints();
     const vector<ifc::Point*>& points2 = surface2->getAllPoints();
@@ -95,11 +106,33 @@ ifc::Point* SurfaceFilling::findCommonPoint(Surface* surface1,
     for(unsigned int i = 0; i < points1.size(); i++){
         for(unsigned int j = 0; j < points2.size(); j++){
             if(points1[i] == points2[j]){
-                commonPoint = points1[i];
+                result.point = points1[i];
+                PointIndex point_index1 = surface1->getIndex(result.point);
+                PointIndex point_index2 = surface2->getIndex(result.point);
+
+                result.position1 = determinePointPosition(point_index1);
+                result.position2 = determinePointPosition(point_index2);
+/*
+                std::cout << counter << std::endl;
+                std::cout
+                << commonPointPositionToString(result.position1)
+                << std::endl;
+                std::cout
+                << commonPointPositionToString(result.position2)
+                << std::endl;
+
+                std::cout
+                << pointIndexToString(point_index1)
+                << std::endl;
+                std::cout
+                << pointIndexToString(point_index2)
+                << std::endl;
+                std::cout << std::endl;
+                counter++;*/
             }
         }
     }
-    return commonPoint;
+    return result;
 }
 
 void SurfaceFilling::updateStatusCommonPoints(CommonPoints &commonPoints){
@@ -113,6 +146,63 @@ void SurfaceFilling::findBorderCurves(){
     findBorderCurve(fillingData[0]);
     findBorderCurve(fillingData[1]);
     findBorderCurve(fillingData[2]);
+
+    computeBorderCurveSideType(fillingData[0]);
+    computeBorderCurveSideType(fillingData[1]);
+    computeBorderCurveSideType(fillingData[2]);
+
+    CommonPointResult result1 = findCommonPoint(fillingData[0].surface,
+                                                fillingData[1].surface);
+    CommonPointResult result2 = findCommonPoint(fillingData[0].surface,
+                                                fillingData[2].surface);
+    CommonPointResult result3 = findCommonPoint(fillingData[1].surface,
+                                                fillingData[2].surface);
+
+    fillingData[0].half_bezier_which_side =
+            determineHalfBezierSide(fillingData[0].borderCurveSide,
+                                    result1.position1);
+    fillingData[0].half_bezier_which_side_top =
+            determineHalfBezierSide(fillingData[0].left->borderCurveSide,
+                                    result1.position2);
+
+    fillingData[0].left->half_bezier_which_side =
+            determineHalfBezierOpositeSide(fillingData[0].left->borderCurveSide,
+                                           result1.position2);
+    fillingData[0].left->half_bezier_which_side_top =
+            determineHalfBezierSide(
+                    fillingData[0].left->left->borderCurveSide,
+                    result3.position2);
+
+    fillingData[0].left->left->half_bezier_which_side =
+            determineHalfBezierOpositeSide(
+                    fillingData[0].left->left->borderCurveSide,
+                    result3.position2);
+    fillingData[0].left->left->half_bezier_which_side_top =
+            determineHalfBezierOpositeSide(
+                    fillingData[0].borderCurveSide,
+                    result1.position1);
+
+    std::cout << "0" << std::endl
+    << "Base: "
+    << halfBezierWhichSideToString(fillingData[0].half_bezier_which_side)
+    << std::endl << "Top:  "
+    << halfBezierWhichSideToString(fillingData[0].half_bezier_which_side_top)
+    << std::endl << std::endl;
+
+    std::cout << "1" << std::endl
+    << "Base: "
+    << halfBezierWhichSideToString(fillingData[1].half_bezier_which_side)
+    << std::endl << "Top:  "
+    << halfBezierWhichSideToString(fillingData[1].half_bezier_which_side_top)
+    << std::endl << std::endl;
+
+    std::cout << "2" << std::endl
+    << "Base: "
+    << halfBezierWhichSideToString(fillingData[2].half_bezier_which_side)
+    << std::endl << "Top:  "
+    << halfBezierWhichSideToString(fillingData[2].half_bezier_which_side_top)
+    << std::endl << std::endl;
+
 }
 
 void SurfaceFilling::findBorderCurve(FillingData &fillingData){
@@ -154,6 +244,25 @@ void SurfaceFilling::findBorderCurve(FillingData &fillingData){
 
             return;
         }
+    }
+}
+
+void SurfaceFilling::computeBorderCurveSideType(FillingData &fillingData){
+    if(fillingData.constBorderCurveParam == BorderCurveParam::U1 &&
+       fillingData.varBorderCurveParam == BorderCurveParam:: V){
+        fillingData.borderCurveSide = BorderCurveSide::RIGHT;
+    }
+    else if(fillingData.constBorderCurveParam == BorderCurveParam::U0 &&
+            fillingData.varBorderCurveParam == BorderCurveParam:: V){
+        fillingData.borderCurveSide = BorderCurveSide::LEFT;
+    }
+    else if(fillingData.constBorderCurveParam == BorderCurveParam::V0 &&
+            fillingData.varBorderCurveParam == BorderCurveParam:: U){
+        fillingData.borderCurveSide = BorderCurveSide::BOTTOM;
+    }
+    else if(fillingData.constBorderCurveParam == BorderCurveParam::V1 &&
+            fillingData.varBorderCurveParam == BorderCurveParam:: U){
+        fillingData.borderCurveSide = BorderCurveSide::TOP;
     }
 }
 
@@ -590,32 +699,21 @@ void SurfaceFilling::computeHalfBorderCurvePoints(FillingData& fillingData){
     BezierSplineC0* bezier
             = objectFactory.createBezier("bezier", fillingData.borderPoints);
 
-    float start = 0.5f;
-    float end = 1.0f;
-    float p = 4.0f / 6.0f;
-    float k = 5.0f / 6.0f;
+    const HalfBorderCurveData data
+            = getHalfBezierCurveDataBasedOnSide(
+                    fillingData.half_bezier_which_side);
+
+    float start = data.start;
+    float end = data.end;
+    float p = data.p;
+    float k = data.k;
+
 /*
-    if(fillingData.constBorderCurveParam == BorderCurveParam::V1 ||
-       fillingData.constBorderCurveParam == BorderCurveParam::U1){
-        start = 0.0f;
-        p = 1.0f / 6.0f;
-        k = 2.0f / 6.0f;
-        end = 0.5f;
-    }
-*/
     if(fillingData.constBorderCurveParam == BorderCurveParam::V1){
-        start = 0.0f;
-        p = 1.0f / 6.0f;
-        k = 2.0f / 6.0f;
-        end = 0.5f;
-    }
-/*
-    if(fillingData.constBorderCurveParam == BorderCurveParam::U0  &&
-            fillingData.varBorderCurveParam == BorderCurveParam::V){
-        start = 0.0f;
-        p = 1.0f / 6.0f;
-        k = 2.0f / 6.0f;
-        end = 0.5f;
+        start = FIRST_HALF_BORDER_CURVE_DATA.start;
+        end = FIRST_HALF_BORDER_CURVE_DATA.end;
+        p = FIRST_HALF_BORDER_CURVE_DATA.p;
+        k = FIRST_HALF_BORDER_CURVE_DATA.k;
     }
 */
     vec3 p0 = bezier->compute(start);
@@ -652,9 +750,6 @@ void SurfaceFilling::computeHalfBorderCurvePoints(FillingData& fillingData){
     fillingData.halfBezierTanget1Base = tangent1;
     fillingData.halfBezierTanget2Base = tangent2;
 
-    // TODO maybe not from control point!
-    //fillingData.halfBezierPoint1Base = halfBezier[1] + tangent1;
-    //fillingData.halfBezierPoint2Base = halfBezier[2] + tangent2;
     fillingData.halfBezierPoint1Base = p1 + tangent1;
     fillingData.halfBezierPoint2Base = p2 + tangent2;
     fillingData.halfBezierPoint1BaseOrigin = p1;
@@ -666,38 +761,18 @@ void SurfaceFilling::computeHalfBorderCurvePointsTop(
         FillingData& fillingDataBase){
     FillingData& fillingData = *(fillingDataBase.left);
 
+    const HalfBorderCurveData data
+            = getHalfBezierCurveDataBasedOnSide(
+                    fillingDataBase.half_bezier_which_side_top);
+
+    float start = data.start;
+    float end = data.end;
+    float p = data.p;
+    float k = data.k;
+
     ObjectFactory& objectFactory = ObjectFactory::getInstance();
     BezierSplineC0* bezier
             = objectFactory.createBezier("bezier", fillingData.borderPoints);
-
-    float start = 0.0f;
-    float p = 1.0f / 6.0f;
-    float k = 2.0f / 6.0f;
-    float end = 0.5f;
-/*
-    if(fillingData.constBorderCurveParam == BorderCurveParam::V1 ||
-       fillingData.constBorderCurveParam == BorderCurveParam::U1){
-        start = 0.5f;
-        end = 1.0f;
-        p = 4.0f / 6.0f;
-        k = 5.0f / 6.0f;
-    }
-*/
-    if(fillingData.constBorderCurveParam == BorderCurveParam::V1){
-        start = 0.5f;
-        end = 1.0f;
-        p = 4.0f / 6.0f;
-        k = 5.0f / 6.0f;
-    }
-/*
-    if(fillingData.constBorderCurveParam == BorderCurveParam::U0  &&
-       fillingData.varBorderCurveParam == BorderCurveParam::V){
-        start = 0.5f;
-        end = 1.0f;
-        p = 4.0f / 6.0f;
-        k = 5.0f / 6.0f;
-    }
-*/
 
     vec3 p0 = bezier->compute(start);
     vec3 p1 = bezier->compute(p);
@@ -732,14 +807,13 @@ void SurfaceFilling::computeHalfBorderCurvePointsTop(
     fillingDataBase.halfBezierTanget1Top = tangent1;
     fillingDataBase.halfBezierTanget2Top = tangent2;
 
-    // TODO maybe not from control point!
-    //fillingDataBase.halfBezierPoint1Top = halfBezier[1] + tangent1;
-    //fillingDataBase.halfBezierPoint2Top = halfBezier[2] + tangent2;
     fillingDataBase.halfBezierPoint1Top = p1 + tangent1;
     fillingDataBase.halfBezierPoint2Top = p2 + tangent2;
     fillingData.halfBezierPoint1TopOrigin = p1;
     fillingData.halfBezierPoint2TopOrigin = p2;
     delete bezier;
+
+    //if()
 }
 
 vector<vec3> SurfaceFilling::CalculateBezierControlPoints(vec3 p0, vec3 p1,
@@ -825,11 +899,172 @@ std::string SurfaceFilling::borderCurveParamToString(BorderCurveParam param){
     return "Unknown";
 }
 
+std::string SurfaceFilling::borderCurveSideToString(BorderCurveSide param){
+    if(param == BorderCurveSide::TOP) return "TOP";
+    if(param == BorderCurveSide::BOTTOM) return "BOTTOM";
+    if(param == BorderCurveSide::LEFT) return "LEFT";
+    if(param == BorderCurveSide::RIGHT) return "RIGHT";
+    return "Unknown";
+};
+
+std::string SurfaceFilling::pointSurfaceTypeToString(ifc::PointSurfaceType param){
+    if(param == ifc::PointSurfaceType::U0V1) return "U0V1";
+    if(param == ifc::PointSurfaceType::U0V0) return "U0V0";
+    if(param == ifc::PointSurfaceType::U1V1) return "U1V1";
+    if(param == ifc::PointSurfaceType::U1V0) return "U1V0";
+    if(param == ifc::PointSurfaceType::NONE) return "NONE";
+    return "Unknown";
+};
+
+std::string SurfaceFilling::pointIndexToString(PointIndex point_index){
+    std::string str = "[" + std::to_string(point_index.row_index) +
+            ", " + std::to_string(point_index.column_index) + "]";
+    return str;
+};
+
+std::string SurfaceFilling::commonPointPositionToString(
+        CommonPointPosition position){
+    if(position == CommonPointPosition::BOTTOM_LEFT)
+        return "BOTTOM_LEFT";
+    if(position == CommonPointPosition::BOTTOM_RIGHT)
+        return "BOTTOM_RIGHT";
+    if(position == CommonPointPosition::TOP_RIGHT)
+        return "TOP_RIGHT";
+    if(position == CommonPointPosition::TOP_LEFT)
+        return "TOP_LEFT";
+}
+
+std::string SurfaceFilling::halfBezierWhichSideToString(
+        HalfBezierWhichSide side){
+    if(side == HalfBezierWhichSide::U_FIRST)
+        return "U_FIRST";
+    if(side == HalfBezierWhichSide::U_SECOND)
+        return "U_SECOND";
+    if(side == HalfBezierWhichSide::V_FIRST)
+        return "V_FIRST";
+    if(side == HalfBezierWhichSide::V_SECOND)
+        return "V_SECOND";
+    return "Unknown";
+}
+
+CommonPointPosition SurfaceFilling::determinePointPosition(PointIndex index){
+    if(index.row_index == 0 && index.column_index == 0)
+        return CommonPointPosition::BOTTOM_LEFT;
+    if(index.row_index == 3 && index.column_index == 0)
+        return CommonPointPosition::TOP_LEFT;
+    if(index.row_index == 0 && index.column_index == 3)
+        return CommonPointPosition::BOTTOM_LEFT;
+    if(index.row_index == 3 && index.column_index == 3)
+        return CommonPointPosition::TOP_RIGHT;
+}
+
+HalfBezierWhichSide SurfaceFilling::determineHalfBezierSide(
+        BorderCurveSide border_curve_side,
+        CommonPointPosition common_point_position){
+    if(border_curve_side == BorderCurveSide::LEFT &&
+            common_point_position == CommonPointPosition::BOTTOM_LEFT){
+        return HalfBezierWhichSide::U_FIRST;
+    }
+    if(border_curve_side == BorderCurveSide::LEFT &&
+       common_point_position == CommonPointPosition::TOP_LEFT){
+        return HalfBezierWhichSide::U_SECOND;
+    }
+
+    if(border_curve_side == BorderCurveSide::RIGHT &&
+       common_point_position == CommonPointPosition::BOTTOM_RIGHT){
+        return HalfBezierWhichSide::U_FIRST;
+    }
+    if(border_curve_side == BorderCurveSide::RIGHT &&
+       common_point_position == CommonPointPosition::TOP_RIGHT){
+        return HalfBezierWhichSide::U_SECOND;
+    }
+
+    if(border_curve_side == BorderCurveSide::TOP &&
+       common_point_position == CommonPointPosition::TOP_RIGHT){
+        return HalfBezierWhichSide::V_SECOND;
+    }
+    if(border_curve_side == BorderCurveSide::TOP &&
+       common_point_position == CommonPointPosition::TOP_LEFT){
+        return HalfBezierWhichSide::V_FIRST;
+    }
+    if(border_curve_side == BorderCurveSide::BOTTOM &&
+       common_point_position == CommonPointPosition::BOTTOM_RIGHT){
+        return HalfBezierWhichSide::V_SECOND;
+    }
+    if(border_curve_side == BorderCurveSide::BOTTOM &&
+       common_point_position == CommonPointPosition::BOTTOM_LEFT){
+        return HalfBezierWhichSide::V_FIRST;
+    }
+}
+
+HalfBezierWhichSide SurfaceFilling::determineHalfBezierOpositeSide(
+        BorderCurveSide border_curve_side,
+        CommonPointPosition common_point_position){
+    if(border_curve_side == BorderCurveSide::LEFT &&
+       common_point_position == CommonPointPosition::BOTTOM_LEFT){
+        return HalfBezierWhichSide::U_SECOND;
+    }
+    if(border_curve_side == BorderCurveSide::LEFT &&
+       common_point_position == CommonPointPosition::TOP_LEFT){
+        return HalfBezierWhichSide::U_FIRST;
+    }
+
+    if(border_curve_side == BorderCurveSide::RIGHT &&
+       common_point_position == CommonPointPosition::BOTTOM_RIGHT){
+        return HalfBezierWhichSide::U_SECOND;
+    }
+    if(border_curve_side == BorderCurveSide::RIGHT &&
+       common_point_position == CommonPointPosition::TOP_RIGHT){
+        return HalfBezierWhichSide::U_FIRST;
+    }
+
+    if(border_curve_side == BorderCurveSide::TOP &&
+       common_point_position == CommonPointPosition::TOP_RIGHT){
+        return HalfBezierWhichSide::U_FIRST;
+    }
+    if(border_curve_side == BorderCurveSide::TOP &&
+       common_point_position == CommonPointPosition::TOP_LEFT){
+        return HalfBezierWhichSide::U_SECOND;
+    }
+
+    if(border_curve_side == BorderCurveSide::BOTTOM &&
+       common_point_position == CommonPointPosition::BOTTOM_RIGHT){
+        return HalfBezierWhichSide::U_FIRST;
+    }
+    if(border_curve_side == BorderCurveSide::BOTTOM &&
+       common_point_position == CommonPointPosition::BOTTOM_LEFT){
+        return HalfBezierWhichSide::U_SECOND;
+    }
+}
+
+const HalfBorderCurveData SurfaceFilling::getHalfBezierCurveDataBasedOnSide(
+        HalfBezierWhichSide side){
+    if(side == HalfBezierWhichSide::U_FIRST)
+        return U_FIRST_DATA;
+    if(side == HalfBezierWhichSide::U_SECOND)
+        return U_SECOND_DATA;
+    if(side == HalfBezierWhichSide::V_FIRST)
+        return V_FIRST_DATA;
+    if(side == HalfBezierWhichSide::V_SECOND)
+        return V_SECOND_DATA;
+}
 
 void SurfaceFilling::renderPatches(const glm::mat4 &VP){
-    renderPatch(VP, fillingData[0]);
-    renderPatch(VP, fillingData[1]);
-    renderPatch(VP, fillingData[2]);
+    if(renderMode == RenderMode::RENDER_ALL){
+        renderPatch(VP, fillingData[0]);
+        renderPatch(VP, fillingData[1]);
+        renderPatch(VP, fillingData[2]);
+    }
+    else if (renderMode == RenderMode::RENDER_FIRST_PATCH){
+        renderPatch(VP, fillingData[0]);
+    }
+    else if (renderMode == RenderMode::RENDER_SECOND_PATCH){
+        renderPatch(VP, fillingData[1]);
+    }
+    else if (renderMode == RenderMode::RENDER_THIRD_PATCH){
+        renderPatch(VP, fillingData[2]);
+    }
+
 }
 
 void SurfaceFilling::renderPatch(const glm::mat4 &VP, FillingData& fillingData){
@@ -838,15 +1073,8 @@ void SurfaceFilling::renderPatch(const glm::mat4 &VP, FillingData& fillingData){
     vec3 e1_m = fillingData.halfBezierPointsPointsBase[2];
     vec3 P1 = fillingData.halfBezierPointsPointsBase[3];
 
-    if(fillingData.varBorderCurveParam == BorderCurveParam::V){
-        P0 = fillingData.halfBezierPointsPointsBase[3];
-        e0_p = fillingData.halfBezierPointsPointsBase[2];
-        e1_m = fillingData.halfBezierPointsPointsBase[1];
-        P1 = fillingData.halfBezierPointsPointsBase[0];
-    }
-
-    if(fillingData.constBorderCurveParam == BorderCurveParam::V0 ||
-            fillingData.constBorderCurveParam == BorderCurveParam::U0){
+    if(fillingData.half_bezier_which_side == HalfBezierWhichSide::U_SECOND ||
+       fillingData.half_bezier_which_side == HalfBezierWhichSide::V_FIRST) {
         P0 = fillingData.halfBezierPointsPointsBase[3];
         e0_p = fillingData.halfBezierPointsPointsBase[2];
         e1_m = fillingData.halfBezierPointsPointsBase[1];
@@ -859,26 +1087,24 @@ void SurfaceFilling::renderPatch(const glm::mat4 &VP, FillingData& fillingData){
     vec3 f1_m = fillingData.halfBezierPoint2Base;
     vec3 f1_p = fillingData.DLeft[1];
     vec3 e1_p = fillingData.P1_Tanget;
-
     vec3 e3_p = fillingData.halfBezierPointsPointsTop[2];
+
+    if(fillingData.half_bezier_which_side_top == HalfBezierWhichSide::U_SECOND ||
+       fillingData.half_bezier_which_side_top == HalfBezierWhichSide::V_FIRST) {
+        e3_p = fillingData.halfBezierPointsPointsTop[1];
+        e0_m = fillingData.halfBezierPointsPointsTop[2];
+    }
+
     vec3 f3_p = fillingData.halfBezierPoint2Top;
     vec3 f3_m = fillingData.DTop[1];
     vec3 f2_p = fillingData.DTop[2];
     vec3 f2_m = fillingData.DLeft[2];
     vec3 e2_m = fillingData.P2;
 
-    vec3 P3 = fillingData.halfBezierPointsPointsTop[3];
-
-
-    if(P3 == P0){
-        e0_m = fillingData.halfBezierPointsPointsTop[2];
-        e3_p = fillingData.halfBezierPointsPointsTop[1];
-        P3 = fillingData.halfBezierPointsPointsTop[0];
-    }
     vec3 e3_m = fillingData.left->P1_Tanget;
     vec3 e2_p = fillingData.left->P2;
-    vec3 P2 = fillingData.P3_Center;
-
+    vec3 P3 = fillingData.left->P0_BorderCurveMidPoint;
+    vec3 P2 = fillingData.left->P3_Center;
 
     auto solveF0 = [f0_p, f0_m](float u, float v){
         float denom = u + v;
@@ -916,29 +1142,36 @@ void SurfaceFilling::renderPatch(const glm::mat4 &VP, FillingData& fillingData){
     };
 
     // DEBUG
-/*
+
     ObjectFactory &objectFactory = ObjectFactory::getInstance();
-    Color color(1.0f, 1.0f, 1.0f);
+    Color color0(1.0f, 0.0f, 0.0f); // red
+    Color color1(1.0f, 1.0f, 0.0f); // yellow
+    Color color2(1.0f, 0.0f, 1.0f); // pink
+    Color color3(0.0f, 0.0f, 1.0f); // blue
 
-    ifc::Point* pointP0 = objectFactory.createPoint("p", P3);
-    ifc::Point* pointe0_p = objectFactory.createPoint("p", P3);
-    ifc::Point* pointe1_m = objectFactory.createPoint("p", P3);
-    ifc::Point* pointP1 = objectFactory.createPoint("p", P3);
+    //ifc::Point* pointP0 = objectFactory.createPoint("p", P0);
+    //ifc::Point* pointP1 = objectFactory.createPoint("p", P1);
+    ifc::Point* pointP0 = objectFactory.createPoint("p", e3_p);
+    ifc::Point* pointP1 = objectFactory.createPoint("p", e0_m);
+    ifc::Point* pointP2 = objectFactory.createPoint("p", P2);
+    ifc::Point* pointP3 = objectFactory.createPoint("p", P3);
+
     pointP0->update();
-    pointe0_p->update();
-    pointe1_m->update();
     pointP1->update();
+    pointP2->update();
+    pointP3->update();
 
-    pointP0->setColor(color);
-    pointe0_p->setColor(color);
-    pointe1_m->setColor(color);
-    pointP1->setColor(color);
+    pointP0->setColor(color0);
+    pointP1->setColor(color1);
+    pointP2->setColor(color2);
+    pointP3->setColor(color3);
 
     pointP0->render(VP);
-    pointe0_p->render(VP);
-    pointe1_m->render(VP);
     pointP1->render(VP);
-*/
+    pointP2->render(VP);
+    pointP3->render(VP);
+
+
     //
 
     mat4 Gx;
@@ -1227,6 +1460,9 @@ void SurfaceFilling::renderDebug(const glm::mat4 &VP) {
         << std::endl;
         std::cout << "Const Param: "
         << borderCurveParamToString(fillingData[j].constBorderCurveParam)
+        << std::endl;
+        std::cout << "Side:        "
+        << borderCurveSideToString(fillingData[j].borderCurveSide)
         << std::endl;
         std::cout << " ------------ " << std::endl << std::endl;
 
@@ -1538,7 +1774,6 @@ void SurfaceFilling::renderDebug(const glm::mat4 &VP) {
     }
 }
 
-
 //-----------------------//
 //  PROTECTED
 //-----------------------//
@@ -1550,6 +1785,7 @@ void SurfaceFilling::initVertices(){
 void SurfaceFilling::initEdges(){
 
 }
+
 //-----------------------//
 //  PUBLIC
 //-----------------------//
@@ -1560,6 +1796,10 @@ bool SurfaceFilling::isRenderDebug(){
 
 void SurfaceFilling::setRenderDebug(bool v){
     doRenderDebug = v;
+}
+
+void SurfaceFilling::setRenderMode(RenderMode render_mode){
+    renderMode = render_mode;
 }
 
 void SurfaceFilling::render(const glm::mat4 &VP){

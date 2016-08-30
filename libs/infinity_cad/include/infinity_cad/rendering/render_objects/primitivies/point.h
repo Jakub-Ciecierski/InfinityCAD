@@ -12,10 +12,16 @@
 
 namespace ifc {
 
+enum PointSurfaceType{
+    NONE, U0V0, U0V1, U1V0, U1V1
+};
+
     class Point : public RenderObject {
     private:
         float radius;
         float toleratedRadius;
+
+        PointSurfaceType point_surface_type_;
 
     protected:
         virtual void initVertices() override;
@@ -25,6 +31,12 @@ namespace ifc {
         Point(SceneID id);
         Point(SceneID id, std::string name);
         ~Point();
+
+        PointSurfaceType point_surface_type() {return point_surface_type_;}
+        PointSurfaceType point_surface_type(
+                PointSurfaceType point_surface_type){
+            point_surface_type_ = point_surface_type;
+        }
 
         float intersect(const RayCast &ray) override;
     };

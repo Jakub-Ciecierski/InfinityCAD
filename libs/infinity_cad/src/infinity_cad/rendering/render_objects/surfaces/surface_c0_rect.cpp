@@ -61,6 +61,25 @@ void SurfaceC0Rect::buildPatchesFromMatrix(const Matrix<ifc::Point*>& points){
 
                     allPoints.push_back(patchPoints[k][l]);
                     components.push_back(patchPoints[k][l]);
+
+
+                    if(k == 0 && l == CUBIC_COUNT - 1) {
+                        points[l][k]->point_surface_type
+                                (ifc::PointSurfaceType::U0V1);
+                    }
+                    if(k == CUBIC_COUNT - 1 && l == 0) {
+                        points[l][k]->point_surface_type
+                                (ifc::PointSurfaceType::U1V0);
+                    }
+                    if(k == CUBIC_COUNT - 1 && l == CUBIC_COUNT - 1) {
+                        points[l][k]->point_surface_type
+                                (ifc::PointSurfaceType::U1V1);
+                    }
+                    if(k == 0 && l == 0) {
+                        points[l][k]->point_surface_type
+                                (ifc::PointSurfaceType::U0V0);
+                    }
+
                 }
             }
             BicubicBezierPatch* patch = new BicubicBezierPatch(patchPoints);
@@ -134,6 +153,15 @@ BicubicBezierPatch*SurfaceC0Rect::createPatch(int n, int m,
             points[j][i]->moveTo(origin);
             points[j][i]->move(x, y, z);
             y += dY;
+
+            if(i == 0 && j == CUBIC_COUNT - 1)
+                points[j][i]->point_surface_type(ifc::PointSurfaceType::U0V1);
+            if(i == CUBIC_COUNT - 1 && j == 0)
+                points[j][i]->point_surface_type(ifc::PointSurfaceType::U1V0);
+            if(i == CUBIC_COUNT - 1 && j == CUBIC_COUNT - 1)
+                points[j][i]->point_surface_type(ifc::PointSurfaceType::U1V1);
+            if(i == 0 && j == 0)
+                points[j][i]->point_surface_type(ifc::PointSurfaceType::U0V0);
         }
         x += dX;
     }

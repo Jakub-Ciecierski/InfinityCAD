@@ -105,3 +105,31 @@ SceneCMHandler SCM_GREGORY_DEBUG_HANDLER(
     bool isEnabled = surface->isRenderDebug();
     surface->setRenderDebug(!isEnabled);
 });
+
+SceneCMHandler SCM_GREGORY_RENDER_ALL_PATCH_HANDLER(
+        "Render All Patches",
+        [](Item* item){
+    SurfaceFilling* surface = static_cast<SurfaceFilling*>(item->object);
+    surface->setRenderMode(RenderMode::RENDER_ALL);
+});
+
+SceneCMHandler SCM_GREGORY_RENDER_FIRST_PATCH_HANDLER(
+        "Render First Patch",
+        [](Item* item){
+    SurfaceFilling* surface = static_cast<SurfaceFilling*>(item->object);
+    surface->setRenderMode(RenderMode::RENDER_FIRST_PATCH);
+});
+
+SceneCMHandler SCM_GREGORY_RENDER_SECOND_PATCH_HANDLER(
+        "Render Second Patch",
+        [](Item* item){
+    SurfaceFilling* surface = static_cast<SurfaceFilling*>(item->object);
+    surface->setRenderMode(RenderMode::RENDER_SECOND_PATCH);
+});
+
+SceneCMHandler SCM_GREGORY_RENDER_THIRD_PATCH_HANDLER(
+        "Render Third Patch",
+        [](Item* item){
+    SurfaceFilling* surface = static_cast<SurfaceFilling*>(item->object);
+    surface->setRenderMode(RenderMode::RENDER_THIRD_PATCH);
+});

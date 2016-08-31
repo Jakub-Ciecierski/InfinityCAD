@@ -112,7 +112,7 @@ CommonPointResult SurfaceFilling::findCommonPoint(Surface* surface1,
 
                 result.position1 = determinePointPosition(point_index1);
                 result.position2 = determinePointPosition(point_index2);
-/*
+
                 std::cout << counter << std::endl;
                 std::cout
                 << commonPointPositionToString(result.position1)
@@ -128,7 +128,7 @@ CommonPointResult SurfaceFilling::findCommonPoint(Surface* surface1,
                 << pointIndexToString(point_index2)
                 << std::endl;
                 std::cout << std::endl;
-                counter++;*/
+                counter++;
             }
         }
     }
@@ -708,14 +708,6 @@ void SurfaceFilling::computeHalfBorderCurvePoints(FillingData& fillingData){
     float p = data.p;
     float k = data.k;
 
-/*
-    if(fillingData.constBorderCurveParam == BorderCurveParam::V1){
-        start = FIRST_HALF_BORDER_CURVE_DATA.start;
-        end = FIRST_HALF_BORDER_CURVE_DATA.end;
-        p = FIRST_HALF_BORDER_CURVE_DATA.p;
-        k = FIRST_HALF_BORDER_CURVE_DATA.k;
-    }
-*/
     vec3 p0 = bezier->compute(start);
     vec3 p1 = bezier->compute(p);
     vec3 p2 = bezier->compute(k);
@@ -953,7 +945,7 @@ CommonPointPosition SurfaceFilling::determinePointPosition(PointIndex index){
     if(index.row_index == 3 && index.column_index == 0)
         return CommonPointPosition::TOP_LEFT;
     if(index.row_index == 0 && index.column_index == 3)
-        return CommonPointPosition::BOTTOM_LEFT;
+        return CommonPointPosition::BOTTOM_RIGHT;
     if(index.row_index == 3 && index.column_index == 3)
         return CommonPointPosition::TOP_RIGHT;
 }
@@ -1020,20 +1012,20 @@ HalfBezierWhichSide SurfaceFilling::determineHalfBezierOpositeSide(
 
     if(border_curve_side == BorderCurveSide::TOP &&
        common_point_position == CommonPointPosition::TOP_RIGHT){
-        return HalfBezierWhichSide::U_FIRST;
+        return HalfBezierWhichSide::V_FIRST;
     }
     if(border_curve_side == BorderCurveSide::TOP &&
        common_point_position == CommonPointPosition::TOP_LEFT){
-        return HalfBezierWhichSide::U_SECOND;
+        return HalfBezierWhichSide::V_SECOND;
     }
 
     if(border_curve_side == BorderCurveSide::BOTTOM &&
        common_point_position == CommonPointPosition::BOTTOM_RIGHT){
-        return HalfBezierWhichSide::U_FIRST;
+        return HalfBezierWhichSide::V_FIRST;
     }
     if(border_curve_side == BorderCurveSide::BOTTOM &&
        common_point_position == CommonPointPosition::BOTTOM_LEFT){
-        return HalfBezierWhichSide::U_SECOND;
+        return HalfBezierWhichSide::V_SECOND;
     }
 }
 
@@ -1044,9 +1036,9 @@ const HalfBorderCurveData SurfaceFilling::getHalfBezierCurveDataBasedOnSide(
     if(side == HalfBezierWhichSide::U_SECOND)
         return U_SECOND_DATA;
     if(side == HalfBezierWhichSide::V_FIRST)
-        return V_FIRST_DATA;
-    if(side == HalfBezierWhichSide::V_SECOND)
         return V_SECOND_DATA;
+    if(side == HalfBezierWhichSide::V_SECOND)
+        return V_FIRST_DATA;
 }
 
 void SurfaceFilling::renderPatches(const glm::mat4 &VP){
@@ -1074,7 +1066,7 @@ void SurfaceFilling::renderPatch(const glm::mat4 &VP, FillingData& fillingData){
     vec3 P1 = fillingData.halfBezierPointsPointsBase[3];
 
     if(fillingData.half_bezier_which_side == HalfBezierWhichSide::U_SECOND ||
-       fillingData.half_bezier_which_side == HalfBezierWhichSide::V_FIRST) {
+       fillingData.half_bezier_which_side == HalfBezierWhichSide::V_SECOND) {
         P0 = fillingData.halfBezierPointsPointsBase[3];
         e0_p = fillingData.halfBezierPointsPointsBase[2];
         e1_m = fillingData.halfBezierPointsPointsBase[1];
@@ -1086,19 +1078,22 @@ void SurfaceFilling::renderPatch(const glm::mat4 &VP, FillingData& fillingData){
     vec3 f0_p = fillingData.halfBezierPoint1Base;
     vec3 f1_m = fillingData.halfBezierPoint2Base;
     vec3 f1_p = fillingData.DLeft[1];
+
     vec3 e1_p = fillingData.P1_Tanget;
     vec3 e3_p = fillingData.halfBezierPointsPointsTop[2];
 
     if(fillingData.half_bezier_which_side_top == HalfBezierWhichSide::U_SECOND ||
-       fillingData.half_bezier_which_side_top == HalfBezierWhichSide::V_FIRST) {
+       fillingData.half_bezier_which_side_top == HalfBezierWhichSide::V_SECOND) {
         e3_p = fillingData.halfBezierPointsPointsTop[1];
         e0_m = fillingData.halfBezierPointsPointsTop[2];
     }
 
     vec3 f3_p = fillingData.halfBezierPoint2Top;
+
     vec3 f3_m = fillingData.DTop[1];
     vec3 f2_p = fillingData.DTop[2];
     vec3 f2_m = fillingData.DLeft[2];
+
     vec3 e2_m = fillingData.P2;
 
     vec3 e3_m = fillingData.left->P1_Tanget;

@@ -10,6 +10,10 @@
 #include <infinity_cad/rendering/render_objects/primitivies/line.h>
 #include <infinity_cad/rendering/render_objects/curves/bezier_spline_c0.h>
 
+/**
+ * http://research.microsoft.com/en-us/um/people/cloop/SGA09.pdf
+ */
+
 enum BorderCurveParam {
     U, V, U0, U1, V0, V1
 };

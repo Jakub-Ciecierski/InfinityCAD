@@ -93,8 +93,8 @@ protected:
     float getMaximumPolygonLength();
 
 public:
-    const static int U_DIVISION_COUNT_DEFAULT = 4;
-    const static int V_DIVISION_COUNT_DEFAULT = 4;
+    const static int U_DIVISION_COUNT_DEFAULT = 16;
+    const static int V_DIVISION_COUNT_DEFAULT = 16;
 
     static int uDivisionCount;
     static int vDivisionCount;

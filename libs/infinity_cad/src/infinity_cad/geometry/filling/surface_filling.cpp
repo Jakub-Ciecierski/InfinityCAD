@@ -364,6 +364,7 @@ void SurfaceFilling::computeGFieldVector(FillingData& fillingData){
     vec3 g0, g1, g2;
 
     vec2 uv = getUV(fillingData);
+    //uv = vec2(0.0f, 0.5f);
 
     if(fillingData.varBorderCurveParam == BorderCurveParam::U){
         a0 = fillingData.surface->computeDu(uv.x, uv.y);
@@ -441,6 +442,7 @@ void SurfaceFilling::computeGFieldVectorTop(FillingData& fillingDataBase){
     vec3 g0, g1, g2;
 
     vec2 uv = getUV(fillingData);
+    //uv = vec2(0.5f, 1.0f);
 
     if(fillingData.varBorderCurveParam == BorderCurveParam::U){
         a0 = fillingData.surface->computeDu(uv.x, uv.y);
@@ -584,16 +586,20 @@ void SurfaceFilling::computeD(FillingData &fillingData){
 
         return vec3(x,y,z);
     };
+
     vec3 d0 = solveD(0.0f);
     vec3 d1 = solveD(0.333f);
     vec3 d2 = solveD(0.666f);
     vec3 d3 = solveD(1.0f);
-/*
-    d0 *= 0.33f;
-    d1 *= 0.33f;
-    d2 *= 0.33f;
-    d3 *= 0.33f;
-*/
+
+    if(fillingData.half_bezier_which_side == HalfBezierWhichSide::V_SECOND
+       || fillingData.half_bezier_which_side == HalfBezierWhichSide::U_FIRST){
+        d0 = -d0;
+        d1 = -d1;
+        d2 = -d2;
+        d3 = -d3;
+    }
+
     vector<vec3> D = {fillingData.P0_BorderCurveMidPoint + d0,
                       fillingData.P1_Tanget + d1,
                       fillingData.P2 + d2,
@@ -669,17 +675,22 @@ void SurfaceFilling::computeDTop(FillingData &fillingDataBase){
     vec3 d1 = solveD(0.333f);
     vec3 d2 = solveD(0.666f);
     vec3 d3 = solveD(1.0f);
-/*
-    d0 *= 0.33f;
-    d1 *= 0.33f;
-    d2 *= 0.33f;
-    d3 *= 0.33f;
-*/
-    //vector<vec3> D = {d0, d1, d2, d3};
+
+    if(fillingDataBase.half_bezier_which_side_top ==
+            HalfBezierWhichSide::V_FIRST
+            || fillingDataBase.half_bezier_which_side_top ==
+               HalfBezierWhichSide::U_SECOND){
+        d0 = -d0;
+        d1 = -d1;
+        d2 = -d2;
+        d3 = -d3;
+    }
+
     vector<vec3> D = {fillingData.P0_BorderCurveMidPoint - d0,
                       fillingData.P1_Tanget - d1,
                       fillingData.P2 - d2,
                       fillingData.P3_Center - d3};
+
 
     fillingDataBase.DTop = D;
 }
@@ -856,7 +867,6 @@ vector<vec3> SurfaceFilling::CalculateBezierControlPoints(vec3 p0, vec3 p1,
     return pos;
 }
 
-
 vec2 SurfaceFilling::getUV(FillingData& fillingData){
     const float HALF_P = 0.5f;
     const float START_P = 0.0f;
@@ -881,6 +891,31 @@ vec2 SurfaceFilling::getUV(FillingData& fillingData){
     return vec2(u,v);
 }
 
+/*
+vec2 SurfaceFilling::getUV(FillingData& fillingData){
+    const float HALF_P = 0.5f;
+    const float START_P = 0.0f;
+    const float END_P = 1.0f;
+    const float NO_P = -1.0f;
+
+    float u = NO_P;
+    float v = NO_P;
+
+    if(fillingData.varBorderCurveParam == BorderCurveParam::U) u = HALF_P;
+    else v = HALF_P;
+
+    if(fillingData.constBorderCurveParam == BorderCurveParam::U0) u = START_P;
+    if(fillingData.constBorderCurveParam == BorderCurveParam::U1) u = END_P;
+    if(fillingData.constBorderCurveParam == BorderCurveParam::V0) v = START_P;
+    if(fillingData.constBorderCurveParam == BorderCurveParam::V1) v = END_P;
+
+    if(u == NO_P || v == NO_P){
+        throw new invalid_argument("Invalid u,v parameters");
+    }
+
+    return vec2(u,v);
+}
+*/
 std::string SurfaceFilling::borderCurveParamToString(BorderCurveParam param){
     if(param == BorderCurveParam::U) return "U";
     if(param == BorderCurveParam::V) return "V";
@@ -1078,6 +1113,7 @@ void SurfaceFilling::renderPatch(const glm::mat4 &VP, FillingData& fillingData){
     vec3 f0_p = fillingData.halfBezierPoint1Base;
     vec3 f1_m = fillingData.halfBezierPoint2Base;
     vec3 f1_p = fillingData.DLeft[1];
+    //vec3 f1_p = fillingData.right->DLeft[2];
 
     vec3 e1_p = fillingData.P1_Tanget;
     vec3 e3_p = fillingData.halfBezierPointsPointsTop[2];
@@ -1092,7 +1128,11 @@ void SurfaceFilling::renderPatch(const glm::mat4 &VP, FillingData& fillingData){
 
     vec3 f3_m = fillingData.DTop[1];
     vec3 f2_p = fillingData.DTop[2];
+    //vec3 f3_m = fillingData.right->DTop[2];
+    //vec3 f2_p = fillingData.right->DTop[1];
+
     vec3 f2_m = fillingData.DLeft[2];
+    //vec3 f2_m = fillingData.right->DLeft[1];
 
     vec3 e2_m = fillingData.P2;
 
@@ -1146,10 +1186,14 @@ void SurfaceFilling::renderPatch(const glm::mat4 &VP, FillingData& fillingData){
 
     //ifc::Point* pointP0 = objectFactory.createPoint("p", P0);
     //ifc::Point* pointP1 = objectFactory.createPoint("p", P1);
-    ifc::Point* pointP0 = objectFactory.createPoint("p", e3_p);
-    ifc::Point* pointP1 = objectFactory.createPoint("p", e0_m);
-    ifc::Point* pointP2 = objectFactory.createPoint("p", P2);
-    ifc::Point* pointP3 = objectFactory.createPoint("p", P3);
+    //ifc::Point* pointP0 = objectFactory.createPoint("p", f3_m);
+    //ifc::Point* pointP1 = objectFactory.createPoint("p", f2_p);
+    ifc::Point* pointP0 = objectFactory.createPoint("p", f3_p);
+    ifc::Point* pointP1 = objectFactory.createPoint("p", f2_m);
+    ifc::Point* pointP2 = objectFactory.createPoint("p", f3_m);
+    ifc::Point* pointP3 = objectFactory.createPoint("p", f2_p);
+    //ifc::Point* pointP2 = objectFactory.createPoint("p", P2);
+    //ifc::Point* pointP3 = objectFactory.createPoint("p", P3);
 
     pointP0->update();
     pointP1->update();

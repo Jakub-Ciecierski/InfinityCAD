@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
     Surface::vDivisionCount = Surface::V_DIVISION_COUNT_DEFAULT;
 
     ObjectManager& objectManager = ObjectManager::getInstance();
-    //objectManager.loadSystem("/home/jakub/programming/infinityCAD/apps/ifc_editor_qt/build/filling_lll.mg");
+    objectManager.loadSystem("/home/jakub/programming/infinityCAD/apps/ifc_editor_qt/build/fll_merged.mg");
 
     w.show();
 

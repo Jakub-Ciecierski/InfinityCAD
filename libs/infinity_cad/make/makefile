@@ -191,7 +191,7 @@ LIBS += -lpthread
 #----------------- INCLUDES -------------------#
 
 # Paths to all Includes
-INCLUDES += -I /usr/local/cuda-7.0/include -I /opt/cuda/include
+INCLUDES += -I ${CUDA_HOME}/include
 
 #------------------- FLAGS --------------------#
 

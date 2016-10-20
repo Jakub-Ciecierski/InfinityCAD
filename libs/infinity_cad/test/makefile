@@ -56,7 +56,7 @@ MAKE_EXTERNAL = '$(GTEST_ROOT)/make/'
 # Paths and names of libraries to link with
 LIBS += $(GTEST_ROOT)/make/gtest_main.a -lpso -lparallel -lmath -ltime\
         -lpthread -lGL -lifcgpu \
-		-L /opt/cuda/lib64/ -L /usr/local/cuda-7.0/lib64 -lcudart -lcuda -lcudadevrt
+		-L ${CUDA_HOME}/lib64 -lcudart -lcuda -lcudadevrt
 
 
 #----------------- INCLUDES -------------------#

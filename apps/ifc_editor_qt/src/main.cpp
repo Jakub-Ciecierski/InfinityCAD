@@ -39,8 +39,8 @@ int main(int argc, char *argv[])
     Surface::uDivisionCount = Surface::U_DIVISION_COUNT_DEFAULT;
     Surface::vDivisionCount = Surface::V_DIVISION_COUNT_DEFAULT;
 
-    ObjectManager& objectManager = ObjectManager::getInstance();
-    objectManager.loadSystem("/home/jakub/programming/infinityCAD/apps/ifc_editor_qt/build/fll_merged.mg");
+    //ObjectManager& objectManager = ObjectManager::getInstance();
+    //objectManager.loadSystem("/home/jakub/programming/infinityCAD/apps/ifc_editor_qt/build/fll_merged.mg");
 
     w.show();
 

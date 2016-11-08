@@ -158,6 +158,7 @@ else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../dependencies/lib/
 else:unix: LIBS += -L$$PWD/../../dependencies/lib/glm/ -lglm
 INCLUDEPATH += $$PWD/../../dependencies/include/glm
 DEPENDPATH += $$PWD/../../dependencies/include/glm
+LIBS += -Wl,-rpath $$PWD/../../dependencies/lib/glm/
 
 # Ray
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../dependencies/lib/rc/release/ -lrc
@@ -165,6 +166,7 @@ else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../dependencies/lib/
 else:unix: LIBS += -L$$PWD/../../dependencies/lib/rc/ -lrc
 INCLUDEPATH += $$PWD/../../dependencies/include/rc
 DEPENDPATH += $$PWD/../../dependencies/include/rc
+LIBS += -Wl,-rpath $$PWD/../../dependencies/lib/rc/
 
 # Math
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../dependencies/lib/math/release/ -lmath
@@ -172,6 +174,7 @@ else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../dependencies/lib/
 else:unix: LIBS += -L$$PWD/../../dependencies/lib/math/ -lmath
 INCLUDEPATH += $$PWD/../../dependencies/include/math
 DEPENDPATH += $$PWD/../../dependencies/include/math
+LIBS += -Wl,-rpath $$PWD/../../dependencies/lib/math/
 
 # Strings
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../dependencies/lib/strings/release/ -lstrings
@@ -187,6 +190,7 @@ else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../dependencies/lib/
 else:unix: LIBS += -L$$PWD/../../dependencies/lib/parallel/ -lparallel
 INCLUDEPATH += $$PWD/../../dependencies/include/parallel
 DEPENDPATH += $$PWD/../../dependencies/include/parallel
+LIBS += -Wl,-rpath $$PWD/../../dependencies/lib/parallel/
 
 # PSO
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../dependencies/lib/pso/release/ -lpso
@@ -194,6 +198,7 @@ else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../dependencies/lib/
 else:unix: LIBS += -L$$PWD/../../dependencies/lib/pso/ -lpso
 INCLUDEPATH += $$PWD/../../dependencies/include/pso
 DEPENDPATH += $$PWD/../../dependencies/include/pso
+LIBS += -Wl,-rpath $$PWD/../../dependencies/lib/pso/
 
 # Time
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../dependencies/lib/time/release/ -ltime
@@ -201,7 +206,7 @@ else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../dependencies/lib/
 else:unix: LIBS += -L$$PWD/../../dependencies/lib/time/ -ltime
 INCLUDEPATH += $$PWD/../../dependencies/include/time
 DEPENDPATH += $$PWD/../../dependencies/include/time
-
+LIBS += -Wl,-rpath $$PWD/../../dependencies/lib/time/
 
 # Uncomment
 #LIBS += -L /opt/cuda/lib64

@@ -126,6 +126,7 @@ public:
 
     virtual void update() override;
 
+    Matrix<BicubicBezierPatch*>& GetBicubicBezierPatches();
     const std::vector<ifc::Point*>& getAllPoints();
     const Matrix<ifc::Point*>& getMatrixPoints();
 

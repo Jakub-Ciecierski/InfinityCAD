@@ -792,6 +792,10 @@ void Surface::update(){
     }
 }
 
+Matrix<BicubicBezierPatch*>& Surface::GetBicubicBezierPatches(){
+    return patches;
+}
+
 const std::vector<ifc::Point*>& Surface::getAllPoints(){
     return this->allPoints;
 }

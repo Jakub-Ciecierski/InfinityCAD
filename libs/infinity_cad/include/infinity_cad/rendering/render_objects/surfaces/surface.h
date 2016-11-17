@@ -121,6 +121,8 @@ public:
     virtual glm::vec3 computeDvv(float u, float v);
     virtual glm::vec3 computeDvu(float u, float v);
 
+    glm::vec3 computeNormal(float u, float v);
+
     virtual void render(const glm::mat4 &VP) override;
     virtual void render(const glm::mat4 &VP, const Color &color) override;
 

@@ -772,6 +772,13 @@ glm::vec3 Surface::computeDvu(float u, float v) {
     return point;
 }
 
+glm::vec3 Surface::computeNormal(float u, float v){
+    glm::vec3 du = computeDu(u,v);
+    glm::vec3 dv = computeDv(u,v);
+    glm::vec3 norm = glm::cross(du, dv);
+
+    return glm::normalize(norm);
+}
 
 void Surface::render(const glm::mat4 &VP) {
     draw(VP, color);

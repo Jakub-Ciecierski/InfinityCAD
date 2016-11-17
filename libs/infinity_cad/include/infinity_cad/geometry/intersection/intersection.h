@@ -63,7 +63,11 @@ public:
 
     Intersection(Surface* surface1,
                  Surface* surface2,
-                 Scene* scene, float distance = 0.01);
+                 Scene* scene, float distance = 0.001);
+
+    Intersection(Surface* surface1,
+                 Surface* surface2,
+                 float distance = 0.001);
 
     ~Intersection();
 
@@ -72,6 +76,7 @@ public:
 
     bool start();
     bool start(glm::vec2& ndcPosition, const glm::mat4& VP, Scene* scene);
+    bool start(glm::vec3& position);
 };
 
 

@@ -211,11 +211,12 @@ void PSO::computeParticleUpdate(thread_argv *targs){
 void PSO::printIterationInfo(thread_argv *targs){
     if (targs->tid == threading::T_BOSS) {
         this->measureTime(targs);
+        /*
         infoPrinter->printInfo(targs->timeMeasures,
                                *(targs->curr_iter),
                                this->maxIterations, this->swarmSize,
                                this->currentGenerationBestParticle.get(),
-                               &(this->globalBestParticle));
+                               &(this->globalBestParticle));*/
     }
 }
 

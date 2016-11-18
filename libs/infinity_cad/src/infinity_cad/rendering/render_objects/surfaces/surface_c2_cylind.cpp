@@ -7,6 +7,9 @@
 #include <algorithm>
 #include <infinity_cad/geometry/polynomials/bspline_basis.h>
 
+#include <infinity_cad/math/math.h>
+#include <infinity_cad/geometry/polynomials/bernstein_basis.h>
+
 using namespace glm;
 using namespace std;
 
@@ -292,6 +295,40 @@ glm::vec3 SurfaceC2Cylind::computeDu(float u, float v){
     return result;
 }
 
+glm::vec3 SurfaceC2Cylind::computeDuBernstein(float u, float v){
+    if(u < 0) u = 0;
+    if(v < 0) v = 0;
+    if(u >= 1.0) u = 0.999f;
+    if(v >= 1.0) v = 0.999f;
+
+    int j = floor(u * m);
+    int i = floor(v * n);
+
+    float minJ = (float)j / (float)m;
+    float maxJ = (float)(j+1) / (float)m;
+    float rJ = maxJ - minJ;
+    u = (u - minJ) / rJ;
+
+    float minI = (float)i / (float)n;
+    float maxI = (float)(i+1) / (float)n;
+    float rI = maxI - minI;
+    v = (v - minI) / rI;
+
+    const BicubicBezierPatch* patch = patches[i][j];
+
+    vec4 Bu = cubicBernsteinDerivative(u);
+    vec4 Bv = cubicBernsteinVector(v);
+
+    float x = ifc::getMultplicationValue(Bu, patch->getX(), Bv);
+    float y = ifc::getMultplicationValue(Bu, patch->getY(), Bv);
+    float z = ifc::getMultplicationValue(Bu, patch->getZ(), Bv);
+
+    vec3 point(x, y, z);
+
+    return point;
+}
+
+
 glm::vec3 SurfaceC2Cylind::computeDuu(float u, float v){
     std::vector<float> knotVectorU;
     std::vector<float> knotVectorV;
@@ -453,6 +490,39 @@ glm::vec3 SurfaceC2Cylind::computeDv(float u, float v){
         }
     }
     return result;
+}
+
+glm::vec3 SurfaceC2Cylind::computeDvBernstein(float u, float v){
+    if(u < 0) u = 0;
+    if(v < 0) v = 0;
+    if(u >= 1.0) u = 0.999f;
+    if(v >= 1.0) v = 0.999f;
+
+    int j = floor(u * m);
+    int i = floor(v * n);
+
+    float minJ = (float)j / (float)m;
+    float maxJ = (float)(j+1) / (float)m;
+    float rJ = maxJ - minJ;
+    u = (u - minJ) / rJ;
+
+    float minI = (float)i / (float)n;
+    float maxI = (float)(i+1) / (float)n;
+    float rI = maxI - minI;
+    v = (v - minI) / rI;
+
+    const BicubicBezierPatch* patch = patches[i][j];
+
+    vec4 Bu = cubicBernsteinVector(u);
+    vec4 Bv = cubicBernsteinDerivative(v);
+
+    float x = ifc::getMultplicationValue(Bu, patch->getX(), Bv);
+    float y = ifc::getMultplicationValue(Bu, patch->getY(), Bv);
+    float z = ifc::getMultplicationValue(Bu, patch->getZ(), Bv);
+
+    vec3 point(x, y, z);
+
+    return point;
 }
 
 glm::vec3 SurfaceC2Cylind::computeDvv(float u, float v){

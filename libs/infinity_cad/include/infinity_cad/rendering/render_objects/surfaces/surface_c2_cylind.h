@@ -33,10 +33,12 @@ public:
     virtual glm::vec3 compute(float u, float v) override;
 
     virtual glm::vec3 computeDu(float u, float v) override;
+    glm::vec3 computeDuBernstein(float u, float v);
     virtual glm::vec3 computeDuu(float u, float v) override;
     virtual glm::vec3 computeDuv(float u, float v) override;
 
     virtual glm::vec3 computeDv(float u, float v) override;
+    glm::vec3 computeDvBernstein(float u, float v);
     virtual glm::vec3 computeDvv(float u, float v) override;
     virtual glm::vec3 computeDvu(float u, float v) override;
 
